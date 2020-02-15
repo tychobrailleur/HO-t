@@ -177,6 +177,11 @@ public class XMLTeamDetailsParser {
 			root = (Element) team.getElementsByTagName("Region").item(0);
 			ele = (Element) root.getElementsByTagName("RegionID").item(0);
 			hash.put("RegionID", (XMLManager.getFirstChildNodeValue(ele)));
+
+			root = (Element) root.getElementsByTagName("Country").item(0);
+			ele = (Element) root.getElementsByTagName("CountryID").item(0);
+			hash.put("CountryID", (XMLManager.getFirstChildNodeValue(ele)));
+
 		} catch (Exception e) {
 			HOLogger.instance().log(XMLTeamDetailsParser.class, e);
 		}

@@ -9,6 +9,9 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.Team;
+import core.model.misc.Basics;
+import module.series.promotion.DownloadCountryDetails;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -214,6 +217,19 @@ public class SeriesPanel extends LazyImagePanel {
 		printButton.setSize(25, 25);
 		printButton.setLocation(255, 5);
 		toolbarPanel.add(printButton);
+
+		JButton downloadLeague = new JButton(ThemeManager.getIcon(HOIconName.DOWNLOAD_MATCH));
+		downloadLeague.setSize(25, 25);
+		downloadLeague.setLocation(290, 5);
+		downloadLeague.addActionListener((e) -> {
+
+			Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
+
+			DownloadCountryDetails downloadCountryDetails = new DownloadCountryDetails();
+			downloadCountryDetails.getTeamsInCountry(basics.getLiga());
+
+		});
+		toolbarPanel.add(downloadLeague);
 
 		toolbarPanel.setPreferredSize(new Dimension(240, 35));
 		panel.add(toolbarPanel, BorderLayout.NORTH);
