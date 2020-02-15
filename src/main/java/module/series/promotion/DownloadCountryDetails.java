@@ -49,7 +49,7 @@ public class DownloadCountryDetails {
     final MyConnector mc = MyConnector.instance();
 
     private int getTeamRank(int teamId) {
-        HOLogger.instance().info(DownloadCountryDetails.class, String.format("Retrieving Team details for team %d.",teamId));
+        HOLogger.instance().info(DownloadCountryDetails.class, String.format("Retrieving Team details for team %d.", teamId));
 
         try {
             String details = mc.getTeamdetails(teamId);
@@ -67,102 +67,35 @@ public class DownloadCountryDetails {
 
     private Map<String, TeamStats> getTeamsInfoInLeague(int leagueId) {
         String details = mc.getLeagueDetails(String.valueOf(leagueId));
-
-//        String details = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-//                "<HattrickData>\n" +
-//                "  <FileName>leaguedetails.xml</FileName>\n" +
-//                "  <Version>1.2</Version>\n" +
-//                "  <UserID>6992417</UserID>\n" +
-//                "  <FetchedDate>2020-02-15 11:37:05</FetchedDate>\n" +
-//                "  <LeagueID>21</LeagueID>\n" +
-//                "  <LeagueName>Ireland</LeagueName>\n" +
-//                "  <LeagueLevel>1</LeagueLevel>\n" +
-//                "  <MaxLevel>5</MaxLevel>\n" +
-//                "  <LeagueLevelUnitID>3573</LeagueLevelUnitID>\n" +
-//                "  <LeagueLevelUnitName>Irish Premier</LeagueLevelUnitName>\n" +
-//                "  <Team>\n" +
-//                "    <TeamID>73868</TeamID>\n" +
-//                "    <TeamName>OLLImpique Offaly</TeamName>\n" +
-//                "    <Position>1</Position>\n" +
-//                "    <PositionChange>0</PositionChange>\n" +
-//                "    <Matches>0</Matches>\n" +
-//                "    <GoalsFor>0</GoalsFor>\n" +
-//                "    <GoalsAgainst>0</GoalsAgainst>\n" +
-//                "    <Points>0</Points>\n" +
-//                "  </Team>\n" +
-//                "  <Team>\n" +
-//                "    <TeamID>280009</TeamID>\n" +
-//                "    <TeamName>Smithwick's FC</TeamName>\n" +
-//                "    <Position>2</Position>\n" +
-//                "    <PositionChange>0</PositionChange>\n" +
-//                "    <Matches>0</Matches>\n" +
-//                "    <GoalsFor>0</GoalsFor>\n" +
-//                "    <GoalsAgainst>0</GoalsAgainst>\n" +
-//                "    <Points>0</Points>\n" +
-//                "  </Team>\n" +
-//                "  <Team>\n" +
-//                "    <TeamID>280318</TeamID>\n" +
-//                "    <TeamName>F.C. Spórtcairde Knockpasheemore</TeamName>\n" +
-//                "    <Position>3</Position>\n" +
-//                "    <PositionChange>0</PositionChange>\n" +
-//                "    <Matches>0</Matches>\n" +
-//                "    <GoalsFor>0</GoalsFor>\n" +
-//                "    <GoalsAgainst>0</GoalsAgainst>\n" +
-//                "    <Points>0</Points>\n" +
-//                "  </Team>\n" +
-//                "  <Team>\n" +
-//                "    <TeamID>281438</TeamID>\n" +
-//                "    <TeamName>Sligo Bay Crabs</TeamName>\n" +
-//                "    <Position>4</Position>\n" +
-//                "    <PositionChange>0</PositionChange>\n" +
-//                "    <Matches>0</Matches>\n" +
-//                "    <GoalsFor>0</GoalsFor>\n" +
-//                "    <GoalsAgainst>0</GoalsAgainst>\n" +
-//                "    <Points>0</Points>\n" +
-//                "  </Team>\n" +
-//                "  <Team>\n" +
-//                "    <TeamID>281450</TeamID>\n" +
-//                "    <TeamName>Losers of CA</TeamName>\n" +
-//                "    <Position>5</Position>\n" +
-//                "    <PositionChange>0</PositionChange>\n" +
-//                "    <Matches>0</Matches>\n" +
-//                "    <GoalsFor>0</GoalsFor>\n" +
-//                "    <GoalsAgainst>0</GoalsAgainst>\n" +
-//                "    <Points>0</Points>\n" +
-//                "  </Team>\n" +
-//                "  <Team>\n" +
-//                "    <TeamID>281662</TeamID>\n" +
-//                "    <TeamName>The Snuggly Duckling</TeamName>\n" +
-//                "    <Position>6</Position>\n" +
-//                "    <PositionChange>0</PositionChange>\n" +
-//                "    <Matches>0</Matches>\n" +
-//                "    <GoalsFor>0</GoalsFor>\n" +
-//                "    <GoalsAgainst>0</GoalsAgainst>\n" +
-//                "    <Points>0</Points>\n" +
-//                "  </Team>\n" +
-//                "  <Team>\n" +
-//                "    <TeamID>280396</TeamID>\n" +
-//                "    <TeamName>McVignes</TeamName>\n" +
-//                "    <Position>7</Position>\n" +
-//                "    <PositionChange>0</PositionChange>\n" +
-//                "    <Matches>0</Matches>\n" +
-//                "    <GoalsFor>0</GoalsFor>\n" +
-//                "    <GoalsAgainst>0</GoalsAgainst>\n" +
-//                "    <Points>0</Points>\n" +
-//                "  </Team>\n" +
-//                "  <Team>\n" +
-//                "    <TeamID>279869</TeamID>\n" +
-//                "    <TeamName>3Dimaina</TeamName>\n" +
-//                "    <Position>8</Position>\n" +
-//                "    <PositionChange>0</PositionChange>\n" +
-//                "    <Matches>0</Matches>\n" +
-//                "    <GoalsFor>0</GoalsFor>\n" +
-//                "    <GoalsAgainst>0</GoalsAgainst>\n" +
-//                "    <Points>0</Points>\n" +
-//                "  </Team>\n" +
-//                "</HattrickData>";
         return XMLLeagueDetailsParser.parseLeagueDetails(details);
+    }
 
+    private void handleDuplicateRankings(CountryTeamInfo countryTeamInfo, Map<Integer, CountryTeamInfo.TeamRank> teamRankMap) {
+        List<CountryTeamInfo.TeamRank> duplicateRanks = countryTeamInfo.ranks
+                .stream()
+                .collect(Collectors.groupingBy(CountryTeamInfo.TeamRank::getRank))
+                .entrySet()
+                .stream()
+                .filter(longListEntry -> longListEntry.getValue().size() > 1) // filter out ranks that appear once
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+                .entrySet()
+                .stream()
+                .flatMap(longListEntry -> longListEntry.getValue().stream())
+                .collect(Collectors.toList()); // merge all the lists of team ranks
+
+        System.out.println(duplicateRanks);
+
+        countryTeamInfo.ranks.clear();
+
+        for (CountryTeamInfo.TeamRank rank : duplicateRanks) {
+            int observedRank = getTeamRank(rank.teamId);
+            CountryTeamInfo.TeamRank teamRank = teamRankMap.get(rank.teamId);
+            teamRank.setRank(teamRank.getRank() + (99_999 - observedRank));
+            teamRankMap.put(rank.teamId, teamRank);
+        }
+
+        countryTeamInfo.ranks.addAll(new ArrayList<>(teamRankMap.values()));
+        countryTeamInfo.ranks.sort(Comparator.comparingLong(o -> -o.rank));
     }
 
     /**
@@ -208,45 +141,6 @@ public class DownloadCountryDetails {
         String json = gson.toJson(countryTeamInfo);
 
         System.out.println(json);
-    }
-
-    private void handleDuplicateRankings(CountryTeamInfo countryTeamInfo, Map<Integer, CountryTeamInfo.TeamRank> teamRankMap) {
-    /*
-    countryTeamInfo.ranks = Arrays.asList(
-            new CountryTeamInfo.TeamRank(1, 43),
-            new CountryTeamInfo.TeamRank(2, 44),
-            new CountryTeamInfo.TeamRank(3, 78),
-            new CountryTeamInfo.TeamRank(4, 78),
-            new CountryTeamInfo.TeamRank(5, 79),
-            new CountryTeamInfo.TeamRank(6, 43)
-    );
-
-     */
-
-        List<CountryTeamInfo.TeamRank> duplicateRanks = countryTeamInfo.ranks
-               .stream()
-               .collect(Collectors.groupingBy(CountryTeamInfo.TeamRank::getRank))
-               .entrySet()
-               .stream()
-               .filter(longListEntry -> longListEntry.getValue().size() > 1) // filter out ranks that appear once
-               .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
-                .entrySet()
-                .stream()
-                .flatMap(longListEntry -> longListEntry.getValue().stream())
-                .collect(Collectors.toList()); // merge all the lists of team ranks
-
-        System.out.println(duplicateRanks);
-
-        countryTeamInfo.ranks.clear();
-        for (CountryTeamInfo.TeamRank rank: duplicateRanks) {
-            int observedRank = getTeamRank(rank.teamId);
-            CountryTeamInfo.TeamRank teamRank = teamRankMap.get(rank.teamId);
-            teamRank.setRank(teamRank.getRank() + (99_999 - observedRank));
-            teamRankMap.put(rank.teamId, teamRank);
-        }
-
-        countryTeamInfo.ranks.addAll(new ArrayList<>(teamRankMap.values()));
-        countryTeamInfo.ranks.sort(Comparator.comparingLong(o -> -o.rank));
     }
 
     public static void main(String[] args) {
