@@ -7,27 +7,28 @@ public class CountryTeamInfo {
 
     static class TeamRank {
 
-        public TeamRank(int teamId, long rank) {
+        public TeamRank(int teamId, long calculatedRank) {
             this.teamId = teamId;
-            this.rank = rank;
+            this.calculatedRank = calculatedRank;
         }
 
         int teamId;
-        long rank;
+        long calculatedRank;
 
         public int getTeamId() {
             return teamId;
         }
 
-        public long getRank() {
-            return rank;
+        public long getCalculatedRank() {
+            return calculatedRank;
         }
 
-        public void setRank(long rank) {
-            this.rank = rank;
+        public void setCalculatedRank(long calculatedRank) {
+            this.calculatedRank = calculatedRank;
         }
     }
 
-    int countryId;
+    int leagueId;
+    int season;
     List<TeamRank> ranks = new ArrayList<>();
 }

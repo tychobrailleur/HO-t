@@ -1,13 +1,10 @@
 package module.series.promotion;
 
 import com.google.gson.Gson;
-import core.db.DBManager;
 import core.file.xml.TeamStats;
 import core.file.xml.XMLLeagueDetailsParser;
 import core.file.xml.XMLTeamDetailsParser;
-import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
-import core.model.UserParameter;
 import core.net.MyConnector;
 import core.util.HOLogger;
 
@@ -16,9 +13,36 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
+/**
+ * This class gets all the teams in a given country, calculates the ranking for each one of them,
+ * and submits the data back to the HO server.
+ *
+ * <p>The ranking for a team is calculated as follows:</p>
+ *
+ * ...
+ *
+ * <p>When a user wants to check what league he or she will be promoted/demoted to the following season,
+ * HO checks whether the ranking calculation has already been done for his/her country.  If it has not been
+ * done already, HO downloads the data for his/her country, calculates the ranking, and submits the
+ * results back to the HO server: this first user is responsible for seeding the data for his/her country.</p>
+ *
+ * <p>when the data is being downloaded for the country, an endpoint on HO server is called to mark
+ * the data retrieval for that country as pending.  While the data retrieval is pending, no one else can
+ * download the data for this country.  This means that if the user interrupts the download (for example
+ * by shutting down HO prematurely, or because of a crash), the status of data retrieval for this country
+ * needs to be reset to “unavailable” after a certain period of time.</p>
+ *
+ * <p>Once the data for a country is available, the data request to the HO server will return the pre-calculated
+ * info without the need for downloading more data from HT.</p>
+ *
+ * <p>TODO Solve the following problems:
+ * <ul>
+ *     <li>How to secure the endpoint where country data is submitted?</li>
+ *     <li>How to make sure the data submitted by the user is not garbage?</li>
+ * </ul>
+ */
 public class DownloadCountryDetails {
 
 
@@ -48,6 +72,59 @@ public class DownloadCountryDetails {
     final private ExecutorService executorService = Executors.newFixedThreadPool(5);
     final MyConnector mc = MyConnector.instance();
 
+
+    /**
+     * Retrieves all the teams in the country of id <code>countryId</code>
+     *
+     * @param countryId – ID of the country for which we are getting all the teams.
+     */
+    public void getTeamsInCountry(int countryId) {
+        int season = HOVerwaltung.instance().getModel().getBasics().getSeason();
+        CountryTeamInfo countryTeamInfo = new CountryTeamInfo();
+        countryTeamInfo.leagueId = countryId;
+        countryTeamInfo.season = season;
+
+        Map<Integer, CountryTeamInfo.TeamRank> teamRankMap = getCountryTeamsRanking(countryId, countryTeamInfo);
+        handleDuplicateRankings(countryTeamInfo, teamRankMap);
+        createJson(countryTeamInfo);
+    }
+
+    private Map<Integer, CountryTeamInfo.TeamRank> getCountryTeamsRanking(int countryId, CountryTeamInfo countryTeamInfo) {
+        CountryStructure structure = COUNTRIES.get(countryId);
+
+        Map<String, TeamStats> teamsInfo = new ConcurrentHashMap<>();
+
+//        final Queue<Integer> queue = new LinkedBlockingQueue<>();
+        for (int i = 0; i < structure.leagueStructure.length; i++) {
+            int leagueSize = LEAGUE_SIZES[i];
+
+            for (int leagueId = structure.leagueStructure[i]; leagueId < structure.leagueStructure[i] + leagueSize; leagueId++) {
+//                int currentLeagueId = queue.poll();
+                final int currentLeagueId = leagueId;
+                Map<String, TeamStats> teamsInfoInLeague = getTeamsInfoInLeague(currentLeagueId);
+                System.out.println(teamsInfoInLeague);
+                teamsInfo.putAll(teamsInfoInLeague);
+            }
+        }
+
+        HOLogger.instance().info(DownloadCountryDetails.class, String.format("Found %d teams.", teamsInfo.size()));
+
+        Map<Integer, CountryTeamInfo.TeamRank> teamRankMap = new HashMap<>();
+
+        for (TeamStats teamStats : teamsInfo.values()) {
+            teamRankMap.put(teamStats.getTeamId(), new CountryTeamInfo.TeamRank(teamStats.getTeamId(), teamStats.rankingScore()));
+        }
+
+        countryTeamInfo.ranks.addAll(new ArrayList<>(teamRankMap.values()));
+        countryTeamInfo.ranks.sort(Comparator.comparingLong(o -> -o.calculatedRank));
+        return teamRankMap;
+    }
+
+    private Map<String, TeamStats> getTeamsInfoInLeague(int leagueId) {
+        String details = mc.getLeagueDetails(String.valueOf(leagueId));
+        return XMLLeagueDetailsParser.parseLeagueDetails(details);
+    }
+
     private int getTeamRank(int teamId) {
         HOLogger.instance().info(DownloadCountryDetails.class, String.format("Retrieving Team details for team %d.", teamId));
 
@@ -64,16 +141,11 @@ public class DownloadCountryDetails {
         return -1;
     }
 
-
-    private Map<String, TeamStats> getTeamsInfoInLeague(int leagueId) {
-        String details = mc.getLeagueDetails(String.valueOf(leagueId));
-        return XMLLeagueDetailsParser.parseLeagueDetails(details);
-    }
-
     private void handleDuplicateRankings(CountryTeamInfo countryTeamInfo, Map<Integer, CountryTeamInfo.TeamRank> teamRankMap) {
+        // Find ranks for which we have duplicate ranks.
         List<CountryTeamInfo.TeamRank> duplicateRanks = countryTeamInfo.ranks
                 .stream()
-                .collect(Collectors.groupingBy(CountryTeamInfo.TeamRank::getRank))
+                .collect(Collectors.groupingBy(CountryTeamInfo.TeamRank::getCalculatedRank))
                 .entrySet()
                 .stream()
                 .filter(longListEntry -> longListEntry.getValue().size() > 1) // filter out ranks that appear once
@@ -83,75 +155,24 @@ public class DownloadCountryDetails {
                 .flatMap(longListEntry -> longListEntry.getValue().stream())
                 .collect(Collectors.toList()); // merge all the lists of team ranks
 
-        System.out.println(duplicateRanks);
-
+        HOLogger.instance().info(DownloadCountryDetails.class, String.format("Found %d team with duplicate ranks.", duplicateRanks.size()));
         countryTeamInfo.ranks.clear();
 
         for (CountryTeamInfo.TeamRank rank : duplicateRanks) {
             int observedRank = getTeamRank(rank.teamId);
             CountryTeamInfo.TeamRank teamRank = teamRankMap.get(rank.teamId);
-            teamRank.setRank(teamRank.getRank() + (99_999 - observedRank));
+            teamRank.setCalculatedRank(teamRank.getCalculatedRank() + (99_999 - observedRank));
             teamRankMap.put(rank.teamId, teamRank);
         }
 
         countryTeamInfo.ranks.addAll(new ArrayList<>(teamRankMap.values()));
-        countryTeamInfo.ranks.sort(Comparator.comparingLong(o -> -o.rank));
+        countryTeamInfo.ranks.sort(Comparator.comparingLong(o -> -o.calculatedRank));
     }
 
-    /**
-     * Retrieves all the teams in the country of id <code>countryId</code>
-     *
-     * @param countryId – ID of the country for which we are getting all the teams.
-     */
-    public void getTeamsInCountry(int countryId) {
-        CountryStructure structure = COUNTRIES.get(countryId);
-
-        Map<String, TeamStats> teamsInfo = new ConcurrentHashMap<>();
-
-        final Queue<Integer> queue = new LinkedBlockingQueue<>();
-        for (int i = 0; i < structure.leagueStructure.length; i++) {
-            int leagueSize = LEAGUE_SIZES[i];
-
-            for (int leagueId = structure.leagueStructure[i]; leagueId < structure.leagueStructure[i] + leagueSize; leagueId++) {
-//                int currentLeagueId = queue.poll();
-                final int currentLeagueId = leagueId;
-                Map<String, TeamStats> teamsInfoInLeague = getTeamsInfoInLeague(currentLeagueId);
-                System.out.println(teamsInfoInLeague);
-                teamsInfo.putAll(teamsInfoInLeague);
-            }
-        }
-
-        HOLogger.instance().info(DownloadCountryDetails.class, String.format("Found %d teams.", teamsInfo.size()));
-
-        CountryTeamInfo countryTeamInfo = new CountryTeamInfo();
-        countryTeamInfo.countryId = countryId;
-
-        Map<Integer, CountryTeamInfo.TeamRank> teamRankMap = new HashMap<>();
-
-        for (TeamStats teamStats : teamsInfo.values()) {
-            teamRankMap.put(teamStats.getTeamId(), new CountryTeamInfo.TeamRank(teamStats.getTeamId(), teamStats.rankingScore()));
-        }
-
-        countryTeamInfo.ranks.addAll(new ArrayList<>(teamRankMap.values()));
-        countryTeamInfo.ranks.sort(Comparator.comparingLong(o -> -o.rank));
-
-        handleDuplicateRankings(countryTeamInfo, teamRankMap);
-
+    private void createJson(CountryTeamInfo countryTeamInfo) {
         Gson gson = new Gson();
         String json = gson.toJson(countryTeamInfo);
 
         System.out.println(json);
-    }
-
-    public static void main(String[] args) {
-        DBManager.instance().loadUserParameter();
-        HOVerwaltung.checkLanguageFile(UserParameter.instance().sprachDatei);
-        HOVerwaltung.instance().setResource(UserParameter.instance().sprachDatei);
-        HOVerwaltung.instance().loadLatestHoModel();
-        UserColumnController.instance().load();
-
-        DownloadCountryDetails countryDetails = new DownloadCountryDetails();
-        countryDetails.getTeamsInCountry(21);
-        System.exit(1);
     }
 }
