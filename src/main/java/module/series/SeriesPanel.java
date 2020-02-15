@@ -24,13 +24,7 @@ import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.util.Calendar;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JViewport;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -218,18 +212,28 @@ public class SeriesPanel extends LazyImagePanel {
 		printButton.setLocation(255, 5);
 		toolbarPanel.add(printButton);
 
-		JButton downloadLeague = new JButton(ThemeManager.getIcon(HOIconName.DOWNLOAD_MATCH));
-		downloadLeague.setSize(25, 25);
-		downloadLeague.setLocation(290, 5);
-		downloadLeague.addActionListener((e) -> {
+		JButton downloadLeagueButton = new JButton(ThemeManager.getIcon(HOIconName.DOWNLOAD_MATCH));
+		downloadLeagueButton.setSize(25, 25);
+		downloadLeagueButton.setLocation(290, 5);
+		downloadLeagueButton.setToolTipText("Download Country Data"); // FIXME l10n
+		downloadLeagueButton.addActionListener((e) -> {
 
 			Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
 
-			DownloadCountryDetails downloadCountryDetails = new DownloadCountryDetails();
-			downloadCountryDetails.getTeamsInCountry(basics.getLiga());
+			final SwingWorker<Void, Void> worker = new SwingWorker() {
+				@Override
+				protected Object doInBackground() throws Exception {
+					DownloadCountryDetails downloadCountryDetails = new DownloadCountryDetails();
+					downloadCountryDetails.getTeamsInCountry(basics.getLiga());
+
+					return -1;
+				}
+			};
+
+			worker.execute();
 
 		});
-		toolbarPanel.add(downloadLeague);
+		toolbarPanel.add(downloadLeagueButton);
 
 		toolbarPanel.setPreferredSize(new Dimension(240, 35));
 		panel.add(toolbarPanel, BorderLayout.NORTH);

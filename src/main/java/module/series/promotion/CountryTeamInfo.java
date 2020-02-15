@@ -3,6 +3,9 @@ package module.series.promotion;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Bean used to generate the JSON payload submitted to the HO server.
+ */
 public class CountryTeamInfo {
 
     static class TeamRank {
@@ -30,5 +33,6 @@ public class CountryTeamInfo {
 
     int leagueId;
     int season;
-    List<TeamRank> ranks = new ArrayList<>();
+    String username;
+    List<TeamRank> calculatedRank = new ArrayList<>();
 }

@@ -10,9 +10,7 @@ import core.util.HOLogger;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 /**
@@ -45,7 +43,6 @@ import java.util.stream.Collectors;
  */
 public class DownloadCountryDetails {
 
-
     static class CountryStructure {
         String name;
         int id;
@@ -69,20 +66,22 @@ public class DownloadCountryDetails {
         COUNTRIES.put(21, new CountryStructure("Ireland", 21, new int[]{3573, 3574, 3578, 8775, 34583}));
     }
 
-    final private ExecutorService executorService = Executors.newFixedThreadPool(5);
     final MyConnector mc = MyConnector.instance();
-
+    final DataSubmitter submitter = new HttpDataSubmitter();
 
     /**
-     * Retrieves all the teams in the country of id <code>countryId</code>
+     * Retrieves all the teams in the country of id <code>countryId</code>.
      *
      * @param countryId – ID of the country for which we are getting all the teams.
      */
     public void getTeamsInCountry(int countryId) {
         int season = HOVerwaltung.instance().getModel().getBasics().getSeason();
+        String username = HOVerwaltung.instance().getModel().getBasics().getManager();
+
         CountryTeamInfo countryTeamInfo = new CountryTeamInfo();
         countryTeamInfo.leagueId = countryId;
         countryTeamInfo.season = season;
+        countryTeamInfo.username = username;
 
         Map<Integer, CountryTeamInfo.TeamRank> teamRankMap = getCountryTeamsRanking(countryId, countryTeamInfo);
         handleDuplicateRankings(countryTeamInfo, teamRankMap);
@@ -93,19 +92,22 @@ public class DownloadCountryDetails {
         CountryStructure structure = COUNTRIES.get(countryId);
 
         Map<String, TeamStats> teamsInfo = new ConcurrentHashMap<>();
+        ProcessAsynchronousTask<Integer> processAsynchronousTask = new ProcessAsynchronousTask<>();
 
-//        final Queue<Integer> queue = new LinkedBlockingQueue<>();
         for (int i = 0; i < structure.leagueStructure.length; i++) {
             int leagueSize = LEAGUE_SIZES[i];
 
             for (int leagueId = structure.leagueStructure[i]; leagueId < structure.leagueStructure[i] + leagueSize; leagueId++) {
-//                int currentLeagueId = queue.poll();
-                final int currentLeagueId = leagueId;
-                Map<String, TeamStats> teamsInfoInLeague = getTeamsInfoInLeague(currentLeagueId);
-                System.out.println(teamsInfoInLeague);
-                teamsInfo.putAll(teamsInfoInLeague);
+                processAsynchronousTask.addToQueue(leagueId);
             }
         }
+
+        ProcessAsynchronousTask.ProcessTask<Integer> task = (val) -> {
+            Map<String, TeamStats> teamsInfoInLeague = getTeamsInfoInLeague(val);
+            System.out.println(teamsInfoInLeague);
+            teamsInfo.putAll(teamsInfoInLeague);
+        };
+        processAsynchronousTask.execute(task);
 
         HOLogger.instance().info(DownloadCountryDetails.class, String.format("Found %d teams.", teamsInfo.size()));
 
@@ -115,8 +117,8 @@ public class DownloadCountryDetails {
             teamRankMap.put(teamStats.getTeamId(), new CountryTeamInfo.TeamRank(teamStats.getTeamId(), teamStats.rankingScore()));
         }
 
-        countryTeamInfo.ranks.addAll(new ArrayList<>(teamRankMap.values()));
-        countryTeamInfo.ranks.sort(Comparator.comparingLong(o -> -o.calculatedRank));
+        countryTeamInfo.calculatedRank.addAll(new ArrayList<>(teamRankMap.values()));
+        countryTeamInfo.calculatedRank.sort(Comparator.comparingLong(o -> -o.calculatedRank));
         return teamRankMap;
     }
 
@@ -143,7 +145,7 @@ public class DownloadCountryDetails {
 
     private void handleDuplicateRankings(CountryTeamInfo countryTeamInfo, Map<Integer, CountryTeamInfo.TeamRank> teamRankMap) {
         // Find ranks for which we have duplicate ranks.
-        List<CountryTeamInfo.TeamRank> duplicateRanks = countryTeamInfo.ranks
+        List<CountryTeamInfo.TeamRank> duplicateRanks = countryTeamInfo.calculatedRank
                 .stream()
                 .collect(Collectors.groupingBy(CountryTeamInfo.TeamRank::getCalculatedRank))
                 .entrySet()
@@ -156,23 +158,31 @@ public class DownloadCountryDetails {
                 .collect(Collectors.toList()); // merge all the lists of team ranks
 
         HOLogger.instance().info(DownloadCountryDetails.class, String.format("Found %d team with duplicate ranks.", duplicateRanks.size()));
-        countryTeamInfo.ranks.clear();
+        countryTeamInfo.calculatedRank.clear();
+
+        ProcessAsynchronousTask<Integer> processAsynchronousTask = new ProcessAsynchronousTask<>();
 
         for (CountryTeamInfo.TeamRank rank : duplicateRanks) {
-            int observedRank = getTeamRank(rank.teamId);
-            CountryTeamInfo.TeamRank teamRank = teamRankMap.get(rank.teamId);
-            teamRank.setCalculatedRank(teamRank.getCalculatedRank() + (99_999 - observedRank));
-            teamRankMap.put(rank.teamId, teamRank);
+            processAsynchronousTask.addToQueue(rank.teamId);
         }
 
-        countryTeamInfo.ranks.addAll(new ArrayList<>(teamRankMap.values()));
-        countryTeamInfo.ranks.sort(Comparator.comparingLong(o -> -o.calculatedRank));
+        ProcessAsynchronousTask.ProcessTask<Integer> task = (val) -> {
+            int observedRank = getTeamRank(val);
+            CountryTeamInfo.TeamRank teamRank = teamRankMap.get(val);
+            teamRank.setCalculatedRank(teamRank.getCalculatedRank() + (99_999 - observedRank));
+            teamRankMap.put(val, teamRank);
+        };
+        processAsynchronousTask.execute(task);
+
+        countryTeamInfo.calculatedRank.addAll(new ArrayList<>(teamRankMap.values()));
+        countryTeamInfo.calculatedRank.sort(Comparator.comparingLong(o -> -o.calculatedRank));
     }
 
     private void createJson(CountryTeamInfo countryTeamInfo) {
         Gson gson = new Gson();
         String json = gson.toJson(countryTeamInfo);
+        HOLogger.instance().debug(DownloadCountryDetails.class, json);
 
-        System.out.println(json);
+        submitter.submitData(json);
     }
 }
