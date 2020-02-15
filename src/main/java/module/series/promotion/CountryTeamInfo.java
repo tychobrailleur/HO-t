@@ -1,13 +1,33 @@
 package module.series.promotion;
 
-import core.file.xml.TeamStats;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class CountryTeamInfo {
 
-    List<TeamStats> teams = new ArrayList<>();
+    static class TeamRank {
 
+        public TeamRank(int teamId, long rank) {
+            this.teamId = teamId;
+            this.rank = rank;
+        }
 
+        int teamId;
+        long rank;
+
+        public int getTeamId() {
+            return teamId;
+        }
+
+        public long getRank() {
+            return rank;
+        }
+
+        public void setRank(long rank) {
+            this.rank = rank;
+        }
+    }
+
+    int countryId;
+    List<TeamRank> ranks = new ArrayList<>();
 }
