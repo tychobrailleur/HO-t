@@ -1,26 +1,47 @@
 package module.series.promotion;
 
 import core.util.HOLogger;
-import okhttp3.*;
+
+import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.net.JksOptions;
+import io.vertx.ext.web.client.HttpResponse;
+import io.vertx.ext.web.client.WebClient;
+import io.vertx.ext.web.client.WebClientOptions;
+
+
 
 public class HttpDataSubmitter implements DataSubmitter {
-    // FIXME fix SSL cert issue.
-    private final static String HOSERVER_URL = "http://UNF6X7OJB7PFLVEQ.anvil.app/_/private_api/HN4JZ6UMWUM7I4PTILWZTJFD/";
+
+    private final static String HOSERVER_URL = "https://UNF6X7OJB7PFLVEQ.anvil.app/_/private_api/HN4JZ6UMWUM7I4PTILWZTJFD/";
+
 
     @Override
     public void submitData(String json) {
-        final OkHttpClient client = new OkHttpClient();
-        RequestBody body = RequestBody.create(json, MediaType.get("application/json; charset=utf-8"));
-        Request request = new Request.Builder()
-                .url(HOSERVER_URL + "/push-data")
-                .post(body)
-                .build();
+        HOLogger.instance().info(HttpDataSubmitter.class, "Sending data to HO Server...");
 
-        try (Response response = client.newCall(request).execute()) {
-            String res = response.body().string();
-            HOLogger.instance().info(DownloadCountryDetails.class, String.format("Upload complete: %s", res));
-        } catch (Exception e) {
-            HOLogger.instance().log(DownloadCountryDetails.class, e);
-        }
+        Vertx vertx = Vertx.vertx();
+
+        WebClient client = WebClient.create(vertx,
+                new WebClientOptions()
+                        .setSsl(true)
+                        .setTrustStoreOptions(new JksOptions()
+                                .setPath("resources/keystore.jks")
+                                .setPassword("password")));
+
+        Buffer buffer = Buffer.buffer();
+        buffer.appendString(json);
+
+        client.post(443, "UNF6X7OJB7PFLVEQ.anvil.app", "_/private_api/HN4JZ6UMWUM7I4PTILWZTJFD/push-data")
+                .putHeader("Content-Type", "application/json")
+                .sendBuffer(buffer, ar -> {
+            System.out.println(ar);
+            if (ar.succeeded()) {
+                HttpResponse<Buffer> response = ar.result();
+                System.out.println("Got HTTP response with status " + response.statusCode());
+            } else {
+                ar.cause().printStackTrace();
+            }
+        });
     }
 }

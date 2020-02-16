@@ -23,7 +23,7 @@ dependencies {
     compile 'org.hsqldb:hsqldb:2.4.1'
     compile 'junit:junit:4.12'
     compile 'com.google.code.gson:gson:2.8.5'
-    compile "com.squareup.okhttp3:okhttp:4.3.1"
+    compile 'io.vertx:vertx-web-client:3.8.5'
 }
 
 
@@ -86,7 +86,7 @@ markdownToHtml {
 // Configure poeditor plugin ================================
 
 poeditor {
-    apiKey = POEDITOR_APIKEY
+//    apiKey = POEDITOR_APIKEY
     projectId = '206221'
 
     trans type:'properties', lang: 'bg', file: 'src\\main\\resources\\sprache\\Bulgarian.properties'
@@ -250,7 +250,7 @@ task preparingBuild {
         //     Deleting build project     ---------------------------------------------------------------------
         println("Deleting build and execution files ....")
         project.delete(files("${buildDir}/"))
-        project.delete(files("${projectDir}\\db"))
+ //       project.delete(files("${projectDir}\\db"))
         project.delete(files("${projectDir}\\logs"))
         project.delete(files("${projectDir}\\themes"))
         project.delete(files("${projectDir}\\user.xml"))
@@ -578,7 +578,8 @@ task ReleaseToGitHub(dependsOn: tasks.getByName('githubRelease')){
 }
 
 githubRelease {
-    def _token = GITHUB_TOKEN  // required token for your personal access with repo permissions
+//    def _token = GITHUB_TOKEN  // required token for your personal access with repo permissions
+    def _token = 'xxx'
     owner = 'akasolace'
     repo = 'HO'
     releaseAssets = file("$target_dir").listFiles()

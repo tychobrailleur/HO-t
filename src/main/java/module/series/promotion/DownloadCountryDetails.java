@@ -94,6 +94,7 @@ public class DownloadCountryDetails {
         Map<String, TeamStats> teamsInfo = new ConcurrentHashMap<>();
         ProcessAsynchronousTask<Integer> processAsynchronousTask = new ProcessAsynchronousTask<>();
 
+        // Find all the series in the league, and them to the processing queue.
         for (int i = 0; i < structure.leagueStructure.length; i++) {
             int leagueSize = LEAGUE_SIZES[i];
 
@@ -103,26 +104,27 @@ public class DownloadCountryDetails {
         }
 
         ProcessAsynchronousTask.ProcessTask<Integer> task = (val) -> {
-            Map<String, TeamStats> teamsInfoInLeague = getTeamsInfoInLeague(val);
-            System.out.println(teamsInfoInLeague);
-            teamsInfo.putAll(teamsInfoInLeague);
+            Map<String, TeamStats> teamsInfoInSeries = getTeamsInfoInSeries(val);
+            System.out.println(teamsInfoInSeries);
+            teamsInfo.putAll(teamsInfoInSeries);
         };
         processAsynchronousTask.execute(task);
 
         HOLogger.instance().info(DownloadCountryDetails.class, String.format("Found %d teams.", teamsInfo.size()));
 
-        Map<Integer, CountryTeamInfo.TeamRank> teamRankMap = new HashMap<>();
+        Map<Integer, CountryTeamInfo.TeamRank> teamRankMap = teamsInfo.entrySet()
+                .stream()
+                .collect(Collectors.toMap(e -> e.getValue().getTeamId(),
+                        e -> new CountryTeamInfo.TeamRank(e.getValue().getTeamId(), e.getValue().rankingScore())));
 
-        for (TeamStats teamStats : teamsInfo.values()) {
-            teamRankMap.put(teamStats.getTeamId(), new CountryTeamInfo.TeamRank(teamStats.getTeamId(), teamStats.rankingScore()));
-        }
-
+        // sort ranks, it will be used to find ex-aequo teams.
         countryTeamInfo.calculatedRank.addAll(new ArrayList<>(teamRankMap.values()));
         countryTeamInfo.calculatedRank.sort(Comparator.comparingLong(o -> -o.calculatedRank));
+
         return teamRankMap;
     }
 
-    private Map<String, TeamStats> getTeamsInfoInLeague(int leagueId) {
+    private Map<String, TeamStats> getTeamsInfoInSeries(int leagueId) {
         String details = mc.getLeagueDetails(String.valueOf(leagueId));
         return XMLLeagueDetailsParser.parseLeagueDetails(details);
     }
