@@ -32,13 +32,13 @@ public class HttpDataSubmitter implements DataSubmitter {
         Buffer buffer = Buffer.buffer();
         buffer.appendString(json);
 
-        client.post(443, "UNF6X7OJB7PFLVEQ.anvil.app", "_/private_api/HN4JZ6UMWUM7I4PTILWZTJFD/push-data")
+        client.post(443, "UNF6X7OJB7PFLVEQ.anvil.app", "/_/private_api/HN4JZ6UMWUM7I4PTILWZTJFD/push-data")
                 .putHeader("Content-Type", "application/json")
                 .sendBuffer(buffer, ar -> {
             System.out.println(ar);
             if (ar.succeeded()) {
                 HttpResponse<Buffer> response = ar.result();
-                System.out.println("Got HTTP response with status " + response.statusCode());
+                System.out.println("Got HTTP response with status " + response.statusCode() + " " + response.bodyAsString());
             } else {
                 ar.cause().printStackTrace();
             }
