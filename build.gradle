@@ -86,7 +86,7 @@ markdownToHtml {
 // Configure poeditor plugin ================================
 
 poeditor {
-//    apiKey = POEDITOR_APIKEY
+    apiKey = POEDITOR_APIKEY
     projectId = '206221'
 
     trans type:'properties', lang: 'bg', file: 'src\\main\\resources\\sprache\\Bulgarian.properties'
@@ -250,7 +250,7 @@ task preparingBuild {
         //     Deleting build project     ---------------------------------------------------------------------
         println("Deleting build and execution files ....")
         project.delete(files("${buildDir}/"))
- //       project.delete(files("${projectDir}\\db"))
+        project.delete(files("${projectDir}\\db"))
         project.delete(files("${projectDir}\\logs"))
         project.delete(files("${projectDir}\\themes"))
         project.delete(files("${projectDir}\\user.xml"))
@@ -311,7 +311,7 @@ task CreateDistribution (dependsOn: installDist) {
                 rename "Logo_stable.ico", "Logo.ico"
             }
         }
-        
+
         copy {
             from "${projectDir}\\src\\main\\resources\\prediction"
             into "${distribDir}\\prediction"
@@ -578,8 +578,7 @@ task ReleaseToGitHub(dependsOn: tasks.getByName('githubRelease')){
 }
 
 githubRelease {
-//    def _token = GITHUB_TOKEN  // required token for your personal access with repo permissions
-    def _token = 'xxx'
+    def _token = GITHUB_TOKEN  // required token for your personal access with repo permissions
     owner = 'akasolace'
     repo = 'HO'
     releaseAssets = file("$target_dir").listFiles()
