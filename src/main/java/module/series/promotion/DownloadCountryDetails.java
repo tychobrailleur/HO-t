@@ -268,9 +268,9 @@ public class DownloadCountryDetails {
         try {
             String details = mc.getTeamdetails(teamId);
             Map<String, String> teamInfo = XMLTeamDetailsParser.parseTeamdetailsFromString(details, teamId);
+            final int teamRank = Integer.parseInt(teamInfo.getOrDefault("TeamRank", "-1"));
 
-            return Integer.parseInt(teamInfo.getOrDefault("TeamRank", "-1"));
-
+            return teamRank;
         } catch (IOException e) {
             HOLogger.instance().log(DownloadCountryDetails.class, e);
         }
@@ -304,7 +304,11 @@ public class DownloadCountryDetails {
         ProcessAsynchronousTask.ProcessTask<Integer> task = (val) -> {
             int observedRank = getTeamRank(val);
             CountryTeamInfo.TeamRank teamRank = teamRankMap.get(val);
-            teamRank.setCalculatedRank(teamRank.getCalculatedRank() + (99_999 - observedRank));
+
+            // Bots' rank is 0
+            if (observedRank != 0) {
+                teamRank.setCalculatedRank(teamRank.getCalculatedRank() + (99_999 - observedRank));
+            }
             teamRankMap.put(val, teamRank);
         };
         processAsynchronousTask.execute(task);
@@ -317,7 +321,6 @@ public class DownloadCountryDetails {
         Gson gson = new Gson();
         String json = gson.toJson(countryTeamInfo);
         HOLogger.instance().debug(DownloadCountryDetails.class, json);
-
         submitter.submitData(json);
     }
 }
