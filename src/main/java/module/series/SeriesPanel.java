@@ -12,6 +12,8 @@ import core.model.HOVerwaltung;
 import core.model.Team;
 import core.model.misc.Basics;
 import module.series.promotion.DownloadCountryDetails;
+import module.series.promotion.LeaguePromotionHandler;
+import module.series.promotion.LeagueStatus;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -36,18 +38,31 @@ public class SeriesPanel extends LazyImagePanel {
 	private static final long serialVersionUID = -5179683183917344230L;
 	private JButton printButton;
 	private JButton deleteButton;
-	private JComboBox seasonComboBox;
+	private JComboBox<Spielplan> seasonComboBox;
 	private SeriesTablePanel seriesTable;
 	private MatchDayPanel[] matchDayPanels;
 	private SeriesHistoryPanel seriesHistoryPanel;
 	private Model model;
+	private LeaguePromotionHandler promotionHandler;
 
 	@Override
 	protected void initialize() {
+		initPromotionHandler();
 		initComponents();
 		fillSaisonCB();
 		addListeners();
 		registerRefreshable(true);
+	}
+
+	private void initPromotionHandler() {
+		promotionHandler = new LeaguePromotionHandler();
+		if (promotionHandler.isActive()) {
+			promotionHandler.processLeagueStatus();
+
+			if (promotionHandler.getLeagueStatus() == LeagueStatus.AVAILABLE) {
+				// TODO Retrieve league details.
+			}
+		}
 	}
 
 	@Override
@@ -212,28 +227,14 @@ public class SeriesPanel extends LazyImagePanel {
 		printButton.setLocation(255, 5);
 		toolbarPanel.add(printButton);
 
-		JButton downloadLeagueButton = new JButton(ThemeManager.getIcon(HOIconName.DOWNLOAD_MATCH));
-		downloadLeagueButton.setSize(25, 25);
-		downloadLeagueButton.setLocation(290, 5);
-		downloadLeagueButton.setToolTipText("Download Country Data"); // FIXME l10n
-		downloadLeagueButton.addActionListener((e) -> {
-
-			Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
-
-			final SwingWorker<Void, Void> worker = new SwingWorker() {
-				@Override
-				protected Object doInBackground() throws Exception {
-					DownloadCountryDetails downloadCountryDetails = new DownloadCountryDetails();
-					downloadCountryDetails.getTeamsInCountry(basics.getLiga());
-
-					return -1;
-				}
-			};
-
-			worker.execute();
-
-		});
-		toolbarPanel.add(downloadLeagueButton);
+		if (promotionHandler.isActive()) {
+			JButton downloadLeagueButton = new JButton(ThemeManager.getIcon(HOIconName.DOWNLOAD_MATCH));
+			downloadLeagueButton.setSize(25, 25);
+			downloadLeagueButton.setLocation(290, 5);
+			downloadLeagueButton.setToolTipText("Download Country Data"); // FIXME l10n
+			downloadLeagueButton.addActionListener(promotionHandler::downloadLeagueData);
+			toolbarPanel.add(downloadLeagueButton);
+		}
 
 		toolbarPanel.setPreferredSize(new Dimension(240, 35));
 		panel.add(toolbarPanel, BorderLayout.NORTH);
@@ -342,8 +343,8 @@ public class SeriesPanel extends LazyImagePanel {
 	}
 
 	private void markierungInfo() {
-		for (int i = 0; i < matchDayPanels.length; i++) {
-			matchDayPanels[i].changeSaison();
+		for (MatchDayPanel matchDayPanel : matchDayPanels) {
+			matchDayPanel.changeSaison();
 		}
 	}
 }

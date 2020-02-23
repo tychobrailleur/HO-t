@@ -1,50 +1,140 @@
 package module.series.promotion;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import core.util.HOLogger;
 
-import io.vertx.core.Vertx;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.net.JksOptions;
-import io.vertx.ext.web.client.HttpResponse;
-import io.vertx.ext.web.client.WebClient;
-import io.vertx.ext.web.client.WebClientOptions;
+import okhttp3.*;
 
+import javax.net.ssl.*;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Function;
 
 
 public class HttpDataSubmitter implements DataSubmitter {
 
-    private final static String HOSERVER_URL = "https://UNF6X7OJB7PFLVEQ.anvil.app/_/private_api/HN4JZ6UMWUM7I4PTILWZTJFD/";
+    // TODO Make configurable.
+    private final static String HOSERVER_BASEURL = "https://UNF6X7OJB7PFLVEQ.anvil.app/_/private_api/HN4JZ6UMWUM7I4PTILWZTJFD";
+
+    // Singleton.
+    private HttpDataSubmitter() {}
+
+    private static HttpDataSubmitter instance = null;
+
+    public static HttpDataSubmitter instance() {
+        if (instance == null) {
+            instance = new HttpDataSubmitter();
+        }
+
+        return instance;
+    }
+
+    public List<Integer> fetchSupportedLeagues() {
+        try {
+
+
+            final OkHttpClient client = initializeHttpsClient();
+
+            Request request = new Request.Builder()
+                    .url(HOSERVER_BASEURL + "/league/supported")
+                    .addHeader("Accept", "application/json")
+                    .build();
+
+            Response response = client.newCall(request).execute();
+
+            List<Integer> supportedLeagues = new ArrayList<>();
+            if (response.isSuccessful()) {
+                String bodyAsString = response.body().string();
+                Gson gson = new Gson();
+                JsonArray array = gson.fromJson(bodyAsString, JsonArray.class);
+
+                for (JsonElement arr : array) {
+                    supportedLeagues.add(arr.getAsJsonArray().get(0).getAsInt());
+                }
+
+                return supportedLeagues;
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Collections.emptyList();
+    }
+
+
+    public void getLeagueStatus(int leagueId, Function<String, Void> callback) {
+
+        try {
+            final OkHttpClient client = initializeHttpsClient();
+
+            Request request = new Request.Builder()
+                    .url(String.format(HOSERVER_BASEURL + "/league/%s/status", leagueId))
+                    .addHeader("Accept", "application/json")
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                callback.apply(response.body().string());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void submitData(String json) {
         HOLogger.instance().info(HttpDataSubmitter.class, "Sending data to HO Server...");
 
-        // FIXME Use a lighter dependency like OkHttp for this.
-        // Other parts of the app use pure Java.
-        final Vertx vertx = Vertx.vertx();
-        final String trustStorePath = this.getClass().getClassLoader().getResource("keystore.jks").getPath();
+        try {
+            final OkHttpClient client = initializeHttpsClient();
 
-        WebClient client = WebClient.create(vertx,
-                new WebClientOptions()
-                        .setSsl(true)
-                        .setLogActivity(true)
-                        .setTrustStoreOptions(new JksOptions()
-                                .setPath(trustStorePath)
-                                .setPassword("password")));
+            RequestBody body = RequestBody.create(MediaType.parse("application/json"), json);
 
-        final Buffer buffer = Buffer.buffer();
-        buffer.appendString(json);
+            Request request = new Request.Builder()
+                    .url(HOSERVER_BASEURL + "/push-data")
+                    .post(body)
+                    .build();
 
-        client.post(443, "UNF6X7OJB7PFLVEQ.anvil.app", "/_/private_api/HN4JZ6UMWUM7I4PTILWZTJFD/push-data")
-                .putHeader("Content-Type", "application/json")
-                .sendBuffer(buffer, ar -> {
-            System.out.println(ar);
-            if (ar.succeeded()) {
-                HttpResponse<Buffer> response = ar.result();
-                System.out.println("Got HTTP response with status " + response.statusCode() + " " + response.bodyAsString());
-            } else {
-                ar.cause().printStackTrace();
+            Call call = client.newCall(request);
+            Response response = call.execute();
+
+            if (response.isSuccessful()) {
+                System.out.println("Got HTTP response with status " + response.code() + " " + response.message());
             }
-        });
+
+        } catch (Exception e) {
+            HOLogger.instance().error(HttpDataSubmitter.class, e.getMessage());
+        }
+    }
+
+    private OkHttpClient initializeHttpsClient() throws Exception {
+        final InputStream trustStoreStream = this.getClass().getClassLoader().getResourceAsStream("keystore.jks");
+
+        final KeyStore keystore = KeyStore.getInstance("JKS");
+        keystore.load(trustStoreStream, "password".toCharArray());
+
+        final KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        keyManagerFactory.init(keystore, "password".toCharArray());
+        final TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        trustManagerFactory.init(keystore);
+
+        final SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+        sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
+
+        final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+        final X509TrustManager trustManager = (X509TrustManager) trustManagerFactory.getTrustManagers()[0];
+
+        return new OkHttpClient.Builder()
+                .sslSocketFactory(sslSocketFactory, trustManager)
+                .build();
     }
 }

@@ -200,7 +200,7 @@ public class DownloadCountryDetails {
     }
 
     final MyConnector mc = MyConnector.instance();
-    final DataSubmitter submitter = new HttpDataSubmitter();
+    final DataSubmitter submitter = HttpDataSubmitter.instance();
 
     /**
      * Retrieves all the teams in the country of id <code>countryId</code>.
