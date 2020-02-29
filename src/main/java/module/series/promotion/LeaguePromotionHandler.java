@@ -14,16 +14,15 @@ import java.util.List;
 public class LeaguePromotionHandler {
 
     static class DownloadDetails {
-
         int blockNumber;
         int blockNumberReady;
         int blockNumberInProgress;
-
     }
 
 
     private LeagueStatus leagueStatus;
     private DownloadDetails downloadDetails;
+    private boolean continueProcessing;
 
     /**
      * Promotion Manager is active only in weeks 14 and 15, and for the supported leagues.
@@ -39,40 +38,45 @@ public class LeaguePromotionHandler {
         return Arrays.asList(14, 15).contains(week) && supportedLeagues.contains(leagueId);
     }
 
-    public void processLeagueStatus() {
+    public void initLeagueStatus() {
         new SwingWorker<Void, Void>() {
 
             @Override
             protected Void doInBackground() {
-                getLeagueStatus();
+                fetchLeagueStatus();
                 return null;
             }
         }.execute();
     }
 
     public LeagueStatus getLeagueStatus() {
-
         if (leagueStatus == null) {
-            final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
-            int leagueId = basics.getLiga();
-
-            HttpDataSubmitter submitter = HttpDataSubmitter.instance();
-            submitter.getLeagueStatus(leagueId, s -> {
-                HOLogger.instance().info(LeaguePromotionHandler.class, "Status of league: " + leagueId + " : " + s);
-                Gson gson = new Gson();
-                JsonObject obj = gson.fromJson(s, JsonObject.class);
-                leagueStatus = LeagueStatus.valueOf(obj.get("status_desc").getAsString());
-
-                if (leagueStatus == LeagueStatus.NOT_AVAILABLE) {
-                    downloadDetails = new DownloadDetails();
-                    downloadDetails.blockNumber = obj.get("nbBlocks").getAsInt();
-                    downloadDetails.blockNumberReady = obj.get("nbBlocksReady").getAsInt();
-                    downloadDetails.blockNumberInProgress = obj.get("nbBlocksInProgress").getAsInt();
-                }
-
-                return null;
-            });
+            leagueStatus = fetchLeagueStatus();
         }
+
+        return leagueStatus;
+    }
+
+    private LeagueStatus fetchLeagueStatus() {
+        final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
+        int leagueId = basics.getLiga();
+
+        HttpDataSubmitter submitter = HttpDataSubmitter.instance();
+        submitter.getLeagueStatus(leagueId, s -> {
+            HOLogger.instance().info(LeaguePromotionHandler.class, "Status of league: " + leagueId + " : " + s);
+            Gson gson = new Gson();
+            JsonObject obj = gson.fromJson(s, JsonObject.class);
+            leagueStatus = LeagueStatus.valueOf(obj.get("status_desc").getAsString());
+
+            if (leagueStatus == LeagueStatus.NOT_AVAILABLE) {
+                downloadDetails = new DownloadDetails();
+                downloadDetails.blockNumber = obj.get("nbBlocks").getAsInt();
+                downloadDetails.blockNumberReady = obj.get("nbBlocksReady").getAsInt();
+                downloadDetails.blockNumberInProgress = obj.get("nbBlocksInProgress").getAsInt();
+            }
+
+            return null;
+        });
 
         return leagueStatus;
     }
@@ -82,14 +86,18 @@ public class LeaguePromotionHandler {
         final SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() {
-                BlockInfo blockInfo = lockBlock(basics.getLiga());
+                continueProcessing = (leagueStatus == LeagueStatus.NOT_AVAILABLE);
+                do {
+                    final BlockInfo blockInfo = lockBlock(basics.getLiga());
 
-                if (blockInfo != null) {
-                    DownloadCountryDetails downloadCountryDetails = new DownloadCountryDetails();
-                    downloadCountryDetails.processSeries(blockInfo);
-                }
+                    if (blockInfo != null) {
+                        DownloadCountryDetails downloadCountryDetails = new DownloadCountryDetails();
+                        downloadCountryDetails.processSeries(blockInfo);
+                    }
 
-                // TODO Check if other blocks need to be processed.
+                    LeagueStatus status = fetchLeagueStatus();
+                    continueProcessing = (status == LeagueStatus.NOT_AVAILABLE);
+                } while (continueProcessing);
 
                 return null;
             }

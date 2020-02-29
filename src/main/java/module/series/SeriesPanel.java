@@ -2,7 +2,6 @@
 package module.series;
 
 import core.db.DBManager;
-import core.db.User;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.panel.ImagePanel;
@@ -11,9 +10,6 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.Team;
-import core.model.misc.Basics;
-import module.series.promotion.DownloadCountryDetails;
 import module.series.promotion.LeaguePromotionHandler;
 import module.series.promotion.LeagueStatus;
 
@@ -59,7 +55,7 @@ public class SeriesPanel extends LazyImagePanel {
 	private void initPromotionHandler() {
 		promotionHandler = new LeaguePromotionHandler();
 		if (promotionHandler.isActive()) {
-			promotionHandler.processLeagueStatus();
+			promotionHandler.initLeagueStatus();
 
 			if (promotionHandler.getLeagueStatus() == LeagueStatus.AVAILABLE) {
 				// TODO Retrieve league details.
