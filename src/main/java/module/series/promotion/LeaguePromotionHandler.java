@@ -8,13 +8,12 @@ import core.model.misc.Basics;
 import core.util.HOLogger;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.List;
 
 public class LeaguePromotionHandler {
 
-    class DownloadDetails {
+    static class DownloadDetails {
 
         int blockNumber;
         int blockNumberReady;
@@ -78,18 +77,29 @@ public class LeaguePromotionHandler {
         return leagueStatus;
     }
 
-    public void downloadLeagueData(ActionEvent e) {
+    public void downloadLeagueData() {
         final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
         final SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() {
-                DownloadCountryDetails downloadCountryDetails = new DownloadCountryDetails();
-                downloadCountryDetails.getTeamsInCountry(basics.getLiga());
+                BlockInfo blockInfo = lockBlock(basics.getLiga());
+
+                if (blockInfo != null) {
+                    DownloadCountryDetails downloadCountryDetails = new DownloadCountryDetails();
+                    downloadCountryDetails.processSeries(blockInfo);
+                }
+
+                // TODO Check if other blocks need to be processed.
 
                 return null;
             }
         };
 
         worker.execute();
+    }
+
+    public BlockInfo lockBlock(int leagueId) {
+        HttpDataSubmitter submitter = HttpDataSubmitter.instance();
+        return submitter.lockBlock(leagueId);
     }
 }

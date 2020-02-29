@@ -3,6 +3,7 @@ package module.series.promotion;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import core.util.HOLogger;
 
 import okhttp3.*;
@@ -91,7 +92,7 @@ public class HttpDataSubmitter implements DataSubmitter {
     }
 
     @Override
-    public void submitData(String json) {
+    public void submitData(BlockInfo blockInfo, String json) {
         HOLogger.instance().info(HttpDataSubmitter.class, "Sending data to HO Server...");
 
         try {
@@ -100,7 +101,7 @@ public class HttpDataSubmitter implements DataSubmitter {
             RequestBody body = RequestBody.create(MediaType.parse("application/json"), json);
 
             Request request = new Request.Builder()
-                    .url(HOSERVER_BASEURL + "/push-data")
+                    .url(String.format(HOSERVER_BASEURL + "/league/%s/block/%s/push/", blockInfo.leagueId, blockInfo.blockId))
                     .post(body)
                     .build();
 
@@ -109,11 +110,57 @@ public class HttpDataSubmitter implements DataSubmitter {
 
             if (response.isSuccessful()) {
                 System.out.println("Got HTTP response with status " + response.code() + " " + response.message());
+            } else {
+                HOLogger.instance().error(HttpDataSubmitter.class, "Error submitting data to HO Server: " + response.body().string());
             }
 
         } catch (Exception e) {
             HOLogger.instance().error(HttpDataSubmitter.class, e.getMessage());
         }
+    }
+
+    public BlockInfo lockBlock(int leagueId) {
+        HOLogger.instance().info(HttpDataSubmitter.class, String.format("Lock block for league %s...", leagueId));
+
+        try {
+            final OkHttpClient client = initializeHttpsClient();
+
+            Request request = new Request.Builder()
+                    .url(String.format(HOSERVER_BASEURL + "/league/%s/next-block?accept-job=true", leagueId))
+                    .addHeader("Accept", "application/json")
+                    .build();
+
+            Response response = client.newCall(request).execute();
+
+            List<Integer> series = new ArrayList<>();
+            if (response.isSuccessful()) {
+                String body = response.body().string();
+
+                Gson gson = new Gson();
+                JsonObject obj = gson.fromJson(body, JsonObject.class);
+
+                String blockContent = obj.get("BlockContent").getAsString();
+
+                // FIXME Shouldn't need to parse content again.  Talk to @akasolace.
+                JsonArray array = gson.fromJson(blockContent, JsonArray.class);
+
+                for (JsonElement elt: array) {
+                    series.add(elt.getAsInt());
+                }
+
+                BlockInfo blockInfo = new BlockInfo();
+                blockInfo.blockId = obj.get("BlockID").getAsInt();
+                blockInfo.series = series;
+                blockInfo.leagueId = leagueId;
+
+                return blockInfo;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     private OkHttpClient initializeHttpsClient() throws Exception {

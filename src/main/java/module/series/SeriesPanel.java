@@ -2,6 +2,8 @@
 package module.series;
 
 import core.db.DBManager;
+import core.db.User;
+import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
@@ -228,12 +230,33 @@ public class SeriesPanel extends LazyImagePanel {
 		toolbarPanel.add(printButton);
 
 		if (promotionHandler.isActive()) {
-			JButton downloadLeagueButton = new JButton(ThemeManager.getIcon(HOIconName.DOWNLOAD_MATCH));
-			downloadLeagueButton.setSize(25, 25);
-			downloadLeagueButton.setLocation(290, 5);
-			downloadLeagueButton.setToolTipText("Download Country Data"); // FIXME l10n
-			downloadLeagueButton.addActionListener(promotionHandler::downloadLeagueData);
-			toolbarPanel.add(downloadLeagueButton);
+			// If League data not available, offer to download.
+			if (promotionHandler.getLeagueStatus() == LeagueStatus.NOT_AVAILABLE) {
+
+				//  TODO Create a separate panel.
+				JButton downloadLeagueButton = new JButton(ThemeManager.getIcon(HOIconName.DOWNLOAD_MATCH));
+				downloadLeagueButton.setSize(25, 25);
+				downloadLeagueButton.setLocation(290, 5);
+				downloadLeagueButton.setToolTipText("Download Country Data"); // FIXME l10n
+				downloadLeagueButton.addActionListener(e -> {
+					int choice = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
+							"Do you accept to download the data for your league?\n" +
+									"This is a lengthy operation."
+							, "League Data Download", // FIXME l10n
+							JOptionPane.OK_CANCEL_OPTION,
+							JOptionPane.QUESTION_MESSAGE);
+
+					if (choice == JOptionPane.OK_OPTION) {
+						promotionHandler.downloadLeagueData();
+					}
+				});
+				toolbarPanel.add(downloadLeagueButton);
+
+				JLabel infoLeagueData = new JLabel("Promotion League Data not available.  Click button to process for your league."); // FIXME l10n
+				infoLeagueData.setSize(400, 25);
+				infoLeagueData.setLocation(325, 5);
+				toolbarPanel.add(infoLeagueData);
+			}
 		}
 
 		toolbarPanel.setPreferredSize(new Dimension(240, 35));
