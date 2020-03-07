@@ -249,7 +249,7 @@ public class SeriesPanel extends LazyImagePanel {
 				toolbarPanel.add(downloadLeagueButton);
 
 				JLabel infoLeagueData = new JLabel("Promotion League Data not available.  Click button to process for your league."); // FIXME l10n
-				infoLeagueData.setSize(400, 25);
+				infoLeagueData.setSize(600, 25);
 				infoLeagueData.setLocation(325, 5);
 				toolbarPanel.add(infoLeagueData);
 			}

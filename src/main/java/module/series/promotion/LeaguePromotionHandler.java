@@ -11,6 +11,12 @@ import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Main class for the League Promotion/Demotion prediction tool.
+ *
+ * TODO Describe process here.
+ * Leagues are processed in blocks.
+ */
 public class LeaguePromotionHandler {
 
     static class DownloadDetails {
@@ -93,7 +99,7 @@ public class LeaguePromotionHandler {
                     if (blockInfo != null) {
                         DownloadCountryDetails downloadCountryDetails = new DownloadCountryDetails();
                         downloadCountryDetails.processSeries(blockInfo);
-                    }
+                    } // TODO Figure out how to handle different cases of locking.
 
                     LeagueStatus status = fetchLeagueStatus();
                     continueProcessing = (status == LeagueStatus.NOT_AVAILABLE);

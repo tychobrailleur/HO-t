@@ -80,9 +80,9 @@ public class DownloadCountryDetails {
 
     private void handleDuplicateRankings(CountryTeamInfo countryTeamInfo, Map<Integer, CountryTeamInfo.TeamRank> teamRankMap) {
         // Find ranks for which we have duplicate ranks.
-        List<CountryTeamInfo.TeamRank> duplicateRanks = countryTeamInfo.calculatedRank
+        List<CountryTeamInfo.TeamRank> duplicateRanks = countryTeamInfo.data
                 .stream()
-                .collect(Collectors.groupingBy(CountryTeamInfo.TeamRank::getCalculatedRank))
+                .collect(Collectors.groupingBy(CountryTeamInfo.TeamRank::getScore))
                 .entrySet()
                 .stream()
                 .filter(longListEntry -> longListEntry.getValue().size() > 1) // filter out ranks that appear once
@@ -93,7 +93,7 @@ public class DownloadCountryDetails {
                 .collect(Collectors.toList()); // merge all the lists of team ranks
 
         HOLogger.instance().info(DownloadCountryDetails.class, String.format("Found %d team with duplicate ranks.", duplicateRanks.size()));
-        countryTeamInfo.calculatedRank.clear();
+        countryTeamInfo.data.clear();
 
         ProcessAsynchronousTask<Integer> processAsynchronousTask = new ProcessAsynchronousTask<>();
 
@@ -107,14 +107,14 @@ public class DownloadCountryDetails {
 
             // Bots' rank is 0
             if (observedRank != 0) {
-                teamRank.setCalculatedRank(teamRank.getCalculatedRank() + (99_999 - observedRank));
+                teamRank.setScore(teamRank.getScore() + (99_999 - observedRank));
             }
             teamRankMap.put(val, teamRank);
         };
         processAsynchronousTask.execute(task);
 
-        countryTeamInfo.calculatedRank.addAll(new ArrayList<>(teamRankMap.values()));
-        countryTeamInfo.calculatedRank.sort(Comparator.comparingLong(o -> -o.calculatedRank));
+        countryTeamInfo.data.addAll(new ArrayList<>(teamRankMap.values()));
+        countryTeamInfo.data.sort(Comparator.comparingLong(o -> -o.Score));
     }
 
     public void processSeries(BlockInfo blockInfo) {
@@ -146,8 +146,8 @@ public class DownloadCountryDetails {
                         e -> new CountryTeamInfo.TeamRank(e.getValue().getTeamId(), e.getValue().rankingScore())));
 
         // sort ranks, it will be used to find ex-aequo teams.
-        countryTeamInfo.calculatedRank.addAll(new ArrayList<>(teamRankMap.values()));
-        countryTeamInfo.calculatedRank.sort(Comparator.comparingLong(o -> -o.calculatedRank));
+        countryTeamInfo.data.addAll(new ArrayList<>(teamRankMap.values()));
+        countryTeamInfo.data.sort(Comparator.comparingLong(o -> -o.Score));
 
         handleDuplicateRankings(countryTeamInfo, teamRankMap);
         createJson(blockInfo, countryTeamInfo);
@@ -156,7 +156,7 @@ public class DownloadCountryDetails {
     private void createJson(BlockInfo blockInfo, CountryTeamInfo countryTeamInfo) {
         Gson gson = new Gson();
         String json = gson.toJson(countryTeamInfo);
-        HOLogger.instance().debug(DownloadCountryDetails.class, json);
+        HOLogger.instance().info(DownloadCountryDetails.class, json);
         submitter.submitData(blockInfo, json);
     }
 }

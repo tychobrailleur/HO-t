@@ -10,29 +10,29 @@ public class CountryTeamInfo {
 
     static class TeamRank {
 
-        public TeamRank(int teamId, long calculatedRank) {
+        public TeamRank(int teamId, long score) {
             this.teamId = teamId;
-            this.calculatedRank = calculatedRank;
+            this.Score = score;
         }
 
         int teamId;
-        long calculatedRank;
+        long Score; // Uppercase “S” because this is what the submitted JSON expects.
 
         public int getTeamId() {
             return teamId;
         }
 
-        public long getCalculatedRank() {
-            return calculatedRank;
+        public long getScore() {
+            return Score;
         }
 
-        public void setCalculatedRank(long calculatedRank) {
-            this.calculatedRank = calculatedRank;
+        public void setScore(long score) {
+            this.Score = score;
         }
     }
 
     int leagueId;
     int season;
     String username;
-    List<TeamRank> calculatedRank = new ArrayList<>();
+    List<TeamRank> data = new ArrayList<>();
 }

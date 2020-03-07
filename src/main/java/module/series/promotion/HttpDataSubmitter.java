@@ -13,7 +13,6 @@ import java.io.InputStream;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
 
@@ -38,8 +37,6 @@ public class HttpDataSubmitter implements DataSubmitter {
 
     public List<Integer> fetchSupportedLeagues() {
         try {
-
-
             final OkHttpClient client = initializeHttpsClient();
 
             Request request = new Request.Builder()
@@ -64,13 +61,16 @@ public class HttpDataSubmitter implements DataSubmitter {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            HOLogger.instance().error(
+                    HttpDataSubmitter.class,
+                    "Error fetching data for league supported: " + e.getMessage()
+            );
         }
 
         return Collections.emptyList();
     }
 
-
+    @Override
     public void getLeagueStatus(int leagueId, Function<String, Void> callback) {
 
         try {
@@ -87,7 +87,10 @@ public class HttpDataSubmitter implements DataSubmitter {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            HOLogger.instance().error(
+                    HttpDataSubmitter.class,
+                    "Error getting data for league status: " + e.getMessage()
+            );
         }
     }
 
@@ -97,8 +100,7 @@ public class HttpDataSubmitter implements DataSubmitter {
 
         try {
             final OkHttpClient client = initializeHttpsClient();
-
-            RequestBody body = RequestBody.create(MediaType.parse("application/json"), json);
+            final RequestBody body = RequestBody.create(json, MediaType.parse("application/json"));
 
             Request request = new Request.Builder()
                     .url(String.format(HOSERVER_BASEURL + "/league/%s/block/%s/push/", blockInfo.leagueId, blockInfo.blockId))
@@ -119,6 +121,7 @@ public class HttpDataSubmitter implements DataSubmitter {
         }
     }
 
+    @Override
     public BlockInfo lockBlock(int leagueId) {
         HOLogger.instance().info(HttpDataSubmitter.class, String.format("Lock block for league %s...", leagueId));
 
@@ -139,25 +142,41 @@ public class HttpDataSubmitter implements DataSubmitter {
                 Gson gson = new Gson();
                 JsonObject obj = gson.fromJson(body, JsonObject.class);
 
-                String blockContent = obj.get("BlockContent").getAsString();
+                HOLogger.instance().debug(HttpDataSubmitter.class, obj.toString());
 
-                // FIXME Shouldn't need to parse content again.  Talk to @akasolace.
-                JsonArray array = gson.fromJson(blockContent, JsonArray.class);
+                /*
 
-                for (JsonElement elt: array) {
-                    series.add(elt.getAsInt());
+                201 => "No more data required for league {leagueID}"
+                202 => "Currently, league {leagueID} has no block available for treatment"
+                200 => "Job awarded for league {leagueID} / Block ID {blockID}", "BlockID":
+                203 => Job NOT awarded for league {leagueID} / Block ID {blockID}", "BlockID"
+
+                 */
+                if (obj.get("HTTP Status Code").getAsInt() == 200) {
+                    JsonArray array = obj.get("BlockContent").getAsJsonArray();
+
+                    for (JsonElement elt : array) {
+                        series.add(elt.getAsInt());
+                    }
+
+                    BlockInfo blockInfo = new BlockInfo();
+                    blockInfo.blockId = obj.get("BlockID").getAsInt();
+                    blockInfo.series = series;
+                    blockInfo.leagueId = leagueId;
+
+                    HOLogger.instance().info(HttpDataSubmitter.class, "Block locked: " + blockInfo.blockId);
+
+                    return blockInfo;
+                } else {
+                    return null;
                 }
-
-                BlockInfo blockInfo = new BlockInfo();
-                blockInfo.blockId = obj.get("BlockID").getAsInt();
-                blockInfo.series = series;
-                blockInfo.leagueId = leagueId;
-
-                return blockInfo;
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            HOLogger.instance().error(
+                    HttpDataSubmitter.class,
+                    "Error locking block: " + e.getMessage()
+            );
         }
 
         return null;
