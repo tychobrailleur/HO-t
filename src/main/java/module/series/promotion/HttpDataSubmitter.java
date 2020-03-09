@@ -100,10 +100,12 @@ public class HttpDataSubmitter implements DataSubmitter {
 
         try {
             final OkHttpClient client = initializeHttpsClient();
-            final RequestBody body = RequestBody.create(json, MediaType.parse("application/json"));
+            // Send bytes (rather than String) to avoid charset being appended to Content-Type
+            // which messes up with server.
+            final RequestBody body = RequestBody.create(json.getBytes(), MediaType.parse("application/json"));
 
             Request request = new Request.Builder()
-                    .url(String.format(HOSERVER_BASEURL + "/league/%s/block/%s/push/", blockInfo.leagueId, blockInfo.blockId))
+                    .url(String.format(HOSERVER_BASEURL + "/league/%s/block/%s/push", blockInfo.leagueId, blockInfo.blockId))
                     .post(body)
                     .build();
 
@@ -113,6 +115,7 @@ public class HttpDataSubmitter implements DataSubmitter {
             if (response.isSuccessful()) {
                 System.out.println("Got HTTP response with status " + response.code() + " " + response.message());
             } else {
+                HOLogger.instance().error(HttpDataSubmitter.class, "Timestamp: " + System.currentTimeMillis());
                 HOLogger.instance().error(HttpDataSubmitter.class, "Error submitting data to HO Server: " + response.body().string());
             }
 
@@ -199,7 +202,11 @@ public class HttpDataSubmitter implements DataSubmitter {
         final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
         final X509TrustManager trustManager = (X509TrustManager) trustManagerFactory.getTrustManagers()[0];
 
+        int proxyPort = 3000;
+        String proxyHost = "localhost";
+
         return new OkHttpClient.Builder()
+ //               .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort)))
                 .sslSocketFactory(sslSocketFactory, trustManager)
                 .build();
     }
