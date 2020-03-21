@@ -10,8 +10,10 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.misc.Basics;
 import module.series.promotion.LeaguePromotionHandler;
 import module.series.promotion.LeagueStatus;
+import module.series.promotion.PromotionInfoPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -41,6 +43,8 @@ public class SeriesPanel extends LazyImagePanel {
 	private MatchDayPanel[] matchDayPanels;
 	private SeriesHistoryPanel seriesHistoryPanel;
 	private Model model;
+
+	private PromotionInfoPanel promotionInfoPanel;
 	private LeaguePromotionHandler promotionHandler;
 
 	@Override
@@ -54,11 +58,25 @@ public class SeriesPanel extends LazyImagePanel {
 
 	private void initPromotionHandler() {
 		promotionHandler = new LeaguePromotionHandler();
+		promotionInfoPanel = new PromotionInfoPanel(promotionHandler);
+		final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
+
 		if (promotionHandler.isActive()) {
 			promotionHandler.initLeagueStatus();
 
 			if (promotionHandler.getLeagueStatus() == LeagueStatus.AVAILABLE) {
-				// TODO Retrieve league details.
+				String promotionDetails = promotionHandler.getPromotionStatus(basics.getLiga(), basics.getTeamId());
+				JOptionPane.showConfirmDialog(this, promotionDetails);
+			} else {
+				promotionHandler.addChangeListener(e -> {
+					Object source = e.getSource();
+					if (source == promotionHandler) {
+						if (promotionHandler.getLeagueStatus() == LeagueStatus.AVAILABLE) {
+							String promotionDetails = promotionHandler.getPromotionStatus(basics.getLiga(), basics.getTeamId());
+							JOptionPane.showConfirmDialog(this, promotionDetails);
+						}
+					}
+				});
 			}
 		}
 	}
@@ -229,29 +247,10 @@ public class SeriesPanel extends LazyImagePanel {
 			// If League data not available, offer to download.
 			if (promotionHandler.getLeagueStatus() == LeagueStatus.NOT_AVAILABLE) {
 
-				//  TODO Create a separate panel.
-				JButton downloadLeagueButton = new JButton(ThemeManager.getIcon(HOIconName.DOWNLOAD_MATCH));
-				downloadLeagueButton.setSize(25, 25);
-				downloadLeagueButton.setLocation(290, 5);
-				downloadLeagueButton.setToolTipText("Download Country Data"); // FIXME l10n
-				downloadLeagueButton.addActionListener(e -> {
-					int choice = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
-							"Do you accept to download the data for your league?\n" +
-									"This is a lengthy operation."
-							, "League Data Download", // FIXME l10n
-							JOptionPane.OK_CANCEL_OPTION,
-							JOptionPane.QUESTION_MESSAGE);
-
-					if (choice == JOptionPane.OK_OPTION) {
-						promotionHandler.downloadLeagueData();
-					}
-				});
-				toolbarPanel.add(downloadLeagueButton);
-
-				JLabel infoLeagueData = new JLabel("Promotion League Data not available.  Click button to process for your league."); // FIXME l10n
-				infoLeagueData.setSize(600, 25);
-				infoLeagueData.setLocation(325, 5);
-				toolbarPanel.add(infoLeagueData);
+				promotionInfoPanel.initComponents();
+				promotionInfoPanel.setSize(500, 25);
+				promotionInfoPanel.setLocation(290, 0);
+				toolbarPanel.add(promotionInfoPanel);
 			}
 		}
 

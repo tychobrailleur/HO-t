@@ -9,7 +9,11 @@ import core.util.HOLogger;
 import okhttp3.*;
 
 import javax.net.ssl.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -119,6 +123,8 @@ public class HttpDataSubmitter implements DataSubmitter {
                 HOLogger.instance().error(HttpDataSubmitter.class, "Error submitting data to HO Server: " + response.body().string());
             }
 
+            response.close();
+
         } catch (Exception e) {
             HOLogger.instance().error(HttpDataSubmitter.class, e.getMessage());
         }
@@ -185,6 +191,32 @@ public class HttpDataSubmitter implements DataSubmitter {
         return null;
     }
 
+    public String getPromotionStatus(int leagueId, int teamId) {
+
+        try {
+            final OkHttpClient client = initializeHttpsClient();
+
+            Request request = new Request.Builder()
+                    .url(String.format(HOSERVER_BASEURL + "/league/%s/team/%s/pd-status", leagueId, teamId))
+                    .addHeader("Accept", "application/json")
+                    .build();
+
+            Response response = client.newCall(request).execute();
+
+            System.out.println(response.body().string());
+
+            return response.body().string();
+
+        } catch (Exception e) {
+            HOLogger.instance().error(
+                    HttpDataSubmitter.class,
+                    "Error retrieving promotion status: " + e.getMessage()
+            );
+        }
+
+        return null;
+    }
+
     private OkHttpClient initializeHttpsClient() throws Exception {
         final InputStream trustStoreStream = this.getClass().getClassLoader().getResourceAsStream("keystore.jks");
 
@@ -206,7 +238,7 @@ public class HttpDataSubmitter implements DataSubmitter {
         String proxyHost = "localhost";
 
         return new OkHttpClient.Builder()
- //               .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort)))
+                .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort)))
                 .sslSocketFactory(sslSocketFactory, trustManager)
                 .build();
     }

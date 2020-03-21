@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class BlockInfo {
 
+    int status;
     int leagueId;
     List<Integer> series;
     int blockId;

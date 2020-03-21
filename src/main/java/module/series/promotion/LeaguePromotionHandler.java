@@ -3,11 +3,14 @@ package module.series.promotion;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import core.db.DBManager;
+import core.gui.event.ChangeEventHandler;
 import core.model.HOVerwaltung;
 import core.model.misc.Basics;
 import core.util.HOLogger;
 
 import javax.swing.*;
+import javax.swing.event.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,7 +20,7 @@ import java.util.List;
  * TODO Describe process here.
  * Leagues are processed in blocks.
  */
-public class LeaguePromotionHandler {
+public class LeaguePromotionHandler extends ChangeEventHandler {
 
     static class DownloadDetails {
         int blockNumber;
@@ -29,6 +32,7 @@ public class LeaguePromotionHandler {
     private LeagueStatus leagueStatus;
     private DownloadDetails downloadDetails;
     private boolean continueProcessing;
+
 
     /**
      * Promotion Manager is active only in weeks 14 and 15, and for the supported leagues.
@@ -105,6 +109,8 @@ public class LeaguePromotionHandler {
                     continueProcessing = (status == LeagueStatus.NOT_AVAILABLE);
                 } while (continueProcessing);
 
+                fireChangeEvent(new ChangeEvent(LeaguePromotionHandler.this));
+
                 return null;
             }
         };
@@ -113,7 +119,35 @@ public class LeaguePromotionHandler {
     }
 
     public BlockInfo lockBlock(int leagueId) {
-        HttpDataSubmitter submitter = HttpDataSubmitter.instance();
+        DataSubmitter submitter = HttpDataSubmitter.instance();
         return submitter.lockBlock(leagueId);
+    }
+
+    public String getPromotionStatus(int leagueId, int teamId) {
+        DataSubmitter submitter = HttpDataSubmitter.instance();
+
+        /*
+
+        res = {"status_code": pdStatus.value, "status_desc": pdStatus.name, "oppTeamIDs": oppTeamIDs}
+
+Pour le status:
+
+class PM(Enum):
+Undefined = -1
+DD = 0
+MD = 1
+S = 2
+MP = 3
+DP = 4
+
+DD = direct demotion
+MD = Demotion Match barrage
+S = no change
+MP = Promotion Match barrage
+DP = Direct Promotion
+
+         */
+
+        return submitter.getPromotionStatus(leagueId, teamId);
     }
 }

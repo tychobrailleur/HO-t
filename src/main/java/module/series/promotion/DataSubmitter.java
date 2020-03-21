@@ -38,4 +38,13 @@ public interface DataSubmitter {
      * @param json JSON containing the data being submitted for the block.
      */
     void submitData(BlockInfo blockInfo, String json);
+
+    /**
+     * Retrieves the promotion/demotion details to a team with id <code>teamId</code> in league <code>leagueId</code>.
+     *
+     * @param leagueId League ID of the team.
+     * @param teamId Team Id of the team.
+     * @return
+     */
+    String getPromotionStatus(int leagueId, int teamId);
 }
