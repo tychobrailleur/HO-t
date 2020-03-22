@@ -1,12 +1,10 @@
 package module.series;
 
-import java.awt.event.KeyEvent;
-
 import core.model.HOVerwaltung;
 import core.module.DefaultModule;
 
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
+import javax.swing.*;
+import java.awt.event.*;
 
 
 public final class SeriesModule extends DefaultModule {

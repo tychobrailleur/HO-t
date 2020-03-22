@@ -9,8 +9,11 @@ import core.net.MyConnector;
 import core.util.HOLogger;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -42,18 +45,6 @@ import java.util.stream.Collectors;
  * </ul>
  */
 public class DownloadCountryDetails {
-
-    static class CountryStructure {
-        String name;
-        int id;
-        int[] leagueStructure;
-
-        CountryStructure(String name, int id, int[] leagueStructure) {
-            this.name = name;
-            this.id = id;
-            this.leagueStructure = leagueStructure;
-        }
-    }
 
     final MyConnector mc = MyConnector.instance();
     final DataSubmitter submitter = HttpDataSubmitter.instance();

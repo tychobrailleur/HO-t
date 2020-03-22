@@ -1,6 +1,7 @@
 package module.series.promotion;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import core.db.DBManager;
 import core.gui.event.ChangeEventHandler;
@@ -123,31 +124,23 @@ public class LeaguePromotionHandler extends ChangeEventHandler {
         return submitter.lockBlock(leagueId);
     }
 
-    public String getPromotionStatus(int leagueId, int teamId) {
+    public LeaguePromotionInfo getPromotionStatus(int leagueId, int teamId) {
         DataSubmitter submitter = HttpDataSubmitter.instance();
 
-        /*
+        String promotionInfo = submitter.getPromotionStatus(leagueId, teamId);
 
-        res = {"status_code": pdStatus.value, "status_desc": pdStatus.name, "oppTeamIDs": oppTeamIDs}
+        final Gson gson = new Gson();
+        final JsonObject obj = gson.fromJson(promotionInfo, JsonObject.class);
 
-Pour le status:
+        LeaguePromotionInfo leaguePromotionInfo = new LeaguePromotionInfo();
+        leaguePromotionInfo.status = LeaguePromotionStatus.codeToStatus(obj.get("status_desc").getAsString());
 
-class PM(Enum):
-Undefined = -1
-DD = 0
-MD = 1
-S = 2
-MP = 3
-DP = 4
+        List<Integer> teams = new ArrayList<>();
+        for (JsonElement o: obj.get("oppTeamIDs").getAsJsonArray()) {
+            teams.add(o.getAsInt());
+        }
+        leaguePromotionInfo.teams = teams;
 
-DD = direct demotion
-MD = Demotion Match barrage
-S = no change
-MP = Promotion Match barrage
-DP = Direct Promotion
-
-         */
-
-        return submitter.getPromotionStatus(leagueId, teamId);
+        return leaguePromotionInfo;
     }
 }

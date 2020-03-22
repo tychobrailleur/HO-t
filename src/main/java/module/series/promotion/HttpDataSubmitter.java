@@ -5,12 +5,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import core.util.HOLogger;
-
 import okhttp3.*;
 
 import javax.net.ssl.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -191,21 +188,23 @@ public class HttpDataSubmitter implements DataSubmitter {
         return null;
     }
 
+    @Override
     public String getPromotionStatus(int leagueId, int teamId) {
 
         try {
             final OkHttpClient client = initializeHttpsClient();
 
+            final String requestUrl = String.format(HOSERVER_BASEURL + "/league/%s/team/%s/pd-status", leagueId, teamId);
             Request request = new Request.Builder()
-                    .url(String.format(HOSERVER_BASEURL + "/league/%s/team/%s/pd-status", leagueId, teamId))
+                    .url(requestUrl)
                     .addHeader("Accept", "application/json")
                     .build();
 
             Response response = client.newCall(request).execute();
+            String promotionStatus = response.body().string();
+            System.out.println(promotionStatus);
 
-            System.out.println(response.body().string());
-
-            return response.body().string();
+            return promotionStatus;
 
         } catch (Exception e) {
             HOLogger.instance().error(

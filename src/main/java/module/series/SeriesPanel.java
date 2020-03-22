@@ -2,7 +2,6 @@
 package module.series;
 
 import core.db.DBManager;
-import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
@@ -11,24 +10,14 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.misc.Basics;
-import module.series.promotion.LeaguePromotionHandler;
-import module.series.promotion.LeagueStatus;
-import module.series.promotion.PromotionInfoPanel;
-
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.util.Calendar;
+import module.series.promotion.*;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.text.DateFormat;
+import java.util.Calendar;
 
 /**
  * Panel, das die Ligatabelle sowie das letzte und das nächste Spiel enthält
@@ -65,15 +54,15 @@ public class SeriesPanel extends LazyImagePanel {
 			promotionHandler.initLeagueStatus();
 
 			if (promotionHandler.getLeagueStatus() == LeagueStatus.AVAILABLE) {
-				String promotionDetails = promotionHandler.getPromotionStatus(basics.getLiga(), basics.getTeamId());
-				JOptionPane.showConfirmDialog(this, promotionDetails);
+				LeaguePromotionInfo promotionDetails = promotionHandler.getPromotionStatus(basics.getLiga(), basics.getTeamId());
+
 			} else {
 				promotionHandler.addChangeListener(e -> {
 					Object source = e.getSource();
 					if (source == promotionHandler) {
 						if (promotionHandler.getLeagueStatus() == LeagueStatus.AVAILABLE) {
-							String promotionDetails = promotionHandler.getPromotionStatus(basics.getLiga(), basics.getTeamId());
-							JOptionPane.showConfirmDialog(this, promotionDetails);
+							LeaguePromotionInfo promotionDetails = promotionHandler.getPromotionStatus(basics.getLiga(), basics.getTeamId());
+
 						}
 					}
 				});
@@ -248,9 +237,17 @@ public class SeriesPanel extends LazyImagePanel {
 			if (promotionHandler.getLeagueStatus() == LeagueStatus.NOT_AVAILABLE) {
 
 				promotionInfoPanel.initComponents();
-				promotionInfoPanel.setSize(500, 25);
+				promotionInfoPanel.setSize(500, 40);
 				promotionInfoPanel.setLocation(290, 0);
 				toolbarPanel.add(promotionInfoPanel);
+			} else {
+				final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
+				final LeaguePromotionInfo promotionStatus = promotionHandler.getPromotionStatus(basics.getLiga(), basics.getTeamId());
+
+				JLabel infoLeagueData = new JLabel(promotionStatus.status.toString()); // FIXME l10n
+				infoLeagueData.setSize(400, 25);
+				infoLeagueData.setLocation(290, 5);
+				toolbarPanel.add(infoLeagueData);
 			}
 		}
 
