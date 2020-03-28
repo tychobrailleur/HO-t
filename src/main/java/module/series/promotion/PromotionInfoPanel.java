@@ -45,7 +45,7 @@ public class PromotionInfoPanel extends JPanel {
                         if (source == promotionHandler) {
                             if (promotionHandler.getLeagueStatus() == LeagueStatus.AVAILABLE) {
                                 final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
-                                final LeaguePromotionInfo promotionStatus = promotionHandler.getPromotionStatus(basics.getLiga(), 281512/*basics.getTeamId()*/);
+                                final LeaguePromotionInfo promotionStatus = promotionHandler.getPromotionStatus(basics.getLiga(), basics.getTeamId());
 
                                 createPromotionInfoLabel(promotionStatus);
                             }
@@ -53,7 +53,7 @@ public class PromotionInfoPanel extends JPanel {
                     });
                 } else {
                     final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
-                    final LeaguePromotionInfo promotionStatus = promotionHandler.getPromotionStatus(basics.getLiga(), 281512/*basics.getTeamId()*/);
+                    final LeaguePromotionInfo promotionStatus = promotionHandler.getPromotionStatus(basics.getLiga(), basics.getTeamId());
 
                     createPromotionInfoLabel(promotionStatus);
                 }
