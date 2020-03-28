@@ -69,6 +69,21 @@ public class DownloadCountryDetails {
         return -1;
     }
 
+    public String getTeamSeries(int teamId) {
+        HOLogger.instance().info(DownloadCountryDetails.class, String.format("Retrieving Team details for team %d.", teamId));
+
+        try {
+            String details = mc.getTeamdetails(teamId);
+            Map<String, String> teamInfo = XMLTeamDetailsParser.parseTeamdetailsFromString(details, teamId);
+
+            return teamInfo.getOrDefault("LeagueLevelUnitName", "");
+        } catch (IOException e) {
+            HOLogger.instance().log(DownloadCountryDetails.class, e);
+        }
+
+        return "";
+    }
+
     private void handleDuplicateRankings(CountryTeamInfo countryTeamInfo, Map<Integer, CountryTeamInfo.TeamRank> teamRankMap) {
         // Find ranks for which we have duplicate ranks.
         List<CountryTeamInfo.TeamRank> duplicateRanks = countryTeamInfo.data

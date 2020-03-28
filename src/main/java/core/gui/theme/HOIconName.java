@@ -197,5 +197,7 @@ public interface HOIconName {
 
 	String RATING_GRAPH = "rating-graph";
 
+	String SPINNER = "spinner";
+
 	String UNKOWN = "unknown";
 }

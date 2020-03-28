@@ -237,7 +237,7 @@ public class HttpDataSubmitter implements DataSubmitter {
         String proxyHost = "localhost";
 
         return new OkHttpClient.Builder()
-                .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort)))
+         //       .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort)))
                 .sslSocketFactory(sslSocketFactory, trustManager)
                 .build();
     }

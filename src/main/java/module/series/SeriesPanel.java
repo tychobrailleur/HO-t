@@ -9,7 +9,6 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.misc.Basics;
 import module.series.promotion.*;
 
 import javax.swing.*;
@@ -48,26 +47,6 @@ public class SeriesPanel extends LazyImagePanel {
 	private void initPromotionHandler() {
 		promotionHandler = new LeaguePromotionHandler();
 		promotionInfoPanel = new PromotionInfoPanel(promotionHandler);
-		final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
-
-		if (promotionHandler.isActive()) {
-			promotionHandler.initLeagueStatus();
-
-			if (promotionHandler.getLeagueStatus() == LeagueStatus.AVAILABLE) {
-				LeaguePromotionInfo promotionDetails = promotionHandler.getPromotionStatus(basics.getLiga(), basics.getTeamId());
-
-			} else {
-				promotionHandler.addChangeListener(e -> {
-					Object source = e.getSource();
-					if (source == promotionHandler) {
-						if (promotionHandler.getLeagueStatus() == LeagueStatus.AVAILABLE) {
-							LeaguePromotionInfo promotionDetails = promotionHandler.getPromotionStatus(basics.getLiga(), basics.getTeamId());
-
-						}
-					}
-				});
-			}
-		}
 	}
 
 	@Override
@@ -232,24 +211,9 @@ public class SeriesPanel extends LazyImagePanel {
 		printButton.setLocation(255, 5);
 		toolbarPanel.add(printButton);
 
-		if (promotionHandler.isActive()) {
-			// If League data not available, offer to download.
-			if (promotionHandler.getLeagueStatus() == LeagueStatus.NOT_AVAILABLE) {
-
-				promotionInfoPanel.initComponents();
-				promotionInfoPanel.setSize(500, 40);
-				promotionInfoPanel.setLocation(290, 0);
-				toolbarPanel.add(promotionInfoPanel);
-			} else {
-				final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
-				final LeaguePromotionInfo promotionStatus = promotionHandler.getPromotionStatus(basics.getLiga(), basics.getTeamId());
-
-				JLabel infoLeagueData = new JLabel(promotionStatus.status.toString()); // FIXME l10n
-				infoLeagueData.setSize(400, 25);
-				infoLeagueData.setLocation(290, 5);
-				toolbarPanel.add(infoLeagueData);
-			}
-		}
+		promotionInfoPanel.setSize(500, 40);
+		promotionInfoPanel.setLocation(290, 0);
+		toolbarPanel.add(promotionInfoPanel);
 
 		toolbarPanel.setPreferredSize(new Dimension(240, 35));
 		panel.add(toolbarPanel, BorderLayout.NORTH);

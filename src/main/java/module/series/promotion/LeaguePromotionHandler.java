@@ -92,14 +92,13 @@ public class LeaguePromotionHandler extends ChangeEventHandler {
         return leagueStatus;
     }
 
-    public void downloadLeagueData() {
-        final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
+    public void downloadLeagueData(int leagueId) {
         final SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() {
                 continueProcessing = (leagueStatus == LeagueStatus.NOT_AVAILABLE);
                 do {
-                    final BlockInfo blockInfo = lockBlock(basics.getLiga());
+                    final BlockInfo blockInfo = lockBlock(leagueId);
 
                     if (blockInfo != null) {
                         DownloadCountryDetails downloadCountryDetails = new DownloadCountryDetails();
