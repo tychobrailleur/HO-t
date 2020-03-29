@@ -9,10 +9,7 @@ import core.net.MyConnector;
 import core.util.HOLogger;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -22,7 +19,17 @@ import java.util.stream.Collectors;
  *
  * <p>The ranking for a team is calculated as follows:</p>
  *
- * ...
+ * <ul>
+ *     <li>The score is a 15-digit integer; the higher the score, the better the ranking.</li>
+ *     <li>Digit 1: 10 - Series Level</li>
+ *     <li>Digit 2: 8 - Position in the Series</li>
+ *     <li>Digits 3-4: Number of points in the Series, between 0 and 42</li>
+ *     <li>Digits 5-6-7: 500 + Goal Difference</li>
+ *     <li>Digits 8-9-10: 500 + Goals for</li>
+ *     <li>Digits 11-12-13-14-15: Initialized at 00000.  If no team has duplicated score, then we are done.
+ *     Otherwise for the teams with duplicated score calculate 99,999 - Visible Rank, with Visible Rank = 99,999
+ *     if the team is a bot.</li>
+ * </ul>
  *
  * <p>When a user wants to check what league he or she will be promoted/demoted to the following season,
  * HO checks whether the ranking calculation has already been done for his/her country.  If it has not been
@@ -37,12 +44,6 @@ import java.util.stream.Collectors;
  *
  * <p>Once the data for a country is available, the data request to the HO server will return the pre-calculated
  * info without the need for downloading more data from HT.</p>
- *
- * <p>TODO Solve the following problems:
- * <ul>
- *     <li>How to secure the endpoint where country data is submitted?</li>
- *     <li>How to make sure the data submitted by the user is not garbage?</li>
- * </ul>
  */
 public class DownloadCountryDetails {
 
@@ -55,33 +56,21 @@ public class DownloadCountryDetails {
     }
 
     private int getTeamRank(int teamId) {
-        HOLogger.instance().info(DownloadCountryDetails.class, String.format("Retrieving Team details for team %d.", teamId));
-
-        try {
-            String details = mc.getTeamdetails(teamId);
-            Map<String, String> teamInfo = XMLTeamDetailsParser.parseTeamdetailsFromString(details, teamId);
-
-            return Integer.parseInt(teamInfo.getOrDefault("TeamRank", "-1"));
-        } catch (IOException e) {
-            HOLogger.instance().log(DownloadCountryDetails.class, e);
-        }
-
-        return -1;
+        Map<String, String> teamInfo = getTeamSeries(teamId);
+        return Integer.parseInt(teamInfo.getOrDefault("TeamRank", "-1"));
     }
 
-    public String getTeamSeries(int teamId) {
+    public Map<String, String> getTeamSeries(int teamId) {
         HOLogger.instance().info(DownloadCountryDetails.class, String.format("Retrieving Team details for team %d.", teamId));
 
         try {
             String details = mc.getTeamdetails(teamId);
-            Map<String, String> teamInfo = XMLTeamDetailsParser.parseTeamdetailsFromString(details, teamId);
-
-            return teamInfo.getOrDefault("LeagueLevelUnitName", "");
+            return XMLTeamDetailsParser.parseTeamdetailsFromString(details, teamId);
         } catch (IOException e) {
             HOLogger.instance().log(DownloadCountryDetails.class, e);
         }
 
-        return "";
+        return Collections.EMPTY_MAP;
     }
 
     private void handleDuplicateRankings(CountryTeamInfo countryTeamInfo, Map<Integer, CountryTeamInfo.TeamRank> teamRankMap) {
@@ -109,13 +98,20 @@ public class DownloadCountryDetails {
 
         ProcessAsynchronousTask.ProcessTask<Integer> task = (val) -> {
             int observedRank = getTeamRank(val);
-            CountryTeamInfo.TeamRank teamRank = teamRankMap.get(val);
 
-            // Bots' rank is 0
-            if (observedRank != 0) {
-                teamRank.setScore(teamRank.getScore() + (99_999 - observedRank));
+            // Re-enqueue if error, unless error count has become too high.
+            if (observedRank < 0 && processAsynchronousTask.getErrorCount() < 100) {
+                processAsynchronousTask.incErrorCount();
+                processAsynchronousTask.addToQueue(val);
+            } else {
+                CountryTeamInfo.TeamRank teamRank = teamRankMap.get(val);
+
+                // Bots' rank is 0
+                if (observedRank != 0) {
+                    teamRank.setScore(teamRank.getScore() + (99_999 - observedRank));
+                }
+                teamRankMap.put(val, teamRank);
             }
-            teamRankMap.put(val, teamRank);
         };
         processAsynchronousTask.execute(task);
 
@@ -138,14 +134,16 @@ public class DownloadCountryDetails {
             processAsynchronousTask.addToQueue(seriesId);
         }
 
+        // Get the teams in each series queued up
         Map<String, TeamStats> teamsInfo = new ConcurrentHashMap<>();
         ProcessAsynchronousTask.ProcessTask<Integer> task = (val) -> {
             Map<String, TeamStats> teamsInfoInSeries = getTeamsInfoInSeries(val);
-            System.out.println(teamsInfoInSeries);
+            HOLogger.instance().info(HttpDataSubmitter.class, teamsInfoInSeries);
             teamsInfo.putAll(teamsInfoInSeries);
         };
         processAsynchronousTask.execute(task);
 
+        // For each team, compute the ranking
         Map<Integer, CountryTeamInfo.TeamRank> teamRankMap = teamsInfo.entrySet()
                 .stream()
                 .collect(Collectors.toMap(e -> e.getValue().getTeamId(),

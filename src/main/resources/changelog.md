@@ -1,6 +1,10 @@
 *Please visit the HO! forum in the CHPP section of Hattrick if you have any questions!
 If you find a bug, please open an issue on [GitHub](https://github.com/akasolace/HO/issues)*
 
+# Changelist HO! 3.0
+
+## League Details
+ - Promotion / Demotion status displayed on week 14 and 15 of season.
 
 # Changelist HO! 2.1
 

@@ -3,6 +3,14 @@ title: HO release notes
 layout: page
 ---
 
+Changelist HO! 3.0
+====================
+
+## League Details
+ - Promotion / Demotion status displayed on week 14 and 15 of season.
+
+
+
 Changelist HO! 2.1
 ====================
 

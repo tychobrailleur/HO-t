@@ -13,6 +13,7 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -20,7 +21,6 @@ import java.util.stream.Collectors;
  */
 public class PromotionInfoPanel extends JPanel {
 
-    private boolean active = false;
     private final LeaguePromotionHandler promotionHandler;
     private final HOVerwaltung verwaltung = HOVerwaltung.instance();
 
@@ -35,26 +35,27 @@ public class PromotionInfoPanel extends JPanel {
         setPreferredSize(new Dimension(500, 40));
 
         SwingUtilities.invokeLater(() -> {
-            active = promotionHandler.isActive();
+
+            final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
+            int teamId = basics.getTeamId();
+            int seriesId = basics.getLiga();
+
+            boolean active = promotionHandler.isActive(seriesId);
 
             if (active) {
                 if (promotionHandler.getLeagueStatus() == LeagueStatus.NOT_AVAILABLE) {
                     initComponents();
                     promotionHandler.addChangeListener(e -> {
-                        Object source = e.getSource();
+                        final Object source = e.getSource();
                         if (source == promotionHandler) {
                             if (promotionHandler.getLeagueStatus() == LeagueStatus.AVAILABLE) {
-                                final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
-                                final LeaguePromotionInfo promotionStatus = promotionHandler.getPromotionStatus(basics.getLiga(), basics.getTeamId());
-
+                                final LeaguePromotionInfo promotionStatus = promotionHandler.getPromotionStatus(seriesId, teamId);
                                 createPromotionInfoLabel(promotionStatus);
                             }
                         }
                     });
                 } else {
-                    final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
-                    final LeaguePromotionInfo promotionStatus = promotionHandler.getPromotionStatus(basics.getLiga(), basics.getTeamId());
-
+                    final LeaguePromotionInfo promotionStatus = promotionHandler.getPromotionStatus(seriesId, teamId);
                     createPromotionInfoLabel(promotionStatus);
                 }
             }
@@ -108,7 +109,10 @@ public class PromotionInfoPanel extends JPanel {
 
             leagueDetails = leaguePromotionInfo.teams
                     .stream()
-                    .map(downloadCountryDetails::getTeamSeries)
+                    .map(teamId -> {
+                        Map<String, String> teamInfo = downloadCountryDetails.getTeamSeries(teamId);
+                        return teamInfo.get("LeagueLevelUnitName");
+                    })
                     .collect(Collectors.toList());
         }
 
@@ -118,6 +122,5 @@ public class PromotionInfoPanel extends JPanel {
             return HOVerwaltung.instance().getLanguageString("pd_status." + leaguePromotionInfo.status.name(),
                     String.join(", ", leagueDetails));
         }
-
     }
 }

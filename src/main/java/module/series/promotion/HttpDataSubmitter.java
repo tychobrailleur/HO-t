@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import core.module.config.ModuleConfig;
 import core.util.HOLogger;
 import okhttp3.*;
 
@@ -17,11 +18,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-
+/**
+ * Implementation of {@link DataSubmitter} based on OkHttp.
+ */
 public class HttpDataSubmitter implements DataSubmitter {
 
-    // TODO Make configurable.
-    private final static String HOSERVER_BASEURL = "https://UNF6X7OJB7PFLVEQ.anvil.app/_/private_api/HN4JZ6UMWUM7I4PTILWZTJFD";
+    private final static String HOSERVER_BASEURL = ModuleConfig.instance()
+            .getString("PromotionStatus_HoServer",
+                    "https://UNF6X7OJB7PFLVEQ.anvil.app/_/private_api/HN4JZ6UMWUM7I4PTILWZTJFD");
 
     // Singleton.
     private HttpDataSubmitter() {}
@@ -114,7 +118,8 @@ public class HttpDataSubmitter implements DataSubmitter {
             Response response = call.execute();
 
             if (response.isSuccessful()) {
-                System.out.println("Got HTTP response with status " + response.code() + " " + response.message());
+                HOLogger.instance().info(HttpDataSubmitter.class,
+                        "Got HTTP response with status " + response.code() + " " + response.message());
             } else {
                 HOLogger.instance().error(HttpDataSubmitter.class, "Timestamp: " + System.currentTimeMillis());
                 HOLogger.instance().error(HttpDataSubmitter.class, "Error submitting data to HO Server: " + response.body().string());
@@ -123,6 +128,7 @@ public class HttpDataSubmitter implements DataSubmitter {
             response.close();
 
         } catch (Exception e) {
+            e.printStackTrace();
             HOLogger.instance().error(HttpDataSubmitter.class, e.getMessage());
         }
     }
@@ -169,12 +175,15 @@ public class HttpDataSubmitter implements DataSubmitter {
                     blockInfo.blockId = obj.get("BlockID").getAsInt();
                     blockInfo.series = series;
                     blockInfo.leagueId = leagueId;
+                    blockInfo.status = 200;
 
                     HOLogger.instance().info(HttpDataSubmitter.class, "Block locked: " + blockInfo.blockId);
 
                     return blockInfo;
                 } else {
-                    return null;
+                    BlockInfo blockInfo = new BlockInfo();
+                    blockInfo.status = obj.get("HTTP Status Code").getAsInt();
+                    return blockInfo;
                 }
             }
 
@@ -201,12 +210,16 @@ public class HttpDataSubmitter implements DataSubmitter {
                     .build();
 
             Response response = client.newCall(request).execute();
-            String promotionStatus = response.body().string();
-            System.out.println(promotionStatus);
 
-            return promotionStatus;
+            if (response.isSuccessful()) {
+                String promotionStatus = response.body().string();
+                HOLogger.instance().info(HttpDataSubmitter.class, "Status: " + promotionStatus);
+
+                return promotionStatus;
+            }
 
         } catch (Exception e) {
+            e.printStackTrace();
             HOLogger.instance().error(
                     HttpDataSubmitter.class,
                     "Error retrieving promotion status: " + e.getMessage()
@@ -236,9 +249,13 @@ public class HttpDataSubmitter implements DataSubmitter {
         int proxyPort = 3000;
         String proxyHost = "localhost";
 
-        return new OkHttpClient.Builder()
-         //       .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort)))
-                .sslSocketFactory(sslSocketFactory, trustManager)
-                .build();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .sslSocketFactory(sslSocketFactory, trustManager);
+
+        if (ModuleConfig.instance().getBoolean("PromotionStatus_DebugProxy", false)) {
+            builder = builder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort)));
+        }
+
+        return builder.build();
     }
 }

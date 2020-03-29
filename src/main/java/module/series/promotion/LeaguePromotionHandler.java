@@ -7,6 +7,7 @@ import core.db.DBManager;
 import core.gui.event.ChangeEventHandler;
 import core.model.HOVerwaltung;
 import core.model.misc.Basics;
+import core.module.config.ModuleConfig;
 import core.util.HOLogger;
 
 import javax.swing.*;
@@ -14,12 +15,15 @@ import javax.swing.event.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Main class for the League Promotion/Demotion prediction tool.
  *
- * TODO Describe process here.
- * Leagues are processed in blocks.
+ * <p>The data for each league (i.e. country) is submitted by clients.  As this is a lengthy process
+ * that can fail at any time, league details are processed in blocks.  A client needs to lock a block
+ * for processing by requesting it from the HO server.  Once locked, the client can then process that
+ * block, and once all the data is retrieved and computed, the result is submitted to the HO server.</p>
  */
 public class LeaguePromotionHandler extends ChangeEventHandler {
 
@@ -38,15 +42,14 @@ public class LeaguePromotionHandler extends ChangeEventHandler {
     /**
      * Promotion Manager is active only in weeks 14 and 15, and for the supported leagues.
      *
+     * @param seriesId ID of the series to check.
      * @return boolean – true if promotion manager can be used, false otherwise.
      */
-    public boolean isActive() {
+    public boolean isActive(int seriesId) {
         List<Integer> supportedLeagues = HttpDataSubmitter.instance().fetchSupportedLeagues();
-        int leagueId = DBManager.instance().getBasics(HOVerwaltung.instance().getId()).getLiga();
-        //  int week = HOVerwaltung.instance().getModel().getBasics().getSpieltag();
-        // TODO Uncomment above when testing complete.
-        int week = 14;
-        return Arrays.asList(14, 15).contains(week) && supportedLeagues.contains(leagueId);
+        int[] activeWeeks = ModuleConfig.instance().getIntArray("PromotionStatus_ActiveWeeks", new int[] { 14, 15 });
+        int week = HOVerwaltung.instance().getModel().getBasics().getSpieltag();
+        return Arrays.stream(activeWeeks).boxed().collect(Collectors.toList()).contains(week) && supportedLeagues.contains(seriesId);
     }
 
     public void initLeagueStatus() {
@@ -100,13 +103,17 @@ public class LeaguePromotionHandler extends ChangeEventHandler {
                 do {
                     final BlockInfo blockInfo = lockBlock(leagueId);
 
-                    if (blockInfo != null) {
+                    if (blockInfo.status == 200) {
                         DownloadCountryDetails downloadCountryDetails = new DownloadCountryDetails();
                         downloadCountryDetails.processSeries(blockInfo);
-                    } // TODO Figure out how to handle different cases of locking.
 
-                    LeagueStatus status = fetchLeagueStatus();
-                    continueProcessing = (status == LeagueStatus.NOT_AVAILABLE);
+                        LeagueStatus status = fetchLeagueStatus();
+                        continueProcessing = (status == LeagueStatus.NOT_AVAILABLE);
+                    } else {
+                        HOLogger.instance().warning(LeaguePromotionHandler.class,
+                                "Block locking status: " + blockInfo.status);
+                        continueProcessing = false;
+                    }
                 } while (continueProcessing);
 
                 fireChangeEvent(new ChangeEvent(LeaguePromotionHandler.this));
@@ -127,6 +134,13 @@ public class LeaguePromotionHandler extends ChangeEventHandler {
         DataSubmitter submitter = HttpDataSubmitter.instance();
 
         String promotionInfo = submitter.getPromotionStatus(leagueId, teamId);
+
+        if (promotionInfo == null) {
+            LeaguePromotionInfo leaguePromotionInfo = new LeaguePromotionInfo();
+            leaguePromotionInfo.status = LeaguePromotionStatus.UNKNOWN;
+
+            return leaguePromotionInfo;
+        }
 
         final Gson gson = new Gson();
         final JsonObject obj = gson.fromJson(promotionInfo, JsonObject.class);

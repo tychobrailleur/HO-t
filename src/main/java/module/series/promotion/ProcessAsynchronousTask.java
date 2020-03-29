@@ -37,6 +37,8 @@ public class ProcessAsynchronousTask<T> {
 
     final Queue<T> queue = new LinkedBlockingQueue<>();
 
+    private int errorCount = 0;
+
     /**
      * Adds an element to the queue for processing.
      * @param entry - Element to process.
@@ -69,5 +71,17 @@ public class ProcessAsynchronousTask<T> {
         } catch (InterruptedException e) {
             HOLogger.instance().error(ProcessAsynchronousTask.class, "Error whilst waiting for tasks to complete:" + e.getMessage());
         }
+    }
+
+    public int getErrorCount() {
+        return errorCount;
+    }
+
+    public void incErrorCount() {
+        errorCount++;
+    }
+
+    public void resetErrorCount() {
+        errorCount = 0;
     }
 }
