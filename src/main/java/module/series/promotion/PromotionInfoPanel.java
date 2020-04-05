@@ -51,6 +51,8 @@ public class PromotionInfoPanel extends JPanel {
                             if (promotionHandler.getLeagueStatus() == LeagueStatus.AVAILABLE) {
                                 final LeaguePromotionInfo promotionStatus = promotionHandler.getPromotionStatus(seriesId, teamId);
                                 createPromotionInfoLabel(promotionStatus);
+                            } else if (promotionHandler.getLeagueStatus() == LeagueStatus.BEING_PROCESSED) {
+                                promotionHandler.pollPromotionStatus();
                             }
                         }
                     });
