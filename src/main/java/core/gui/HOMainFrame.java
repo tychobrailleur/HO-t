@@ -1,6 +1,9 @@
 // %3852537837:de.hattrickorganizer.gui%
 package core.gui;
 
+import com.github.weisj.darklaf.DarkLaf;
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.theme.DarculaTheme;
 import core.HO;
 import core.db.DBManager;
 import core.db.User;
@@ -123,7 +126,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 	// Menu color depending of version
 	private final Color c_beta = new Color(162, 201, 255);
-	private final Color c_dev = new Color(235, 170, 170);
+	private final Color c_dev = new Color(40, 170, 170);
 
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
@@ -132,6 +135,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	 * Singleton
 	 */
 	private HOMainFrame() {
+
+		if (OSUtils.isMac()) {
+			System.setProperty("apple.laf.useScreenMenuBar", "true");
+			System.setProperty("apple.awt.showGroupBox", "true");
+		}
 
 		// Log HO! version
 		HOLogger.instance().info(getClass(),
@@ -182,7 +190,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	}
 
 	private void setFrameIconImage() {
-
 		String iconName = HOIconName.LOGO16_STABLE;
 		if (!HO.isRelease()) {
 			iconName = HOIconName.LOGO16 + "_" + HO.getVersionType().toLowerCase();
@@ -620,14 +627,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	}
 
 	/**
-	 * OptionsPanels for Modules
-	 */
-	public void addOptionPanel(String name, JPanel optionpanel) {
-		m_vOptionPanels.add(optionpanel);
-		m_vOptionPanelNames.add(name);
-	}
-
-	/**
 	 * Reinit, set currency.
 	 */
 	@Override
@@ -709,35 +708,23 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 				} catch (Exception e) {
 					succ = false;
 				}
+			} else if ("Dark".equalsIgnoreCase(UserParameter.instance().skin)) {
+				LafManager.setTheme(new DarculaTheme());
+				UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
+				SwingUtilities.updateComponentTreeUI(this);
+				succ = true;
 			} else if (!"Classic".equalsIgnoreCase(UserParameter.instance().skin)) {
 				// Nimbus is the default theme
 				succ = NimbusTheme.enableNimbusTheme(size);
 			}
+
 			if (!succ) {
-				final MetalLookAndFeel laf = new MetalLookAndFeel();
-				MetalLookAndFeel.setCurrentTheme(new HOTheme(
-						UserParameter.instance().schriftGroesse));
-
-				// Um die systemweite MenuBar von Mac OS X zu verwenden
-				// http://www.pushing-pixels.org/?p=366
-				if (System.getProperty("os.name").toLowerCase(java.util.Locale.ENGLISH)
-						.startsWith("mac")) {
-					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-					Object mbUI = UIManager.get("MenuBarUI");
-					Object mUI = UIManager.get("MenuUI");
-					Object cbmiUI = UIManager.get("CheckBoxMenuItemUI");
-					Object rbmiUI = UIManager.get("RadioButtonMenuItemUI");
-					Object pmUI = UIManager.get("PopupMenuUI");
-
+				if (!OSUtils.isMac()) {
+					final MetalLookAndFeel laf = new MetalLookAndFeel();
+					MetalLookAndFeel.setCurrentTheme(new HOTheme(UserParameter.instance().schriftGroesse));
 					UIManager.setLookAndFeel(laf);
-
-					UIManager.put("MenuBarUI", mbUI);
-					UIManager.put("MenuUI", mUI);
-					UIManager.put("CheckBoxMenuItemUI", cbmiUI);
-					UIManager.put("RadioButtonMenuItemUI", rbmiUI);
-					UIManager.put("PopupMenuUI", pmUI);
 				} else {
-					UIManager.setLookAndFeel(laf);
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 				}
 			}
 

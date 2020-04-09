@@ -88,17 +88,6 @@ public final class SonstigeOptionenPanel extends ImagePanel implements ChangeLis
         initComponents();
     }
 
-    public static float getFaktorGeld4WaehrungsID(int id) {
-        for (int i = 0; i < SonstigeOptionenPanel.WAEHRUNGEN.length; i++) {
-            if (id == SonstigeOptionenPanel.WAEHRUNGEN[i].getId()) {
-                return SonstigeOptionenPanel.WAEHRUNGEN[i].getFaktor();
-            }
-        }
-
-        // nix gefunden
-        return 1.0f;
-    }
-
     @Override
     public final void itemStateChanged(ItemEvent itemEvent) {
         // Kein Selected Event!
@@ -182,8 +171,8 @@ public final class SonstigeOptionenPanel extends ImagePanel implements ChangeLis
         m_jslSchriftgroesse.addChangeListener(this);
         add(m_jslSchriftgroesse);
 
-        m_jcbSkin = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("options.misc.skin"), new String[]{"Nimbus", "Classic", "JGoodies Green", //
-                "JGoodies Silver", "JGoodies Sky", "JGoodies Blue", "JGoodies Royale", "System"}, 120);
+        m_jcbSkin = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("options.misc.skin"),
+                new String[]{"Nimbus", "Classic", "Dark", "JGoodies Green", "JGoodies Silver", "JGoodies Sky", "JGoodies Blue", "JGoodies Royale", "System"}, 120);
         m_jcbSkin.setSelectedItem(core.model.UserParameter.temp().skin);
         m_jcbSkin.addItemListener(this);
         add(m_jcbSkin);

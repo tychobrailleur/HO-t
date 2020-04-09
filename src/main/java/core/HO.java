@@ -1,5 +1,7 @@
 package core;
 
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.theme.DarculaTheme;
 import core.db.DBManager;
 import core.db.User;
 import core.db.backup.BackupHelper;
@@ -70,9 +72,7 @@ public class HO {
 
 		if (isBeta()) {
 			txt += " BETA (r" + RevisionNumber + ")";
-		}
-
-		else if (isDevelopment()) {
+		} else if (isDevelopment()) {
 			txt += " DEV (r" + RevisionNumber + ")";
 		}
 
@@ -198,7 +198,6 @@ public class HO {
 
 		interuptionsWindow.setInfoText(5, "Load latest Data");
 		HOVerwaltung.instance().loadLatestHoModel();
-//		HOVerwaltung.instance().getModel().setLineups(HOVerwaltung.instance().getModel().getID());
 		interuptionsWindow.setInfoText(6, "Load  XtraDaten");
 
 		// TableColumn
@@ -224,6 +223,7 @@ public class HO {
 
 			@Override
 			public void run() {
+			//
 				HOMainFrame.instance().setVisible(true);
 
 				// Startbild weg
