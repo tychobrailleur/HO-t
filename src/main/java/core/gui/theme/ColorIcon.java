@@ -3,12 +3,15 @@ package core.gui.theme;
 import javax.swing.*;
 import java.awt.*;
 
-public class ColourIcon implements Icon {
+/**
+ * Icon to display overview of a colour defined by a {@link Color} instance.
+ */
+public class ColorIcon implements Icon {
 
     private final static int ICON_SIZE = 8;
     private final Color colour;
 
-    public ColourIcon(Color colour) {
+    public ColorIcon(Color colour) {
         this.colour = colour;
     }
 
