@@ -3,6 +3,7 @@ package core.gui.theme.nimbus;
 import core.gui.theme.FontUtil;
 import core.model.UserParameter;
 import core.util.HOLogger;
+import core.util.OSUtils;
 
 import java.awt.Font;
 
@@ -31,7 +32,7 @@ public class NimbusTheme {
 		    }
 			
 			if (nimbus != null) {
-				if (System.getProperty("os.name").toLowerCase(java.util.Locale.ENGLISH).startsWith("mac")) {
+				if (OSUtils.isMac()) {
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 					Object mbUI = UIManager.get("MenuBarUI");
 					Object mUI = UIManager.get("MenuUI");
@@ -107,11 +108,10 @@ public class NimbusTheme {
 				uid.put("SliderTrack.font", userFont);
 				uid.put("TitledBorder.font", boldFont);
 				
-				uid.put("Table.intercellSpacing", new DimensionUIResource(1, 1)); //new DimensionUIResource(1, 1)
+				uid.put("Table.intercellSpacing", new DimensionUIResource(1, 1));
 				uid.put("Table.showGrid", Boolean.TRUE);
 				uid.put("Table.gridColor", new ColorUIResource(214, 217, 223));
-				
-				//uid.put("Table.editor".contentMargins	InsetsUIResource	javax.swing.plaf.InsetsUIResource[top=3,left=5,bottom=3,right=5]
+
 				BorderUIResource tableBorder = new BorderUIResource(BorderFactory.createEmptyBorder(2, 3, 2, 3));
 				uid.put("Table.cellNoFocusBorder", tableBorder);
 				uid.put("Table.focusCellHighlightBorder", tableBorder);

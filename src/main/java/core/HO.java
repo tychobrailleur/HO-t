@@ -1,7 +1,5 @@
 package core;
 
-import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.theme.DarculaTheme;
 import core.db.DBManager;
 import core.db.User;
 import core.db.backup.BackupHelper;
@@ -54,9 +52,11 @@ public class HO {
 	public static boolean isDevelopment() {
 		return "DEV".equalsIgnoreCase(versionType);
 	}
+
 	public static boolean isBeta() {
 		return "BETA".equalsIgnoreCase(versionType);
 	}
+
 	public static boolean isRelease() {
 		return "RELEASE".equalsIgnoreCase(versionType);
 	}
@@ -112,8 +112,8 @@ public class HO {
 		}
 
 		// Get HO version from manifest
-        String sVERSION = HO.class.getPackage().getImplementationVersion();
-        if (sVERSION != null) {
+		String sVERSION = HO.class.getPackage().getImplementationVersion();
+		if (sVERSION != null) {
 			String[] aVersion = sVERSION.split("\\.");
 
 			VERSION = Double.parseDouble(aVersion[0] + "." + aVersion[1]);
@@ -223,7 +223,6 @@ public class HO {
 
 			@Override
 			public void run() {
-			//
 				HOMainFrame.instance().setVisible(true);
 
 				// Startbild weg
@@ -236,6 +235,6 @@ public class HO {
 	}
 
 	public static int getRevisionNumber() {
-	return RevisionNumber;
+		return RevisionNumber;
 	}
 }

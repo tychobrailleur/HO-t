@@ -138,7 +138,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		if (OSUtils.isMac()) {
 			System.setProperty("apple.laf.useScreenMenuBar", "true");
-			System.setProperty("apple.awt.showGroupBox", "true");
+            System.setProperty("apple.awt.showGroupBox", "true");
 		}
 
 		// Log HO! version
@@ -154,9 +154,9 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		// Log Java version
 		HOLogger.instance().info(
-				getClass(),
-				"Using java: " + System.getProperty("java.version") + " ("
-						+ System.getProperty("java.vendor") + ")");
+                getClass(),
+                "Using java: " + System.getProperty("java.version") + " ("
+                + System.getProperty("java.vendor") + ")");
 
 		RefreshManager.instance().registerRefreshable(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -474,7 +474,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		getContentPane().add(getInfoPanel(), BorderLayout.SOUTH);
 
 		setLocation(UserParameter.instance().hoMainFrame_PositionX,
-				UserParameter.instance().hoMainFrame_PositionY);
+                    UserParameter.instance().hoMainFrame_PositionY);
 		setSize(UserParameter.instance().hoMainFrame_width,
 				UserParameter.instance().hoMainFrame_height);
 	}
@@ -484,8 +484,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	 */
 	public void initMenue() {
 		// Kein F10!
-		((InputMap) UIManager.get("Table.ancestorInputMap")).remove(KeyStroke.getKeyStroke(
-				KeyEvent.VK_F2, 0));
+		((InputMap) UIManager.get("Table.ancestorInputMap")).remove(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
 
 		m_jmDownloadItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0));
 		m_jmDownloadItem.addActionListener(this);
@@ -518,7 +517,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		// Toggle full screen mode
 		if (FullScreen.instance().isFullScreenSupported(this)) {
 			m_jmFullScreenItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11,
-					KeyEvent.SHIFT_DOWN_MASK));
+                                                                     KeyEvent.SHIFT_DOWN_MASK));
 		} else {
 			m_jmFullScreenItem.setEnabled(false);
 		}
@@ -542,14 +541,14 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 				showTabMenuItem.putClientProperty("MODULE", activeModules[i]);
 				showTabMenuItem.addActionListener(new ActionListener() {
 
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						JMenuItem item = (JMenuItem) e.getSource();
-						IModule module = (IModule) item.getClientProperty("MODULE");
-						getTabbedPane().showTab(module.getModuleId());
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            JMenuItem item = (JMenuItem) e.getSource();
+                            IModule module = (IModule) item.getClientProperty("MODULE");
+                            getTabbedPane().showTab(module.getModuleId());
 
-					}
-				});
+                        }
+                    });
 				m_jmFunctions.add(showTabMenuItem);
 			}
 			if (activeModules[i].hasMenu()) {
@@ -634,7 +633,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		// Die Währung auf die aus dem HRF setzen
 		try {
 			float faktorgeld = (float) HOVerwaltung.instance().getModel().getXtraDaten()
-					.getCurrencyRate();
+                .getCurrencyRate();
 
 			if (faktorgeld > -1) {
 				UserParameter.instance().faktorGeld = faktorgeld;
@@ -657,15 +656,14 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	// --------------------------------------------------------------
 	public void showMatch(final int matchid) {
 		m_jtpTabbedPane.showTab(IModule.MATCHES);
-		final SpielePanel matchesPanel = (SpielePanel) getTabbedPane().getModulePanel(
-				IModule.MATCHES);
+		final SpielePanel matchesPanel = (SpielePanel) getTabbedPane().getModulePanel(IModule.MATCHES);
 		SwingUtilities.invokeLater(new Runnable() {
 
-			@Override
-			public void run() {
-				matchesPanel.showMatch(matchid);
-			}
-		});
+                @Override
+                public void run() {
+                    matchesPanel.showMatch(matchid);
+                }
+            });
 	}
 
 	// ----------------Hilfsmethoden---------------------------------
@@ -709,10 +707,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 					succ = false;
 				}
 			} else if ("Dark".equalsIgnoreCase(UserParameter.instance().skin)) {
-				LafManager.setTheme(new DarculaTheme());
-				UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
-				SwingUtilities.updateComponentTreeUI(this);
-				succ = true;
+				DarkTheme theme = new DarkTheme();
+
+				Map<String, Object> properties = new HashMap<>();
+				properties.put("fontSize", 12);
+				succ = theme.enableTheme(this, properties);
 			} else if (!"Classic".equalsIgnoreCase(UserParameter.instance().skin)) {
 				// Nimbus is the default theme
 				succ = NimbusTheme.enableNimbusTheme(size);
@@ -753,18 +752,17 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		parameter.hoMainFrame_PositionX = Math.max(getLocation().x, 0);
 		parameter.hoMainFrame_PositionY = Math.max(getLocation().y, 0);
 		parameter.hoMainFrame_width = Math.min(getSize().width, getToolkit().getScreenSize().width
-				- parameter.hoMainFrame_PositionX);
+                                               - parameter.hoMainFrame_PositionX);
 		parameter.hoMainFrame_height = Math.min(getSize().height,
-				getToolkit().getScreenSize().height - parameter.hoMainFrame_PositionY);
+                                                getToolkit().getScreenSize().height - parameter.hoMainFrame_PositionY);
 
 		final IAufstellungsAssistentPanel aap = getAufstellungsPanel()
-				.getAufstellungsAssistentPanel();
+            .getAufstellungsAssistentPanel();
 
 		parameter.bestPostWidth = Math.max(getSpielerUebersichtPanel().getBestPosWidth(),
-				getAufstellungsPanel().getBestPosWidth());
+                                           getAufstellungsPanel().getBestPosWidth());
 
-		parameter.aufstellungsAssistentPanel_gruppe = AufstellungsAssistentPanelNew.asString(aap
-				.getGroups());
+		parameter.aufstellungsAssistentPanel_gruppe = AufstellungsAssistentPanelNew.asString(aap.getGroups());
 		parameter.aufstellungsAssistentPanel_reihenfolge = aap.getOrder();
 		parameter.aufstellungsAssistentPanel_not = aap.isNotGroup();
 		parameter.aufstellungsAssistentPanel_cbfilter = aap.isGroupFilter();
