@@ -1,9 +1,6 @@
 // %3852537837:de.hattrickorganizer.gui%
 package core.gui;
 
-import com.github.weisj.darklaf.DarkLaf;
-import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.theme.DarculaTheme;
 import core.HO;
 import core.db.DBManager;
 import core.db.User;
@@ -12,6 +9,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.tabbedPane.HOTabbedPane;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
+import core.gui.theme.dark.DarkTheme;
 import core.gui.theme.ho.HOTheme;
 import core.gui.theme.nimbus.NimbusTheme;
 import core.model.FormulaFactors;

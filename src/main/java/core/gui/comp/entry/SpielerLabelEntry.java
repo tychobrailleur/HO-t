@@ -159,7 +159,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         final GridBagConstraints constraints = new GridBagConstraints();
 
         m_clComponent.setLayout(layout);
-        m_clComponent.setBorder(new LineBorder(Color.WHITE, 1));
+       // m_clComponent.setBorder(new LineBorder(Color.WHITE, 1));
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.anchor = GridBagConstraints.WEST;
         constraints.weightx = 1.0;

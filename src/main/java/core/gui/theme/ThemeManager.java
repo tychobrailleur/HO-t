@@ -7,6 +7,7 @@ package core.gui.theme;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.RasenPanel;
 import core.gui.theme.ho.HOClassicSchema;
+import core.model.UserParameter;
 
 import java.awt.Color;
 import java.awt.Image;
@@ -218,7 +219,11 @@ public final class ThemeManager {
 		if(name != null && !name.equals(classicSchema.getName()))
 			extSchema = loadSchema(name);
 		RasenPanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.GRASSPANEL_BACKGROUND).getImage());
-		ImagePanel.background =  ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.IMAGEPANEL_BACKGROUND).getImage());
+		ImagePanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.IMAGEPANEL_BACKGROUND).getImage());
+
+		if (UserParameter.instance().skin.equals("Dark")) {
+			classicSchema.put(HOColorName.TABLEENTRY_BG, new Color(80, 80, 80));
+		}
 	}
 	
 	

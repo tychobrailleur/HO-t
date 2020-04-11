@@ -58,7 +58,7 @@ public class LookAndFeelDialog extends JDialog {
 		return defaults.keySet().stream().map(Object::toString).sorted().collect(Collectors.toList());
 	}
 
-	private class MyTableModel extends AbstractTableModel {
+	private static class MyTableModel extends AbstractTableModel {
 
 		private String[] columns = { "Key", "Value" };
 
