@@ -1,8 +1,10 @@
 package core.gui.theme.ho;
 
 import core.gui.theme.FontUtil;
+import core.gui.theme.Theme;
 import core.model.UserParameter;
 import core.util.HOLogger;
+import core.util.OSUtils;
 
 import java.awt.Font;
 import java.util.Enumeration;
@@ -10,13 +12,13 @@ import java.util.Enumeration;
 import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
-import javax.swing.plaf.metal.DefaultMetalTheme;
+import javax.swing.plaf.metal.*;
 
 
 /**
  * Theme configuring HO colors, fonts and sizes.
  */
-public class HOTheme extends DefaultMetalTheme {
+public class HOTheme extends DefaultMetalTheme implements Theme {
     private static final ColorUIResource primary1 = new ColorUIResource(106, 104, 100);
     private static final ColorUIResource primary2 = new ColorUIResource(159, 156, 150);
     private static final ColorUIResource primary3 = new ColorUIResource(212, 208, 200);
@@ -24,6 +26,8 @@ public class HOTheme extends DefaultMetalTheme {
     private static final ColorUIResource secondary2 = new ColorUIResource(159, 156, 150);
     private static final ColorUIResource secondary3 = new ColorUIResource(212, 208, 200);
     private static FontUIResource TEXTFONT;
+
+    public final static String THEME_NAME = "Classic";
 
     //~ Constructors -------------------------------------------------------------------------------
     /**
@@ -42,6 +46,11 @@ public class HOTheme extends DefaultMetalTheme {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
+
+    @Override
+    public String getName() {
+        return THEME_NAME;
+    }
 
     @Override
 	public final FontUIResource getControlTextFont() {
@@ -129,5 +138,22 @@ public class HOTheme extends DefaultMetalTheme {
 		} catch (Exception e) {
 			//HOLogger.instance().log(HO.class, "Error(setUIFont): " + e);
 		}
+    }
+
+    public boolean loadTheme() {
+        boolean success = true;
+
+        try {
+            if (!OSUtils.isMac()) {
+                final MetalLookAndFeel laf = new MetalLookAndFeel();
+                MetalLookAndFeel.setCurrentTheme(new HOTheme(UserParameter.instance().schriftGroesse));
+                UIManager.setLookAndFeel(laf);
+            } else {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            }
+        } catch (Exception e) {
+            success = false;
+        }
+        return success;
     }
 }

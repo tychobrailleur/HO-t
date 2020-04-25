@@ -1,6 +1,7 @@
 package core.gui.theme.nimbus;
 
 import core.gui.theme.FontUtil;
+import core.gui.theme.Theme;
 import core.model.UserParameter;
 import core.util.HOLogger;
 import core.util.OSUtils;
@@ -16,12 +17,20 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.DimensionUIResource;
 
 
-public class NimbusTheme {
-	
-	private NimbusTheme() {
+public class NimbusTheme implements Theme {
+
+	public final static String THEME_NAME = "Nimbus";
+
+	public String getName() {
+		return THEME_NAME;
 	}
-	
-	public static boolean enableNimbusTheme(int fontSize) {
+
+	@Override
+	public boolean loadTheme() {
+		return enableTheme(UserParameter.instance().schriftGroesse);
+	}
+
+	public boolean enableTheme(int fontSize) {
 		try {
 			LookAndFeelInfo nimbus = null;
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {

@@ -158,7 +158,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		RefreshManager.instance().registerRefreshable(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setDefaultFont(UserParameter.instance().schriftGroesse);
+		SwingUtilities.updateComponentTreeUI(this);
 
 		setFrameTitle();
 		setFrameIconImage();
@@ -676,71 +676,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		m_jtpTabbedPane.showTab(tabnumber);
 	}
 
-	/**
-	 * Set the default font size.
-	 */
-	private void setDefaultFont(int size) {
-		try {
-			boolean succ = false;
-			if ("System".equalsIgnoreCase(UserParameter.instance().skin)) {
-				try {
-					LookAndFeelInfo win = null;
-					for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-						if ("Windows".equals(info.getName())) {
-							win = info;
-							break;
-						}
-					}
-					if (win != null) {
-						HOLogger.instance().log(getClass(), "Use " + win.getName() + " l&f");
-						UIManager.setLookAndFeel(win.getClassName());
-					} else {
-						HOLogger.instance().log(getClass(), "Use System l&f...");
-						UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-					}
-					// TODO: font size
-					SwingUtilities.updateComponentTreeUI(this);
-					succ = true;
-				} catch (Exception e) {
-					succ = false;
-				}
-			} else if ("Dark".equalsIgnoreCase(UserParameter.instance().skin)) {
-				DarkTheme theme = new DarkTheme();
-
-				Map<String, Object> properties = new HashMap<>();
-				properties.put("fontSize", 12);
-				succ = theme.enableTheme(this, properties);
-			} else if (!"Classic".equalsIgnoreCase(UserParameter.instance().skin)) {
-				// Nimbus is the default theme
-				succ = NimbusTheme.enableNimbusTheme(size);
-			}
-
-			if (!succ) {
-				if (!OSUtils.isMac()) {
-					final MetalLookAndFeel laf = new MetalLookAndFeel();
-					MetalLookAndFeel.setCurrentTheme(new HOTheme(UserParameter.instance().schriftGroesse));
-					UIManager.setLookAndFeel(laf);
-				} else {
-					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-				}
-			}
-
-			// #177 Standard shortcuts for copy/cut/paste don't work in MacOSX if LookAndFeel changes
-			if (succ && OSUtils.isMac()) {
-				InputMap im = (InputMap) UIManager.get("TextField.focusInputMap");
-				im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
-				im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
-				im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
-				im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
-			}
-
-			SwingUtilities.updateComponentTreeUI(this);
-		} catch (Exception e) {
-			HOLogger.instance().log(HOMainFrame.class, e);
-		}
-	}
-
-	/**
+    /**
 	 * Holt die Parameter aus den Dialogen und speichert sie in der DB
 	 */
 	@SuppressWarnings("deprecation")

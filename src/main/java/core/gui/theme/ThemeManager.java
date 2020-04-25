@@ -4,33 +4,41 @@
 package core.gui.theme;
 
 
+import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.RasenPanel;
+import core.gui.theme.dark.DarculaDarkTheme;
+import core.gui.theme.dark.DarkTheme;
 import core.gui.theme.ho.HOClassicSchema;
+import core.gui.theme.ho.HOTheme;
+import core.gui.theme.nimbus.NimbusTheme;
+import core.gui.theme.system.SystemTheme;
 import core.model.UserParameter;
+import core.util.HOLogger;
+import core.util.OSUtils;
 
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.event.*;
 import java.io.File;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import javax.swing.ImageIcon;
-import javax.swing.UIManager;
-
-
+import javax.swing.*;
+import javax.swing.plaf.metal.*;
+import javax.swing.text.*;
 
 
 public final class ThemeManager {
 	private final static ThemeManager MANAGER = new ThemeManager();
-	private File themesDir = new File("themes");
+	private final File themesDir = new File("themes");
 	
-	HOClassicSchema 	classicSchema = new HOClassicSchema();
-	private ExtSchema 	extSchema;
+	HOClassicSchema classicSchema = new HOClassicSchema();
+	private ExtSchema extSchema;
+
+	private final Map<String, Theme> themes = new HashMap<>();
 
 	private ThemeManager(){
 		initialize();
@@ -39,9 +47,14 @@ public final class ThemeManager {
 	public static ThemeManager instance(){
 		return MANAGER;
 	}
-	
-	private void initialize(){
-		if(!themesDir.exists()){
+
+	private void initialize() {
+		themes.put(HOTheme.THEME_NAME, new HOTheme(UserParameter.instance().schriftGroesse));
+		themes.put(NimbusTheme.THEME_NAME, new NimbusTheme());
+		themes.put(DarculaDarkTheme.THEME_NAME, new DarculaDarkTheme());
+		themes.put(SystemTheme.THEME_NAME, new SystemTheme());
+
+		if (!themesDir.exists()) {
 			themesDir.mkdir();
 		}
 	}
@@ -79,7 +92,7 @@ public final class ThemeManager {
 			tmp = (Boolean)classicSchema.get(key);
 		if(tmp == null)
 			tmp = Boolean.FALSE;
-		return tmp.booleanValue();
+		return tmp;
 	}
 	
 	public void put(String key,Object value){
@@ -95,7 +108,7 @@ public final class ThemeManager {
 			tmp = classicSchema.get(key);
 		
 		if(tmp == null)
-			tmp =  UIManager.get(key);
+			tmp = UIManager.get(key);
 		
 		return tmp;
 	}
@@ -185,9 +198,7 @@ public final class ThemeManager {
 	public static Image loadImage(String datei) {
 		return instance().classicSchema.loadImageIcon(datei).getImage();
 	}
-	
- 
-	
+
 	public ExtSchema loadSchema(String name) throws Exception {
 		ExtSchema theme = null;
 		File themeFile = new File(themesDir,name+".zip");
@@ -215,18 +226,47 @@ public final class ThemeManager {
 		}
 		return theme;
 	}
+
 	public void setCurrentTheme(String name) throws Exception {
-		if(name != null && !name.equals(classicSchema.getName()))
+		if (name != null && !name.equals(classicSchema.getName())) {
 			extSchema = loadSchema(name);
+		}
+
 		RasenPanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.GRASSPANEL_BACKGROUND).getImage());
 		ImagePanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.IMAGEPANEL_BACKGROUND).getImage());
 
-		if (UserParameter.instance().skin.equals("Dark")) {
-			classicSchema.put(HOColorName.TABLEENTRY_BG, new Color(80, 80, 80));
+		try {
+			boolean success = false;
+
+			Theme theme = themes.get(UserParameter.instance().skin);
+			if (theme != null) {
+				success = theme.loadTheme();
+			}
+
+			if (!success) {
+				Theme classicTheme = themes.get("Classic");
+				success = classicTheme.loadTheme();
+			}
+
+			initializeMacKeyBindings(success);
+
+		} catch (Exception e) {
+			HOLogger.instance().log(HOMainFrame.class, e);
 		}
 	}
-	
-	
+
+	private void initializeMacKeyBindings(boolean succ) {
+		// #177 Standard shortcuts for copy/cut/paste don't work in MacOSX if LookAndFeel changes
+		if (succ && OSUtils.isMac()) {
+			InputMap im = (InputMap) UIManager.get("TextField.focusInputMap");
+			im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
+			im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
+			im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
+			im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
+		}
+	}
+
+
 	public String[] getAvailableThemeNames(){
 		final String[] fileList = themesDir.list();
 		final String[] schemaNames = new String[fileList.length+1];
