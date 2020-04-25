@@ -12,10 +12,13 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
 public class OutputTableRenderer extends DefaultTableCellRenderer {
-    private static final Color SELECTION_BG = new java.awt.Color(210, 210, 210);
     //~ Methods ------------------------------------------------------------------------------------
 
     private static final long serialVersionUID = 7179773036740605371L;
+
+    private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
+    private static final Color SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG);
+    private static final Color TABLE_FG = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
@@ -37,17 +40,17 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
         }
 
         // Reset default values
-        this.setForeground(Color.BLACK);
+        this.setForeground(TABLE_FG);
         if (isSelected)
             this.setBackground(SELECTION_BG);
         else
-            this.setBackground(Color.WHITE);
+            this.setBackground(TABLE_BG);
 
         if ((column > 2) && (column < 11)) {
             VerticalIndicator vi = (VerticalIndicator) value;
 
             // Set background and make it visible.
-            vi.setBackground(cell.getBackground());
+            vi.setBackground(TABLE_BG.brighter());
             vi.setOpaque(true);
 
             return vi;
@@ -68,7 +71,7 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
             if (column == 0) {
                 PlayerNameCell pnc = (PlayerNameCell) value;
                 // Reset default values
-                pnc.setForeground(Color.BLACK);
+                pnc.setForeground(ThemeManager.getColor(HOColorName.TABLEENTRY_FG));
                 pnc.setBackground(bg_color);
                 return pnc;
             } else {

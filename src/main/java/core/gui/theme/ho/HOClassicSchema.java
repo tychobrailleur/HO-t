@@ -461,6 +461,9 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		// Colours for alternating rows in table
 		put(TABLE_LEAGUE_EVEN, Color.WHITE);
 		put(TABLE_LEAGUE_ODD, new Color(240, 240, 240));
+
+		// Training
+		put(TRAINING_BIRTHDAY_BG, new Color(255, 240, 175));
 	}
 
 	public Color getDefaultColor(String key) {

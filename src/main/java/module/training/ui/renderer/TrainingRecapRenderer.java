@@ -3,6 +3,8 @@ package module.training.ui.renderer;
 
 import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSkill;
+import core.gui.theme.HOColorName;
+import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import module.training.ui.TrainingLegendPanel;
@@ -25,8 +27,11 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
 	 *
 	 */
 	private static final long serialVersionUID = -4088001127909689247L;
-	private static final Color SELECTION_BG = new java.awt.Color(210, 210, 210);
-    private static final Color BIRTHDAY_BG = new java.awt.Color(255, 240, 175);
+
+	private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
+	private static final Color SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG);
+	private static final Color TABLE_FG = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
+    private static final Color BIRTHDAY_BG = ThemeManager.getColor(HOColorName.TRAINING_BIRTHDAY_BG);
     //~ Methods ------------------------------------------------------------------------------------
 
     /* (non-Javadoc)
@@ -38,11 +43,11 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
         // Reset default values
-        this.setForeground(Color.BLACK);
+        this.setForeground(TABLE_FG);
         if (isSelected)
         	this.setBackground(SELECTION_BG);
         else
-        	this.setBackground(Color.WHITE);
+        	this.setBackground(TABLE_BG);
 
         String text = null;
         String tooltip = null;
