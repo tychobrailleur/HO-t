@@ -1,7 +1,8 @@
 package core.gui.theme.nimbus;
 
-import core.gui.theme.FontUtil;
-import core.gui.theme.Theme;
+import core.gui.comp.panel.ImagePanel;
+import core.gui.comp.panel.RasenPanel;
+import core.gui.theme.*;
 import core.model.UserParameter;
 import core.util.HOLogger;
 import core.util.OSUtils;
@@ -63,7 +64,6 @@ public class NimbusTheme implements Theme {
 				UIDefaults uid = UIManager.getLookAndFeelDefaults();
 				final String fontName = FontUtil.getFontName(UserParameter.instance().sprachDatei);
 				final Font userFont = new Font((fontName != null ? fontName : "SansSerif"), Font.PLAIN, fontSize);
-//				final Font smallFont = new Font((fontName != null ? fontName : "SansSerif"), Font.PLAIN, (fontSize-1));
 				final Font boldFont = new Font((fontName != null ? fontName : "SansSerif"), Font.BOLD, fontSize);
 				uid.put("defaultFont", userFont);
 				uid.put("DesktopIcon.font", userFont);
@@ -73,7 +73,7 @@ public class NimbusTheme implements Theme {
 				uid.put("FormattedTextField.font", userFont);
 				uid.put("Spinner.font", userFont);
 				uid.put("PopupMenuSeparator.font", userFont);
-				uid.put("Table.font", userFont); // smallFont
+				uid.put("Table.font", userFont);
 				uid.put("TextArea.font", userFont);
 				uid.put("Slider.font", userFont);
 				uid.put("InternalFrameTitlePane.font", userFont);
@@ -92,7 +92,7 @@ public class NimbusTheme implements Theme {
 				uid.put("CheckBox.font", userFont);
 				uid.put("ToggleButton.font", userFont);
 				uid.put("TabbedPane.font", userFont);
-				uid.put("TableHeader.font", userFont); // smallFont
+				uid.put("TableHeader.font", userFont);
 				uid.put("List.font", userFont);
 				uid.put("PopupMenu.font", userFont);
 				uid.put("ToolTip.font", userFont);
@@ -124,7 +124,10 @@ public class NimbusTheme implements Theme {
 				BorderUIResource tableBorder = new BorderUIResource(BorderFactory.createEmptyBorder(2, 3, 2, 3));
 				uid.put("Table.cellNoFocusBorder", tableBorder);
 				uid.put("Table.focusCellHighlightBorder", tableBorder);
-				
+
+				RasenPanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.GRASSPANEL_BACKGROUND).getImage());
+				ImagePanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.IMAGEPANEL_BACKGROUND).getImage());
+
 				return true;
 			}
 		} catch (Exception e) {

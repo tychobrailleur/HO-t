@@ -22,7 +22,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
      *
      */
     private static final long serialVersionUID = 2300786156899745002L;
-    public static final Color FG_STANDARD = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);//gui.UserParameter.instance().FG_STANDARD;
+    public static final Color FG_STANDARD = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
     public static final Color BG_STANDARD = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
     public static final Color BG_PLAYERSPECIALVALUES = ThemeManager.getColor(HOColorName.PLAYER_SKILL_SPECIAL_BG);
     public static final Color BG_SINGLEPLAYERVALUES = ThemeManager.getColor(HOColorName.PLAYER_SKILL_BG);//new Colour(255, 255, 200);

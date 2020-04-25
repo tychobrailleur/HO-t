@@ -49,7 +49,6 @@ public class SpielerUebersichtNamenTable extends JTable implements Refreshable, 
 	@Override
 	public final void reInit() {
 		initModelNamen();
-
 		repaint();
 	}
 

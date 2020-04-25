@@ -1,9 +1,6 @@
 package core.gui.theme;
 
 
-
-
-
 /**
  * Constants for Colors used in HO.
  * Modules can use them too.
@@ -138,6 +135,9 @@ public interface HOColorName {
 	public static final String LINEUP_POS_MIN_BG 		= "lineup.pos.min.bg";
 	public static final String LINEUP_POS_MIN_BORDER	= "lineup.pos.min.border";
 	public static final String SUBST_CHANGED_VALUE_BG   = "substitution.changed.value.bg";
+
+	public static final String LINEUP_PARTIAL_TRAINING  = "lineup.partial.training.bg";
+	public static final String LINEUP_FULL_TRAINING     = "lineup.full.training.bg";
 
 	//1.431
 	public static final String MATCHDETAILS_PROGRESSBAR_GREEN = "matchdetails.progressbar.green";

@@ -1,7 +1,8 @@
 package core.gui.theme.ho;
 
-import core.gui.theme.FontUtil;
-import core.gui.theme.Theme;
+import core.gui.comp.panel.ImagePanel;
+import core.gui.comp.panel.RasenPanel;
+import core.gui.theme.*;
 import core.model.UserParameter;
 import core.util.HOLogger;
 import core.util.OSUtils;
@@ -151,6 +152,10 @@ public class HOTheme extends DefaultMetalTheme implements Theme {
             } else {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             }
+
+            RasenPanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.GRASSPANEL_BACKGROUND).getImage());
+            ImagePanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.IMAGEPANEL_BACKGROUND).getImage());
+
         } catch (Exception e) {
             success = false;
         }

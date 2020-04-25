@@ -41,7 +41,7 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 	 */
 	public final int getBestPosWidth() {
 		return getColumnModel().getColumn(
-				getColumnModel().getColumnIndex(Integer.valueOf(tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION))))
+				getColumnModel().getColumnIndex(tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION)))
 				.getWidth();
 	}
 
