@@ -3,6 +3,8 @@ package core.gui.theme;
 
 import core.gui.HOMainFrame;
 import core.gui.theme.dark.DarculaDarkTheme;
+import core.gui.theme.dark.HighContrastTheme;
+import core.gui.theme.dark.SolarizedDarkTheme;
 import core.gui.theme.ho.HOClassicSchema;
 import core.gui.theme.ho.HOTheme;
 import core.gui.theme.nimbus.NimbusTheme;
@@ -45,6 +47,8 @@ public final class ThemeManager {
 		themes.put(HOTheme.THEME_NAME, new HOTheme(UserParameter.instance().schriftGroesse));
 		themes.put(NimbusTheme.THEME_NAME, new NimbusTheme());
 		themes.put(DarculaDarkTheme.THEME_NAME, new DarculaDarkTheme());
+		themes.put(SolarizedDarkTheme.THEME_NAME, new SolarizedDarkTheme());
+		themes.put(HighContrastTheme.THEME_NAME, new HighContrastTheme());
 		themes.put(SystemTheme.THEME_NAME, new SystemTheme());
 
 		if (!themesDir.exists()) {
