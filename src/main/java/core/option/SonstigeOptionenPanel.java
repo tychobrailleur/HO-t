@@ -172,7 +172,7 @@ public final class SonstigeOptionenPanel extends ImagePanel implements ChangeLis
         add(m_jslSchriftgroesse);
 
         m_jcbSkin = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("options.misc.skin"),
-                new String[]{"Nimbus", "Classic", "Darcula", "Solarized", "High Contrast", "System"}, 120);
+                new String[]{"Nimbus", "Classic", "Darcula", "Solarized", "Solarized Light", "High Contrast", "System"}, 120);
         m_jcbSkin.setSelectedItem(core.model.UserParameter.temp().skin);
         m_jcbSkin.addItemListener(this);
         add(m_jcbSkin);
