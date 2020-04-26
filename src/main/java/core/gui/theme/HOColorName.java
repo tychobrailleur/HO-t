@@ -139,6 +139,8 @@ public interface HOColorName {
 	public static final String LINEUP_PARTIAL_TRAINING  = "lineup.partial.training.bg";
 	public static final String LINEUP_FULL_TRAINING     = "lineup.full.training.bg";
 
+	public static final String LINEUP_RATING_BORDER = "lineup.rating.border";
+
 	//1.431
 	public static final String MATCHDETAILS_PROGRESSBAR_GREEN = "matchdetails.progressbar.green";
 	public static final String MATCHDETAILS_PROGRESSBAR_RED = "matchdetails.progressbar.red";

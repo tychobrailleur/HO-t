@@ -370,6 +370,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(LINEUP_POS_MIN_BORDER, "light_gray");
 		put(SUBST_CHANGED_VALUE_BG, "lightGreen");
 
+		put(LINEUP_RATING_BORDER, Color.BLACK);
+
 		// Same colours as training preview gauges images.
 		put(LINEUP_PARTIAL_TRAINING, new Color(73, 208, 21));
 		put(LINEUP_FULL_TRAINING, new Color(37, 110, 9));

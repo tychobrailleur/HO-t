@@ -24,13 +24,13 @@ public abstract class DarkTheme implements Theme {
 
             ThemeManager.instance().put(HOBooleanName.IMAGEPANEL_BG_PAINTED, false);
 
-            final Color NEUTRAL_GREY = new Color(80, 80, 80);
+            final Color neutralGrey = new Color(80, 80, 80);
 
             // Use defaults from LAF
-            ThemeManager.instance().put(HOColorName.TABLEENTRY_FG, defaults.get("Label.foreground"));
-            ThemeManager.instance().put(HOColorName.LABEL_FG, defaults.get("Label.foreground"));
-            ThemeManager.instance().put(HOColorName.PANEL_BG, defaults.get("background"));
-            ThemeManager.instance().put(HOColorName.TABLEENTRY_BG, NEUTRAL_GREY);
+            ThemeManager.instance().put(HOColorName.TABLEENTRY_FG, defaults.getColor("Label.foreground"));
+            ThemeManager.instance().put(HOColorName.LABEL_FG, defaults.getColor("Label.foreground"));
+            ThemeManager.instance().put(HOColorName.PANEL_BG, defaults.getColor("background"));
+            ThemeManager.instance().put(HOColorName.TABLEENTRY_BG, neutralGrey);
 
             ThemeManager.instance().put(HOColorName.TABLE_SELECTION_FG, Color.WHITE);
             ThemeManager.instance().put(HOColorName.TABLE_SELECTION_BG, new Color(65, 65, 65));
@@ -40,8 +40,18 @@ public abstract class DarkTheme implements Theme {
             ThemeManager.instance().put(HOColorName.PLAYER_POS_BG, new Color(55, 71, 83));
             ThemeManager.instance().put(HOColorName.PLAYER_SUBPOS_BG, new Color(60, 60, 60));
 
+            // League Details
+            // defaults defined by darklaf
+            ThemeManager.instance().put(HOColorName.LEAGUE_TITLE_BG, defaults.getColor("TableHeader.background"));
+            ThemeManager.instance().put(HOColorName.TABLE_LEAGUE_EVEN, defaults.getColor("Table.background"));
+            ThemeManager.instance().put(HOColorName.TABLE_LEAGUE_ODD, defaults.getColor("Table.alternateRowBackground"));
+            ThemeManager.instance().put(HOColorName.LEAGUE_FG, defaults.getColor("Table.foreground"));
+            ThemeManager.instance().put(HOColorName.LEAGUE_BG, defaults.getColor("Table.background"));
+            ThemeManager.instance().put(HOColorName.TEAM_FG, new Color(100, 131, 226));
+
             // Lineup
-            ThemeManager.instance().put(HOColorName.LINEUP_POS_MIN_BG, NEUTRAL_GREY);
+            ThemeManager.instance().put(HOColorName.LINEUP_POS_MIN_BG, neutralGrey);
+            ThemeManager.instance().put(HOColorName.LINEUP_RATING_BORDER, Color.GRAY);
 
             // Matches
             ThemeManager.instance().put(HOColorName.MATCHTYPE_LEAGUE_BG, new Color(95, 86, 38));
