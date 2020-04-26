@@ -268,7 +268,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 		cBox.setFocusable(false);
 
 		if (this.buttonModels.containsKey(skillType)) {
-			cBox.setModel((ButtonModel) this.buttonModels.get(skillType));
+			cBox.setModel(this.buttonModels.get(skillType));
 		} else {
 			this.buttonModels.put(skillType, cBox.getModel());
 			if (change > 0) {
