@@ -124,7 +124,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(LOGO16_STABLE, "gui/bilder/Logo-16px_stable.png");
 		put(LOGO16_BETA, "gui/bilder/Logo-16px_beta.png");
 		put(LOGO16_DEV, "gui/bilder/Logo-16px_dev.png");
-		put(TRICKOT, "gui/bilder/Trickot.png");
+		//put(TRICKOT, "gui/bilder/Trickot.png");
+		put(TRICKOT, "gui/bilder/jerseys.svg");
 
 		// Player Overview
 		put(INJURED_SMALL, "gui/bilder/player overview/injured.png");
@@ -372,9 +373,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 
 		put(LINEUP_RATING_BORDER, Color.BLACK);
 
-		// Same colours as training preview gauges images.
-		put(LINEUP_PARTIAL_TRAINING, new Color(73, 208, 21));
-		put(LINEUP_FULL_TRAINING, new Color(37, 110, 9));
+		put(LINEUP_PARTIAL_TRAINING, new Color(34, 255, 255));
+		put(LINEUP_FULL_TRAINING, new Color(0, 0, 255));
 
 		// shirts
 		put(SHIRT_KEEPER, "black");

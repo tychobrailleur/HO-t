@@ -299,7 +299,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     private void showJersey() {
         // Jersey
         if (m_bShowTrikot) {
-            m_jlName.setIcon(ImageUtilities.getImage4Position(
+            m_jlName.setIcon(ImageUtilities.getJerseyIcon(
                     m_clCurrentPlayerPosition,
                     m_clPlayer.getTrikotnummer()
             ));

@@ -489,7 +489,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         //Minimized
         if ((m_clSelectedPlayer != null) && (m_clSelectedPlayer.getSpieler() != null)) {
             m_jlPlayer.setText(m_clSelectedPlayer.getSpieler().getShortName());
-            m_jlPlayer.setIcon(ImageUtilities.getImage4Position(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
+            m_jlPlayer.setIcon(ImageUtilities.getJerseyIcon(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
                     m_clSelectedPlayer.getSpieler().getTrikotnummer()));
         } else {
             m_jlPlayer.setText("");
@@ -590,7 +590,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         //Minimized
         if ((m_clSelectedPlayer != null) && (m_clSelectedPlayer.getSpieler() != null)) {
             m_jlPlayer.setText(m_clSelectedPlayer.getSpieler().getShortName());
-            m_jlPlayer.setIcon(ImageUtilities.getImage4Position(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
+            m_jlPlayer.setIcon(ImageUtilities.getJerseyIcon(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
                     m_clSelectedPlayer.getSpieler().getTrikotnummer()));
         } else {
             m_jlPlayer.setText("");
@@ -666,7 +666,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         //Minimized
         if ((m_clSelectedPlayer != null) && (m_clSelectedPlayer.getSpieler() != null)) {
             m_jlPlayer.setText(m_clSelectedPlayer.getSpieler().getShortName());
-            m_jlPlayer.setIcon(ImageUtilities.getImage4Position(lineup.getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
+            m_jlPlayer.setIcon(ImageUtilities.getJerseyIcon(lineup.getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
                     m_clSelectedPlayer.getSpieler()
                             .getTrikotnummer()));
         } else {

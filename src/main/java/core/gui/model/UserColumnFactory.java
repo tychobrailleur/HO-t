@@ -114,7 +114,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem) {
                 ColorLabelEntry colorLabelEntry = new ColorLabelEntry(ImageUtilities
-                        .getImage4Position(MatchRoleID
+                        .getJerseyIcon(MatchRoleID
                                         .getHTPosidForHOPosition4Image((byte) spielerCBItem
                                                 .getPosition()),
                                 (byte) 0, 0),
@@ -812,7 +812,7 @@ final public class UserColumnFactory {
                 if (model.getLineupWithoutRatingRecalc().isPlayerInLineup(player.getSpielerID())
                         && (model.getLineupWithoutRatingRecalc().getPositionBySpielerId(player
                         .getSpielerID()) != null)) {
-                    return new ColorLabelEntry(ImageUtilities.getImage4Position(model.getLineupWithoutRatingRecalc()
+                    return new ColorLabelEntry(ImageUtilities.getJerseyIcon(model.getLineupWithoutRatingRecalc()
                                     .getPositionBySpielerId(player.getSpielerID()),
                             player.getTrikotnummer()),
                             -model.getLineupWithoutRatingRecalc()
@@ -823,7 +823,7 @@ final public class UserColumnFactory {
                             ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
                 }
 
-                return new ColorLabelEntry(ImageUtilities.getImage4Position(null,
+                return new ColorLabelEntry(ImageUtilities.getJerseyIcon(null,
                         player.getTrikotnummer()),
                         -player.getTrikotnummer() - 1000,
                         ColorLabelEntry.FG_STANDARD,
