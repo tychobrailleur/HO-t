@@ -18,7 +18,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 
 /**
- * Rendered for the TrainingRecap Table
+ * Renderer for the TrainingRecap Table (Prediction)
  *
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
@@ -60,7 +60,7 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
 
             // fetch playerId (last column) from table
         	playerId = Integer.parseInt((String)table.getValueAt(row, table.getColumnCount()-1));
-        	Player player =HOVerwaltung.instance().getModel().getSpieler(playerId);
+        	Player player = HOVerwaltung.instance().getModel().getSpieler(playerId);
         	realPlayerAge = player.getAlterWithAgeDays();
 
         	/** If there is some kind of skillup information
@@ -74,11 +74,10 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
         		String[] skills = s.split(" "); //$NON-NLS-1$
         		int skillType = Integer.parseInt(skills[0]);
         		int change = Integer.parseInt((skills[2])); // +1: skillup; -1: skilldrop
-//        		Color color = Skills.getSkillColor(skillType);
         		icon = TrainingLegendPanel.getSkillupTypeIcon(skillType, change);
         		double val = Double.parseDouble(skills[1]);
         		String skillLevelName = PlayerAbility.getNameForSkill(val, true);
-        		tooltip =PlayerSkill.toString(skillType)+": " + skillLevelName;
+        		tooltip = PlayerSkill.toString(skillType)+": " + skillLevelName;
         		text = skillLevelName;
         	}
 

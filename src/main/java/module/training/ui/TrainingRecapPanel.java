@@ -42,8 +42,6 @@ public class TrainingRecapPanel extends LazyImagePanel {
     private static final int fixedColumns = 5;
     private TrainingRecapTable recapTable;
     private final TrainingModel model;
-    private boolean initialized = false;
-    private boolean needsRefresh = false;
 
     /**
      * Creates a new TrainingRecapPanel object.
@@ -78,8 +76,6 @@ public class TrainingRecapPanel extends LazyImagePanel {
             public void refresh() {
                 if (isShowing()) {
                     reload();
-                } else {
-                    needsRefresh = true;
                 }
             }
         });
