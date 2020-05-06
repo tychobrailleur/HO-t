@@ -11,8 +11,6 @@ import core.model.WorldDetailLeague;
 import core.model.WorldDetailsManager;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
-import module.seb.SVGDisplayFrame;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -550,7 +548,7 @@ public class ImageUtilities {
 			URI svgURI = null;
 
 			try {
-				svgURI = SVGDisplayFrame.class.getClassLoader().getResource("gui/bilder/jerseys.svg").toURI();
+				svgURI = ImageUtilities.class.getClassLoader().getResource("gui/bilder/jerseys.svg").toURI();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
