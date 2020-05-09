@@ -9,6 +9,8 @@ import core.gui.theme.ThemeManager;
 import javax.swing.*;
 import java.awt.*;
 
+import static core.gui.theme.HOColorName.TSFORECAST_ALT_COLOR;
+
 public class DarculaDarkTheme extends DarkTheme {
 
     public final static String THEME_NAME = "Darcula";
@@ -79,6 +81,9 @@ public class DarculaDarkTheme extends DarkTheme {
             // Statistics
             ThemeManager.instance().put(HOColorName.STAT_PANEL_BG, defaults.getColor("background").brighter());
             ThemeManager.instance().put(HOColorName.STAT_PANEL_FG, defaults.getColor("Label.foreground"));
+
+            // TS Forecast
+            ThemeManager.instance().put(TSFORECAST_ALT_COLOR, new Color(160, 160, 210));
 
             return super.enableTheme();
         } catch (Exception e) {
