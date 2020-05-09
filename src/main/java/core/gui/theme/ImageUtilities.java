@@ -1,8 +1,7 @@
 package core.gui.theme;
 
-import com.kitfox.svg.SVGDiagram;
-import com.kitfox.svg.SVGRoot;
-import com.kitfox.svg.SVGUniverse;
+import com.kitfox.svg.*;
+import com.kitfox.svg.animation.AnimationElement;
 import com.kitfox.svg.app.beans.SVGIcon;
 import com.kitfox.svg.xml.StyleSheet;
 import com.kitfox.svg.xml.StyleSheetRule;
@@ -13,6 +12,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 
 import java.awt.*;
+import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.FilteredImageSource;
@@ -52,11 +52,11 @@ public class ImageUtilities {
 	public static Image getImageDurchgestrichen(Image image,Color helleFarbe, Color dunkleFarbe) {
 	    try {
 	        final BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-	
+
 	        final java.awt.Graphics2D g2d = (java.awt.Graphics2D) bufferedImage.getGraphics();
-	
+
 	        g2d.drawImage(image, 0, 0, null);
-	
+
 	        //Kreuz zeichnen
 	        g2d.setColor(helleFarbe);
 	        g2d.drawLine(0, 0, bufferedImage.getWidth() - 1, bufferedImage.getHeight());
@@ -71,8 +71,7 @@ public class ImageUtilities {
 	}
 
 	/**
-	 * Macht eine Farbe in dem Bild transparent
-	 *
+	 * Makes a colour in the image transparent.
 	 */
 	public static Image makeColorTransparent(Image im, int minred, int mingreen,
 	                                                  int minblue, int maxred, int maxgreen,
@@ -83,36 +82,34 @@ public class ImageUtilities {
 	}
 
 	/**
-	 * Kopiert das zweite Image auf das erste
-	 *
+	 * Makes a colour in the image transparent.
+	 */
+	public static Image makeColorTransparent(Image im, Color color) {
+		Image image = null;
+
+		//Cache durchsuchen
+		image = (Image) m_clTransparentsCache.get(im);
+
+		//Nicht im Cache -> laden
+		if (image == null) {
+			final ImageProducer ip = new FilteredImageSource(im.getSource(), new TransparentFilter(color));
+			image = Toolkit.getDefaultToolkit().createImage(ip);
+
+			//Bild in den Cache hinzufügen
+			m_clTransparentsCache.put(im, image);
+		}
+
+		return image;
+	}
+
+	/**
+	 * Copies the second image on the first image.
 	 */
 	public static Image merge(Image background, Image foreground) {
 	    final BufferedImage image = new BufferedImage(
 	    		background.getWidth(null), background.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 	    image.getGraphics().drawImage(background, 0, 0, null);
 	    image.getGraphics().drawImage(foreground, 0, 0, null);
-	
-	    return image;
-	}
-
-	/**
-	 * Macht eine Farbe in dem Bild transparent
-	 *
-	 */
-	public static Image makeColorTransparent(Image im, Color color) {
-	    Image image = null;
-	
-	    //Cache durchsuchen
-	    image = (Image) m_clTransparentsCache.get(im);
-	
-	    //Nicht im Cache -> laden
-	    if (image == null) {
-	        final ImageProducer ip = new FilteredImageSource(im.getSource(), new TransparentFilter(color));
-	        image = Toolkit.getDefaultToolkit().createImage(ip);
-	
-	        //Bild in den Cache hinzufügen
-	        m_clTransparentsCache.put(im, image);
-	    }
 	
 	    return image;
 	}
@@ -569,9 +566,27 @@ public class ImageUtilities {
 				root.setStyleSheet(ss);
 
 				String rgbColour = getHexColor(trickotfarbe);
-
 				ss.addStyleRule(new StyleSheetRule("fill", "path", "jersey"), rgbColour);
 				ss.addStyleRule(new StyleSheetRule("fill", "path", "collar"), rgbColour);
+
+				double brightness = ImageUtilities.getBrightness(trickotfarbe);
+
+				if (brightness < 130) {
+					ss.addStyleRule(new StyleSheetRule("fill", "text", "num"), "white");
+				} else {
+					ss.addStyleRule(new StyleSheetRule("fill", "text", "num"), "black");
+				}
+
+				if (trickotnummer > 0 && trickotnummer < 50) {
+					Text element = (Text)diagram.getElement("number");
+					element.appendText(String.valueOf(trickotnummer));
+					try {
+						element.setAttribute("x", AnimationElement.AT_XML, String.valueOf(trickotnummer).length() > 1 ? "57.5": "61");
+						element.rebuild();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 
 				komplettIcon = icon;
 			}
@@ -652,9 +667,21 @@ public class ImageUtilities {
 		return trickotfarbe;
 	}
 
+	public static double getBrightness(Color colour) {
+		return Math.sqrt(0.241 * colour.getRed()*colour.getRed()
+				+ 0.691 * colour.getGreen()*colour.getGreen()
+				+ 0.068 * colour.getBlue()*colour.getBlue());
+	}
+
 	private static String getHexColor(Color colour) {
-		return "#" + Integer.toHexString(colour.getRed()) +
-				Integer.toHexString(colour.getGreen()) +
-				Integer.toHexString(colour.getBlue());
+		return "#" + String.format("%1$02X", colour.getRed()) +
+				String.format("%1$02X", colour.getGreen()) +
+				String.format("%1$02X", colour.getBlue());
+	}
+
+	public static Color getColorFromHex(String hexColour) {
+		return new Color(Integer.valueOf(hexColour.substring(1, 3), 16),
+				Integer.valueOf(hexColour.substring(3, 5), 16),
+				Integer.valueOf(hexColour.substring(5, 7), 16));
 	}
 }

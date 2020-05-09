@@ -26,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="5.6"
-     inkscape:cx="-7.8732361"
+     inkscape:cx="25.963842"
      inkscape:cy="23.514556"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -185,11 +185,20 @@
        id="path4228"
        inkscape:connector-curvature="0"
        transform="matrix(0.28222222,0,0,0.28222222,51.569848,44.820658)" />
-    <path class="collar"
+    <path
+       class="collar"
        style="fill-opacity:1;stroke:none;stroke-width:16;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 41.72689,8.9779657 C 37.67151,8.0729796 35.257975,5.9158173 36.080111,3.9310044 36.265396,3.4836868 36.415475,3.4007937 37.219069,3.3019229 40.5405,2.8932681 53.167929,3.0529042 53.624342,3.5093187 c 0.08333,0.083331 0.22087,0.3933463 0.30564,0.6889233 0.490262,1.7094445 -1.696556,3.7054247 -5.071075,4.6285365 -1.54567,0.4228232 -5.535744,0.5074064 -7.132017,0.1511872 z"
        id="path4155"
        inkscape:connector-curvature="0"
        transform="matrix(0.28222222,0,0,0.28222222,51.569848,44.820658)" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:bold;font-size:11px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="59"
+       y="60.783714"
+       id="number"
+       class="num"
+       sodipodi:linespacing="125%"></text>
   </g>
 </svg>

@@ -809,18 +809,23 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 final HOModel model = HOVerwaltung.instance().getModel();
+                final MatchRoleID positionBySpielerId = model.getLineupWithoutRatingRecalc()
+                        .getPositionBySpielerId(player.getSpielerID());
                 if (model.getLineupWithoutRatingRecalc().isPlayerInLineup(player.getSpielerID())
-                        && (model.getLineupWithoutRatingRecalc().getPositionBySpielerId(player
-                        .getSpielerID()) != null)) {
-                    return new ColorLabelEntry(ImageUtilities.getJerseyIcon(model.getLineupWithoutRatingRecalc()
-                                    .getPositionBySpielerId(player.getSpielerID()),
-                            player.getTrikotnummer()),
-                            -model.getLineupWithoutRatingRecalc()
-                                    .getPositionBySpielerId(player
-                                            .getSpielerID())
+                        && (positionBySpielerId != null)) {
+                    final ColorLabelEntry colorLabelEntry = new ColorLabelEntry(
+                            ImageUtilities.getJerseyIcon(
+                                    positionBySpielerId,
+                                    player.getTrikotnummer()
+                            ),
+                            -positionBySpielerId
                                     .getSortId(),
                             ColorLabelEntry.FG_STANDARD,
-                            ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
+                            ColorLabelEntry.BG_STANDARD,
+                            SwingConstants.CENTER
+                    );
+                    colorLabelEntry.setToolTipText(MatchRoleID.getNameForPosition(positionBySpielerId.getPosition()));
+                    return colorLabelEntry;
                 }
 
                 return new ColorLabelEntry(ImageUtilities.getJerseyIcon(null,

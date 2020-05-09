@@ -9,9 +9,6 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.tabbedPane.HOTabbedPane;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.gui.theme.dark.DarkTheme;
-import core.gui.theme.ho.HOTheme;
-import core.gui.theme.nimbus.NimbusTheme;
 import core.model.FormulaFactors;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
@@ -66,9 +63,6 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.text.DefaultEditorKit;
 
 /**
  * The Main HO window
@@ -124,7 +118,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 	// Menu color depending of version
 	private final Color c_beta = new Color(162, 201, 255);
-	private final Color c_dev = new Color(40, 170, 170);
+	private final Color c_dev = new Color(235, 170, 170);
 
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
