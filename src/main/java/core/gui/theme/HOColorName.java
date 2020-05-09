@@ -80,6 +80,7 @@ public interface HOColorName {
 	public static final String SHIRT_SUBFORWARD 		= "shirt.subFor";
 	public static final String SHIRT 					= "shirt";
 
+	// Statistics
 	public static final String STAT_LEADERSHIP 			= "stat.leadership";
 	public static final String STAT_EXPERIENCE 			= "stat.experience";;
 	public static final String STAT_FORM 				= "stat.form";;
@@ -117,6 +118,8 @@ public interface HOColorName {
 	public static final String STAT_CONFIDENCE			= "stat.confidence";
 	public static final String STAT_HATSTATS			= "stat.hatstats";
 	public static final String STAT_LODDAR				= "stat.loddar";
+	public static final String STAT_PANEL_BG = "stat.panel.bg";
+	public static final String STAT_PANEL_FG = "stat.panel.fg";
 
 	public static final String MATCHHIGHLIGHT_FAILED_FG	= "matchHighlight.failed.fg";
 

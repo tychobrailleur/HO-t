@@ -427,6 +427,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(STAT_CONFIDENCE, Color.CYAN);
 		put(STAT_HATSTATS, Color.YELLOW);
 		put(STAT_LODDAR, new Color(150, 20, 20));
+		put(STAT_PANEL_BG, Color.WHITE);
+		put(STAT_PANEL_FG, Color.DARK_GRAY);
 
 		// matchtypes
 		put(MATCHTYPE_BG, "white");

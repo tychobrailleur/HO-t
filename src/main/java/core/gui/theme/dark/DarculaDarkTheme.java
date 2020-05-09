@@ -76,6 +76,9 @@ public class DarculaDarkTheme extends DarkTheme {
             //Training
             ThemeManager.instance().put(HOColorName.TRAINING_BIRTHDAY_BG, new Color(66, 66, 24));
 
+            // Statistics
+            ThemeManager.instance().put(HOColorName.STAT_PANEL_BG, defaults.getColor("background").brighter());
+            ThemeManager.instance().put(HOColorName.STAT_PANEL_FG, defaults.getColor("Label.foreground"));
 
             return super.enableTheme();
         } catch (Exception e) {
