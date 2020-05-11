@@ -471,6 +471,12 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 
 		// TS Forecast
 		put(TSFORECAST_ALT_COLOR, Color.BLUE);
+
+		// HRF Explorer
+		put(HOColorName.HRF_GREEN_BG, new Color(220,255,220));
+		put(HOColorName.HRF_LIGHTBLUE_BG, new Color(235,235,255));
+		put(HOColorName.HRF_DARKBLUE_BG, new Color(220,220,255));
+		put(HOColorName.HRF_RED_BG, new Color(255,200,200));
 	}
 
 	public Color getDefaultColor(String key) {

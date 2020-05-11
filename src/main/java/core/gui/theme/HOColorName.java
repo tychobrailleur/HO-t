@@ -179,4 +179,10 @@ public interface HOColorName {
 
 	// TS Forecast
 	public static final String TSFORECAST_ALT_COLOR = "tsforecast.alt.color";
+
+	// HRF Explorer
+	public static final String HRF_GREEN_BG = "hrf.green.bg";
+	public static final String HRF_LIGHTBLUE_BG = "hrf.lightblue.bg";
+	public static final String HRF_DARKBLUE_BG = "hrf.darkblue.bg";
+	public static final String HRF_RED_BG = "hrf.red.bg";
 }

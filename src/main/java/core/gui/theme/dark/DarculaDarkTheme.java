@@ -85,6 +85,12 @@ public class DarculaDarkTheme extends DarkTheme {
             // TS Forecast
             ThemeManager.instance().put(TSFORECAST_ALT_COLOR, new Color(160, 160, 210));
 
+            // HRF Explorer
+            ThemeManager.instance().put(HOColorName.HRF_GREEN_BG, new Color(56, 76, 53));
+            ThemeManager.instance(). put(HOColorName.HRF_LIGHTBLUE_BG, new Color(55, 71, 83));
+            ThemeManager.instance().put(HOColorName.HRF_DARKBLUE_BG, new Color(25, 25, 68));
+            ThemeManager.instance().put(HOColorName.HRF_RED_BG, new Color(68, 40, 40));
+
             return super.enableTheme();
         } catch (Exception e) {
             e.printStackTrace();
