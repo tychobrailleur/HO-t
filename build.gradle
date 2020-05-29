@@ -192,6 +192,11 @@ jlink {
                 '--icon', "${projectDir}/buildResources/Mac/HO.icns",
                 '--resource-dir', "${projectDir}/buildResources/Mac"
         ]
+        installerOptions = [
+                '--vendor', 'HO!',
+                '--app-version', "${project.version}",
+                '--resource-dir', "${projectDir}/buildResources/Mac"
+        ]
     }
 }
 
