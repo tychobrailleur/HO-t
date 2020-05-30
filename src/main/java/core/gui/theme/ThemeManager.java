@@ -34,7 +34,10 @@ public final class ThemeManager {
 	HOClassicSchema classicSchema = new HOClassicSchema();
 	private ExtSchema extSchema;
 
-	private final Map<String, Theme> themes = new HashMap<>();
+	private final Map<String, Theme> themes = new LinkedHashMap<>();
+
+	/** Name of the default theme. */
+	public final static String DEFAULT_THEME_NAME = NimbusTheme.THEME_NAME;
 
 	private ThemeManager(){
 		initialize();
@@ -45,12 +48,13 @@ public final class ThemeManager {
 	}
 
 	private void initialize() {
-		themes.put(HOTheme.THEME_NAME, new HOTheme(UserParameter.instance().schriftGroesse));
+		themes.put(HOTheme.THEME_NAME, new HOTheme());
 		themes.put(NimbusTheme.THEME_NAME, new NimbusTheme());
 		themes.put(DarculaDarkTheme.THEME_NAME, new DarculaDarkTheme());
-		themes.put(SolarizedDarkTheme.THEME_NAME, new SolarizedDarkTheme());
+// Comment out those themes for now as they are not ready yet.
+//		themes.put(HighContrastTheme.THEME_NAME, new HighContrastTheme());
+//		themes.put(SolarizedDarkTheme.THEME_NAME, new SolarizedDarkTheme());
 		themes.put(SolarizedLightTheme.THEME_NAME, new SolarizedLightTheme());
-		themes.put(HighContrastTheme.THEME_NAME, new HighContrastTheme());
 		themes.put(SystemTheme.THEME_NAME, new SystemTheme());
 
 		if (!themesDir.exists()) {
@@ -58,7 +62,16 @@ public final class ThemeManager {
 		}
 	}
 
-	public static Color getColor(String key){
+	/**
+	 * Returns the list of registered themes.
+	 *
+	 * @return List<Theme> – List of registered themes
+	 */
+	public List<Theme> getRegisteredThemes() {
+		return new ArrayList<>(themes.values());
+	}
+
+	public static Color getColor(String key) {
 		Object obj = null;
 		if(instance().extSchema != null){
 			obj = instance().extSchema.getThemeColor(key);
@@ -240,7 +253,7 @@ public final class ThemeManager {
 			}
 
 			if (!success) {
-				Theme classicTheme = themes.get("Classic");
+				Theme classicTheme = themes.get(DEFAULT_THEME_NAME);
 				success = classicTheme.loadTheme();
 			}
 

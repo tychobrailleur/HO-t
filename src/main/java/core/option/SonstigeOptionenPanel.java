@@ -4,12 +4,15 @@ package core.option;
 import core.datatype.CBItem;
 import core.datatype.GeldFaktorCBItem;
 import core.gui.comp.panel.ImagePanel;
+import core.gui.theme.Theme;
+import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.List;
 
 import javax.swing.JCheckBox;
 import javax.swing.event.ChangeEvent;
@@ -171,8 +174,12 @@ public final class SonstigeOptionenPanel extends ImagePanel implements ChangeLis
         m_jslSchriftgroesse.addChangeListener(this);
         add(m_jslSchriftgroesse);
 
-        m_jcbSkin = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("options.misc.skin"),
-                new String[]{"Nimbus", "Classic", "Darcula", "Solarized", "Solarized Light", "High Contrast", "System"}, 120);
+        List<Theme> registeredThemes = ThemeManager.instance().getRegisteredThemes();
+        m_jcbSkin = new ComboBoxPanel(
+                HOVerwaltung.instance().getLanguageString("options.misc.skin"),
+                registeredThemes.stream().map(Theme::getName).toArray(),
+                120
+        );
         m_jcbSkin.setSelectedItem(core.model.UserParameter.temp().skin);
         m_jcbSkin.addItemListener(this);
         add(m_jcbSkin);

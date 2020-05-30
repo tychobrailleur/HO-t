@@ -30,22 +30,6 @@ public class HOTheme extends DefaultMetalTheme implements Theme {
 
     public final static String THEME_NAME = "Classic";
 
-    //~ Constructors -------------------------------------------------------------------------------
-    /**
-     * Creates a new HOTheme object.
-     *
-     * @param fontSize font size (e.g. from user parameters)
-     */
-    public HOTheme(int fontSize) {
-        super();
-       	final String fontName = FontUtil.getFontName(UserParameter.instance().sprachDatei);
-		HOLogger.instance().log(getClass(), "Use Font: " + fontName + " [lang:" + UserParameter.instance().sprachDatei + "]");
-		TEXTFONT = new FontUIResource((fontName != null ? fontName : "SansSerif"), Font.PLAIN, fontSize);
-		setUIFont(TEXTFONT);
-        //Ausnahme TitledBorderfont nicht Bold
-        UIManager.put("TitledBorder.font", TEXTFONT);
-    }
-
     //~ Methods ------------------------------------------------------------------------------------
 
     @Override
@@ -145,9 +129,17 @@ public class HOTheme extends DefaultMetalTheme implements Theme {
         boolean success = true;
 
         try {
+            final String fontName = FontUtil.getFontName(UserParameter.instance().sprachDatei);
+            HOLogger.instance().log(getClass(), "Use Font: " + fontName + " [lang:" + UserParameter.instance().sprachDatei + "]");
+            TEXTFONT = new FontUIResource((fontName != null ? fontName : "SansSerif"),
+                    Font.PLAIN,
+                    UserParameter.instance().schriftGroesse);
+            setUIFont(TEXTFONT);
+            UIManager.put("TitledBorder.font", TEXTFONT);
+
             if (!OSUtils.isMac()) {
                 final MetalLookAndFeel laf = new MetalLookAndFeel();
-                MetalLookAndFeel.setCurrentTheme(new HOTheme(UserParameter.instance().schriftGroesse));
+                MetalLookAndFeel.setCurrentTheme(this);
                 UIManager.setLookAndFeel(laf);
             } else {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
