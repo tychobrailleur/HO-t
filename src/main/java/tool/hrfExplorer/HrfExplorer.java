@@ -154,7 +154,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	private Vector m_V_Filelist_Header;
 	@SuppressWarnings("unchecked")
 	private Vector m_V_Filelist_Values;
-//	Variablen für Calendar-Tabelle
+	// Variablen für Calendar-Tabelle
 	@SuppressWarnings("unchecked")
 	private Vector m_V_Calendar_Header;
 	@SuppressWarnings("unchecked")
@@ -172,37 +172,45 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	private ResultSet m_Result_SpecialEvent;
 
 	@SuppressWarnings("unchecked")
-	private static Hashtable m_HashTable_DayInDB = new Hashtable(40);		// KEY: Tag des gewählten Monats in Calendar, 		VALUE: HRF-ID für diesen Tag
+	/** KEY: Day of the selected month in calendar, VALUE: HRF ID for this day. */
+	private static Hashtable m_HashTable_DayInDB = new Hashtable(40);
 	@SuppressWarnings("unchecked")
-	private Hashtable m_HashTable_Details = new Hashtable(40);			// KEY: Pfad oder Datum eines HrfDetails-Objekt, 	VALUE: das HrfDetails-Objekt
+	/** KEY: Path or day of an HrfDetails object, VALUE: the HrfDetails object. */
+	private Hashtable m_HashTable_Details = new Hashtable(40);
 	@SuppressWarnings("unchecked")
-	private Hashtable m_HashTable_Details_ColHeader = new Hashtable(40);	// KEY: Datum eines HrfDetails-Objekt				VALUE: das HrfDetails-Objekt
+	/** KEY: Date of an HrfDetails object, VALUE: the HrfDetails object. */
+	private Hashtable m_HashTable_Details_ColHeader = new Hashtable(40);
 	@SuppressWarnings("unchecked")
-	private Hashtable m_HashTable_Columns = new Hashtable(40);			// KEY: Spaltenname der Detailtabelle				VALUE: Vector mit dem Inhalt einer Spalte der Detailtabelle
+	/** KEY: Column name of the detail table, VALUE: Vector with the content of a column of the detail table. */
+	private Hashtable m_HashTable_Columns = new Hashtable(40);
 	@SuppressWarnings("unchecked")
-	private static Hashtable m_HashTable_DatumKey = new Hashtable(40);	// KEY: Datum im Format YYYY-MM-DD					VALUE: Dateipfad
+	/** KEY: Date in the YYYY-MM-DD format, VALUE: file path. */
+	private static Hashtable m_HashTable_DatumKey = new Hashtable(40);
 	@SuppressWarnings("unchecked")
-	private Hashtable m_HashTable_Import = new Hashtable(40);				// KEY: Pfad der Dateien aus der Importtabelle		VALUE: ---
+	/** KEY: Path of the files from the import table, VALUE: --- */
+	private Hashtable m_HashTable_Import = new Hashtable(40);
 	@SuppressWarnings("unchecked")
-	private static Hashtable m_HashTable_isEvent = new Hashtable(40);		// KEY: Tag des gewählten Monats in Calendar, 		VALUE: Matchtyp als String
+	/** KEY: Day of the selected month in the calendar, VALUE: match type as a string. */
+	private static Hashtable m_HashTable_isEvent = new Hashtable(40);
 	@SuppressWarnings("unchecked")
-	private Hashtable m_HashTable_MatchTyp = new Hashtable(40);			// KEY: Match-ID, 									VALUE: Matchtyp
+	/** KEY: Match ID, VALUE: match type. */
+	private Hashtable m_HashTable_MatchTyp = new Hashtable(40);
 	private static Hashtable<String,String> m_HashTable_EventInfo = new Hashtable<String,String>(40);
 	@SuppressWarnings("unchecked")
-	private Hashtable m_HashTable_EventGUI = new Hashtable();			// KEY: Der Tag des Events							VALUE: Vector mit Zeit(sek) und Eventtyp
+	/** KEY: Day of the event, VALUE: Vector with time (in seconds) and event type. */
+	private Hashtable m_HashTable_EventGUI = new Hashtable();
 
 	public HrfExplorer() {
 		initialize();
 	}
 	/**
-	 * Wird von HO aufgerufen, wenn das Tab aktiviert wird
-	 * @param hOMiniModel Das MiniModel, übergeben von HO
+	 * Called when the tab is activated.
 	 */
 	@SuppressWarnings("unchecked")
 	private void initialize() {
 
 		HOVerwaltung hoV = HOVerwaltung.instance();
-		// Aktuelles Datum ermitteln und in die Members schreiben
+		// Find the current date, and write the instance variables.
 		m_gc = new GregorianCalendar();
 		m_int_selectedMonth = m_gc.get(GregorianCalendar.MONTH);
 		m_int_selectedYear = m_gc.get(GregorianCalendar.YEAR);
@@ -231,7 +239,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
         m_HashTable_EventInfo.put("DB",hoV.getLanguageString("ttCalDB"));
         m_HashTable_EventInfo.put("FILE",hoV.getLanguageString("ttCalFile"));
 
-		// Anzahl der HRF-Files in der DB ermitteln
+		// Count of HRF files in the db.
 		doSelect("SELECT COUNT(*) FROM HRF");
 		try {
 			while(m_queryResult.next())	{
@@ -245,7 +253,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
         	//tmp.show();
 		}
 
-		// Jahr des ersten HRF in der DB ermitteln
+		// Find the year of the first HRF.
 		doSelect("SELECT MIN(DATUM) FROM HRF");
 		try
 		{
@@ -267,7 +275,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 			HOLogger.instance().error(getClass(), s);
 		}
 
-		// Ausgangspfad für den Start des JFileChooser ermitteln
+		// Entry path to start JFileChooser
 
 		m_Str_hrfPfad = null;
 
@@ -353,7 +361,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
         m_Ar_Detail_Label_fix[0] = hoV.getLanguageString("Liga");
         m_Ar_Detail_Label_fix[1] = hoV.getLanguageString("Season") + " / " +hoV.getLanguageString("Spieltag");
         m_Ar_Detail_Label_fix[2] = hoV.getLanguageString("Punkte") + " / " + hoV.getLanguageString("Tore");
-        m_Ar_Detail_Label_fix[3] =hoV.getLanguageString("Platzierung");
+        m_Ar_Detail_Label_fix[3] = hoV.getLanguageString("Platzierung");
         m_Ar_Detail_Label_fix[4] = hoV.getLanguageString("ls.team.trainingtype");
         m_Ar_Detail_Label_fix[5] = hoV.getLanguageString("ls.team.trainingintensity");
         m_Ar_Detail_Label_fix[6] = hoV.getLanguageString("ls.club.staff.assistantcoach");
@@ -408,9 +416,6 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
     	TableColumn colFixed = m_Table_Details.getColumnModel().getColumn(0);
     	colFixed.setPreferredWidth(m_int_Breite_Detail_Fixed);
 
-
-
-    	Border kante = BorderFactory.createBevelBorder(BevelBorder.RAISED,hellblau,dunkelblau);
         /*****************
          *Erstellen der Buttons
          *****************/
@@ -721,9 +726,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 		GregorianCalendar gc = new GregorianCalendar(m_int_selectedYear,m_int_selectedMonth,1);
 		int last_day = gc.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);
 
-		/*
-		 * Alle Werte aus dem SELECT lesen und in die Hashtable schreiben
-		 */
+		// Read all values from SELECT and write them to the hashtable
 		try
 		{
 			while(m_queryResult.next())
@@ -760,9 +763,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 			//debugWindow.append("" + sexc);
 		}
 
-		/*
-		 * Alle Spiele und Trainings für den gewählten Monat herausfinden
-		 */
+		// Find all games and trainings for the selected month
 		GregorianCalendar cStart = new GregorianCalendar(Integer.parseInt(jahr_Start),Integer.parseInt(monat_Start)-1,1);
 		Timestamp tsStart = new Timestamp(cStart.getTimeInMillis());
 		GregorianCalendar cStop = new GregorianCalendar(Integer.parseInt(jahr_Ende),Integer.parseInt(monat_Ende)-1,1);
@@ -1477,7 +1478,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 //  ******** Start der Methoden für IOfficialPlugin
 //	 *********** Beginn der Datenbank-Methoden *******************
 	/*****************
-	 * Führt ein query gegen die DB aus
+	 * Executes a query against the db
 	 * @param query
 	 */
 	public void doSelect(String query)
