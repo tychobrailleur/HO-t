@@ -21,7 +21,8 @@ public class LinearCalendarPanel extends JPanel {
             add(new YearPanel(i, entries.get(i)));
         }
 
-        Box.Filler hFill = new Box.Filler(new Dimension(10000,0),
+        Box.Filler hFill = new Box.Filler(
+                new Dimension(10000,0),
                 new Dimension(10000, 0),
                 new Dimension(10000, 0));
         add(hFill);
@@ -31,23 +32,49 @@ public class LinearCalendarPanel extends JPanel {
         private Map<Integer, Integer> hrfCount = new HashMap<>();
 
         YearPanel(int year, List<HRF> entries) {
-            setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            setPreferredSize(new Dimension(12*10, 120));
-            setMinimumSize(new Dimension(12*10, 120));
+            setPreferredSize(new Dimension(12*10, 180));
+            setMinimumSize(new Dimension(12*10, 180));
             setLayout(new BorderLayout());
 
-            JPanel mainPanel = new JPanel();
+            Map<Integer, List<HRF>> monthHrf = entries.stream().collect(
+                    Collectors.groupingBy(HRF::getMonth, Collectors.toList())
+            );
+
+            JPanel mainPanel = new ChartPanel(monthHrf);
             mainPanel.setOpaque(true);
             mainPanel.setBackground(Color.WHITE);
-            mainPanel.setPreferredSize(new Dimension(120, 100));
+            mainPanel.setPreferredSize(new Dimension(120, 160));
 
             add(mainPanel, BorderLayout.CENTER);
 
-            Map<Integer, List<HRF>> monthHrf = entries.stream().collect(Collectors.groupingBy(HRF::getMonth, Collectors.toList()));
-
-
             JLabel yearLabel = new JLabel(String.valueOf(year), SwingConstants.CENTER);
+            yearLabel.setOpaque(true);
+            yearLabel.setBackground(new Color(150, 150, 150));
+            yearLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
             add(yearLabel, BorderLayout.SOUTH);
+        }
+    }
+
+    class ChartPanel extends JPanel {
+        private final Map<Integer, List<HRF>> entries;
+
+        public ChartPanel(Map<Integer, List<HRF>> entries) {
+            this.entries = entries;
+        }
+
+        @Override
+        public void paint(Graphics g) {
+            Dimension dim = getSize();
+            g.setColor(Color.WHITE);
+            g.fillRect(0, 0, dim.width, dim.height);
+            System.out.println("Height: " + dim.height);
+
+            g.setColor(Color.GREEN);
+            for (int i = 0; i < 12; i++) {
+                int month = entries.getOrDefault(i, Collections.EMPTY_LIST).size();
+                int height = dim.height;
+                g.fillRect(i*10, height-5*month, 9, 5*month);
+            }
         }
     }
 }
