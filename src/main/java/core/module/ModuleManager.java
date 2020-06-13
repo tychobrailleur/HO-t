@@ -2,6 +2,7 @@ package core.module;
 
 import core.model.UserParameter;
 import core.module.config.ModuleConfig;
+import module.hrfExplorer.HrfExplorerModule;
 import module.ifa.IfaModule;
 import module.lineup.LineupModule;
 import module.matches.MatchesModule;
@@ -26,12 +27,12 @@ import java.util.Map;
 public final class ModuleManager {
 
 	private static final int factor = 10000;
-	private Map<Integer, IModule> all_modules = new HashMap<Integer, IModule>();
+	private final Map<Integer, IModule> all_modules = new HashMap<Integer, IModule>();
 	private Map<Integer, IModule> tmpModules;
 
 	private static ModuleManager moduleManager;
 
-	public static final ModuleManager instance() {
+	public static ModuleManager instance() {
 		if (moduleManager == null)
 			moduleManager = new ModuleManager();
 		return moduleManager;
@@ -56,6 +57,7 @@ public final class ModuleManager {
 		map.put(Integer.valueOf(IModule.SPECIALEVENTS), new SpecialEventsModule());
 		map.put(Integer.valueOf(IModule.TEAM_OF_THE_WEEK), new TeamOfTheWeekModule());
 		map.put(Integer.valueOf(IModule.IFA), new IfaModule());
+		map.put(IModule.NEW_HRF_EXPLORER, new HrfExplorerModule());
 	}
 
 	private void initialize() {
@@ -70,7 +72,7 @@ public final class ModuleManager {
 	}
 
 	public IModule getModule(int moduleId) {
-		return all_modules.get(Integer.valueOf(moduleId));
+		return all_modules.get(moduleId);
 	}
 
 	public IModule[] getAllModules() {

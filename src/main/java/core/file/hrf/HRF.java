@@ -1,6 +1,7 @@
 // %214693493:de.hattrickorganizer.model%
 package core.file.hrf;
 
+import core.util.DateTimeUtils;
 import core.util.HOLogger;
 
 import java.sql.Timestamp;
@@ -66,4 +67,11 @@ public final class HRF {
 		return name;
 	}
 
+	public int getYear() {
+    	return DateTimeUtils.getYear(this.datum.getTime());
+	}
+
+	public int getMonth() {
+		return DateTimeUtils.getMonth(this.datum.getTime());
+	}
 }

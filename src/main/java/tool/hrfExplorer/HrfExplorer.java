@@ -63,7 +63,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 
 	private static final long serialVersionUID = -4187405421481083232L;
 	private MatchKurzInfo[] m_kurzInfo;				// Adapter für Spieleinfos, u.a. ob Friendly oder Liga
-	// Members für Farben
+	// Members for colours
 	private Color gruen = ThemeManager.getColor(HOColorName.HRF_GREEN_BG);
 	private Color hellblau = ThemeManager.getColor(HOColorName.HRF_LIGHTBLUE_BG);
 	private Color dunkelblau = ThemeManager.getColor(HOColorName.HRF_DARKBLUE_BG);
@@ -121,10 +121,10 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	private HrfPanelCellRenderer m_renderer = new HrfPanelCellRenderer();
 
 
-	private static int m_int_selectedMonth;				// int für den Monat im Calendar-Panel (0-11)
-	private static int m_int_selectedYear;				// int für das Jahr aus dem Calendar-Panel
-	private int m_int_firstYearInDB;					// int für das Jahr des ersten DB-Eintrages
-	private int m_int_actualYear;						// int für das aktuelle Jahr
+	private static int m_int_selectedMonth;				// int for the month in the calendar panel (0-11)
+	private static int m_int_selectedYear;				// int for the year on the calendar panel
+	private int m_int_firstYearInDB;					// int for the year of the first database entry
+	private int m_int_actualYear;						// int for the current year
 
 	private int m_int_Hoehe_DetailPanels;				// Höhe des Panels, in dem alle Details in der Detail-Tabelle stehen
 	private int m_int_Breite_Detail_Fixed = 130;		// Breite der 1. Spalte der Detail-Tabelle
@@ -134,17 +134,17 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	private int m_int_anz_DBEintraege = 0;				// Anzahl der HRF-Files in der DB
 	private int m_TeamID;								// Die TeamID
 
-	// Breiten der Spalten in der jeweiligen Tabelle
+	// Widths of the columns in the different tables.
 	private int[] m_intAr_col_width_Filelist = {30,130,140,80,40,60,60,110,40,60};
 	private int[] m_intAr_col_width_Calendar = {40,40,40,40,40,40,40,40};
 	private int[] m_intAr_col_width_Details = {140};
 
-	private String m_Str_hrfPfad = "";					// Pfad aus UserSettings, dort werden normalerweise die hrf-files hingespeichert
+	private String m_Str_hrfPfad = "";					// Path from user settings where the HRF files are stored.
 
 	private String[] m_Ar_Detail_Label_fix;				// Bezeichnungen in der 1.Spalte der Detail-Tabelle
 
 
-	//Variablen für Detailtabelle
+	// Variable for the detail table
 	@SuppressWarnings("unchecked")
 	private Vector m_V_Details_Header;
 	@SuppressWarnings("unchecked")
@@ -154,7 +154,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	private Vector m_V_Filelist_Header;
 	@SuppressWarnings("unchecked")
 	private Vector m_V_Filelist_Values;
-//	Variablen für Calendar-Tabelle
+	// Variable for the calendar table
 	@SuppressWarnings("unchecked")
 	private Vector m_V_Calendar_Header;
 	@SuppressWarnings("unchecked")
@@ -169,53 +169,52 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	private JFileChooser m_FileChooser_chooser;
 	private GregorianCalendar m_gc;
 	private ResultSet m_queryResult;
-	private ResultSet m_Result_SpecialEvent;
 
-	@SuppressWarnings("unchecked")
-	private static Hashtable m_HashTable_DayInDB = new Hashtable(40);		// KEY: Tag des gewählten Monats in Calendar, 		VALUE: HRF-ID für diesen Tag
-	@SuppressWarnings("unchecked")
-	private Hashtable m_HashTable_Details = new Hashtable(40);			// KEY: Pfad oder Datum eines HrfDetails-Objekt, 	VALUE: das HrfDetails-Objekt
-	@SuppressWarnings("unchecked")
-	private Hashtable m_HashTable_Details_ColHeader = new Hashtable(40);	// KEY: Datum eines HrfDetails-Objekt				VALUE: das HrfDetails-Objekt
-	@SuppressWarnings("unchecked")
-	private Hashtable m_HashTable_Columns = new Hashtable(40);			// KEY: Spaltenname der Detailtabelle				VALUE: Vector mit dem Inhalt einer Spalte der Detailtabelle
-	@SuppressWarnings("unchecked")
-	private static Hashtable m_HashTable_DatumKey = new Hashtable(40);	// KEY: Datum im Format YYYY-MM-DD					VALUE: Dateipfad
-	@SuppressWarnings("unchecked")
-	private Hashtable m_HashTable_Import = new Hashtable(40);				// KEY: Pfad der Dateien aus der Importtabelle		VALUE: ---
-	@SuppressWarnings("unchecked")
-	private static Hashtable m_HashTable_isEvent = new Hashtable(40);		// KEY: Tag des gewählten Monats in Calendar, 		VALUE: Matchtyp als String
-	@SuppressWarnings("unchecked")
-	private Hashtable m_HashTable_MatchTyp = new Hashtable(40);			// KEY: Match-ID, 									VALUE: Matchtyp
+
+	/** KEY: Day of the selected month in calendar, VALUE: HRF ID for this day. */
+	private static Hashtable m_HashTable_DayInDB = new Hashtable(40);
+	/** KEY: Path or day of an HrfDetails object, VALUE: the HrfDetails object. */
+	private Hashtable m_HashTable_Details = new Hashtable(40);
+	/** KEY: Date of an HrfDetails object, VALUE: the HrfDetails object. */
+	private Hashtable m_HashTable_Details_ColHeader = new Hashtable(40);
+	/** KEY: Column name of the detail table, VALUE: Vector with the content of a column of the detail table. */
+	private Hashtable m_HashTable_Columns = new Hashtable(40);
+	/** KEY: Date in the YYYY-MM-DD format, VALUE: file path. */
+	private static Hashtable m_HashTable_DatumKey = new Hashtable(40);
+	/** KEY: Path of the files from the import table, VALUE: --- */
+	private Hashtable m_HashTable_Import = new Hashtable(40);
+	/** KEY: Day of the selected month in the calendar, VALUE: match type as a string. */
+	private static Hashtable m_HashTable_isEvent = new Hashtable(40);
+	/** KEY: Match ID, VALUE: match type. */
+	private Hashtable m_HashTable_MatchTyp = new Hashtable(40);
 	private static Hashtable<String,String> m_HashTable_EventInfo = new Hashtable<String,String>(40);
-	@SuppressWarnings("unchecked")
-	private Hashtable m_HashTable_EventGUI = new Hashtable();			// KEY: Der Tag des Events							VALUE: Vector mit Zeit(sek) und Eventtyp
+	/** KEY: Day of the event, VALUE: Vector with time (in seconds) and event type. */
+	private Hashtable m_HashTable_EventGUI = new Hashtable();
 
 	public HrfExplorer() {
 		initialize();
 	}
+
 	/**
-	 * Wird von HO aufgerufen, wenn das Tab aktiviert wird
-	 * @param hOMiniModel Das MiniModel, übergeben von HO
+	 * Called from HO when the tab gets activated.
 	 */
-	@SuppressWarnings("unchecked")
 	private void initialize() {
 
 		HOVerwaltung hoV = HOVerwaltung.instance();
-		// Aktuelles Datum ermitteln und in die Members schreiben
+		// Find the current date and write to the calendar fields.
 		m_gc = new GregorianCalendar();
 		m_int_selectedMonth = m_gc.get(GregorianCalendar.MONTH);
 		m_int_selectedYear = m_gc.get(GregorianCalendar.YEAR);
 		m_int_actualYear = m_gc.get(GregorianCalendar.YEAR);
 
-		// TeamID setzen
+
 		m_TeamID = hoV.getModel().getBasics().getTeamId();
 
-		// Matches für das Team holen und in die Hashtable m_HashTable_MatchTyp füllen
+		// Get matches for the team and fill them into the hashtable
 		m_kurzInfo = DBManager.instance().getMatchesKurzInfo(m_TeamID);
 		for(int ii = 0; ii < m_kurzInfo.length; ii++)
 		{
-			m_HashTable_MatchTyp.put(new Integer(m_kurzInfo[ii].getMatchID()),new Integer(m_kurzInfo[ii].getMatchTyp().getId()));
+			m_HashTable_MatchTyp.put(m_kurzInfo[ii].getMatchID(), m_kurzInfo[ii].getMatchTyp().getId());
 		}
 
         // Namen der Tage in m_Ar_days schreiben

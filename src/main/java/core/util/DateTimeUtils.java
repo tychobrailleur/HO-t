@@ -1,6 +1,8 @@
 package core.util;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.temporal.TemporalField;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -138,6 +140,22 @@ public class DateTimeUtils {
 		cal.set(GregorianCalendar.SECOND, cal.getMinimum(Calendar.SECOND));
 		cal.set(GregorianCalendar.MILLISECOND, cal.getMinimum(Calendar.MILLISECOND));
 	}
+
+	public static int getYear(long timestamp) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(timestamp);
+
+		return calendar.get(Calendar.YEAR);
+	}
+
+	public static int getMonth(long timestamp) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(timestamp);
+
+		return calendar.get(Calendar.MONTH);
+	}
+
+
 
 	/**
 	 * Specifies how time in a Date object is set/changed.
