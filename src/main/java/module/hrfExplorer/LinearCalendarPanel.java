@@ -4,6 +4,8 @@ import core.file.hrf.HRF;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,9 +30,7 @@ public class LinearCalendarPanel extends JPanel {
         add(hFill);
     }
 
-    class YearPanel extends JPanel {
-        private Map<Integer, Integer> hrfCount = new HashMap<>();
-
+    static class YearPanel extends JPanel {
         YearPanel(int year, List<HRF> entries) {
             setPreferredSize(new Dimension(12*10, 180));
             setMinimumSize(new Dimension(12*10, 180));
@@ -40,7 +40,7 @@ public class LinearCalendarPanel extends JPanel {
                     Collectors.groupingBy(HRF::getMonth, Collectors.toList())
             );
 
-            JPanel mainPanel = new ChartPanel(monthHrf);
+            JPanel mainPanel = new ChartPanel(year, monthHrf);
             mainPanel.setOpaque(true);
             mainPanel.setBackground(Color.WHITE);
             mainPanel.setPreferredSize(new Dimension(120, 160));
@@ -55,11 +55,13 @@ public class LinearCalendarPanel extends JPanel {
         }
     }
 
-    class ChartPanel extends JPanel {
+    static class ChartPanel extends JPanel {
         private final Map<Integer, List<HRF>> entries;
+        private final int year;
 
-        public ChartPanel(Map<Integer, List<HRF>> entries) {
+        public ChartPanel(int year, Map<Integer, List<HRF>> entries) {
             this.entries = entries;
+            this.year = year;
         }
 
         @Override
@@ -67,7 +69,6 @@ public class LinearCalendarPanel extends JPanel {
             Dimension dim = getSize();
             g.setColor(Color.WHITE);
             g.fillRect(0, 0, dim.width, dim.height);
-            System.out.println("Height: " + dim.height);
 
             g.setColor(Color.GREEN);
             for (int i = 0; i < 12; i++) {
@@ -75,6 +76,15 @@ public class LinearCalendarPanel extends JPanel {
                 int height = dim.height;
                 g.fillRect(i*10, height-5*month, 9, 5*month);
             }
+
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    Point p = e.getPoint();
+                    int clickedMonth = p.x / 10;
+                    System.out.println("Month clicked: " + clickedMonth + "/" + year);
+                }
+            });
         }
     }
 }
