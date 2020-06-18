@@ -200,16 +200,4 @@ public final class ThemeManager {
 			im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
 		}
 	}
-
-
-	public String[] getAvailableThemeNames(){
-		final String[] fileList = themesDir.list();
-		final String[] schemaNames = new String[fileList.length+1];
-		schemaNames[0] = classicSchema.getName();
-		for (int i = 0; i < fileList.length; i++) {
-			schemaNames[i+1] = fileList[i].split("\\.")[0];
-		}
-		return schemaNames;
-	}
-
 }

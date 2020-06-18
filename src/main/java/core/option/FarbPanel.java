@@ -96,9 +96,6 @@ final class FarbPanel extends ImagePanel implements ActionListener {
                 OptionManager.instance().setReInitNeeded();
                 refresh();
             }
-        } else if( actionEvent.getSource() == themeComboBox) {
-        	temp.theme = themeComboBox.getSelectedItem().toString();
-        	OptionManager.instance().setRestartNeeded();
         }
     }
 
@@ -126,16 +123,7 @@ final class FarbPanel extends ImagePanel implements ActionListener {
         panel.setLayout(new GridLayout(6, 2, 4, 10));
         panel.setBorder(BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.PANEL_BORDER)));
 
-
-        JLabel label = new JLabel("  " + HOVerwaltung.instance().getLanguageString("Farben"));
-        panel.add(label);
-
-        themeComboBox = new JComboBox(ThemeManager.instance().getAvailableThemeNames());
-        themeComboBox.setSelectedItem(core.model.UserParameter.temp().theme);
-        themeComboBox.addActionListener(this);
-        panel.add(themeComboBox);
-
-        label = new JLabel("  " + HOVerwaltung.instance().getLanguageString("ls.player.injurystatus.bruised"));
+        JLabel label = new JLabel("  " + HOVerwaltung.instance().getLanguageString("ls.player.injurystatus.bruised"));
         addRowPanel(panel,label, bruisedButton, temp.FG_BRUISED);
 
         label = new JLabel("  " + HOVerwaltung.instance().getLanguageString("ls.player.injurystatus.injured"));
