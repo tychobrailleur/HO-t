@@ -19,14 +19,12 @@ import javax.swing.*;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-
 public class HO {
 
     public static double VERSION;  // Version is set in build.gradle and exposed to HO via the manifest
 	public static int RevisionNumber;
     private static String versionType;
-	private static OSUtils.OS platform;
-	private static boolean portable_version; // Used to determined the location of the DB
+	private static boolean portableVersion; // Used to determined the location of the DB
 
 	public static String getVersionType() {
 		return versionType;
@@ -35,9 +33,8 @@ public class HO {
 		return RevisionNumber;
 	}
 	public static boolean isPortableVersion() {
-		return portable_version;
+		return portableVersion;
 	}
-	public static OSUtils.OS getPlatform() {return platform; }
 	public static boolean isDevelopment() {
 		return "DEV".equalsIgnoreCase(versionType);
 	}
@@ -68,12 +65,9 @@ public class HO {
 	 *  HO entry point
 	 */
 	public static void main(String[] args) {
-		final long start = System.currentTimeMillis();
+		portableVersion = true;
 
-		portable_version = true;
-		platform = OSUtils.getOS();
-
-		if (platform == OSUtils.OS.MAC) {
+		if (OSUtils.isMac()) {
 			System.setProperty("apple.laf.useScreenMenuBar", "true");
 			System.setProperty("apple.awt.showGroupBox", "true");
 		}
@@ -90,29 +84,23 @@ public class HO {
 					case "DEBUG" -> HOLogger.instance().setLogLevel(HOLogger.DEBUG);
 					case "WARNING" -> HOLogger.instance().setLogLevel(HOLogger.WARNING);
 					case "ERROR" -> HOLogger.instance().setLogLevel(HOLogger.ERROR);
-					case "INSTALLED" -> portable_version = false;
+					case "INSTALLED" -> portableVersion = false;
 				}
 			}
 		}
 
 		// Get HO version from manifest
-		String sVERSION = HO.class.getPackage().getImplementationVersion();
-		if (sVERSION != null) {
-			String[] aVersion = sVERSION.split("\\.");
+		String version = HO.class.getPackage().getImplementationVersion();
+		if (version != null) {
+			String[] aVersion = version.split("\\.");
 
 			VERSION = Double.parseDouble(aVersion[0] + "." + aVersion[1]);
 			RevisionNumber = Integer.parseInt(aVersion[3]);
-			switch (aVersion[2]) {
-				case "0":
-					versionType = "DEV";
-					break;
-				case "1":
-					versionType = "BETA";
-					break;
-				default:
-					versionType = "RELEASE";
-					break;
-			}
+            switch (aVersion[2]) {
+                case "0" -> versionType = "DEV";
+                case "1" -> versionType = "BETA";
+                default -> versionType = "RELEASE";
+            }
         } else {
         	HOLogger.instance().error(HO.class, "Launched from IDE otherwise there is a bug !");
         	VERSION = 0d;
@@ -123,7 +111,13 @@ public class HO {
 		try {
 			if (!UserManager.instance().isSingleUser()) {
 
-				JComboBox comboBox = new JComboBox(UserManager.instance().getAllUser().stream().map(User::getTeamName).toArray());
+                String[] teamNames = UserManager.instance()
+                    .getAllUser()
+                    .stream()
+                    .map(User::getTeamName)
+                    .toArray(String[]::new);
+
+				final JComboBox<String> comboBox = new JComboBox<>(teamNames);
 				int choice = JOptionPane.showConfirmDialog(null, comboBox, "Login",
 						JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
@@ -207,5 +201,4 @@ public class HO {
 			interuptionsWindow.dispose();
 		});
 	}
-
 }

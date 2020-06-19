@@ -13,11 +13,9 @@ import static core.db.user.BaseUser.serialize;
 
 public class UserManager {
 
-    private final ArrayList<User> users = new ArrayList<>();  // List of users
+    private final List<User> users = new ArrayList<>();  // List of users
     private int INDEX = 0;
     private String dbParentFolder;
-
-
 
     private final String driver = "org.hsqldb.jdbcDriver";
 
@@ -26,7 +24,7 @@ public class UserManager {
     public void setINDEX(int _INDEX) { INDEX = _INDEX;}
     public String getDriver() {return driver;}
 
-    /** singelton */
+    /** singleton */
     protected static UserManager m_clInstance;
 
     /**
@@ -41,7 +39,7 @@ public class UserManager {
         return m_clInstance;
     }
 
-    public @NotNull ArrayList<User> getAllUser() {
+    public @NotNull List<User> getAllUser() {
         return users;
     }
 
@@ -70,25 +68,20 @@ public class UserManager {
                 users.add(newUser);
             }
         }
-
     }
-
-
+    
     public void save() {
         List<BaseUser> lBaseUsers = users.stream().map(User::getBaseUser).collect(Collectors.toList());
         serialize(lBaseUsers, dbParentFolder);
     }
 
-
     public User getCurrentUser() {return getAllUser().get(INDEX);}
-
-
 
     private void setDBParentFolder(){
         if (! HO.isPortableVersion()) {
-            if (HO.getPlatform() == OSUtils.OS.LINUX) {
+            if (OSUtils.isLinux()) {
                 dbParentFolder = System.getProperty("user.home") + "/.ho";}
-            else if (HO.getPlatform() == OSUtils.OS.MAC) {
+            else if (OSUtils.isMac()) {
                 dbParentFolder =  System.getProperty("user.home") + "/Library/Application Support/HO";
             }
             else {
@@ -99,5 +92,4 @@ public class UserManager {
             dbParentFolder = System.getProperty("user.dir");
         }
     }
-
 }
