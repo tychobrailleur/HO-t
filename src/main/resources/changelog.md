@@ -55,6 +55,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
   - [FEAT] Remove jcalendar dependency.
   - [FIX] ExperienceViewer removed #503 
   - [FIX] Avoid potential infinite loop at startup. [#584]
+  - [FEAT] Remove player state colours, and display icons in Lineup tab
 
 ### League
 

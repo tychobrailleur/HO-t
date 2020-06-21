@@ -3,6 +3,7 @@ package core.gui.comp.entry;
 import core.constants.player.PlayerSpeciality;
 import core.gui.HOMainFrame;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
+import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
