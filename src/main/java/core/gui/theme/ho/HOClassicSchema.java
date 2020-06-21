@@ -481,6 +481,14 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(HOColorName.HRF_LIGHTBLUE_BG, new Color(235,235,255));
 		put(HOColorName.HRF_DARKBLUE_BG, new Color(220,220,255));
 		put(HOColorName.HRF_RED_BG, new Color(255,200,200));
+
+		// Player State colours
+		put(HOColorName.FG_STANDARD, Color.BLACK);
+		put(HOColorName.FG_TRANSFERLISTED, new Color(0, 180, 0));
+		put(HOColorName.FG_BRUISED, new Color(100, 0, 0));
+		put(HOColorName.FG_INJURED, new Color(200, 0, 0));
+		put(HOColorName.FG_TWO_YELLOW_CARDS, new Color(100, 100, 0));
+		put(HOColorName.FG_RED_CARD, new Color(200, 20, 20));
 	}
 
 	public Color getDefaultColor(String key) {

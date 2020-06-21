@@ -254,11 +254,6 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                     aufstellung.adjustBackupPlayers();
                 }
 
-                //Adjust colors
-                if (player != null) {
-                    m_jcbPlayer.setForeground(SpielerLabelEntry.getForegroundForSpieler(player));
-                }
-
                 //Taktikwerte anpassen
                 setTaktik(getTactic(), player);
             } else if (itemEvent.getSource().equals(m_jcbTactic)) {
@@ -476,12 +471,6 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
             cbmodel.addElement(cbItems[i]);
         }
 
-        //Adjust CB color
-        // Color player name depending of status (injured, warned, ...)
-        if (aktuellerPlayer != null) {
-            m_jcbPlayer.setForeground(SpielerLabelEntry.getForegroundForSpieler(aktuellerPlayer));
-        }
-
         //Listener wieder hinzu
         m_jcbPlayer.addItemListener(this);
 
@@ -575,12 +564,6 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         for (int i = 0; i < cbItems.length; i++) {
             //All Other players
             cbmodel.addElement(cbItems[i]);
-        }
-
-        //Adjust CB color
-        // Color player name depending of status (injured, warned, ...)
-        if (selectedPlayer != null) {
-            m_jcbPlayer.setForeground(SpielerLabelEntry.getForegroundForSpieler(selectedPlayer));
         }
 
         //Listener wieder hinzu
