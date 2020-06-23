@@ -33,6 +33,12 @@ public interface HOIconName {
 	 String BRUISED_SMALL   = "patch.small";
 	 String INJURED_SMALL   = "injured.small";
 
+	 String BRUISED_TINY = "bruised.tiny";
+	 String INJURED_TINY = "injured.tiny";
+	 String SUSPENDED_TINY = "suspended.tiny";
+	 String TWOYELLOW_TINY = "twoyellow.tiny";
+	 String TRANSFERLISTED_TINY = "transferlisted.tiny";
+
 	 String PRINTER 		= "printer";
 	 String DISK 			= "disk";
 	 String LOCKED 			= "locked";

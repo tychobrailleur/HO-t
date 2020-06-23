@@ -3,23 +3,18 @@ package core.gui.comp.entry;
 import core.constants.player.PlayerSpeciality;
 import core.gui.HOMainFrame;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
-import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.UserParameter;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.TrainingPreviewPlayers;
 import core.util.Helper;
 import java.awt.*;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import java.util.List;
+import javax.swing.*;
+
+import static core.gui.theme.HOIconName.*;
 
 public final class SpielerLabelEntry implements IHOTableEntry {
 
@@ -31,6 +26,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     private final JLabel m_jlSpezialitaet = new JLabel();
     private final JLabel m_jlWeatherEffect = new JLabel();
     private final JLabel m_jlTrainUp = new JLabel();
+
     private MatchRoleID m_clCurrentPlayerPosition;
     private final boolean m_bShowTrikot;
     private boolean m_bShowWeatherEffect = true;
@@ -41,9 +37,14 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     private boolean m_bMultiLine = false;
     private boolean m_bSelect = false;
     private boolean m_bAssit = false;
+    private JLabel transferlistedLabel;
+    private JLabel injuredLabel;
+    private JLabel bruisedLabel;
+    private JLabel suspendedLabel;
+    private JLabel twoYellowCardsLabel;
 
 
-     // Label for the player name (depending on status)
+    // Label for the player name (depending on status)
     public SpielerLabelEntry(Player player, MatchRoleID positionAktuell,
                              float positionsbewertung, boolean showTrikot, boolean showWetterwarnung) {
         m_clPlayer = player;
@@ -166,18 +167,18 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         spezPanel.setOpaque(false);
 
         if (!m_bMultiLine) {
-            //Wetterwarnung
+            // Weather effect
             m_jlWeatherEffect.setBackground(ColorLabelEntry.BG_STANDARD);
             m_jlWeatherEffect.setOpaque(false);
             m_jlWeatherEffect.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
             spezPanel.add(m_jlWeatherEffect);
 
-            //Spezialität
+            // Speciality
             m_jlSpezialitaet.setBackground(ColorLabelEntry.BG_STANDARD);
             m_jlSpezialitaet.setOpaque(false);
             spezPanel.add(m_jlSpezialitaet);
 
-            //Bewertung
+            // Rating
             m_jlSkill.setBackground(ColorLabelEntry.BG_STANDARD);
             m_jlSkill.setOpaque(false);
             m_jlSkill.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
@@ -207,7 +208,9 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             m_jlSpezialitaet.setOpaque(false);
             spezPanel.add(m_jlSpezialitaet);
 
-            //Wetterwarnung
+            addPlayerStatusIcons(spezPanel);
+
+            // Weather effect
             m_jlWeatherEffect.setBackground(ColorLabelEntry.BG_STANDARD);
             m_jlWeatherEffect.setOpaque(false);
             m_jlWeatherEffect.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
@@ -246,18 +249,43 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         m_clComponent.setPreferredSize(new Dimension(Helper.calcCellWidth(150), Helper.calcCellWidth(18)));
     }
 
+    private void addPlayerStatusIcons(JPanel infoPanel) {
+        transferlistedLabel = createPlayerStatusLabel(ImageUtilities.getSvgIcon(TRANSFERLISTED_TINY, 12, 12));
+        infoPanel.add(transferlistedLabel);
+
+        injuredLabel = createPlayerStatusLabel(ImageUtilities.getSvgIcon(INJURED_TINY, 12, 12));
+        infoPanel.add(injuredLabel);
+
+        bruisedLabel = createPlayerStatusLabel(ImageUtilities.getSvgIcon(BRUISED_TINY, 12, 12));
+        infoPanel.add(bruisedLabel);
+
+        suspendedLabel = createPlayerStatusLabel(ImageUtilities.getSvgIcon(SUSPENDED_TINY, 12, 12));
+        infoPanel.add(suspendedLabel);
+
+        twoYellowCardsLabel = createPlayerStatusLabel(ImageUtilities.getSvgIcon(TWOYELLOW_TINY, 12, 12));
+        infoPanel.add(twoYellowCardsLabel);
+    }
+
+    private JLabel createPlayerStatusLabel(Icon icon) {
+        final JLabel playerStatusLabel = new JLabel(icon);
+        playerStatusLabel.setBackground(ColorLabelEntry.BG_STANDARD);
+        playerStatusLabel.setOpaque(false);
+        playerStatusLabel.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
+
+        return playerStatusLabel;
+    }
+
     public final void updateComponent() {
         if (m_clPlayer != null) {
             showJersey();
             updateDisplay(m_clPlayer);
-
         } else {
             setEmptyLabel();
         }
     }
 
     /**
-     * Aktualisierung des Entrys
+     * Update the entry.
      */
     public final void updateComponent(Player player, MatchRoleID positionAktuell,
                                       float positionsbewertung, boolean alternativePosition, String nameText) {
@@ -337,6 +365,37 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             m_jlSkill.setText("");
         }
 
-        m_jlTrainUp.setIcon(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(m_clPlayer).getIcon());
+        m_jlTrainUp.setIcon(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(player).getIcon());
+
+        if (m_bMultiLine) {
+            List.of(injuredLabel,
+                    bruisedLabel,
+                    transferlistedLabel,
+                    suspendedLabel,
+                    twoYellowCardsLabel)
+                    .forEach(label -> label.setIcon(null));
+
+            if (player.getVerletzt() > 2) {
+                injuredLabel = new JLabel();
+                injuredLabel.setIcon(ImageUtilities.getSvgIcon(INJURED_TINY, 12, 12));
+            } else if (player.getVerletzt() == 0) {
+                bruisedLabel.setIcon(ImageUtilities.getSvgIcon(BRUISED_TINY, 12, 12));
+            }
+            if (player.getTransferlisted() > 0) {
+                transferlistedLabel.setIcon(ImageUtilities.getSvgIcon(TRANSFERLISTED_TINY, 12, 12));
+            }
+            if (player.isGesperrt()) {
+                suspendedLabel.setIcon(ImageUtilities.getSvgIcon(SUSPENDED_TINY, 12, 12));
+            } else if (player.getGelbeKarten() == 2) {
+                twoYellowCardsLabel.setIcon(ImageUtilities.getSvgIcon(TWOYELLOW_TINY, 12, 12));
+            }
+
+            suspendedLabel.getParent().repaint();
+//            injuredLabel.setVisible(player.getVerletzt() > 2);
+//            bruisedLabel.setVisible(player.getVerletzt() == 0);
+//            transferlistedLabel.setVisible(player.getTransferlisted() > 0);
+//            suspendedLabel.setVisible(player.isGesperrt());
+//            twoYellowCardsLabel.setVisible(player.getGelbeKarten() == 2);
+        }
     }
 }

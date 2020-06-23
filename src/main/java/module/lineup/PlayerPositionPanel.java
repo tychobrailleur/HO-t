@@ -24,10 +24,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -557,7 +555,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
             }
         }
 
-        cbItems = Arrays.stream(cbItems).filter(value -> value != null).toArray(size -> new SpielerCBItem[size]);
+        cbItems = Arrays.stream(cbItems).filter(Objects::nonNull).toArray(SpielerCBItem[]::new);
 
         java.util.Arrays.sort(cbItems);
 

@@ -124,7 +124,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(LOGO16_STABLE, "gui/bilder/Logo-16px_stable.png");
 		put(LOGO16_BETA, "gui/bilder/Logo-16px_beta.png");
 		put(LOGO16_DEV, "gui/bilder/Logo-16px_dev.png");
-		//put(TRICKOT, "gui/bilder/Trickot.png");
 		put(TRICKOT, "gui/bilder/jerseys.svg");
 
 		// Player Overview
@@ -133,6 +132,12 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(YELLOWCARD_SMALL, "gui/bilder/player overview/yellow-card(yellow)-small.png");
 		put(TWOYELLOWCARDS_SMALL, "gui/bilder/player overview/yellow-card-x2(yellow)-small.png");
 		put(REDCARD_SMALL, "gui/bilder/player overview/red-card(red)-small.png");
+
+		put(INJURED_TINY, "img/icons/made/injury(red).svg");
+		put(BRUISED_TINY, "img/icons/official/icomoon/SVG/injury.svg");
+		put(TRANSFERLISTED_TINY, "img/icons/official/icomoon/SVG/transferlisted.svg");
+		put(SUSPENDED_TINY, "img/icons/made/red-card(red).svg");
+		put(TWOYELLOW_TINY, "img/icons/made/yellow-card-x2(yellow).svg");
 
 		// Highlights
 
