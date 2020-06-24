@@ -140,7 +140,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         }
         return 0;
     }
-    //-------------------------------------------------------------    
+    //-------------------------------------------------------------
 
     /**
      * Erstellt eine passende Komponente
@@ -355,7 +355,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         if (m_bShowWeatherEffect) {
             int effect = PlayerSpeciality.getWeatherEffect(HOMainFrame.getWetter(), player.getPlayerSpecialty());
             if (effect != 0) {
-                final ImageIcon wettericon = ThemeManager.getIcon("weather.effect." + effect);
+                final Icon wettericon = ThemeManager.getIcon("weather.effect." + effect);
                 m_jlWeatherEffect.setIcon(wettericon);
             }
         }
