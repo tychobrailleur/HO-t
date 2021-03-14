@@ -6,7 +6,6 @@ import core.training.HattrickDate;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -15,7 +14,7 @@ import java.util.Properties;
 
 
 /**
- * Benutzerdaten
+ * Basic user data.
  */
 public final class Basics  {
     /**
@@ -35,13 +34,13 @@ public final class Basics  {
     /** TeamName */
     private String m_sTeamName = "";
 
-    /** Datum der Erstellung */
+    /** Creation date. */
     private Timestamp m_clDatum = new Timestamp(0);
 
     /** Date of activation */
     private Timestamp m_tActivationDate = new Timestamp(0);
 
-    /** Land */
+    /** Country */
     private int m_iLand;
 
     /** The globally unique LeagueID. */

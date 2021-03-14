@@ -42,7 +42,6 @@ import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.*;
 
 /**
@@ -72,12 +71,9 @@ public class DBManager {
 	/** Erster Start */
 	private boolean m_bFirstStart;
 
-
 	private int m_iLatestHRFid = -1;
-
 	private long m_lLatestUpdateTime = -1;
 
-//	private DateTime
 
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
@@ -186,7 +182,6 @@ public class DBManager {
 				}
 
 				HOLogger.instance().error(DBManager.class, msg);
-
 				System.exit(-1);
 			}
 
@@ -198,19 +193,9 @@ public class DBManager {
 
 			// Do we need to create the database from scratch?
 			if (!existsDB) {
-				try {
-					tempInstance.createAllTables();
-				} catch (SQLException e) {
-					throw new RuntimeException(e);
-				}
-				UserConfigurationTable configTable = (UserConfigurationTable) tempInstance
-						.getTable(UserConfigurationTable.TABLENAME);
-				configTable.store(UserParameter.instance());
-				configTable.store(HOParameter.instance());
-			}
-			else {
-				// Check if there are any updates on the database to be done.
-				dbUpdater.updateDB(DBVersion);
+				dbUpdater.initialiseDb();
+			} else {
+				dbUpdater.migrateDb(DBVersion);
 			}
 
 			// tempInstance.updateConfig();

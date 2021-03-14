@@ -8,11 +8,10 @@ import core.model.misc.Basics;
 import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
-import core.training.TrainingWeekManager;
+import core.training.TrainingManager;
 import module.youth.YouthPlayer;
 import core.model.series.Liga;
 import core.training.TrainingPerWeek;
-import core.training.TrainingManager;
 import core.util.HOLogger;
 import module.lineup.Lineup;
 import module.series.Spielplan;
@@ -24,7 +23,6 @@ import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 
 import java.sql.Timestamp;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,8 +31,11 @@ import java.util.stream.Collectors;
  * This class bundles all models that belong to an HRF file - the data can also come from the database
  */
 public class HOModel {
+    //~ Instance fields ----------------------------------------------------------------------------
+
     private HRF o_previousHRF;
     private HRF o_hrf;
+
     private Lineup m_clAufstellung;
     private Lineup m_clLastAufstellung;
     private Basics m_clBasics;
@@ -538,7 +539,7 @@ public class HOModel {
 			m_vPlayer.remove(player);
 		}
     }
-   
+
     /**
      * save the model in the database
      */
@@ -577,7 +578,7 @@ public class HOModel {
      * Save match schedule in database
      */
     public final synchronized void saveFixtures() {
-        if (m_clSpielplan != null) 
+        if (m_clSpielplan != null)
             DBManager.instance().storeSpielplan(m_clSpielplan);
     }
 

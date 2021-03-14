@@ -1,19 +1,16 @@
 package core.db;
 
-import core.model.enums.DBDataSource;
+import core.db.user.User;
+import core.db.user.UserManager;
+import core.model.HOParameter;
+import core.model.UserParameter;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.WeekFields;
 import java.util.*;
 import javax.swing.JOptionPane;
 import core.HO;
-import module.youth.YouthPlayer;
-import module.youth.YouthSkillInfo;
+import org.flywaydb.core.Flyway;
 
 final class DBUpdater {
 	JDBCAdapter m_clJDBCAdapter;
@@ -56,7 +53,7 @@ final class DBUpdater {
 						updateDBv400(DBVersion);
 					case 400:
 					case 499:
-						updateDBv500(DBVersion);
+
 				}
 
 			} catch (Exception e) {
@@ -65,223 +62,6 @@ final class DBUpdater {
 		} else {
 			HOLogger.instance().log(getClass(), "No DB update necessary.");
 		}
-	}
-
-	private void updateDBv500(int dbVersion) throws SQLException {
-		// Upgrade legacy FINANZEN table to new ECONOMY Table (since HO 5.0)
-		if (!tableExists(EconomyTable.TABLENAME)) {
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Datum RENAME TO FetchedDate");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Supporter RENAME TO SupportersPopularity");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Sponsoren RENAME TO SponsorsPopularity");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Finanzen RENAME TO Cash");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinSponsoren RENAME TO IncomeSponsors");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinZuschauer RENAME TO IncomeSpectators");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinZinsen RENAME TO IncomeFinancial");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinSonstiges RENAME TO IncomeTemporary");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinGesamt RENAME TO IncomeSum");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostSpieler RENAME TO CostsPlayers");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostTrainer RENAME TO CostsStaff");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostStadion RENAME TO CostsArena");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostJugend RENAME TO CostsYouth");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostZinsen RENAME TO CostsFinancial");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostSonstiges RENAME TO CostsTemporary");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostGesamt RENAME TO CostsSum");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN GewinnVerlust RENAME TO ExpectedWeeksTotal");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinSponsoren RENAME TO LastIncomeSponsors");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinZuschauer RENAME TO LastIncomeSpectators");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinZinsen RENAME TO LastIncomeFinancial");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinSonstiges RENAME TO LastIncomeTemporary");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinGesamt RENAME TO LastIncomeSum");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostSpieler RENAME TO LastCostsPlayers");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostTrainer RENAME TO LastCostsStaff");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostStadion RENAME TO LastCostsArena");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostJugend RENAME TO LastCostsYouth");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostZinsen RENAME TO LastCostsFinancial");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostSonstiges RENAME TO LastCostsTemporary");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostGesamt RENAME TO LastCostsSum");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteGewinnVerlust RENAME TO LastWeeksTotal");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN ExpectedCash INTEGER DEFAULT 0");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN IncomeSoldPlayers INTEGER DEFAULT 0");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN IncomeSoldPlayersCommission INTEGER DEFAULT 0");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN CostsBoughtPlayers INTEGER DEFAULT 0");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN CostsArenaBuilding INTEGER DEFAULT 0");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN LastIncomeSoldPlayers INTEGER DEFAULT 0");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN LastIncomeSoldPlayersCommission INTEGER DEFAULT 0");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN LastCostsBoughtPlayers INTEGER DEFAULT 0");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN LastCostsArenaBuilding INTEGER DEFAULT 0");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN RENAME TO ECONOMY");
-		}
-
-		AbstractTable matchDetailsTable = dbManager.getTable(MatchDetailsTable.TABLENAME);
-		matchDetailsTable.tryAddColumn("HomeFormation","VARCHAR (5)");
-		matchDetailsTable.tryAddColumn("AwayFormation","VARCHAR (5)");
-		matchDetailsTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
-
-		AbstractTable basicsTable = dbManager.getTable(BasicsTable.TABLENAME);
-		basicsTable.tryAddColumn("YouthTeamName","VARCHAR (127)");
-		basicsTable.tryAddColumn("YouthTeamID","INTEGER");
-
-		AbstractTable aufstellungTable = dbManager.getTable(AufstellungTable.TABLENAME);
-		aufstellungTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
-
-		AbstractTable matchLineupPlayerTable = dbManager.getTable(MatchLineupPlayerTable.TABLENAME);
-		matchLineupPlayerTable.tryAddColumn("StartSetPieces", "BOOLEAN");
-		matchLineupPlayerTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
-
-		AbstractTable matchLineupTable = dbManager.getTable(MatchLineupTable.TABLENAME);
-		matchLineupTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
-
-		AbstractTable matchLineupTeamTable = dbManager.getTable(MatchLineupTeamTable.TABLENAME);
-		matchLineupTeamTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
-
-		AbstractTable matchSubstitutionTable = dbManager.getTable(MatchSubstitutionTable.TABLENAME);
-		matchSubstitutionTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
-
-		AbstractTable matchHighlightsTable = dbManager.getTable(MatchHighlightsTable.TABLENAME);
-		matchHighlightsTable.tryAddColumn("MatchDate", "TIMESTAMP");
-		matchHighlightsTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
-
-		if (!tableExists(YouthTrainingTable.TABLENAME)) {
-			dbManager.getTable(YouthTrainingTable.TABLENAME).createTable();
-			dbManager.getTable(YouthPlayerTable.TABLENAME).createTable();
-			dbManager.getTable(YouthScoutCommentTable.TABLENAME).createTable();
-		}
-
-		AbstractTable youthplayerTable = dbManager.getTable(YouthPlayerTable.TABLENAME);
-		for ( var skill: YouthPlayer.skillIds) {
-			youthplayerTable.tryAddColumn(skill+"Top3", "BOOLEAN");
-		}
-
-		if (!tableExists(TeamsLogoTable.TABLENAME)) {
-			dbManager.getTable(TeamsLogoTable.TABLENAME).createTable();
-		}
-
-		// Upgrade TRAINING table =================================================================================
-		if ( columnExistsInTable("COACH_LEVEL", TrainingsTable.TABLENAME)) {
-			HOLogger.instance().debug(getClass(), "Upgrade of training table was already performed ... process skipped !");
-		}
-		else {
-			// Step 1. Add new columns in TRAINING table ===========================
-			var trainingTable = dbManager.getTable(TrainingsTable.TABLENAME);
-			trainingTable.tryAddColumn("COACH_LEVEL", "INTEGER");
-			trainingTable.tryAddColumn("TRAINING_ASSISTANTS_LEVEL", "INTEGER");
-			trainingTable.tryAddColumn("SOURCE", "INTEGER");
-			trainingTable.tryAddColumn("TRAINING_DATE", "TIMESTAMP");
-
-			// Step 2. Migrate existing entries ==================================================================
-			var trainings = new ArrayList<int[]>();
-			final String statement = "SELECT * FROM " + TrainingsTable.TABLENAME;
-			ResultSet rs = m_clJDBCAdapter.executeQuery(statement);
-			try {
-				if (rs != null) {
-					rs.beforeFirst();
-					while (rs.next()) {
-						var training = new int[]{
-								rs.getInt("week"),
-								rs.getInt("year")
-						};
-						trainings.add(training);
-					}
-				}
-
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
-				for (var training : trainings) {
-					// Convert year, week to Date
-					int dayOfWeek = 1;  // 1-7, locale-dependent such as Sunday-Monday in US.
-					WeekFields weekFields = WeekFields.of(Locale.GERMANY);
-					LocalDate ld = LocalDate.now()
-							.withYear(training[1])
-							.with(weekFields.weekOfYear(), training[0])
-							.with(weekFields.dayOfWeek(), dayOfWeek);
-
-					String dateString = formatter.format(ld);
-
-					// find hrf of that training week
-					// COTrainer from VEREIN,HRF_ID
-					// TRAINER from SPIELER,HRF_ID && TRAINER>0
-					// TrainingDate from XTRA,HRF_ID
-					String sql = "select TRAININGDATE,COTRAINER,TRAINER FROM XTRADATA " +
-							"INNER JOIN VEREIN ON VEREIN.HRF_ID=XTRADATA.HRF_ID " +
-							"INNER JOIN SPIELER ON SPIELER.HRF_ID=XTRADATA.HRF_ID AND TRAINER>0 " +
-							"WHERE TRAININGDATE>'" +
-							dateString +
-							"' LIMIT 1";
-
-					rs = m_clJDBCAdapter.executeQuery(sql);
-					if (rs != null) {
-						rs.next();
-						var trainingDate = rs.getTimestamp("TRAININGDATE");
-						var coTrainer = rs.getInt("COTRAINER");
-						var trainer = rs.getInt("TRAINER");
-
-						// update new columns
-						String update = "update " + TrainingsTable.TABLENAME +
-								" SET" +
-								" TRAINING_DATE='" +
-								trainingDate +
-								"',  TRAINING_ASSISTANTS_LEVEL=" +
-								coTrainer +
-								", COACH_LEVEL=" +
-								trainer +
-								", SOURCE=" +
-								DBDataSource.MANUAL.getValue() +
-								" WHERE YEAR=" +
-								training[1] +
-								" AND WEEK=" +
-								training[0];
-
-						m_clJDBCAdapter.executeUpdate(update);
-					}
-				}
-			} catch (Exception e) {
-				HOLogger.instance().error(getClass(), "Error when trying to migrate existing entries of TRAININGS table: " + e);
-			}
-
-			// Step 3. Finalize upgrade of Training table structure ===============================
-			trainingTable.tryChangeColumn("COACH_LEVEL", "NOT NULL");
-			trainingTable.tryChangeColumn("TRAINING_ASSISTANTS_LEVEL", "NOT NULL");
-			trainingTable.tryChangeColumn("TRAINING_DATE", "NOT NULL");
-			trainingTable.tryChangeColumn("SOURCE", "NOT NULL");
-			trainingTable.tryRenameColumn("TYP", "TRAINING_TYPE");
-			trainingTable.tryRenameColumn("INTENSITY", "TRAINING_INTENSITY");
-			trainingTable.tryRenameColumn("STAMINATRAININGPART", "STAMINA_SHARE");
-			trainingTable.tryDeleteColumn("YEAR");
-			trainingTable.tryDeleteColumn("WEEK");
-		}
-
-		// Upgrade FutureTraining table ======================================================================================
-		if ( columnExistsInTable("COACH_LEVEL", FutureTrainingTable.TABLENAME)) {
-			HOLogger.instance().debug(getClass(), "Upgrade of FutureTraining table was already performed ... process skipped !");
-		}
-		else{
-			// Step 1. Add new columns in FUTURETRAININGS table ===========================================================
-			var futureTrainingTable = dbManager.getTable(FutureTrainingTable.TABLENAME);
-			futureTrainingTable.tryAddColumn("COACH_LEVEL","INTEGER");
-			futureTrainingTable.tryAddColumn("TRAINING_ASSISTANTS_LEVEL", "INTEGER");
-			futureTrainingTable.tryAddColumn("TRAINING_DATE", "TIMESTAMP");
-			futureTrainingTable.tryAddColumn("SOURCE", "INTEGER");
-
-
-			// Step 2: update columns with non-null values to ensure NOT NULL clauses can be called
-			// we store week and season information for future treatment
-			String sql = "UPDATE " + FutureTrainingTable.TABLENAME +
-					" SET TRAINING_DATE=timestamp('1900-01-01'), TRAINING_ASSISTANTS_LEVEL=WEEK, COACH_LEVEL=SEASON, SOURCE=" +
-					DBDataSource.MANUAL.getValue() + " WHERE TRUE";
-			m_clJDBCAdapter.executeUpdate(sql);
-
-			// Step 3. Finalize upgrade of FUTURETRAININGS table structure ===============================
-			futureTrainingTable.tryChangeColumn("COACH_LEVEL", "NOT NULL");
-			futureTrainingTable.tryChangeColumn("TRAINING_ASSISTANTS_LEVEL", "NOT NULL");
-			futureTrainingTable.tryChangeColumn("TRAINING_DATE", "NOT NULL");
-			futureTrainingTable.tryChangeColumn("SOURCE", "NOT NULL");
-			futureTrainingTable.tryRenameColumn("TYPE", "TRAINING_TYPE");
-			futureTrainingTable.tryRenameColumn("INTENSITY", "TRAINING_INTENSITY");
-			futureTrainingTable.tryRenameColumn("STAMINATRAININGPART", "STAMINA_SHARE");
-			futureTrainingTable.tryDeleteColumn("SEASON");
-			futureTrainingTable.tryDeleteColumn("WEEK");
-			}
-
-		updateDBVersion(dbVersion, 500);
 	}
 
 	private void updateDBv400(int dbVersion) throws SQLException {
@@ -593,5 +373,45 @@ final class DBUpdater {
 		m_clJDBCAdapter.executeQuery(sql);
 	}
 
+	public void initialiseDb() {
+		final User currentUser = UserManager.instance().getCurrentUser();
+		final Flyway flyway = Flyway.configure()
+				.dataSource(
+						currentUser.getDbURL(),
+						currentUser.getDbUsername(),
+						currentUser.getDbPwd())
+				.load();
+		var result = flyway.migrate();
+		HOLogger.instance().info(DBManager.class, "DB init result: " + result);
+
+		UserConfigurationTable configTable = (UserConfigurationTable) dbManager
+				.getTable(UserConfigurationTable.TABLENAME);
+		configTable.store(UserParameter.instance());
+		configTable.store(HOParameter.instance());
+	}
+
+	public void migrateDb(int DBVersion) {
+		// Check if there are any updates on the database to be done.
+		// Get the DB up to the point where Flyway takes over.
+		updateDB(DBVersion);
+
+		// Baseline DB before running migrations
+		final User currentUser = UserManager.instance().getCurrentUser();
+		final Flyway flyway = Flyway.configure()
+				.dataSource(
+						currentUser.getDbURL(),
+						currentUser.getDbUsername(),
+						currentUser.getDbPwd())
+				.load();
+
+		try {
+			if (!tableExists("flyway_schema_history")) {
+				flyway.baseline();
+			}
+		} catch (SQLException e) {
+			HOLogger.instance().error(getClass(), "Error when trying to baseline existing database: " + e);
+		}
+		flyway.migrate();
+	}
 
 }

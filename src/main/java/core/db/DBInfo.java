@@ -7,20 +7,20 @@ import java.sql.Types;
 import java.util.ArrayList;
 
 /**
- * 
+ *
  * @author Thorsten Dietz
  *
  */
 final public  class DBInfo {
 	private DatabaseMetaData databaseMetaData;
-	
+
 	/**
 	 * return String for java.sql.Types
 	 * @param type
 	 * @return
 	 */
 	public String getTypeName(int type){
-		
+
 		// in future we have to change some type for some db
 		switch(type){
 		case Types.BOOLEAN: return "BOOLEAN";
@@ -41,13 +41,13 @@ final public  class DBInfo {
 		default:
 				return "";
 		}
-		
+
 	}
-	
+
 	protected DBInfo(DatabaseMetaData databaseMetaData){
 		this.databaseMetaData = databaseMetaData;
 	}
-	
+
 	/**
 	 * return all TableNames from current Database
 	 * @return Object []
@@ -57,15 +57,15 @@ final public  class DBInfo {
         types[0] = "TABLES"; //some DB want Tables
         types[1] = "TABLE"; // other Table
         ArrayList<String> tables = new ArrayList<String>();
-        try { 
+        try {
             final ResultSet rs = databaseMetaData.getTables(null, null, "%", types);
-            while(rs.next()){
-            	tables.add(rs.getString("TABLE_NAME"));
+            while (rs.next()) {
+            	String tableName = rs.getString("TABLE_NAME");
+            	if (!tableName.toLowerCase().startsWith("flyway_")) {
+					tables.add(tableName);
+				}
             }
             rs.close();
-            
- 
-            //this.listTables();
         }
         catch (SQLException ex) {
             System.err.println("database connection: " + ex.getMessage());
