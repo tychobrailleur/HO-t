@@ -200,7 +200,7 @@ install4j {
     license = System.getenv('INSTALL4J_LICENSE')
 }
 
-//endregion ======================================================================================================================
+// endregion ===========================================================================================================
 
 
 // region my tasks ================================================================================================
@@ -273,13 +273,13 @@ task preparingBuild(dependsOn: clean) {
     group 'sub tasks'
     doLast {
         if (releaseArtefacts) {
-            //     Deleting build project     ---------------------------------------------------------------------
+            //     Deleting build project     -------------------------------------------------------------
             println("Deleting build and execution files ....")
             project.delete(files("${projectDir}/db"))
             project.delete(files("${projectDir}/logs"))
             project.delete(files("${projectDir}/themes"))
             project.delete(files("${projectDir}/user.xml"))
-            //     Creating Target directory ...  ---------------------------------------------------------------------
+            //     Creating Target directory ...  ---------------------------------------------------------
             mkdir project.ext.target_dir
         }
     }
@@ -472,4 +472,8 @@ poeditorPull.dependsOn markdownToHtml
 processResources.dependsOn poeditorPull
 compileJava.dependsOn processResources
 
-// endregion ======================================================================================================================
+// Call these tasks explicitly at build time.
+//processResources.dependsOn poeditorPull
+//compileJava.dependsOn processResources
+
+// endregion ===========================================================================================================

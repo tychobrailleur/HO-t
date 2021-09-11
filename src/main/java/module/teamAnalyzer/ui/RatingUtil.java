@@ -28,8 +28,7 @@ public final class RatingUtil {
      * @param showText is the textual representation being shown
      * @return String with rating as configured
      */
-    public static String getRating(int rating, boolean showNumber,
-        boolean showText) {
+    public static String getRating(int rating, boolean showNumber, boolean showText) {
         if (rating == 0) {
             return "";
         }
@@ -39,7 +38,7 @@ public final class RatingUtil {
         String subLevel = "";
         final StringTokenizer st = new StringTokenizer(value, "(");
      
-        if (value != null && value.indexOf("(")>-1 && value.indexOf(")")>-1) {
+        if (value.contains("(") && value.contains(")")) {
 	        level = st.nextToken().trim();
 	        if (rating > 80) // divine(very high)
 	        {
@@ -51,16 +50,16 @@ public final class RatingUtil {
 	        subLevel = st2.nextToken();
         }
 
-        if (subLevel.indexOf(HOVerwaltung.instance().getLanguageString("veryhigh")) > -1) {
+        if (subLevel.contains(HOVerwaltung.instance().getLanguageString("veryhigh"))) {
             level = level + "++";
         }
-        else if (subLevel.indexOf(HOVerwaltung.instance().getLanguageString("high")) > -1) {
+        else if (subLevel.contains(HOVerwaltung.instance().getLanguageString("high"))) {
             level = level + "+";
         }
-        else if (subLevel.indexOf(HOVerwaltung.instance().getLanguageString("verylow")) > -1) {
+        else if (subLevel.contains(HOVerwaltung.instance().getLanguageString("verylow"))) {
             level = level + "--";
         }
-        else if (subLevel.indexOf(HOVerwaltung.instance().getLanguageString("low")) > -1) {
+        else if (subLevel.contains(HOVerwaltung.instance().getLanguageString("low"))) {
             level = level + "-";
         }
 

@@ -241,7 +241,6 @@ public class RecapPanel extends JPanel {
         row.add(getRating((int) rating.getRightAttack()));
         row.add(getRating((int) rating.getCentralAttack()));
         row.add(getRating((int) rating.getLeftAttack()));
-
     }
 
     private String getRating(int rating) {
