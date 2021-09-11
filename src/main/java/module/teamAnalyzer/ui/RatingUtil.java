@@ -28,8 +28,7 @@ public final class RatingUtil {
      * @param showText is the textual representation being shown
      * @return String with rating as configured
      */
-    public static String getRating(int rating, boolean showNumber,
-        boolean showText) {
+    public static String getRating(int rating, boolean showNumber, boolean showText) {
         if (rating == 0) {
             return "";
         }
