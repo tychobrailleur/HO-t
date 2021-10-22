@@ -258,7 +258,7 @@ public class SubstitutionEditView extends JPanel {
 
 		if (this.orderType != MatchOrderType.POSITION_SWAP && this.orderType != MatchOrderType.MAN_MARKING) {
 			// ItemListener that will update the PositionChooser if selection in
-			// the position combobox changes
+			// the position combobox changes11
 			this.positionComboBox.addItemListener(e -> {
 				PlayerPositionItem item = (PlayerPositionItem) positionComboBox.getSelectedItem();
 				if (item != null) {
