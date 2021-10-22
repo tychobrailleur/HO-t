@@ -8,7 +8,7 @@ import java.sql.Types;
 public final class EconomyTable extends AbstractTable {
 
 	public final static String TABLENAME = "ECONOMY";
-	
+
 	EconomyTable(JDBCAdapter  adapter){
 		super(TABLENAME,adapter);
 	}
