@@ -1,3 +1,5 @@
+import org.codehaus.groovy.runtime.GStringImpl
+
 plugins {
     id 'java'
     id 'application'
@@ -55,7 +57,7 @@ def development_message = [
 println "Configuration start"
 
 ext {
-    target_dir = "${buildDir}/artefacts"
+    target_dir = "${buildDir}/artefacts" as GStringImpl
 }
 
 ext.callGit = { param ->
@@ -66,7 +68,7 @@ ext.callGit = { param ->
 }
 
 ext.filter = { string, filters ->
-    def lines = string.split('\n')
+    def lines = string.split('\n' as Closure)
     String res=""
     lines.each{ l->
         for ( String f in filters ) {
