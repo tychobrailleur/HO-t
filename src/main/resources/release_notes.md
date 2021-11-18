@@ -28,9 +28,15 @@
 ### League
 * fix download of power rating (not only one team per match) (#1293)
 * download all matches of latest league match day (#1373)
+* fix download of old league data (#1413)
+* initial width of league table pane adjusted (#1451)
 
 ### Youth
-* duration format d hh:mm:ss of "can be promoted in" when less than one day is left (#1578)
+* fix bug in potential calculation due to wrong isTop3 skill tagging (#1278)
+* fix escaping of youth team names (#1295)
+* fix set pieces is not limited by top3 skill rules (#1309)
+* fix settings loss of the first table columns (#1402)
+* show youth player's training development as line charts (#1418)
 
 ### Misc
 
