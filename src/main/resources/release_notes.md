@@ -46,6 +46,8 @@ Please do not forget to back up data.
 * fix error in training calculation due to incorrectly loaded cup matches (#1714)
 
 ### League
+* fix download of power rating (not only one team per match) (#1293)
+* download all matches of latest league match day (#1373)
 
 ### Youth
 * duration format d hh:mm:ss of "can be promoted in" when less than one day is left (#1578)
@@ -56,4 +58,15 @@ Please do not forget to back up data.
 
 ## Translations
 
-Reports by Contributors - October 15, 2022 - October 31, 2022
+Reports by Contributors - Dec 20, 2021 - Mar 19, 2022
+
+* Foppe	640
+* \_KOHb\_	76
+* akasolace	76
+* Lidegand 	73
+* sich	73
+* anti_anti 69
+* Moorhuhninho	67
+* dzsoo 18
+* wsbrenk 11
+* Total translated:	1103
