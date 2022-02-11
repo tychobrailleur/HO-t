@@ -468,14 +468,12 @@ markdownToHtml {
     markdownToHtml.hardwraps = true
 }
 
-installDist.dependsOn createLanguageFileList
-markdownToHtml.dependsOn pushmd
-poeditorPull.dependsOn markdownToHtml
-processResources.dependsOn poeditorPull
-compileJava.dependsOn processResources
-
 // Call these tasks explicitly at build time.
+//installDist.dependsOn createLanguageFileList
+//markdownToHtml.dependsOn pushmd
+//poeditorPull.dependsOn markdownToHtml
 //processResources.dependsOn poeditorPull
 //compileJava.dependsOn processResources
+
 
 // endregion ===========================================================================================================
