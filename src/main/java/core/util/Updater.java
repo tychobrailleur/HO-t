@@ -1,6 +1,6 @@
 package core.util;
 
-import com.install4j.api.launcher.ApplicationLauncher;
+//import com.install4j.api.launcher.ApplicationLauncher;
 import core.HO;
 import core.gui.HOMainFrame;
 import core.model.UserParameter;
@@ -63,11 +63,11 @@ public class Updater {
      * Creates a new instance of ReleaseChannel
      */
     private Updater() {
-        try {
-            mediaID = com.install4j.api.launcher.Variables.getCompilerVariable("mediaID");
-        } catch (IOException e) {
-            HOLogger.instance().error(Updater.class, "can't fetch updater variables" + e);
-        }
+//        try {
+//            mediaID = com.install4j.api.launcher.Variables.getCompilerVariable("mediaID");
+//        } catch (IOException e) {
+//            HOLogger.instance().error(Updater.class, "can't fetch updater variables" + e);
+//        }
     }
 
     public static Updater instance() {
@@ -78,46 +78,46 @@ public class Updater {
     }
 
     public void saveReleaseChannelPreference(ReleaseChannel rc){
-        try {
-            if (HO.getRevisionNumber() == 0) {mediaID = "HO_IDE_MEDIA_ID";} // we are testing from the IDE and media is not set by install4j
-            com.install4j.api.launcher.Variables.saveToPreferenceStore(Map.of("updatesUrl", rc.xmlURL), mediaID, true);
-        }
-        catch (IOException e) {
-            HOLogger.instance().error(Updater.class, "can't store release channel preference in java store" + e);
-        }
+//        try {
+//            if (HO.getRevisionNumber() == 0) {mediaID = "HO_IDE_MEDIA_ID";} // we are testing from the IDE and media is not set by install4j
+//            com.install4j.api.launcher.Variables.saveToPreferenceStore(Map.of("updatesUrl", rc.xmlURL), mediaID, true);
+//        }
+//        catch (IOException e) {
+//            HOLogger.instance().error(Updater.class, "can't store release channel preference in java store" + e);
+//        }
     }
 
     public void update() {
-        boolean bValidregisteredMediaID = false;
-        try {
-            var currentReleaseChannel = ReleaseChannel.byLabel(UserParameter.temp().ReleaseChannel);
-            Map<String, Object> vPrefsStore = com.install4j.api.launcher.Variables.loadFromPreferenceStore(mediaID, true);
-            if ((vPrefsStore != null) && (vPrefsStore.containsKey("updatesUrl"))) {
-                String registeredMediaID = vPrefsStore.get("updatesUrl").toString();
-                bValidregisteredMediaID = currentReleaseChannel.xmlURL.equalsIgnoreCase(registeredMediaID);
-            }
+//        boolean bValidregisteredMediaID = false;
+//        try {
+//            var currentReleaseChannel = ReleaseChannel.byLabel(UserParameter.temp().ReleaseChannel);
+//            Map<String, Object> vPrefsStore = com.install4j.api.launcher.Variables.loadFromPreferenceStore(mediaID, true);
+//            if ((vPrefsStore != null) && (vPrefsStore.containsKey("updatesUrl"))) {
+//                String registeredMediaID = vPrefsStore.get("updatesUrl").toString();
+//                bValidregisteredMediaID = currentReleaseChannel.xmlURL.equalsIgnoreCase(registeredMediaID);
+//            }
+//
+//            if (!bValidregisteredMediaID) {
+//                saveReleaseChannelPreference(currentReleaseChannel);
+//                HOLogger.instance().info(Updater.class, "preference store changed!");
+//            }
+//        } catch (IOException e) {
+//            HOLogger.instance().error(Updater.class, "error while fetching java store" + e);
+//        }
 
-            if (!bValidregisteredMediaID) {
-                saveReleaseChannelPreference(currentReleaseChannel);
-                HOLogger.instance().info(Updater.class, "preference store changed!");
-            }
-        } catch (IOException e) {
-            HOLogger.instance().error(Updater.class, "error while fetching java store" + e);
-        }
-
-        ApplicationLauncher.launchApplicationInProcess(UPDATER_APPLICATION_ID, null, new ApplicationLauncher.Callback() {
-                    public void exited(int exitValue) {
-                        if (exitValue != 0) {
-                            HOLogger.instance().error(Updater.class, "installer exited with value: " + exitValue);
-                        }
-                    }
-
-                    public void prepareShutdown() {
-                        HOLogger.instance().info(Updater.class, "prepare to shutdown !");
-                        HOMainFrame.instance().shutdown();
-                    }
-                }, ApplicationLauncher.WindowMode.FRAME, null
-        );
+//        ApplicationLauncher.launchApplicationInProcess(UPDATER_APPLICATION_ID, null, new ApplicationLauncher.Callback() {
+//                    public void exited(int exitValue) {
+//                        if (exitValue != 0) {
+//                            HOLogger.instance().error(Updater.class, "installer exited with value: " + exitValue);
+//                        }
+//                    }
+//
+//                    public void prepareShutdown() {
+//                        HOLogger.instance().info(Updater.class, "prepare to shutdown !");
+//                        HOMainFrame.instance().shutdown();
+//                    }
+//                }, ApplicationLauncher.WindowMode.FRAME, null
+//        );
 
     }
 }
