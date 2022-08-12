@@ -140,12 +140,6 @@ public class MatchLineupTeam {
 				// minutes in o1 is greater than o2
 				return 1;
 			}
-
-			public boolean equals(Substitution o1, Substitution o2) {
-				// Lazy solution, a proper would compare all fields, but we
-				// don't need that.
-				return o1 == o2;
-			}
 		});
 
 		this.lineup.setSubstitionList(ordered);

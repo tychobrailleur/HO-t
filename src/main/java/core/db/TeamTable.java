@@ -12,7 +12,7 @@ import java.sql.Types;
 
 final class TeamTable extends AbstractTable {
 	public final static String TABLENAME = "TEAM";
-	
+
 	protected TeamTable(JDBCAdapter  adapter){
 		super(TABLENAME,adapter);
 	}
@@ -52,28 +52,28 @@ final class TeamTable extends AbstractTable {
 		if (team != null) {
 			//delete existing lineup
 			delete( awhereS, awhereV );
-			//prepare insert statment 
+			//prepare insert statment
 			statement = "INSERT INTO " + getTableName()
 					+ " ( TrainingsIntensitaet , StaminaTrainingPart, TrainingsArt, sTrainingsArt , iStimmung, sStimmung , iSelbstvertrauen, sSelbstvertrauen , iErfahrung541 , iErfahrung433 , iErfahrung352 , iErfahrung451 , iErfahrung532 , iErfahrung343, iErfahrung442, iErfahrung523, iErfahrung550, iErfahrung253, HRF_ID ) VALUES(";
 			statement
-				+= ("" + team.getTrainingslevel()
-					+ "," + team.getStaminaTrainingPart()
-					+ "," + team.getTrainingsArtAsInt()
-					+ ",'" 
-					+ "'," + team.getTeamSpirit()
-					+ ",'" 
-					+ "'," + team.getConfidence()
-					+ ",'" 
-					+ "'," + team.getFormationExperience541()
-					+ "," + team.getFormationExperience433()
-					+ "," + team.getFormationExperience352()
-					+ "," + team.getFormationExperience451()
-					+ "," + team.getFormationExperience532()
-					+ "," + team.getFormationExperience343()
-					+ "," + team.getFormationExperience442()
-					+ "," + team.getFormationExperience523()
-					+ "," + team.getFormationExperience550()
-					+ "," + team.getFormationExperience253()
+				+= ("" + team.trainingsLevel()
+					+ "," + team.staminaTrainingPart()
+					+ "," + team.trainingType()
+					+ ",'"
+					+ "'," + team.teamSpirit()
+					+ ",'"
+					+ "'," + team.confidence()
+					+ ",'"
+					+ "'," + team.formationExperience541()
+					+ "," + team.formationExperience433()
+					+ "," + team.formationExperience352()
+					+ "," + team.formationExperience451()
+					+ "," + team.formationExperience532()
+					+ "," + team.formationExperience343()
+					+ "," + team.formationExperience442()
+					+ "," + team.formationExperience523()
+					+ "," + team.formationExperience550()
+					+ "," + team.formationExperience253()
 					+ "," + hrfId
 					+ " )");
 			adapter.executeUpdate(statement);
@@ -133,7 +133,7 @@ final class TeamTable extends AbstractTable {
 
 		return intvalue;
 	}
-	
+
 	/**
 	 * load the team data for the given HRF id
 	 */

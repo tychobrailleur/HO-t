@@ -68,13 +68,11 @@ public class XMLMatchArchivParser {
 				tmp = (Element) ele.getElementsByTagName("MatchID").item(0);
 				match.setMatchID(Integer.parseInt(tmp.getFirstChild()
 						.getNodeValue()));
+
 				tmp = (Element) ele.getElementsByTagName("MatchType").item(0);
-				if( tmp!=null || !isYouth)
-				{
+				if (tmp != null && !isYouth) {
 					iMatchType = Integer.parseInt(tmp.getFirstChild().getNodeValue());
-				}
-				else
-				{
+				} else {
 					// workaround for isyouth=true (MatchType is missing if isYouth==true)
 					iMatchType = MatchType.YOUTHLEAGUE.getId();
 				}

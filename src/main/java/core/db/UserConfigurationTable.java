@@ -112,25 +112,18 @@ final class UserConfigurationTable extends AbstractTable {
 
 	int getDBVersion() {
 		int version = 0;
-		try {
-			//      	 in the next version we have to change statement!!!
-
-			final ResultSet rs = adapter.executeQuery("SELECT CONFIG_VALUE FROM " + TABLENAME + " WHERE CONFIG_KEY = 'DBVersion'");
-
+		try (ResultSet rs = adapter.executeQuery("SELECT CONFIG_VALUE FROM " + TABLENAME + " WHERE CONFIG_KEY = 'DBVersion'");) {
+			// in the next version we have to change statement!!!
 			if ((rs != null) && rs.first()) {
 				version = rs.getInt(1);
-				rs.close();
 			}
 			
 		} catch (Exception e) {
-			try {
 				HOLogger.instance().log(getClass(), "Old DB version.");
-				final ResultSet rs = adapter.executeQuery("SELECT DBVersion FROM UserParameter");
-				if ((rs != null) && rs.first()) {
-					version = rs.getInt(1);
-					rs.close();
+				try (ResultSet rset = adapter.executeQuery("SELECT DBVersion FROM UserParameter")) {
+				if ((rset != null) && rset.first()) {
+					version = rset.getInt(1);
 				}
-				
 			} catch (Exception e1) {
 				HOLogger.instance().log(getClass(), e1);
 			}

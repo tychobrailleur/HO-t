@@ -67,19 +67,6 @@ public class HOZip extends File {
         }
     }
 
-    /**
-     * Deconstructor
-     *
-     * @throws Exception
-     */
-    @Override
-    protected void finalize() throws Exception {
-        if (zOut != null) {
-            zOut.finish();
-            zOut.close();
-        }
-    }
-
 	public void addStringEntry(String filename, String data) throws Exception {
 
 		// Set next Entry

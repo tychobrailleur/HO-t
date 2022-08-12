@@ -671,9 +671,9 @@ public class HOModel {
         var team = this.getTeam();
         return new TrainingPerWeek(
                 this.getXtraDaten().getTrainingDateAfterWeeks(-1), // previous training
-                team.getTrainingsArtAsInt(),
-                team.getTrainingslevel(),
-                team.getStaminaTrainingPart(),
+                team.trainingType(),
+                team.trainingsLevel(),
+                team.staminaTrainingPart(),
                 this.getClub().getCoTrainer(),
                 this.getTrainer().getTrainerSkill(),
                 DBDataSource.HRF);

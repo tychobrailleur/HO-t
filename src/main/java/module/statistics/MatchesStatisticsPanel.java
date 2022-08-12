@@ -400,9 +400,12 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 
 			UserParameter.instance().statistikSpielerFinanzenAnzahlHRF = anzahlHRF;
 			var selectedItem = (CBItem) c_jcbMatchesFilter.getSelectedItem();
-			if (selectedItem != null) {
-				UserParameter.instance().statistikSpieleFilter = selectedItem.getId();
+
+			if (selectedItem == null) {
+				return;
 			}
+
+			UserParameter.instance().statistikSpieleFilter = selectedItem.getId();
 
 			var from = HODateTime.now().minus(anzahlHRF*7, ChronoUnit.DAYS);
 			MatchKurzInfo[] matchkurzinfos = DBManager.instance().getMatchesKurzInfo(
@@ -414,53 +417,53 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 
 			double[][] statistikWerte = new double[14][anzahl];
 
-			// Infos zusammenstellen
+			// Collect details
 			for (int i = 0; i < anzahl; i++) {
 				var match = matchkurzinfos[i];
 				Matchdetails details = match.getMatchdetails();
 
-				int bewertungwert;
-				// Für match
+				int ratingsValue;
+				// for match
 				int sublevel;
 
-				// Für gesamtstärke
+				// for total value
 				double temp;
 
 				if (details.getHomeTeamId() == teamid) {
 					sublevel = calcSublevel(details.getHomeMidfield());
 
-					bewertungwert = ((details.getHomeMidfield() - 1) / 4) + 1;
-					statistikWerte[1][i] = bewertungwert
+					ratingsValue = ((details.getHomeMidfield() - 1) / 4) + 1;
+					statistikWerte[1][i] = ratingsValue
 							+ PlayerAbility.getValue4Sublevel(sublevel);
 					sublevel = calcSublevel(details.getHomeRightDef());
 
-					bewertungwert = ((details.getHomeRightDef() - 1) / 4) + 1;
-					statistikWerte[2][i] = bewertungwert
+					ratingsValue = ((details.getHomeRightDef() - 1) / 4) + 1;
+					statistikWerte[2][i] = ratingsValue
 							+ PlayerAbility.getValue4Sublevel(sublevel);
 					sublevel = calcSublevel(details.getHomeMidDef());
 
-					bewertungwert = ((details.getHomeMidDef() - 1) / 4) + 1;
-					statistikWerte[3][i] = bewertungwert
+					ratingsValue = ((details.getHomeMidDef() - 1) / 4) + 1;
+					statistikWerte[3][i] = ratingsValue
 							+ PlayerAbility.getValue4Sublevel(sublevel);
 					sublevel = calcSublevel(details.getHomeLeftDef());
 
-					bewertungwert = ((details.getHomeLeftDef() - 1) / 4) + 1;
-					statistikWerte[4][i] = bewertungwert
+					ratingsValue = ((details.getHomeLeftDef() - 1) / 4) + 1;
+					statistikWerte[4][i] = ratingsValue
 							+ PlayerAbility.getValue4Sublevel(sublevel);
 					sublevel = calcSublevel(details.getHomeRightAtt());
 
-					bewertungwert = ((details.getHomeRightAtt() - 1) / 4) + 1;
-					statistikWerte[5][i] = bewertungwert
+					ratingsValue = ((details.getHomeRightAtt() - 1) / 4) + 1;
+					statistikWerte[5][i] = ratingsValue
 							+ PlayerAbility.getValue4Sublevel(sublevel);
 					sublevel = calcSublevel(details.getHomeMidAtt());
 
-					bewertungwert = ((details.getHomeMidAtt() - 1) / 4) + 1;
-					statistikWerte[6][i] = bewertungwert
+					ratingsValue = ((details.getHomeMidAtt() - 1) / 4) + 1;
+					statistikWerte[6][i] = ratingsValue
 							+ PlayerAbility.getValue4Sublevel(sublevel);
 					sublevel = calcSublevel(details.getHomeLeftAtt());
 
-					bewertungwert = ((details.getHomeLeftAtt() - 1) / 4) + 1;
-					statistikWerte[7][i] = bewertungwert
+					ratingsValue = ((details.getHomeLeftAtt() - 1) / 4) + 1;
+					statistikWerte[7][i] = ratingsValue
 							+ PlayerAbility.getValue4Sublevel(sublevel);
 					temp = details.getHomeGesamtstaerke(false);
 					sublevel = calcSublevel((int) temp);
@@ -472,38 +475,38 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 				} else {
 					sublevel = calcSublevel(details.getGuestMidfield());
 
-					bewertungwert = ((details.getGuestMidfield() - 1) / 4) + 1;
-					statistikWerte[1][i] = bewertungwert
+					ratingsValue = ((details.getGuestMidfield() - 1) / 4) + 1;
+					statistikWerte[1][i] = ratingsValue
 							+ PlayerAbility.getValue4Sublevel(sublevel);
 					sublevel = calcSublevel(details.getGuestRightDef());
 
-					bewertungwert = ((details.getGuestRightDef() - 1) / 4) + 1;
-					statistikWerte[2][i] = bewertungwert
+					ratingsValue = ((details.getGuestRightDef() - 1) / 4) + 1;
+					statistikWerte[2][i] = ratingsValue
 							+ PlayerAbility.getValue4Sublevel(sublevel);
 					sublevel = calcSublevel(details.getGuestMidDef());
 
-					bewertungwert = ((details.getGuestMidDef() - 1) / 4) + 1;
-					statistikWerte[3][i] = bewertungwert
+					ratingsValue = ((details.getGuestMidDef() - 1) / 4) + 1;
+					statistikWerte[3][i] = ratingsValue
 							+ PlayerAbility.getValue4Sublevel(sublevel);
 					sublevel = calcSublevel(details.getGuestLeftDef());
 
-					bewertungwert = ((details.getGuestLeftDef() - 1) / 4) + 1;
-					statistikWerte[4][i] = bewertungwert
+					ratingsValue = ((details.getGuestLeftDef() - 1) / 4) + 1;
+					statistikWerte[4][i] = ratingsValue
 							+ PlayerAbility.getValue4Sublevel(sublevel);
 					sublevel = calcSublevel(details.getGuestRightAtt());
 
-					bewertungwert = ((details.getGuestRightAtt() - 1) / 4) + 1;
-					statistikWerte[5][i] = bewertungwert
+					ratingsValue = ((details.getGuestRightAtt() - 1) / 4) + 1;
+					statistikWerte[5][i] = ratingsValue
 							+ PlayerAbility.getValue4Sublevel(sublevel);
 					sublevel = calcSublevel(details.getGuestMidAtt());
 
-					bewertungwert = ((details.getGuestMidAtt() - 1) / 4) + 1;
-					statistikWerte[6][i] = bewertungwert
+					ratingsValue = ((details.getGuestMidAtt() - 1) / 4) + 1;
+					statistikWerte[6][i] = ratingsValue
 							+ PlayerAbility.getValue4Sublevel(sublevel);
 					sublevel = calcSublevel(details.getGuestLeftAtt());
 
-					bewertungwert = ((details.getGuestLeftAtt() - 1) / 4) + 1;
-					statistikWerte[7][i] = bewertungwert
+					ratingsValue = ((details.getGuestLeftAtt() - 1) / 4) + 1;
+					statistikWerte[7][i] = ratingsValue
 							+ PlayerAbility.getValue4Sublevel(sublevel);
 					temp = details.getGuestGesamtstaerke(false);
 					sublevel = calcSublevel((int) temp);

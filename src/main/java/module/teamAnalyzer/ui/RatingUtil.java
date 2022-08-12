@@ -114,13 +114,10 @@ public final class RatingUtil {
 
             return Double.parseDouble(s);
         }
-        
-        desc.trim();
-     
+
         double extra = 0.5;
 
-        String valueStr = desc;
-              	
+        String valueStr = desc.trim();
         if (valueStr.contains("(")) {
         	// We have things like divine(+1)-
         	// Add the 1 to extra, and remove this part.

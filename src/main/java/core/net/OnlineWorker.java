@@ -997,7 +997,6 @@ public class OnlineWorker {
 		}
 
 		if ((file != null)) {
-			file.getPath();
 			// Save Path
 			UserParameter.instance().hrfImport_HRFPath = file.getParentFile().getAbsolutePath();
 

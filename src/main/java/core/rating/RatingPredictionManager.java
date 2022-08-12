@@ -981,9 +981,9 @@ public class RatingPredictionManager {
 			this.attitude = (short)startingLineup.getAttitude();
             this.heimspiel = startingLineup.getLocation();
             this.taktikType = (short)startingLineup.getTacticType();
-            this.stimmung = (short)team.getTeamSpirit();
-            this.substimmung = (short)team.getSubTeamSpirit();
-            this.selbstvertrauen = (short)team.getConfidence();
+            this.stimmung = (short)team.teamSpirit();
+            this.substimmung = (short)team.subTeamSpirit();
+            this.selbstvertrauen = (short)team.confidence();
             this.pullBackMinute = startingLineup.getPullBackMinute();
 		}
         catch(Exception e)

@@ -55,13 +55,7 @@ public class TorLabelEntry extends AbstractHOTableEntry {
         if (obj instanceof TorLabelEntry) {
             final TorLabelEntry entry = (TorLabelEntry) obj;
 
-            if (getTore() < entry.getTore()) {
-                return -1;
-            } else if (getTore() > entry.getTore()) {
-                return 1;
-            } else {
-                return 0;
-            }
+            return Integer.compare(getTore(), entry.getTore());
         }
 
         return 0;
@@ -72,7 +66,7 @@ public class TorLabelEntry extends AbstractHOTableEntry {
         renderer.setLayout(new BoxLayout(renderer, 0));
         renderer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
-        for (float f = m_iTore; f > 0; f--) {
+        for (int f = m_iTore; f > 0; f--) {
             final JLabel jlabel = new JLabel(BALLIMAGEICON);
             jlabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
             renderer.add(jlabel);
@@ -88,7 +82,7 @@ public class TorLabelEntry extends AbstractHOTableEntry {
 	public final void updateComponent() {
         m_clComponent.removeAll();
 
-        for (float f = m_iTore; f > 0; f--) {
+        for (int f = m_iTore; f > 0; f--) {
             final JLabel jlabel = new JLabel(BALLIMAGEICON);
             jlabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
             m_clComponent.add(jlabel);

@@ -696,19 +696,15 @@ public class XMLMatchdetailsParser {
         }
     }
 
-	private static Matchdetails.eInjuryType getInjuryType(int iMinute, int iPlayerID, ArrayList<Matchdetails.Injury> injuries)
-	{
-		for (Matchdetails.Injury injury : injuries )
-		{
-			if ( (injury.getInjuryPlayerID() == iPlayerID) && (injury.getInjuryPlayerID() == iPlayerID))
-			{
+	private static Matchdetails.eInjuryType getInjuryType(int iMinute, int iPlayerID, ArrayList<Matchdetails.Injury> injuries) {
+		for (Matchdetails.Injury injury : injuries ) {
+			if (injury.getInjuryPlayerID() == iPlayerID) {
 				return injury.getInjuryType();
 			}
 		}
 
 		HOLogger.instance().log(XMLMatchdetailsParser.class, "the injured player was not listed !!! This is not normal ");
 		return Matchdetails.eInjuryType.NA;
-
 	}
 
 }

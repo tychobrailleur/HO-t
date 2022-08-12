@@ -408,7 +408,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
             HOLogger.instance().log(getClass(), e);
         }
 
-        if (success) {
+        if (success && m_clSelectedMatch != null) {
             m_clSelectedMatch.setOrdersSetInHT(true);
             try {
                 CursorToolkit.startWaitCursor(this);
@@ -418,11 +418,15 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
                 }
                 DBManager.instance().updateMatchKurzInfo(m_clSelectedMatch);
                 refresh();
-                //update_jcbUpcomingGamesAfterSendingMatchOrders(m_clSelectedMatch);
 
                 // store lineup in database
-                var lineupTeam = new MatchLineupTeam( m_clSelectedMatch.getMatchType(), m_clSelectedMatch.getMatchID(),
-                        HOVerwaltung.instance().getModel().getBasics().getTeamName(), OWN_TEAM_ID, 0);
+                var lineupTeam = new MatchLineupTeam(
+                        m_clSelectedMatch.getMatchType(),
+                        m_clSelectedMatch.getMatchID(),
+                        HOVerwaltung.instance().getModel().getBasics().getTeamName(),
+                        OWN_TEAM_ID,
+                        0
+                );
                 lineupTeam.setLineup(lineup);
                 DBManager.instance().storeMatchLineupTeam(lineupTeam);
             }

@@ -359,18 +359,17 @@ public class DBManager {
 	 * @return boolean
 	 */
 	private boolean checkIfDBExists() {
-		if ( m_clJDBCAdapter==null) return false;
-		boolean exists;
-		try {
-			ResultSet rs = m_clJDBCAdapter.executeQuery("SELECT Count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC'");
-			assert rs != null;
-			rs.next();
-			exists = rs.getInt(1) > 0;
+		if (m_clJDBCAdapter == null) return false;
+
+		try (ResultSet rs = m_clJDBCAdapter.executeQuery("SELECT Count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC'")) {
+			if (rs != null) {
+				rs.next();
+				return rs.getInt(1) > 0;
+			}
 		} catch(SQLException e) {
 			HOLogger.instance().error(getClass(), ExceptionUtils.getStackTrace(e));
-			exists = false;
-		  }
-		return exists;
+		}
+		return false;
 	}
 
 

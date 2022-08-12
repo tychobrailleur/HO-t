@@ -178,8 +178,8 @@ public class OutputTableModel extends AbstractTableModel {
                     player.getValue4Skill(skillIndex),
                     model.getTrainer().getTrainerSkill(),
                     model.getClub().getCoTrainer(),
-                    model.getTeam().getTrainingslevel(),
-                    model.getTeam().getStaminaTrainingPart(),
+                    model.getTeam().trainingsLevel(),
+                    model.getTeam().staminaTrainingPart(),
                     player.getAlter(),
                     90, 0, 0, 0);
         }

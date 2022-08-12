@@ -162,7 +162,7 @@ public class Lineup{
 
 	/**
 	 * Creates a new instance of Lineup
-	 * 
+	 *
 	 * Probably up for change with new XML?
 	 */
 	public Lineup(Properties properties) {
@@ -310,7 +310,7 @@ public class Lineup{
 
 	/**
 	 * get the tactic level for AiM/AoW
-	 * 
+	 *
 	 * @return tactic level
 	 */
 	public final float getTacticLevelAimAow() {
@@ -319,7 +319,7 @@ public class Lineup{
 
 	/**
 	 * get the tactic level for counter
-	 * 
+	 *
 	 * @return tactic level
 	 */
 	public final float getTacticLevelCounter() {
@@ -328,7 +328,7 @@ public class Lineup{
 
 	/**
 	 * get the tactic level for pressing
-	 * 
+	 *
 	 * @return tactic level
 	 */
 	public final float getTacticLevelPressing() {
@@ -337,7 +337,7 @@ public class Lineup{
 
 	/**
 	 * get the tactic level for Long Shots
-	 * 
+	 *
 	 * @return tactic level
 	 */
 	public final float getTacticLevelLongShots() {
@@ -346,7 +346,7 @@ public class Lineup{
 
 	/**
 	 * Setter for property m_iAttitude.
-	 * 
+	 *
 	 * @param m_iAttitude
 	 *            New value of property m_iAttitude.
 	 */
@@ -356,13 +356,13 @@ public class Lineup{
 
 	/**
 	 * Getter for property m_iAttitude.
-	 * 
+	 *
 	 * @return Value of property m_iAttitude.
 	 */
 	public final int getAttitude() {
 		return settings.m_iAttitude;
 	}
-	
+
 	public String getAttitudeName(int attitude) {
 		HOVerwaltung hov = HOVerwaltung.instance();
 		return switch (attitude) {
@@ -376,7 +376,7 @@ public class Lineup{
 	public void setStyleOfPlay(int style) {
 		settings.m_iStyleOfPlay = style;
 	}
-	
+
 	public int getStyleOfPlay() {
 		return settings.m_iStyleOfPlay;
 	}
@@ -553,7 +553,7 @@ public class Lineup{
 
 	/**
 	 * Setter for property m_iKapitaen.
-	 * 
+	 *
 	 * @param m_iKapitaen
 	 *            New value of property m_iKapitaen.
 	 */
@@ -563,7 +563,7 @@ public class Lineup{
 
 	/**
 	 * Getter for property m_iKapitaen.
-	 * 
+	 *
 	 * @return Value of property m_iKapitaen.
 	 */
 	public final int getCaptain() {
@@ -572,7 +572,7 @@ public class Lineup{
 
 	/**
 	 * Setter for property m_iKicker.
-	 * 
+	 *
 	 * @param m_iKicker
 	 *            New value of property m_iKicker.
 	 */
@@ -582,7 +582,7 @@ public class Lineup{
 
 	/**
 	 * Getter for property m_iKicker.
-	 * 
+	 *
 	 * @return Value of property m_iKicker.
 	 */
 	public final int getKicker() {
@@ -633,7 +633,7 @@ public class Lineup{
 
 	/**
 	 * Setter for property m_sHeimspiel.
-	 * 
+	 *
 	 * @param location
 	 *            New value of property m_sHeimspiel.
 	 */
@@ -643,7 +643,7 @@ public class Lineup{
 
 	/**
 	 * Get the location constant for the match (home/away/awayderby)
-	 * 
+	 *
 	 * @return the location constant for the match
 	 */
 	public final short getLocation() {
@@ -745,7 +745,7 @@ public class Lineup{
 
 	/**
 	 * Umrechnung von double auf 1-80 int
-	 * 
+	 *
 	 * @deprecated use RatingUtil.getIntValue4Rating(double rating) instead
 	 */
 	@Deprecated
@@ -836,7 +836,7 @@ public class Lineup{
 	/**
 	 * Setter for property m_vPositionen. All previous entries of the linup are
 	 * cleared.
-	 * 
+	 *
 	 * @param positions
 	 *            New value of property m_vPositionen.
 	 */
@@ -895,7 +895,7 @@ public class Lineup{
 
 	/**
 	 * Getter for property m_vPositionen.
-	 * 
+	 *
 	 * @return Value of property m_vPositionen.
 	 */
 	public final Vector<MatchLineupPosition> getAllPositions() {
@@ -1021,7 +1021,7 @@ public class Lineup{
 
 	/**
 	 * Returns a list of match orders for this lineup.
-	 * 
+	 *
 	 * @return the substitutions for this lineup. If there are no substitutions,
 	 *         an empty list will be returned.
 	 */
@@ -1126,7 +1126,7 @@ public class Lineup{
 
 	/**
 	 * Setter for property m_iTacticType.
-	 * 
+	 *
 	 * @param m_iTacticType
 	 *            New value of property m_iTacticType.
 	 */
@@ -1136,7 +1136,7 @@ public class Lineup{
 
 	/**
 	 * Getter for property m_iTacticType.
-	 * 
+	 *
 	 * @return Value of property m_iTacticType.
 	 */
 	public final int getTacticType() {
@@ -1149,16 +1149,16 @@ public class Lineup{
 	public final int getExperienceForCurrentTeamFormation() {
 		return switch (getCurrentTeamFormationCode()) {
 			case SYS_MURKS -> -1;
-			case SYS_451 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience451();
-			case SYS_352 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience352();
-			case SYS_442 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience442();
-			case SYS_343 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience343();
-			case SYS_433 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience433();
-			case SYS_532 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience532();
-			case SYS_541 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience541();
-			case SYS_523 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience523();
-			case SYS_550 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience550();
-			case SYS_253 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience253();
+			case SYS_451 -> HOVerwaltung.instance().getModel().getTeam().formationExperience451();
+			case SYS_352 -> HOVerwaltung.instance().getModel().getTeam().formationExperience352();
+			case SYS_442 -> HOVerwaltung.instance().getModel().getTeam().formationExperience442();
+			case SYS_343 -> HOVerwaltung.instance().getModel().getTeam().formationExperience343();
+			case SYS_433 -> HOVerwaltung.instance().getModel().getTeam().formationExperience433();
+			case SYS_532 -> HOVerwaltung.instance().getModel().getTeam().formationExperience532();
+			case SYS_541 -> HOVerwaltung.instance().getModel().getTeam().formationExperience541();
+			case SYS_523 -> HOVerwaltung.instance().getModel().getTeam().formationExperience523();
+			case SYS_550 -> HOVerwaltung.instance().getModel().getTeam().formationExperience550();
+			case SYS_253 -> HOVerwaltung.instance().getModel().getTeam().formationExperience253();
 			default -> -1;
 		};
 	}

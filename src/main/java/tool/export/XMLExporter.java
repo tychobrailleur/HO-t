@@ -49,7 +49,7 @@ public class XMLExporter  {
     //~ Instance fields ----------------------------------------------------------------------------
 
     private SpinnerDateModel m_clSpinnerModel = new SpinnerDateModel();
-   
+
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -68,11 +68,11 @@ public class XMLExporter  {
         javax.swing.JWindow waitDialog = null;
 		JSpinner m_jsSpinner = new JSpinner(m_clSpinnerModel);
         try {
-            // Date           
+            // Date
             m_clSpinnerModel.setCalendarField(java.util.Calendar.MONTH);
             ((JSpinner.DateEditor) m_jsSpinner.getEditor()).getFormat().applyPattern("dd.MM.yyyy");
             m_clSpinnerModel.setValue(RatingPredictionManager.LAST_CHANGE);
-	
+
             JFrame owner = HOMainFrame.instance();
             final JDialog dialog = new JDialog(owner, HOVerwaltung.instance().getLanguageString("xmlexport.startdate"));
             dialog.getContentPane().setLayout(new BorderLayout());
@@ -91,7 +91,7 @@ public class XMLExporter  {
                                - (dialog.getHeight() / 2));
             dialog.setModal(true);
             dialog.setVisible(true);
-            
+
             // File
             java.io.File file = new java.io.File(HOVerwaltung.instance().getModel().getBasics().getTeamName() + ".zip");
 
@@ -131,7 +131,7 @@ public class XMLExporter  {
 	// *  <Derby>
 	// *  <MatchTyp> //Cup usw...
 	// *  <Heim/Ausw>
-	// *  <Team>  
+	// *  <Team>
 	// *      <TeamID>
 	// *      <System>
 	// *      <EingespieltHeit>
@@ -162,10 +162,10 @@ public class XMLExporter  {
 	 */
 	@SuppressWarnings("deprecation")
 	public void saveXML(String filename, HODateTime startingDate) {
-				
-		//Alle Matches holen			
+
+		//Alle Matches holen
 		List<ExportMatchData> matches = MatchExporter.getDataUsefullMatches(startingDate);
-		
+
 		//XML schreiben
 		try {
 			Document doc;
@@ -479,7 +479,7 @@ public class XMLExporter  {
 			HOLogger.instance().log(getClass(), e);
 		}
 
-		//        HOMiniModel.instance().getGUI ().getInfoPanel ().clearAll ();   
+		//        HOMiniModel.instance().getGUI ().getInfoPanel ().clearAll ();
 		JOptionPane.showMessageDialog(
 			HOMainFrame.instance(), HOVerwaltung.instance().getLanguageString("xmlexport.information", matches.size()),
 					HOVerwaltung.instance().getLanguageString("windowtitle.exportsuccessful"),
@@ -500,7 +500,7 @@ public class XMLExporter  {
 
 		return "0";
 	}
-	
+
 	// -------------------------------- Helper -----------------------------------------------------------
 
 	private String getRegionID4Team(int teamID) {
@@ -516,7 +516,7 @@ public class XMLExporter  {
 				return m_sUserRegionID;
 			}
 			return m_sUserRegionID;
-		} 
+		}
 		return MyConnector.instance().fetchRegionID(teamID);
 	}
 
@@ -529,16 +529,16 @@ public class XMLExporter  {
 		}
 		return switch (system) {
 			case Lineup.SYS_MURKS -> -1;
-			case Lineup.SYS_451 -> team.getFormationExperience451();
-			case Lineup.SYS_352 -> team.getFormationExperience352();
-			case Lineup.SYS_442 -> team.getFormationExperience442();
-			case Lineup.SYS_343 -> team.getFormationExperience343();
-			case Lineup.SYS_433 -> team.getFormationExperience433();
-			case Lineup.SYS_532 -> team.getFormationExperience532();
-			case Lineup.SYS_541 -> team.getFormationExperience541();
-			case Lineup.SYS_523 -> team.getFormationExperience523();
-			case Lineup.SYS_550 -> team.getFormationExperience550();
-			case Lineup.SYS_253 -> team.getFormationExperience253();
+			case Lineup.SYS_451 -> team.formationExperience451();
+			case Lineup.SYS_352 -> team.formationExperience352();
+			case Lineup.SYS_442 -> team.formationExperience442();
+			case Lineup.SYS_343 -> team.formationExperience343();
+			case Lineup.SYS_433 -> team.formationExperience433();
+			case Lineup.SYS_532 -> team.formationExperience532();
+			case Lineup.SYS_541 -> team.formationExperience541();
+			case Lineup.SYS_523 -> team.formationExperience523();
+			case Lineup.SYS_550 -> team.formationExperience550();
+			case Lineup.SYS_253 -> team.formationExperience253();
 			default -> -1;
 		};
 	}
@@ -550,7 +550,7 @@ public class XMLExporter  {
 		if (team == null) {
 			return -1;
 		}
-		return team.getConfidence();
+		return team.confidence();
 
 	}
 
@@ -561,7 +561,7 @@ public class XMLExporter  {
 		if (team == null) {
 			return -1;
 		}
-		return team.getTeamSpirit();
+		return team.teamSpirit();
 	}
-	
+
 }

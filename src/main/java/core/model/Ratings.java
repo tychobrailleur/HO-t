@@ -2,10 +2,7 @@ package core.model;
 
 import core.model.match.IMatchDetails;
 
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -23,7 +20,7 @@ public class Ratings {
         double totalRating120 = 0.0;
         double duration, m_a, m_b;
 
-        List<Double> minutes = vRatings.keySet().stream().collect(Collectors.toList());
+        List<Double> minutes = new ArrayList<>(vRatings.keySet());
         Collections.sort(minutes);
 
         for (int m_i = 0; m_i < minutes.size()-1; m_i++) {
@@ -114,11 +111,6 @@ public class Ratings {
 
     private int tacticType;
     private int tacticLevel;
-
-    public void setHatStats() {
-
-        this.HatStats = HatStats;
-    }
 
     public void computeHatStats() {
         Hashtable<Double, Integer> _HatStats = new Hashtable<>();
@@ -223,7 +215,7 @@ public class Ratings {
      * convert reduced float rating (1.00....20.99) to original integer HT
      * rating (1...80) one +0.5 is because of correct rounding to integer
      */
-    public static final int HTfloat2int(double x) {
+    public static int HTfloat2int(double x) {
         return (int) (((x - 1.0f) * 4.0f) + 1.0f);
     }
 

@@ -399,8 +399,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 
 	public MatchKurzInfo(){}
 
-	public MatchKurzInfo(MatchKurzInfo parent){
-		new MatchKurzInfo();
+	public MatchKurzInfo(MatchKurzInfo parent) {
 		this.copyFrom(parent);
 	}
 
