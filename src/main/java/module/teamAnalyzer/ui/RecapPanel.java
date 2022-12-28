@@ -1,71 +1,26 @@
 package module.teamAnalyzer.ui;
 
-import core.constants.player.PlayerAbility;
-import core.gui.theme.HOIconName;
-import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
-import core.model.enums.MatchType;
-import core.model.match.IMatchType;
-import core.model.match.Matchdetails;
-import module.teamAnalyzer.SystemManager;
+import core.gui.comp.table.FixedColumnsTable;
+import core.gui.model.UserColumnController;
 import module.teamAnalyzer.report.TeamReport;
 import module.teamAnalyzer.ui.controller.RecapListSelectionListener;
-import module.teamAnalyzer.ui.model.UiRecapTableModel;
-import module.teamAnalyzer.vo.MatchRating;
-import module.teamAnalyzer.vo.TeamLineup;
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.io.Serial;
-import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.Vector;
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
-
+import javax.swing.*;
 
 
 public class RecapPanel extends JPanel {
-    //~ Static fields/initializers -----------------------------------------------------------------
+
 	@Serial
     private static final long serialVersionUID = 486150690031160261L;
     public static final String VALUE_NA = "---"; //$NON-NLS-1$
 
     //~ Instance fields ----------------------------------------------------------------------------
-    private JTable table;
-    private UiRecapTableModel tableModel;
-    private RecapListSelectionListener recapListener = null;
-    private final String[] columns = {
-            HOVerwaltung.instance().getLanguageString("RecapPanel.Game"), //$NON-NLS-1$
-            HOVerwaltung.instance().getLanguageString("Type"), //$NON-NLS-1$
-            HOVerwaltung.instance().getLanguageString("ls.match.result"),
-            HOVerwaltung.instance().getLanguageString("Week"), //$NON-NLS-1$
-            HOVerwaltung.instance().getLanguageString("Season"), //$NON-NLS-1$
-            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.midfield"),
-            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightdefence"),
-            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centraldefence"),
-            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftdefence"),
-            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightattack"),
-            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centralattack"),
-            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftattack"),
-            HOVerwaltung.instance().getLanguageString("RecapPanel.Stars"), //$NON-NLS-1$
-            HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.hatstats"),
-            HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.squad"),
-            HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.smartsquad"),
-            HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.loddarstats"),
-            HOVerwaltung.instance().getLanguageString("ls.team.tactic"),
-            HOVerwaltung.instance().getLanguageString("ls.team.tacticalskill"),
-            HOVerwaltung.instance().getLanguageString("ls.team.formation"),
-            HOVerwaltung.instance().getLanguageString("ls.team.teamspirit"),
-            HOVerwaltung.instance().getLanguageString("ls.team.confidence"),
-            "", //$NON-NLS-1$ columns 20 and 21 are only used by the RecapTableRenderer
-            "" //$NON-NLS-1$
-    };
+    private FixedColumnsTable table;
 
-    //~ Constructors -------------------------------------------------------------------------------
+    private final RecapListSelectionListener recapListener = null;
 
+    private RecapPanelTableModel tableModel;
     /**
      * Creates a new RecapPanel object.
      */
@@ -254,35 +209,21 @@ public class RecapPanel extends JPanel {
     }
 
     private void jbInit() {
-        Vector<Vector<Object>> data = new Vector<>();
-
-        tableModel = new UiRecapTableModel(data, new Vector<>(Arrays.asList(columns)));
-
-        RecapTableSorter sorter = new RecapTableSorter(tableModel);
-        table = new JTable(sorter);
-        sorter.setTableHeader(table.getTableHeader());
-
-        // Set up tool tips for column headers.
-        table.getTableHeader().setToolTipText(HOVerwaltung.instance().getLanguageString("RecapPanel.Tooltip")); //$NON-NLS-1$
-
+        tableModel = UserColumnController.instance().getTeamAnalyzerRecapModell();
+        tableModel.showTeamReport(null);
+        table = new FixedColumnsTable(2, tableModel);
         table.setDefaultRenderer(Object.class, new RecapTableRenderer());
         table.setDefaultRenderer(ImageIcon.class, new RecapTableRenderer());
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//        restoreUserSettings();
 
-        ListSelectionModel rowSM = table.getSelectionModel();
-        recapListener = new RecapListSelectionListener(sorter, tableModel);
-        rowSM.addListSelectionListener(recapListener);
+        table.addListSelectionListener( new RecapListSelectionListener(table.getTableSorter(), tableModel));
         setLayout(new BorderLayout());
 
-        JScrollPane scrollPane = new JScrollPane(table);
-
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        add(scrollPane);
-
-        // Hide 'match type' and 'is home match?' columns. (used by RecapTableRenderer)
-        setColumnInvisible(22);
-        setColumnInvisible(23);
+//        JScrollPane scrollPane = new JScrollPane(table);
+//
+//        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+//        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        add(table);
     }
 
     public String getSelectedTacticType() {
@@ -291,5 +232,9 @@ public class RecapPanel extends JPanel {
 
     public String getSelectedTacticSkill() {
     	return recapListener.getSelectedTacticSkill();
+    }
+
+    public void storeUserSettings() {
+        this.tableModel.storeUserSettings(table);
     }
 }
