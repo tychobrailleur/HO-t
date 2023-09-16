@@ -20,6 +20,8 @@ jobs:
           distribution: 'temurin'
       - name: Validate Maven wrapper
         uses: loosebazooka/maven-wrapper-validation-action@56d42b735214b7255887d98a0785f0f12aff9bc8
+        with:
+          wrapper-path: .mvn/wrapper/maven-wrapper.jar
       - name: Build with Gradle
         run: ./mvnw clean package -Xtest
         env:
