@@ -1,3 +1,4 @@
+
 <div align="left">
   <img src="https://cdn.jsdelivr.net/gh/ho-dev/hattrickOrganizer@master/utils/buildResources/Logo_stable.png" alt="HO logo">
 </div>
