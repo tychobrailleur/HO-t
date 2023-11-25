@@ -480,10 +480,10 @@ markdownToHtml {
     markdownToHtml.hardwraps = true
 }
 
-markdownToHtml.dependsOn pushmd
-poeditorPull.dependsOn markdownToHtml
-createLanguageFileList.dependsOn poeditorPull
-processResources.dependsOn createLanguageFileList
-compileJava.dependsOn processResources
+// markdownToHtml.dependsOn pushmd
+// poeditorPull.dependsOn markdownToHtml
+// createLanguageFileList.dependsOn poeditorPull
+// processResources.dependsOn createLanguageFileList
+// compileJava.dependsOn processResources
 
 // endregion ======================================================================================================================
