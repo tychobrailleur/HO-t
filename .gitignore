@@ -153,3 +153,4 @@ truststore.jks
 /_db2/database.properties
 /_db2/database.script
 /buildSrc/build/
+/dependency-reduced-pom.xml
