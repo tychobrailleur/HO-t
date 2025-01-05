@@ -5,13 +5,10 @@ import core.file.xml.SafeInsertMap;
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.HOLogger;
-import lombok.Getter;
-import lombok.Setter;
 import module.teamAnalyzer.manager.PlayerDataManager;
 
 import static module.lineup.substitution.LanguageStringLookup.getPosition;
 
-@Getter
 public class PlayerInfo extends AbstractTable.Storable {
 
     private int injuryLevel;
@@ -22,36 +19,25 @@ public class PlayerInfo extends AbstractTable.Storable {
     private float lastMatchRatingEndOfGame;
     private float rating;
     //~ Instance fields ----------------------------------------------------------------------------
-    @Setter
     String name = "";
     //~ Methods ------------------------------------------------------------------------------------
-    @Setter
     int age;
-    @Setter
     int experience;
-    @Setter
     int form;
-    @Setter
     int playerId;
-    @Setter
     int specialEvent;
     int status;
     int injuryStatus = 0;
     int bookingStatus = 0;
     int transferListedStatus = 0;
-    @Setter
     int tsi;
-    @Setter
     int teamId;
     @Setter
     AmountOfMoney salary; // Money in SEK
     @Setter
     int stamina;
-    @Setter
     boolean motherClubBonus;
-    @Setter
     int loyalty;
-    @Setter
     private int week;
 
     public PlayerInfo(SafeInsertMap i) {
@@ -157,5 +143,153 @@ public class PlayerInfo extends AbstractTable.Storable {
 
     public boolean isTransferListed() {
         return transferListedStatus != 0;
+    }
+
+    public int getInjuryLevel() {
+        return this.injuryLevel;
+    }
+
+    public HODateTime getLastMatchDate() {
+        return this.lastMatchDate;
+    }
+
+    public int getLastMatchId() {
+        return this.lastMatchId;
+    }
+
+    public int getLastMatchPosition() {
+        return this.lastMatchPosition;
+    }
+
+    public int getLastMatchPlayedMinutes() {
+        return this.lastMatchPlayedMinutes;
+    }
+
+    public float getLastMatchRatingEndOfGame() {
+        return this.lastMatchRatingEndOfGame;
+    }
+
+    public float getRating() {
+        return this.rating;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public int getAge() {
+        return this.age;
+    }
+
+    public int getExperience() {
+        return this.experience;
+    }
+
+    public int getForm() {
+        return this.form;
+    }
+
+    public int getPlayerId() {
+        return this.playerId;
+    }
+
+    public int getSpecialEvent() {
+        return this.specialEvent;
+    }
+
+    public int getStatus() {
+        return this.status;
+    }
+
+    public int getInjuryStatus() {
+        return this.injuryStatus;
+    }
+
+    public int getBookingStatus() {
+        return this.bookingStatus;
+    }
+
+    public int getTransferListedStatus() {
+        return this.transferListedStatus;
+    }
+
+    public int getTsi() {
+        return this.tsi;
+    }
+
+    public int getTeamId() {
+        return this.teamId;
+    }
+
+    public int getSalary() {
+        return this.salary;
+    }
+
+    public int getStamina() {
+        return this.stamina;
+    }
+
+    public boolean isMotherClubBonus() {
+        return this.motherClubBonus;
+    }
+
+    public int getLoyalty() {
+        return this.loyalty;
+    }
+
+    public int getWeek() {
+        return this.week;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setExperience(int experience) {
+        this.experience = experience;
+    }
+
+    public void setForm(int form) {
+        this.form = form;
+    }
+
+    public void setPlayerId(int playerId) {
+        this.playerId = playerId;
+    }
+
+    public void setSpecialEvent(int specialEvent) {
+        this.specialEvent = specialEvent;
+    }
+
+    public void setTsi(int tsi) {
+        this.tsi = tsi;
+    }
+
+    public void setTeamId(int teamId) {
+        this.teamId = teamId;
+    }
+
+    public void setSalary(int salary) {
+        this.salary = salary;
+    }
+
+    public void setStamina(int stamina) {
+        this.stamina = stamina;
+    }
+
+    public void setMotherClubBonus(boolean motherClubBonus) {
+        this.motherClubBonus = motherClubBonus;
+    }
+
+    public void setLoyalty(int loyalty) {
+        this.loyalty = loyalty;
+    }
+
+    public void setWeek(int week) {
+        this.week = week;
     }
 }
