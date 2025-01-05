@@ -1,6 +1,6 @@
 package tool.updater;
 
-import com.install4j.api.launcher.Variables;
+//import com.install4j.api.launcher.Variables;
 import core.HO;
 import core.gui.HOMainFrame;
 import core.model.TranslationFacility;
@@ -140,32 +140,32 @@ public final class UpdateController {
     }
 
     public static void updateHO(final VersionInfo versionInfo, String versionType) {
-        boolean manualUpdate = false;
-        try {
-            String mediaId = Variables.getCompilerVariable("mediaID");
-            if (mediaId != null) {
-                // making update via install4J
-                Updater.instance().update();
-            } else {
-                manualUpdate = true;
-            }
-        } catch (IOException e) {
-            HOLogger.instance().warning(UpdateController.class, "Error retrieving compiler var mediaID: " +
-                    e.getMessage());
-            manualUpdate = true;
-        }
-
-        if (manualUpdate) {
-            String urlString = getHOZipDownloadUrl(versionInfo, versionType);
-            try {
-                HOLogger.instance().info(UpdateController.class,
-                        "Launching browser to download update manually: " + urlString);
-                BrowserLauncher.openURL(urlString);
-            } catch (Exception ee) {
-                HOLogger.instance().error(UpdateController.class, "Error opening URL: "
-                        + urlString + ": " + ee.getMessage());
-            }
-        }
+//        boolean manualUpdate = false;
+//        try {
+//            String mediaId = Variables.getCompilerVariable("mediaID");
+//            if (mediaId != null) {
+//                // making update via install4J
+//                Updater.instance().update();
+//            } else {
+//                manualUpdate = true;
+//            }
+//        } catch (IOException e) {
+//            HOLogger.instance().warning(UpdateController.class, "Error retrieving compiler var mediaID: " +
+//                    e.getMessage());
+//            manualUpdate = true;
+//        }
+//
+//        if (manualUpdate) {
+//            String urlString = getHOZipDownloadUrl(versionInfo, versionType);
+//            try {
+//                HOLogger.instance().info(UpdateController.class,
+//                        "Launching browser to download update manually: " + urlString);
+//                BrowserLauncher.openURL(urlString);
+//            } catch (Exception ee) {
+//                HOLogger.instance().error(UpdateController.class, "Error opening URL: "
+//                        + urlString + ": " + ee.getMessage());
+//            }
+//        }
     }
 
     public static boolean compareTwoVersions(VersionInfo a, VersionInfo b) {
