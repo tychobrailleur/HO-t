@@ -1,5 +1,9 @@
 package core;
 
+import clojure.java.api.Clojure;
+import clojure.lang.IFn;
+import clojure.lang.RT;
+import clojure.main;
 import core.db.DBManager;
 import core.db.backup.BackupHelper;
 import core.db.user.UserManager;
@@ -164,6 +168,19 @@ public class HO {
 		// Load user parameters from the DB
 		interruptionWindow.setInfoText(2, "Initialize Database");
 		DBManager.instance().loadUserParameter();
+
+		String[] finalArgs = args;
+		new Thread(() -> {
+			RT.var("user", "dbManager", DBManager.instance());
+			RT.var("user", "admin", HOVerwaltung.instance());
+
+			IFn require = Clojure.var("clojure.core", "require");
+			require.invoke(Clojure.read("nrepl.server"));
+			IFn startServer = Clojure.var("nrepl.server", "start-server");
+			// Can connect to HO using cider on localhost:5555
+			startServer.invoke(Clojure.read("{:port 5555 :name \"HO\"}"));
+		}).start();
+
 
 		// init Theme
 		try {
