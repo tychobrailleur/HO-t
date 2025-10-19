@@ -41,7 +41,7 @@ jobs:
         with:
           delete_release: true
           delete_non_draft: true
-          tag_name: ${{ steps.read_version_properties.outputs.tag }}
+          tag_name: ${{ steps.read_version_properties.outputs.git-tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       - name: Create a Release
