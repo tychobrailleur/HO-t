@@ -36,14 +36,14 @@ jobs:
       - name: Show version
         id: show_version
         run: cat version.properties
-      - name: Delete previous tag and release
-        uses: tychobrailleur/delete-tag-and-release@453626e2f16a2625a19e18d91e4cdf1f41624dde
-        with:
-          delete_release: true
-          delete_non_draft: true
-          tag_name: ${{ steps.read_version_properties.outputs.git-tag }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      # - name: Delete previous tag and release
+      #   uses: tychobrailleur/delete-tag-and-release@453626e2f16a2625a19e18d91e4cdf1f41624dde
+      #   with:
+      #     delete_release: true
+      #     delete_non_draft: true
+      #     tag_name: ${{ steps.read_version_properties.outputs.git-tag }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       - name: Create a Release
         id: create_release
         uses: softprops/action-gh-release@v2
