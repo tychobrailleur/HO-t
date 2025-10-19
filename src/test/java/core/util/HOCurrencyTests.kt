@@ -23,7 +23,7 @@ class HOCurrencyTests {
         val e = AmountOfMoney(50)
         Assertions.assertEquals(10, e.toLocale())
 
-        val d = AmountOfMoney(c.swedishKrona + 90)
+        val d = AmountOfMoney(c.swedishKrona.longValueExact() + 90)
         val nbsp = "\u00A0"
         Assertions.assertEquals("10" + nbsp + "€", d.toLocaleString())
     }
