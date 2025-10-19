@@ -3,7 +3,9 @@ package module.youth
 import core.constants.player.PlayerSkill
 import core.model.player.Specialty
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.io.File
 import java.util.*
 
 class YouthPlayerTests {
@@ -46,7 +48,10 @@ class YouthPlayerTests {
 
         youthPlayer = YouthPlayer(properties)
         Assertions.assertEquals(2928, youthPlayer.calculateRateMyAcademyScore())
+    }
 
-
+    @BeforeEach
+    fun cleanUp() {
+        File("null").deleteRecursively()
     }
 }
