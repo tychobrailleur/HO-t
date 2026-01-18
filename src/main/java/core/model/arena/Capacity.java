@@ -1,4 +1,4 @@
-package hattrickdata;
+package core.model.arena;
 
 import core.util.HODateTime;
 

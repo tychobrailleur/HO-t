@@ -1,8 +1,8 @@
 package core.file.xml;
 
+import core.model.arena.*;
 import core.util.HODateTime;
 import core.util.HOLogger;
-import hattrickdata.*;
 import org.apache.commons.lang3.tuple.Pair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

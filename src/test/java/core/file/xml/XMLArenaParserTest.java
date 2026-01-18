@@ -1,8 +1,8 @@
 package core.file.xml;
 
+import core.model.arena.*;
 import core.util.HODateTime;
 import core.util.ResourceUtils;
-import hattrickdata.*;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
