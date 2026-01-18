@@ -85,7 +85,7 @@ public class XMLArenaParser {
             int id = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_TEAM_NAME).item(0);
             String name = XMLManager.getFirstChildNodeValue(element);
-            Team team = new Team(id, name);
+            TeamIdName teamIdName = new TeamIdName(id, name);
 
             // League
             tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_LEAGUE).item(0);
@@ -93,7 +93,7 @@ public class XMLArenaParser {
             id = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_LEAGUE_NAME).item(0);
             name = XMLManager.getFirstChildNodeValue(element);
-            League league = new League(id, name);
+            LeagueIdName leagueIdName = new LeagueIdName(id, name);
 
             // Region
             tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_REGION).item(0);
@@ -101,7 +101,7 @@ public class XMLArenaParser {
             id = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_REGION_NAME).item(0);
             name = XMLManager.getFirstChildNodeValue(element);
-            Region region = new Region(id, name);
+            RegionIdName regionIdName = new RegionIdName(id, name);
 
             // Current Capacity
             tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_CURRENT_CAPACITY).item(0);
@@ -124,13 +124,13 @@ public class XMLArenaParser {
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_TOTAL).item(0);
             int total = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
 
-            CurrentCapacity currentCapacity = new CurrentCapacity(terraces, basic, roof, vip, total, rebuildDate);
+            Capacity currentCapacity = new Capacity(terraces, basic, roof, vip, total, rebuildDate, null);
 
             tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_EXPANDED_CAPACITY).item(0);
 
             final boolean expandedCapacityAvailable = getXmlAttributeAsBoolean(tmpRoot,
                     ATTRIBUTE_NAME_CAPACITY_AVAILABLE);
-            ExpandedCapacity expandedCapacity = null;
+            Capacity expandedCapacity = null;
             if (expandedCapacityAvailable) {
                 element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_EXPANDED_CAPACITY_EXPANSION_DATE).item(0);
                 HODateTime expansionDate = HODateTime.fromHT(XMLManager.getFirstChildNodeValue(element));
@@ -145,10 +145,10 @@ public class XMLArenaParser {
                 element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_TOTAL).item(0);
                 total = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
 
-                expandedCapacity = new ExpandedCapacity(terraces, basic, roof, vip, total, expansionDate);
+                expandedCapacity = new Capacity(terraces, basic, roof, vip, total, null, expansionDate);
             }
 
-            Arena arena = new Arena(arenaId, arenaName, team, league, region, currentCapacity, Optional.ofNullable(expandedCapacity));
+            Arena arena = new Arena(arenaId, arenaName, teamIdName, leagueIdName, regionIdName, currentCapacity, Optional.ofNullable(expandedCapacity));
 
             return Pair.of(hattrickDataInfo, arena);
         } catch (Exception e) {

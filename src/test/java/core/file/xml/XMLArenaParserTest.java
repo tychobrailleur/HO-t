@@ -28,16 +28,16 @@ class XMLArenaParserTest {
                         HODateTime.fromHT("2024-08-21 01:13:12")),
                 new Arena(2345678,
                         "ArenaName",
-                        new Team(3456789, "TeamName"),
-                        new League(3, "LeagueName"),
-                        new Region(227, "RegionName"),
-                        new CurrentCapacity(8000,
+                        new TeamIdName(3456789, "TeamName"),
+                        new LeagueIdName(3, "LeagueName"),
+                        new RegionIdName(227, "RegionName"),
+                        new Capacity(8000,
                                 3000,
                                 1792,
                                 282,
                                 13074,
-                                HODateTime.fromHT("2024-08-13 00:05:26")),
-                        null));
+                                HODateTime.fromHT("2024-08-13 00:05:26"), null),
+                        Optional.empty()));
 
         // when
         final var result = XMLArenaParser.parseArenaFromString(content);
@@ -59,20 +59,21 @@ class XMLArenaParserTest {
                 new Arena(
                         2345678,
                         "ArenaName",
-                        new Team(3456789, "TeamName"),
-                        new League(3, "LeagueName"),
-                        new Region(227, "RegionName"),
-                        new CurrentCapacity(8000,
+                        new TeamIdName(3456789, "TeamName"),
+                        new LeagueIdName(3, "LeagueName"),
+                        new RegionIdName(227, "RegionName"),
+                        new Capacity(8000,
                                 3000,
                                 1792,
                                 282,
                                 13074,
-                                null),
-                        Optional.of(new ExpandedCapacity(226,
+                                null, null),
+                        Optional.of(new Capacity(226,
                                 234,
                                 1138,
                                 78,
                                 1676,
+                                null,
                                 HODateTime.fromHT("2024-08-30 11:07:17")))));
         // when
         final var result = XMLArenaParser.parseArenaFromString(content);

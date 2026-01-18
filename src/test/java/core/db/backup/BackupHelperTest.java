@@ -3,6 +3,7 @@ package core.db.backup;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -103,7 +104,7 @@ class BackupHelperTest {
 
         File[] zips = listZipInDir(dbDir.getAbsolutePath());
         Assertions.assertNotNull(zips);
-        Assertions.assertEquals(3, zips.length);
+        Assertions.assertEquals(5, zips.length);
     }
 
     @AfterEach

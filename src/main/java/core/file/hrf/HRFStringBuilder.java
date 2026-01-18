@@ -15,7 +15,7 @@ import core.model.player.IMatchRoleID;
 import core.util.HOLogger;
 import core.util.StringUtils;
 import hattrickdata.Arena;
-import hattrickdata.ExpandedCapacity;
+import hattrickdata.Capacity;
 import module.lineup.substitution.model.Substitution;
 import module.youth.YouthPlayer;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -125,15 +125,15 @@ public class HRFStringBuilder {
         appendKeyValue(arenaStringBuilder, "seatTotal", arena.currentCapacity().total());
 
         appendKeyValue(arenaStringBuilder, "expandingStaplats",
-                arena.expandedCapacity().map(ExpandedCapacity::terraces).orElse(0));
+                arena.expandedCapacity().map(Capacity::terraces).orElse(0));
         appendKeyValue(arenaStringBuilder, "expandingSitt",
-                arena.expandedCapacity().map(ExpandedCapacity::basic).orElse(0));
+                arena.expandedCapacity().map(Capacity::basic).orElse(0));
         appendKeyValue(arenaStringBuilder, "expandingTak",
-                arena.expandedCapacity().map(ExpandedCapacity::roof).orElse(0));
+                arena.expandedCapacity().map(Capacity::roof).orElse(0));
         appendKeyValue(arenaStringBuilder, "expandingVIP",
-                arena.expandedCapacity().map(ExpandedCapacity::vip).orElse(0));
+                arena.expandedCapacity().map(Capacity::vip).orElse(0));
         appendKeyValue(arenaStringBuilder, "expandingSseatTotal",
-                arena.expandedCapacity().map(ExpandedCapacity::total).orElse(0));
+                arena.expandedCapacity().map(Capacity::total).orElse(0));
         appendKeyValue(arenaStringBuilder, "isExpanding", arena.expandedCapacity().isPresent());
         appendKeyValue(arenaStringBuilder, "RebuiltDate",
                 arena.currentCapacity().rebuildDate().toHT());
