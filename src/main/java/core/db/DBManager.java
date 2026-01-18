@@ -60,7 +60,8 @@ public class DBManager implements PersistenceManager {
 	/** database versions */
 	private static final int DBVersion = 1000; // HO 10.0 version
 	/**
-	 * Previous db version is used by development versions to ensure that db upgrade will rerun on each
+	 * Previous db version is used by development versions to ensure that db upgrade
+	 * will rerun on each
 	 * new installed preliminary version
 	 */
 	private static final int previousDBVersion = 901;
@@ -102,7 +103,8 @@ public class DBManager implements PersistenceManager {
 	 * @return the version
 	 */
 	public static int getVersion() {
-		if (HO.isDevelopment()) return previousDBVersion;
+		if (HO.isDevelopment())
+			return previousDBVersion;
 		return DBVersion;
 	}
 
@@ -131,7 +133,8 @@ public class DBManager implements PersistenceManager {
 						dbDirectoryCreated = dbfolder.mkdirs();
 					} else {
 						errorMsg = "Could not initialize the database folder.";
-						errorMsg += "No writing rights to the following directory\n" + parentFolder.getAbsolutePath() + "\n";
+						errorMsg += "No writing rights to the following directory\n" + parentFolder.getAbsolutePath()
+								+ "\n";
 						errorMsg += "You can report this error by opening a new bug ticket on GitHub";
 					}
 					if (!dbDirectoryCreated) {
@@ -140,12 +143,14 @@ public class DBManager implements PersistenceManager {
 				}
 
 			} catch (Exception e) {
-				errorMsg = "Error encountered during database initialization: \n" + UserManager.instance().getCurrentUser().getDbURL();
+				errorMsg = "Error encountered during database initialization: \n"
+						+ UserManager.instance().getCurrentUser().getDbURL();
 				e.printStackTrace();
 			}
 
 			if (errorMsg != null) {
-				javax.swing.JOptionPane.showMessageDialog(null, errorMsg, "Fatal DB Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+				javax.swing.JOptionPane.showMessageDialog(null, errorMsg, "Fatal DB Error",
+						javax.swing.JOptionPane.ERROR_MESSAGE);
 				System.exit(-1);
 			}
 
@@ -156,16 +161,17 @@ public class DBManager implements PersistenceManager {
 			// Try connecting to the DB
 			try {
 				m_clInstance.connect();
-//				dbUpdater.setDbManager(tempInstance);
+				// dbUpdater.setDbManager(tempInstance);
 			} catch (Exception e) {
 
 				String msg = e.getMessage();
 				boolean recover = true;
 
-				if ((msg.contains("The database is already in use by another process"))	||
+				if ((msg.contains("The database is already in use by another process")) ||
 						(e instanceof SQLException &&
-							(((SQLException)e).getErrorCode() == ErrorCode.LOCK_FILE_ACQUISITION_FAILURE ||
-									((SQLException)e).getErrorCode() == ErrorCode.LOCK_FILE_ACQUISITION_FAILURE * -1))) {
+								(((SQLException) e).getErrorCode() == ErrorCode.LOCK_FILE_ACQUISITION_FAILURE ||
+										((SQLException) e).getErrorCode() == ErrorCode.LOCK_FILE_ACQUISITION_FAILURE
+												* -1))) {
 					if ((msg.contains("Permission denied"))
 							|| msg.contains("system cannot find the path")) {
 						msg = "Could not write to database. Make sure you have write access to the HO directory and its sub-directories.\n"
@@ -208,17 +214,18 @@ public class DBManager implements PersistenceManager {
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				}
-				UserConfigurationTable configTable = (UserConfigurationTable) m_clInstance.getTable(UserConfigurationTable.TABLENAME);
+				UserConfigurationTable configTable = (UserConfigurationTable) m_clInstance
+						.getTable(UserConfigurationTable.TABLENAME);
 				configTable.storeConfigurations(UserParameter.instance());
 				configTable.storeConfigurations(HOParameter.instance());
-			}
-			else {
+			} else {
 				// Check if there are any updates on the database to be done.
 				dbUpdater.updateDB(DBVersion);
 			}
 
 			// tempInstance.updateConfig();
-			HOLogger.instance().info(DBManager.class, "instance " + UserManager.instance().getCurrentUser().getDbURL() + "; parent folder: " + UserManager.instance().getDbParentFolder());
+			HOLogger.instance().info(DBManager.class, "instance " + UserManager.instance().getCurrentUser().getDbURL()
+					+ "; parent folder: " + UserManager.instance().getDbParentFolder());
 		}
 		return m_clInstance;
 	}
@@ -228,9 +235,9 @@ public class DBManager implements PersistenceManager {
 	}
 
 	/**
-	 This method is called
+	 * This method is called
 	 */
-	public void updateConfig(){
+	public void updateConfig() {
 		DBConfigUpdater.updateDBConfig(DBConfigVersion);
 	}
 
@@ -258,15 +265,15 @@ public class DBManager implements PersistenceManager {
 		tables.put(MatchLineupTeamTable.TABLENAME, new MatchLineupTeamTable(connectionManager));
 		tables.put(MatchLineupTable.TABLENAME, new MatchLineupTable(connectionManager));
 		tables.put(XtraDataTable.TABLENAME, new XtraDataTable(connectionManager));
-		tables.put(MatchLineupPlayerTable.TABLENAME,new MatchLineupPlayerTable(connectionManager));
+		tables.put(MatchLineupPlayerTable.TABLENAME, new MatchLineupPlayerTable(connectionManager));
 		tables.put(MatchesKurzInfoTable.TABLENAME, new MatchesKurzInfoTable(connectionManager));
 		tables.put(MatchDetailsTable.TABLENAME, new MatchDetailsTable(connectionManager));
 		tables.put(MatchHighlightsTable.TABLENAME, new MatchHighlightsTable(connectionManager));
 		tables.put(TrainingsTable.TABLENAME, new TrainingsTable(connectionManager));
 		tables.put(FutureTrainingTable.TABLENAME, new FutureTrainingTable(connectionManager));
 		tables.put(FuturePlayerSkillTrainingTable.TABLENAME, new FuturePlayerSkillTrainingTable(connectionManager));
-		tables.put(UserConfigurationTable.TABLENAME,new UserConfigurationTable(connectionManager));
-		tables.put(StaffTable.TABLENAME,  new StaffTable(connectionManager));
+		tables.put(UserConfigurationTable.TABLENAME, new UserConfigurationTable(connectionManager));
+		tables.put(StaffTable.TABLENAME, new StaffTable(connectionManager));
 		tables.put(MatchSubstitutionTable.TABLENAME, new MatchSubstitutionTable(connectionManager));
 		tables.put(TransferTable.TABLENAME, new TransferTable(connectionManager));
 		tables.put(TransferTypeTable.TABLENAME, new TransferTypeTable(connectionManager));
@@ -297,7 +304,7 @@ public class DBManager implements PersistenceManager {
 	 *
 	 * @return the adapter
 	 */
-// Accessor
+	// Accessor
 	public ConnectionManager getConnectionManager() {
 		return connectionManager;
 	}
@@ -319,7 +326,7 @@ public class DBManager implements PersistenceManager {
 	 * disconnect from database
 	 */
 	public void disconnect() {
-		if ( connectionManager != null) {
+		if (connectionManager != null) {
 			connectionManager.disconnect();
 			connectionManager = null;
 		}
@@ -332,7 +339,12 @@ public class DBManager implements PersistenceManager {
 	private void connect() {
 		User current_user = UserManager.instance().getCurrentUser();
 		if (connectionManager != null) {
-			connectionManager.connect(current_user.getDbURL(), current_user.getDbUsername(), current_user.getDbPwd(), UserManager.instance().getDriver());
+			try {
+				connectionManager.connect(current_user.getDbURL(), current_user.getDbUsername(),
+						current_user.getDbPwd(), UserManager.instance().getDriver());
+			} catch (Exception e) {
+				HOLogger.instance().error(getClass(), e);
+			}
 		}
 	}
 
@@ -342,17 +354,19 @@ public class DBManager implements PersistenceManager {
 	 * @return boolean
 	 */
 	private boolean checkIfDBExists() {
-		if ( connectionManager ==null) return false;
+		if (connectionManager == null)
+			return false;
 		boolean exists;
 		try {
-			ResultSet rs = connectionManager.executeQuery("SELECT Count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC'");
+			ResultSet rs = connectionManager
+					.executeQuery("SELECT Count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC'");
 			assert rs != null;
 			rs.next();
 			exists = rs.getInt(1) > 0;
-		} catch(SQLException e) {
+		} catch (SQLException e) {
 			HOLogger.instance().error(getClass(), ExceptionUtils.getStackTrace(e));
 			exists = false;
-		  }
+		}
 		return exists;
 	}
 
@@ -367,7 +381,7 @@ public class DBManager implements PersistenceManager {
 				.loadAllPlayers();
 	}
 
-	public List<Player> loadPlayerHistory(int playerId){
+	public List<Player> loadPlayerHistory(int playerId) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
 				.loadPlayerHistory(playerId);
 	}
@@ -387,7 +401,7 @@ public class DBManager implements PersistenceManager {
 	 * Returns the players present in the HRF with id <code>hrfId</code>
 	 *
 	 * @param hrfId ID of HRF to consider.
-	 * @return List<Player> – Players present in HRF.  Empty list if none found.
+	 * @return List<Player> – Players present in HRF. Empty list if none found.
 	 */
 	@Override
 	public List<Player> getSpieler(int hrfId) {
@@ -418,27 +432,28 @@ public class DBManager implements PersistenceManager {
 	/**
 	 * store youth players
 	 *
-	 * @param hrfId  the hrf id
+	 * @param hrfId        the hrf id
 	 * @param youthPlayers the list of youth players
 	 */
 	public void storeYouthPlayers(int hrfId, List<YouthPlayer> youthPlayers) {
 		var youthplayertable = ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME));
 		youthplayertable.deleteYouthPlayers(hrfId);
-		for ( var youthPlayer : youthPlayers){
+		for (var youthPlayer : youthPlayers) {
 			youthPlayer.setIsStored(false);
-			storeYouthPlayer(hrfId,youthPlayer);
+			storeYouthPlayer(hrfId, youthPlayer);
 		}
 	}
 
 	/**
 	 * store youth players
 	 *
-	 * @param hrfId  the hrf id
+	 * @param hrfId       the hrf id
 	 * @param youthPlayer the youth player
 	 */
 	public void storeYouthPlayer(int hrfId, YouthPlayer youthPlayer) {
-		((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME)).storeYouthPlayer(hrfId,youthPlayer);
-		var youthScoutCommentTable = (YouthScoutCommentTable) DBManager.instance().getTable(YouthScoutCommentTable.TABLENAME);
+		((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME)).storeYouthPlayer(hrfId, youthPlayer);
+		var youthScoutCommentTable = (YouthScoutCommentTable) DBManager.instance()
+				.getTable(YouthScoutCommentTable.TABLENAME);
 		youthScoutCommentTable.storeYouthScoutComments(youthPlayer.getId(), youthPlayer.getScoutComments());
 	}
 
@@ -499,7 +514,7 @@ public class DBManager implements PersistenceManager {
 	}
 
 	public Player loadPlayerFirstHRF(int spielerid, HODateTime after) {
-		if ( after == null){
+		if (after == null) {
 			after = HODateTime.HT_START;
 		}
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
@@ -531,7 +546,7 @@ public class DBManager implements PersistenceManager {
 	 * Returns the {@link Liga} details, as defined by HRF ID <code>hrfId</code>.
 	 *
 	 * @param hrfId ID of reference HRF.
-	 * @return Liga – Liga details if found.  Returns <code>null</code> if not found.
+	 * @return Liga – Liga details if found. Returns <code>null</code> if not found.
 	 */
 	@Override
 	public Liga getLiga(int hrfId) {
@@ -573,7 +588,7 @@ public class DBManager implements PersistenceManager {
 	 */
 	public MatchFixtures getSpielplan(int ligaId, int saison) {
 		var ret = ((SpielplanTable) getTable(SpielplanTable.TABLENAME)).getSpielplan(ligaId, saison);
-		if ( ret != null ){
+		if (ret != null) {
 			ret.addFixtures(loadFixtures(ret));
 		}
 		return ret;
@@ -582,7 +597,7 @@ public class DBManager implements PersistenceManager {
 	@Override
 	public MatchFixtures getLatestSpielplan() {
 		var ret = ((SpielplanTable) getTable(SpielplanTable.TABLENAME)).getLatestSpielplan();
-		if ( ret != null ){
+		if (ret != null) {
 			ret.addFixtures(loadFixtures(ret));
 		}
 		return ret;
@@ -594,7 +609,7 @@ public class DBManager implements PersistenceManager {
 	 * @param plan the plan
 	 */
 	public void storeSpielplan(MatchFixtures plan) {
-		if ( plan != null){
+		if (plan != null) {
 			((SpielplanTable) getTable(SpielplanTable.TABLENAME))
 					.storeSpielplan(plan);
 			storePaarung(plan.getMatches(), plan.getLigaId(), plan.getSaison());
@@ -602,7 +617,7 @@ public class DBManager implements PersistenceManager {
 	}
 
 	public void deleteSpielplanTabelle(int saison, int ligaId) {
-		var table = (SpielplanTable)getTable(SpielplanTable.TABLENAME);
+		var table = (SpielplanTable) getTable(SpielplanTable.TABLENAME);
 		table.executePreparedDelete(saison, ligaId);
 	}
 
@@ -613,7 +628,7 @@ public class DBManager implements PersistenceManager {
 	 * @return List<Spielplan> – List of all the {@link MatchFixtures}s.
 	 */
 	public List<MatchFixtures> getAllSpielplaene(boolean withFixtures) {
-		var ret =  ((SpielplanTable) getTable(SpielplanTable.TABLENAME)).getAllSpielplaene();
+		var ret = ((SpielplanTable) getTable(SpielplanTable.TABLENAME)).getAllSpielplaene();
 		if (withFixtures) {
 			for (MatchFixtures gameSchedule : ret) {
 				gameSchedule.addFixtures(loadFixtures(gameSchedule));
@@ -664,13 +679,13 @@ public class DBManager implements PersistenceManager {
 	/**
 	 * Gets match lineup players.
 	 *
-	 * @param matchID the match id
+	 * @param matchID   the match id
 	 * @param matchType MatchType
-	 * @param teamID  the team id
+	 * @param teamID    the team id
 	 * @return the match lineup players
 	 */
 	public List<MatchLineupPosition> getMatchLineupPlayers(int matchID,
-                                                             MatchType matchType, int teamID) {
+			MatchType matchType, int teamID) {
 		return ((MatchLineupPlayerTable) getTable(MatchLineupPlayerTable.TABLENAME))
 				.getMatchLineupPlayers(matchID, matchType, teamID);
 	}
@@ -690,23 +705,25 @@ public class DBManager implements PersistenceManager {
 	 * Get the top or flop players of given lineup position in given matches
 	 *
 	 * @param position lineup position sector
-	 * @param matches list of matches
-	 * @param isBest true: the best player is listed first
+	 * @param matches  list of matches
+	 * @param isBest   true: the best player is listed first
 	 * @return stored lineup positions
 	 */
-	public List<MatchLineupPosition> loadTopFlopRatings(List<Paarung> matches, int position, int count, boolean isBest) {
+	public List<MatchLineupPosition> loadTopFlopRatings(List<Paarung> matches, int position, int count,
+			boolean isBest) {
 		return ((MatchLineupPlayerTable) getTable(MatchLineupPlayerTable.TABLENAME))
 				.loadTopFlopRatings(matches, position, count, isBest);
 	}
 
-		// ------------------------------- BasicsTable
+	// ------------------------------- BasicsTable
 	// -------------------------------------------------
 
 	/**
 	 * Returns {@link Basics} details, as defined by HRF ID <code>hrfId</code>.
 	 *
 	 * @param hrfId ID of reference HRF
-	 * @return Basics – Basics details if found.  Returns an empty {@link Basics} object if not found.
+	 * @return Basics – Basics details if found. Returns an empty {@link Basics}
+	 *         object if not found.
 	 */
 	@Override
 	public Basics getBasics(int hrfId) {
@@ -729,7 +746,7 @@ public class DBManager implements PersistenceManager {
 	 *
 	 * @param fo the fo
 	 */
-// ------------------------------- FaktorenTable
+	// ------------------------------- FaktorenTable
 	// -------------------------------------------------
 	public void setFaktorenFromDB(FactorObject fo) {
 		((FaktorenTable) getTable(FaktorenTable.TABLENAME))
@@ -743,17 +760,17 @@ public class DBManager implements PersistenceManager {
 		((FaktorenTable) getTable(FaktorenTable.TABLENAME)).getFaktorenFromDB();
 	}
 
-
 	/**
 	 * Gets tournament details from db.
 	 *
 	 * @param tournamentId the tournament id
 	 * @return the tournament details from db
 	 */
-// Tournament Details
+	// Tournament Details
 	public TournamentDetails getTournamentDetailsFromDB(int tournamentId) {
 		TournamentDetails oTournamentDetails;
-		oTournamentDetails = ((TournamentDetailsTable) getTable(TournamentDetailsTable.TABLENAME)).getTournamentDetails(tournamentId);
+		oTournamentDetails = ((TournamentDetailsTable) getTable(TournamentDetailsTable.TABLENAME))
+				.getTournamentDetails(tournamentId);
 		return oTournamentDetails;
 	}
 
@@ -763,7 +780,8 @@ public class DBManager implements PersistenceManager {
 	 * @param oTournamentDetails the o tournament details
 	 */
 	public void storeTournamentDetailsIntoDB(TournamentDetails oTournamentDetails) {
-		((TournamentDetailsTable) getTable(TournamentDetailsTable.TABLENAME)).storeTournamentDetails(oTournamentDetails);
+		((TournamentDetailsTable) getTable(TournamentDetailsTable.TABLENAME))
+				.storeTournamentDetails(oTournamentDetails);
 	}
 
 	// ------------------------------- FinanzenTable
@@ -797,16 +815,18 @@ public class DBManager implements PersistenceManager {
 	/**
 	 * Get a list of all HRFs
 	 *
-	 * @param asc   order ascending (descending otherwise)
+	 * @param asc order ascending (descending otherwise)
 	 * @return all matching HRFs
 	 */
-	public HRF[] loadAllHRFs( boolean asc) {
+	public HRF[] loadAllHRFs(boolean asc) {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).loadAllHRFs(asc);
 	}
 
 	/**
 	 * get the latest imported hrf
-	 * this does not have to be the latest downloaded, if the user imported hrf files in any order from files
+	 * this does not have to be the latest downloaded, if the user imported hrf
+	 * files in any order from files
+	 * 
 	 * @return HRF object
 	 */
 	@Override
@@ -816,14 +836,15 @@ public class DBManager implements PersistenceManager {
 
 	/**
 	 * get the latest downloaded hrf
+	 * 
 	 * @return HRF object
 	 */
-	public HRF getLatestHRF(){
+	public HRF getLatestHRF() {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).getLatestHrf();
 	}
 
 	@Override
-	public HRF loadHRF(int id){
+	public HRF loadHRF(int id) {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).loadHRF(id);
 	}
 
@@ -848,13 +869,14 @@ public class DBManager implements PersistenceManager {
 	 * Is there is an HRFFile in the database with the same date?
 	 *
 	 * @param fetchDate the date
-	 * @return The date of the file to which the file was imported or zero if no suitable file is available
+	 * @return The date of the file to which the file was imported or zero if no
+	 *         suitable file is available
 	 */
 	public HRF loadHRFDownloadedAt(Timestamp fetchDate) {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).loadHRFDownloadedAt(fetchDate);
 	}
 
-	public HRF loadLatestHRFDownloadedBefore(Timestamp fetchDate){
+	public HRF loadLatestHRFDownloadedBefore(Timestamp fetchDate) {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).loadLatestHRFDownloadedBefore(fetchDate);
 	}
 
@@ -869,7 +891,6 @@ public class DBManager implements PersistenceManager {
 		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME)).load(playerId);
 	}
 
-
 	// ------------------------------- MatchLineupTable
 	// -------------------------------------------------
 
@@ -877,12 +898,12 @@ public class DBManager implements PersistenceManager {
 	 * Load match lineup match lineup.
 	 *
 	 * @param iMatchType the source system
-	 * @param matchID      the match id
+	 * @param matchID    the match id
 	 * @return the match lineup
 	 */
 	public MatchLineup loadMatchLineup(int iMatchType, int matchID) {
-		var ret =  ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME)).loadMatchLineup(iMatchType, matchID);
-		if ( ret != null ) {
+		var ret = ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME)).loadMatchLineup(iMatchType, matchID);
+		if (ret != null) {
 			var match = DBManager.instance().loadMatchDetails(iMatchType, matchID);
 			ret.setHomeTeam(DBManager.instance().loadMatchLineupTeam(iMatchType, matchID, match.getHomeTeamId()));
 			ret.setGuestTeam(DBManager.instance().loadMatchLineupTeam(iMatchType, matchID, match.getGuestTeamId()));
@@ -894,7 +915,7 @@ public class DBManager implements PersistenceManager {
 	 * Is the match already in the database?
 	 *
 	 * @param iMatchType the source system
-	 * @param matchid      the matchid
+	 * @param matchid    the matchid
 	 * @return the boolean
 	 */
 	public boolean matchLineupIsNotStored(MatchType iMatchType, int matchid) {
@@ -919,8 +940,8 @@ public class DBManager implements PersistenceManager {
 	 * @param matchId the match id
 	 * @return the boolean
 	 */
-	public boolean hasUnsureWeatherForecast(int matchId){
-		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).hasUnsureWeatherForecast(matchId);
+	public boolean hasUnsureWeatherForecast(int matchId) {
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).hasUnsureWeatherForecast(matchId);
 	}
 	// ------------------------------- MatchesKurzInfoTable
 	// -------------------------------------------------
@@ -928,7 +949,7 @@ public class DBManager implements PersistenceManager {
 	/**
 	 * Check if match is available
 	 *
-	 * @param matchid the matchid
+	 * @param matchid   the matchid
 	 * @param matchType type of the match
 	 * @return the boolean
 	 */
@@ -940,7 +961,7 @@ public class DBManager implements PersistenceManager {
 	/**
 	 * Returns the MatchKurzInfo for the match. Returns null if not found.
 	 *
-	 * @param matchid The ID for the match
+	 * @param matchid   The ID for the match
 	 * @param matchType type of the match
 	 * @return The kurz info object or null
 	 */
@@ -960,7 +981,7 @@ public class DBManager implements PersistenceManager {
 				.getMatchesKurzInfo(teamId);
 	}
 
-	public List<MatchKurzInfo> getMatchesKurzInfo(String where, Object ... values) {
+	public List<MatchKurzInfo> getMatchesKurzInfo(String where, Object... values) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.loadMatchesKurzInfo(where, values);
 	}
@@ -972,35 +993,42 @@ public class DBManager implements PersistenceManager {
 	 * @return the match kurz info
 	 */
 	public MatchKurzInfo getLastMatchesKurzInfo(int teamId) {
-		return  ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.loadLastMatchesKurzInfo(teamId);
 	}
 
 	public MatchKurzInfo getNextMatchesKurzInfo(int teamId) {
-		return  ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.loadNextMatchesKurzInfo(teamId);
 	}
 
 	public MatchKurzInfo getLastMatchWithMatchId(int matchId) {
-		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME))
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.getLastMatchWithMatchId(matchId);
 
 	}
 
 	/**
-	 * function that fetch info of match played related to the TrainingPerWeek instance
+	 * function that fetch info of match played related to the TrainingPerWeek
+	 * instance
+	 * 
 	 * @return MatchKurzInfo[] related to this TrainingPerWeek instance
 	 */
-	public List<MatchKurzInfo> loadOfficialMatchesBetween(int teamId, HODateTime firstMatchDate, HODateTime lastMatchDate) {
-		return  ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId, firstMatchDate.toDbTimestamp(), lastMatchDate.toDbTimestamp(), MatchType.getOfficialMatchTypes());
+	public List<MatchKurzInfo> loadOfficialMatchesBetween(int teamId, HODateTime firstMatchDate,
+			HODateTime lastMatchDate) {
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId,
+				firstMatchDate.toDbTimestamp(), lastMatchDate.toDbTimestamp(), MatchType.getOfficialMatchTypes());
 	}
 
 	/**
-	 * function that fetch info of NT match played related to the TrainingPerWeek instance
+	 * function that fetch info of NT match played related to the TrainingPerWeek
+	 * instance
+	 * 
 	 * @return MatchKurzInfo[] related to this TrainingPerWeek instance
 	 */
-	public List<MatchKurzInfo> loadNTMatchesBetween(int teamId,HODateTime firstMatchDate, HODateTime lastMatchDate) {
-		return  ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId, firstMatchDate.toDbTimestamp(), lastMatchDate.toDbTimestamp(), MatchType.getNTMatchType());
+	public List<MatchKurzInfo> loadNTMatchesBetween(int teamId, HODateTime firstMatchDate, HODateTime lastMatchDate) {
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId,
+				firstMatchDate.toDbTimestamp(), lastMatchDate.toDbTimestamp(), MatchType.getNTMatchType());
 	}
 
 	/**
@@ -1015,7 +1043,6 @@ public class DBManager implements PersistenceManager {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.getMatchesKurzInfo(teamId, matchStatus);
 	}
-
 
 	/**
 	 * Gets first upcoming match with team id.
@@ -1035,8 +1062,9 @@ public class DBManager implements PersistenceManager {
 	 * @param bOfficialGamesOnly the b official games only
 	 * @return the array list
 	 */
-	public List<MatchKurzInfo> getOwnPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly){
-		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames, bOfficialGamesOnly, true);
+	public List<MatchKurzInfo> getOwnPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly) {
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames,
+				bOfficialGamesOnly, true);
 	}
 
 	/**
@@ -1046,40 +1074,49 @@ public class DBManager implements PersistenceManager {
 	 * @param bOfficialGamesOnly the b official games only
 	 * @return the array list
 	 */
-	public List<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly, boolean ownTeam){
-		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames, bOfficialGamesOnly, ownTeam);
+	public List<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly,
+			boolean ownTeam) {
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames,
+				bOfficialGamesOnly, ownTeam);
 	}
 
 	/**
-	 * Returns an array of {@link MatchKurzInfo} for the team with ID <code>teamId</code>,
+	 * Returns an array of {@link MatchKurzInfo} for the team with ID
+	 * <code>teamId</code>,
 	 * and of type <code>matchtyp</code>.
 	 * Important: if teamId is -1, <code>matchtype</code> must be set to
 	 * <code>MatchesPanel.ALL_MATCHS</code>.
-	 * @param teamId   The ID of the team, or -1 for all.
-	 * @param iMatchType Type of match, as defined in {@link module.matches.MatchesPanel}
+	 * 
+	 * @param teamId        The ID of the team, or -1 for all.
+	 * @param iMatchType    Type of match, as defined in
+	 *                      {@link module.matches.MatchesPanel}
 	 * @param matchLocation Home, Away, Neutral
 	 *
 	 * @return MatchKurzInfo[] – Array of match info.
 	 */
 	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, int iMatchType, MatchLocation matchLocation) {
-		return getMatchesKurzInfo(teamId,iMatchType, matchLocation,  HODateTime.HT_START.toDbTimestamp(), true);
+		return getMatchesKurzInfo(teamId, iMatchType, matchLocation, HODateTime.HT_START.toDbTimestamp(), true);
 	}
 
 	/**
-	 * Returns an array of {@link MatchKurzInfo} for the team with ID <code>teamId</code>,
+	 * Returns an array of {@link MatchKurzInfo} for the team with ID
+	 * <code>teamId</code>,
 	 * and of type <code>matchtyp</code>.
 	 * Important: if teamId is -1, <code>matchtype</code> must be set to
 	 * <code>MatchesPanel.ALL_MATCHS</code>.
 	 *
-	 * @param teamId   The ID of the team, or -1 for all.
-	 * @param iMatchType Type of match, as defined in {@link module.matches.MatchesPanel}
-	 * @param matchLocation Home, Away, Neutral
-	 * @param from filter match schedule date
+	 * @param teamId          The ID of the team, or -1 for all.
+	 * @param iMatchType      Type of match, as defined in
+	 *                        {@link module.matches.MatchesPanel}
+	 * @param matchLocation   Home, Away, Neutral
+	 * @param from            filter match schedule date
 	 * @param includeUpcoming if false filter finished matches only
 	 * @return MatchKurzInfo[] – Array of match info.
 	 */
-	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, int iMatchType, MatchLocation matchLocation, Timestamp from, boolean includeUpcoming) {
-		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId, iMatchType, matchLocation, from, includeUpcoming);
+	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, int iMatchType, MatchLocation matchLocation,
+			Timestamp from, boolean includeUpcoming) {
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId, iMatchType,
+				matchLocation, from, includeUpcoming);
 	}
 
 	/**
@@ -1177,7 +1214,6 @@ public class DBManager implements PersistenceManager {
 				stadion);
 	}
 
-
 	// ------------------------------- StaffTable
 	// -------------------------------------------------
 
@@ -1202,28 +1238,29 @@ public class DBManager implements PersistenceManager {
 		((StaffTable) getTable(StaffTable.TABLENAME)).storeStaff(hrfId, list);
 	}
 
-
 	// ------------------------------- MatchSubstitutionTable
 	// -------------------------------------------------
 
 	/**
 	 * Returns an array with substitution belonging to the match-team.
 	 *
-	 * @param matchType  match type
-	 * @param teamId       The teamId for the team in question
-	 * @param matchId      The matchId for the match in question
+	 * @param matchType match type
+	 * @param teamId    The teamId for the team in question
+	 * @param matchId   The matchId for the match in question
 	 * @return the match substitutions by match team
 	 */
 	public List<Substitution> getMatchSubstitutionsByMatchTeam(int matchId, MatchType matchType,
-															   int teamId) {
+			int teamId) {
 		return ((MatchSubstitutionTable) getTable(MatchSubstitutionTable.TABLENAME))
 				.getMatchSubstitutionsByMatchTeam(matchType.getId(), teamId, matchId);
 	}
 
 	/**
 	 * Returns the team details, as defined by HRF ID <code>hrfId</code>.
+	 * 
 	 * @param hrfId ID of reference HRF.
-	 * @return Team – Team details if found.  Returns an empty {@link Team} object if not found.
+	 * @return Team – Team details if found. Returns an empty {@link Team} object if
+	 *         not found.
 	 */
 	@Override
 	public Team getTeam(int hrfId) {
@@ -1292,7 +1329,8 @@ public class DBManager implements PersistenceManager {
 	 * Returns the club details, as defined by HRF ID <code>hrfId</code>.
 	 *
 	 * @param hrfId ID of reference HRF.
-	 * @return Verein – Club details if found.  Returns an empty {@link Verein} object if not found.
+	 * @return Verein – Club details if found. Returns an empty {@link Verein}
+	 *         object if not found.
 	 */
 	@Override
 	public Verein getVerein(int hrfId) {
@@ -1316,7 +1354,7 @@ public class DBManager implements PersistenceManager {
 	 * @param trainingDate the saison
 	 * @return the futur training type
 	 */
-// ------------------------------- FutureTraining
+	// ------------------------------- FutureTraining
 	// -------------------------------------------------
 	public TrainingPerWeek getFuturTraining(Timestamp trainingDate) {
 		return ((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME)).loadFutureTrainings(trainingDate);
@@ -1326,10 +1364,12 @@ public class DBManager implements PersistenceManager {
 	// -------------------------------------------------
 
 	/**
-	 * Returns the {@link XtraData} details, as defined by HRF ID <code>hrfId</code>.
+	 * Returns the {@link XtraData} details, as defined by HRF ID
+	 * <code>hrfId</code>.
 	 *
 	 * @param hrfId ID of reference HRF.
-	 * @return XtraData – XtraData details if found.  Returns <code>null</code> if not found.
+	 * @return XtraData – XtraData details if found. Returns <code>null</code> if
+	 *         not found.
 	 */
 	@Override
 	public XtraData getXtraDaten(int hrfId) {
@@ -1379,12 +1419,14 @@ public class DBManager implements PersistenceManager {
 	// -------------------------------------------------
 
 	/**
-	 * Gets the fixtures for the given <code>plan</code> from the DB, and add them to that plan.
+	 * Gets the fixtures for the given <code>plan</code> from the DB, and add them
+	 * to that plan.
 	 *
-	 * @param plan Schedule for which the fixtures are retrieved, and to which they are added.
+	 * @param plan Schedule for which the fixtures are retrieved, and to which they
+	 *             are added.
 	 */
 	protected List<Paarung> loadFixtures(MatchFixtures plan) {
-		return ((PaarungTable) getTable(PaarungTable.TABLENAME)).loadFixtures( plan.getLigaId(), plan.getSaison());
+		return ((PaarungTable) getTable(PaarungTable.TABLENAME)).loadFixtures(plan.getLigaId(), plan.getSaison());
 	}
 
 	/**
@@ -1410,7 +1452,7 @@ public class DBManager implements PersistenceManager {
 	 * Gibt die MatchDetails zu einem Match zurück
 	 *
 	 * @param iMatchType the sourcesystem
-	 * @param matchId      the match id
+	 * @param matchId    the match id
 	 * @return the matchdetails
 	 */
 	public Matchdetails loadMatchDetails(int iMatchType, int matchId) {
@@ -1435,7 +1477,7 @@ public class DBManager implements PersistenceManager {
 	 * Gibt die MatchHighlights zu einem Match zurück
 	 *
 	 * @param iMatchType the source system
-	 * @param matchId      the match id
+	 * @param matchId    the match id
 	 * @return the match highlights
 	 */
 	public List<MatchEvent> getMatchHighlights(int iMatchType, int matchId) {
@@ -1446,8 +1488,8 @@ public class DBManager implements PersistenceManager {
 	/**
 	 * Get chances stat matches highlights stat [ ].
 	 *
-	 * @param ownTeam   the own team
-	 * @param iMatchType the matchtype
+	 * @param ownTeam       the own team
+	 * @param iMatchType    the matchtype
 	 * @param matchLocation Home, Away, Neutral
 	 * @return the matches highlights stat [ ]
 	 */
@@ -1468,7 +1510,7 @@ public class DBManager implements PersistenceManager {
 	 * @return the transfers
 	 */
 	public List<PlayerTransfer> getTransfers(int playerid, boolean allTransfers) {
-        return ((TransferTable) getTable(TransferTable.TABLENAME))
+		return ((TransferTable) getTable(TransferTable.TABLENAME))
 				.getTransfers(playerid, allTransfers);
 	}
 
@@ -1477,9 +1519,8 @@ public class DBManager implements PersistenceManager {
 				.getTransfersSince(dbTimestamp);
 	}
 
-
 	private void loadPlayerInfo(List<PlayerTransfer> playerTransfers) {
-		for ( var t : playerTransfers){
+		for (var t : playerTransfers) {
 			t.loadPLayerInfo(true);
 		}
 	}
@@ -1489,7 +1530,7 @@ public class DBManager implements PersistenceManager {
 	 *
 	 * @param season the season
 	 * @param bought the bought
-	 * @param isSold   the isSold
+	 * @param isSold the isSold
 	 * @return the transfers
 	 */
 	public List<PlayerTransfer> getTransfers(int season, boolean bought, boolean isSold) {
@@ -1534,6 +1575,7 @@ public class DBManager implements PersistenceManager {
 
 	/**
 	 * load one player transfer
+	 * 
 	 * @param transferId int
 	 * @return PlayerTransfer
 	 */
@@ -1556,9 +1598,9 @@ public class DBManager implements PersistenceManager {
 	/**
 	 * Sets transfer type.
 	 *
-	 * @param type     the type
+	 * @param type the type
 	 */
-	public void setTransferType(TransferType  type) {
+	public void setTransferType(TransferType type) {
 		((TransferTypeTable) getTable(TransferTypeTable.TABLENAME))
 				.storeTransferType(type);
 	}
@@ -1666,10 +1708,15 @@ public class DBManager implements PersistenceManager {
 		var officialWhere = official ? "<8" : ">7";
 		String sqlStmt = "select count(MATCHESKURZINFO.matchid) as MatchNumber FROM MATCHLINEUPPLAYER " +
 				"INNER JOIN MATCHESKURZINFO ON MATCHESKURZINFO.matchid = MATCHLINEUPPLAYER.matchid " +
-				"where spielerId = "+ playerId +
+				"where spielerId = " + playerId +
 				" and ROLEID BETWEEN 100 AND 113 and matchtyp " + officialWhere;
 		assert getConnectionManager() != null;
-		final ResultSet rs = getConnectionManager().executeQuery(sqlStmt);
+		ResultSet rs = null;
+		try {
+			rs = getConnectionManager().executeQuery(sqlStmt);
+		} catch (SQLException e) {
+			HOLogger.instance().error(getClass(), e);
+		}
 		if (rs == null) {
 			return 0;
 		}
@@ -1695,11 +1742,12 @@ public class DBManager implements PersistenceManager {
 	/**
 	 * Returns a list of PlayerMatchCBItems for given playerID
 	 *
-	 * @param playerID the player ID
+	 * @param playerID     the player ID
 	 * @param officialOnly whether or not to select official game only
 	 */
 	public Vector<PlayerMatchCBItem> getPlayerMatchCBItems(int playerID, boolean officialOnly) {
-		if(playerID == -1) return new Vector<>();
+		if (playerID == -1)
+			return new Vector<>();
 		final Vector<PlayerMatchCBItem> spielerMatchCBItems = new Vector<>();
 		String sql = """
 				SELECT DISTINCT MatchID, MatchDate, Rating, SpielDatum, HeimName, HeimID, GastName, GastID, HoPosCode, MatchTyp
@@ -1709,8 +1757,9 @@ public class DBManager implements PersistenceManager {
 				INNER JOIN MATCHESKURZINFO ON (MATCHESKURZINFO.MATCHID=MATCHLINEUP.MatchID AND MATCHESKURZINFO.MATCHTYP=MATCHLINEUP.MATCHTYP)
 				WHERE MATCHLINEUPPLAYER.SpielerID=? AND MATCHLINEUPPLAYER.Rating>0""";
 
-		if(officialOnly){
-			var lMatchTypes = MatchType.fromSourceSystem(Objects.requireNonNull(SourceSystem.valueOf(SourceSystem.HATTRICK.getValue())));
+		if (officialOnly) {
+			var lMatchTypes = MatchType
+					.fromSourceSystem(Objects.requireNonNull(SourceSystem.valueOf(SourceSystem.HATTRICK.getValue())));
 			var inValues = lMatchTypes.stream().map(p -> String.valueOf(p.getId())).collect(Collectors.joining(","));
 			sql += " AND MATCHTYP IN (" + inValues + ")";
 		}
@@ -1726,7 +1775,7 @@ public class DBManager implements PersistenceManager {
 			while (rs.next()) {
 				playerMatchCBItem = new PlayerMatchCBItem(null,
 						rs.getInt("MatchID"),
-						(int)(rs.getFloat("Rating") * 2),
+						(int) (rs.getFloat("Rating") * 2),
 						rs.getInt("HoPosCode"),
 						HODateTime.fromDbTimestamp(rs.getTimestamp("MatchDate")),
 						rs.getString("HeimName"),
@@ -1754,7 +1803,7 @@ public class DBManager implements PersistenceManager {
 						TeamSpirit.toString(team.getTeamSpiritLevel()),
 						TeamConfidence.toString(team.getConfidence())
 				};
-				//Only if player data has been found, pass it into the return vector
+				// Only if player data has been found, pass it into the return vector
 				if (player != null && details != null) {
 					item.setSpieler(player);
 					item.setMatchdetails(details);
@@ -1769,7 +1818,6 @@ public class DBManager implements PersistenceManager {
 		}
 		return spielerMatchCBItems;
 	}
-
 
 	/**
 	 * Delete hrf.
@@ -1823,7 +1871,7 @@ public class DBManager implements PersistenceManager {
 	 * @param lineup  The MatchLineup for the match
 	 * @return true if the match is stored. False if not
 	 */
-	public boolean storeMatch(MatchKurzInfo info, Matchdetails details,	MatchLineup lineup) {
+	public boolean storeMatch(MatchKurzInfo info, Matchdetails details, MatchLineup lineup) {
 
 		if ((info == null) || (details == null) || (lineup == null)) {
 			return false;
@@ -1833,7 +1881,7 @@ public class DBManager implements PersistenceManager {
 				&& (info.getMatchID() == lineup.getMatchID())
 				&& (info.getMatchStatus() == MatchKurzInfo.FINISHED)) {
 
-			//deleteMatch( info.getMatchID(), info.getMatchType().getId());
+			// deleteMatch( info.getMatchID(), info.getMatchType().getId());
 
 			var matches = new ArrayList<MatchKurzInfo>();
 			matches.add(info);
@@ -1864,12 +1912,12 @@ public class DBManager implements PersistenceManager {
 		Object[] allTables = tables.values().toArray();
 		for (Object allTable : allTables) {
 			AbstractTable table = (AbstractTable) allTable;
-			HOLogger.instance().info(getClass(),"Create table : " + table.getTableName());
+			HOLogger.instance().info(getClass(), "Create table : " + table.getTableName());
 			table.createTable();
 			String[] statements = table.getCreateIndexStatement();
 			for (String statement : statements) {
-                assert connectionManager != null;
-                connectionManager.executeUpdate(statement);
+				assert connectionManager != null;
+				connectionManager.executeUpdate(statement);
 			}
 		}
 	}
@@ -2076,19 +2124,21 @@ public class DBManager implements PersistenceManager {
 		((IfaMatchTable) getTable(IfaMatchTable.TABLENAME)).deleteAllMatches();
 	}
 
-	public static Timestamp getTimestamp(ResultSet rs, String columnLabel){
+	public static Timestamp getTimestamp(ResultSet rs, String columnLabel) {
 		try {
 			var ret = rs.getTimestamp(columnLabel);
-			if (!rs.wasNull()) return ret;
+			if (!rs.wasNull())
+				return ret;
 		} catch (Exception ignored) {
 		}
 		return null;
 	}
 
-	public static String getString(ResultSet rs, String columnLabel){
+	public static String getString(ResultSet rs, String columnLabel) {
 		try {
 			var ret = rs.getString(columnLabel);
-			if (!rs.wasNull()) return ret;
+			if (!rs.wasNull())
+				return ret;
 		} catch (Exception ignored) {
 		}
 		return "";
@@ -2104,7 +2154,8 @@ public class DBManager implements PersistenceManager {
 	public static Integer getInteger(ResultSet rs, String columnLabel) {
 		try {
 			var ret = rs.getInt(columnLabel);
-			if (rs.wasNull()) return null;
+			if (rs.wasNull())
+				return null;
 			return ret;
 		} catch (Exception ignored) {
 		}
@@ -2121,15 +2172,17 @@ public class DBManager implements PersistenceManager {
 	public static Boolean getBoolean(ResultSet rs, String columnLabel) {
 		try {
 			var ret = rs.getBoolean(columnLabel);
-			if (!rs.wasNull()) return ret;
+			if (!rs.wasNull())
+				return ret;
 		} catch (Exception ignored) {
 		}
 		return null;
 	}
 
 	public static boolean getBoolean(ResultSet rs, String columnLabel, boolean defaultValue) {
-		var ret = getBoolean(rs,columnLabel);
-		if ( ret != null) return ret;
+		var ret = getBoolean(rs, columnLabel);
+		if (ret != null)
+			return ret;
 		return defaultValue;
 	}
 
@@ -2147,7 +2200,7 @@ public class DBManager implements PersistenceManager {
 	/**
 	 * Store future player trainings.
 	 *
-	 * @param playerId Player id (used to delete old trainings)
+	 * @param playerId              Player id (used to delete old trainings)
 	 * @param futurePlayerTrainings the future player trainings
 	 */
 	public void storeFuturePlayerTrainings(int playerId, List<FuturePlayerTraining> futurePlayerTrainings) {
@@ -2171,7 +2224,7 @@ public class DBManager implements PersistenceManager {
 	 *
 	 * @return the timestamp
 	 */
-	public Timestamp getMinScoutingDate(){
+	public Timestamp getMinScoutingDate() {
 		return ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME))
 				.loadMinScoutingDate();
 	}
@@ -2203,16 +2256,16 @@ public class DBManager implements PersistenceManager {
 	}
 
 	public List<MatchLineup> getYouthMatchLineups() {
-		return ((MatchLineupTable)getTable(MatchLineupTable.TABLENAME)).loadYouthMatchLineups();
+		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME)).loadYouthMatchLineups();
 	}
 
 	/**
 	 * Delete youth match data.
 	 *
-	 * @param before       the before
+	 * @param before the before
 	 */
-	public void deleteYouthMatchDataBefore(Timestamp before){
-		if ( before != null) {
+	public void deleteYouthMatchDataBefore(Timestamp before) {
+		if (before != null) {
 			((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME)).deleteYouthMatchHighlightsBefore(before);
 			((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME)).deleteYouthMatchDetailsBefore(before);
 			((MatchLineupTable) getTable(MatchLineupTable.TABLENAME)).deleteYouthMatchLineupsBefore(before);
@@ -2225,7 +2278,7 @@ public class DBManager implements PersistenceManager {
 	 * @return the list
 	 */
 	public List<YouthTraining> loadYouthTrainings() {
-		return ((YouthTrainingTable)getTable(YouthTrainingTable.TABLENAME)).loadYouthTrainings();
+		return ((YouthTrainingTable) getTable(YouthTrainingTable.TABLENAME)).loadYouthTrainings();
 	}
 
 	/**
@@ -2234,8 +2287,8 @@ public class DBManager implements PersistenceManager {
 	 * @param youthTraining the youth training
 	 */
 	public void storeYouthTraining(YouthTraining youthTraining) {
-		((YouthTrainingTable)getTable(YouthTrainingTable.TABLENAME)).storeYouthTraining(youthTraining);
-    }
+		((YouthTrainingTable) getTable(YouthTrainingTable.TABLENAME)).storeYouthTraining(youthTraining);
+	}
 
 	/**
 	 * Store match details.
@@ -2243,24 +2296,25 @@ public class DBManager implements PersistenceManager {
 	 * @param details the details
 	 */
 	public void storeMatchDetails(Matchdetails details) {
-		((MatchDetailsTable)getTable(MatchDetailsTable.TABLENAME)).storeMatchDetails(details);
-		//Store Match Events
-		((MatchHighlightsTable)getTable(MatchHighlightsTable.TABLENAME)).storeMatchHighlights(details);
+		((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME)).storeMatchDetails(details);
+		// Store Match Events
+		((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME)).storeMatchHighlights(details);
 	}
 
 	/**
-	 * Gets team logo file name BUT it will triggers download of the logo from internet if it is not yet available.
+	 * Gets team logo file name BUT it will triggers download of the logo from
+	 * internet if it is not yet available.
 	 * It will also update LAST_ACCESS field
 	 *
 	 * @param teamID the team id
 	 * @return the team logo file name
 	 */
 	public TeamLogoInfo loadTeamLogoInfo(int teamID) {
-		return ((TeamsLogoTable)getTable(TeamsLogoTable.TABLENAME)).loadTeamLogoInfo(teamID);
+		return ((TeamsLogoTable) getTable(TeamsLogoTable.TABLENAME)).loadTeamLogoInfo(teamID);
 	}
 
 	public void storeTeamLogoInfo(TeamLogoInfo info) {
-		((TeamsLogoTable)getTable(TeamsLogoTable.TABLENAME)).storeTeamLogoInfo(info);
+		((TeamsLogoTable) getTable(TeamsLogoTable.TABLENAME)).storeTeamLogoInfo(info);
 	}
 
 	/**
@@ -2270,35 +2324,36 @@ public class DBManager implements PersistenceManager {
 	 * @param logoURL    the logo url
 	 * @param lastAccess the last access
 	 */
-	public void storeTeamLogoInfo(int teamID, String logoURL, HODateTime lastAccess){
+	public void storeTeamLogoInfo(int teamID, String logoURL, HODateTime lastAccess) {
 		var info = new TeamLogoInfo();
 		info.setUrl(logoURL);
 		info.setTeamId(teamID);
 		info.setLastAccess(lastAccess);
-		((TeamsLogoTable)getTable(TeamsLogoTable.TABLENAME)).storeTeamLogoInfo(info);
+		((TeamsLogoTable) getTable(TeamsLogoTable.TABLENAME)).storeTeamLogoInfo(info);
 	}
 
 	public List<HRF> getHRFsSince(Timestamp since) {
-		return ((HRFTable)getTable(HRFTable.TABLENAME)).getHRFsSince(since);
+		return ((HRFTable) getTable(HRFTable.TABLENAME)).getHRFsSince(since);
 	}
 
 	public List<Integer> loadHrfIdPerWeekList(int nWeeks) {
-		return ((HRFTable)getTable(HRFTable.TABLENAME)).getHrfIdPerWeekList(nWeeks);
+		return ((HRFTable) getTable(HRFTable.TABLENAME)).getHrfIdPerWeekList(nWeeks);
 	}
 
 	public void storeTeamRatings(MatchTeamRating teamrating) {
-		((MatchTeamRatingTable)getTable(MatchTeamRatingTable.TABLENAME)).storeTeamRating(teamrating);
+		((MatchTeamRatingTable) getTable(MatchTeamRatingTable.TABLENAME)).storeTeamRating(teamrating);
 	}
 
-    public List<MatchTeamRating> loadMatchTeamRating( int matchtype, int matchId) {
+	public List<MatchTeamRating> loadMatchTeamRating(int matchtype, int matchId) {
 		return ((MatchTeamRatingTable) getTable(MatchTeamRatingTable.TABLENAME)).load(matchId, matchtype);
 	}
 
 	// ------------------------------- MatchLineupTeamTable
 	// -------------------------------------------------
 	public MatchLineupTeam loadMatchLineupTeam(int iMatchType, int matchID, int teamID) {
-		var ret = ((MatchLineupTeamTable) getTable(MatchLineupTeamTable.TABLENAME)).loadMatchLineupTeam(iMatchType, matchID, teamID);
-		if ( ret != null) {
+		var ret = ((MatchLineupTeamTable) getTable(MatchLineupTeamTable.TABLENAME)).loadMatchLineupTeam(iMatchType,
+				matchID, teamID);
+		if (ret != null) {
 			ret.loadLineup();
 		}
 		return ret;
@@ -2322,56 +2377,63 @@ public class DBManager implements PersistenceManager {
 	}
 
 	public void storeMatchLineupTeam(MatchLineupTeam matchLineupTeam) {
-		((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).storeMatchLineupTeam(matchLineupTeam);
+		((MatchLineupTeamTable) getTable(MatchLineupTeamTable.TABLENAME)).storeMatchLineupTeam(matchLineupTeam);
 
-		//replace players
-		var matchLineupPlayerTable = (MatchLineupPlayerTable) DBManager.instance().getTable(MatchLineupPlayerTable.TABLENAME);
-		matchLineupPlayerTable.storeMatchLineupPlayers(matchLineupTeam.getLineup().getAllPositions(), matchLineupTeam.getMatchType(), matchLineupTeam.getMatchId(), matchLineupTeam.getTeamID());
+		// replace players
+		var matchLineupPlayerTable = (MatchLineupPlayerTable) DBManager.instance()
+				.getTable(MatchLineupPlayerTable.TABLENAME);
+		matchLineupPlayerTable.storeMatchLineupPlayers(matchLineupTeam.getLineup().getAllPositions(),
+				matchLineupTeam.getMatchType(), matchLineupTeam.getMatchId(), matchLineupTeam.getTeamID());
 
 		// replace Substitutions
-		var matchSubstitutionTable = (MatchSubstitutionTable) DBManager.instance().getTable(MatchSubstitutionTable.TABLENAME);
-		matchSubstitutionTable.storeMatchSubstitutionsByMatchTeam(matchLineupTeam.getMatchType(), matchLineupTeam.getMatchId(), matchLineupTeam.getTeamID(), matchLineupTeam.getSubstitutions());
+		var matchSubstitutionTable = (MatchSubstitutionTable) DBManager.instance()
+				.getTable(MatchSubstitutionTable.TABLENAME);
+		matchSubstitutionTable.storeMatchSubstitutionsByMatchTeam(matchLineupTeam.getMatchType(),
+				matchLineupTeam.getMatchId(), matchLineupTeam.getTeamID(), matchLineupTeam.getSubstitutions());
 	}
 
 	public void deleteMatchLineupTeam(MatchLineupTeam matchLineupTeam) {
-		((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).deleteMatchLineupTeam(matchLineupTeam);
+		((MatchLineupTeamTable) getTable(MatchLineupTeamTable.TABLENAME)).deleteMatchLineupTeam(matchLineupTeam);
 	}
 
 	public List<MatchLineupTeam> loadTemplateMatchLineupTeams() {
-		return ((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).getTemplateMatchLineupTeams();
+		return ((MatchLineupTeamTable) getTable(MatchLineupTeamTable.TABLENAME)).getTemplateMatchLineupTeams();
 	}
 
 	public int getTemplateMatchLineupTeamNextNumber() {
-		return ((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).getTemplateMatchLineupTeamNextNumber();
+		return ((MatchLineupTeamTable) getTable(MatchLineupTeamTable.TABLENAME)).getTemplateMatchLineupTeamNextNumber();
 	}
 
 	public NtTeamDetails loadNtTeamDetails(int teamId, Timestamp matchDate) {
-		return ((NtTeamTable)getTable(NtTeamTable.TABLENAME)).loadNTTeam(teamId, matchDate);
+		return ((NtTeamTable) getTable(NtTeamTable.TABLENAME)).loadNTTeam(teamId, matchDate);
 	}
 
 	public List<NtTeamDetails> loadAllNtTeamDetails() {
-		return ((NtTeamTable)getTable(NtTeamTable.TABLENAME)).loadNTTeams(getLatestHRF().getHrfId());
+		return ((NtTeamTable) getTable(NtTeamTable.TABLENAME)).loadNTTeams(getLatestHRF().getHrfId());
 	}
 
 	public void storeNtTeamDetails(NtTeamDetails details) {
-		((NtTeamTable)getTable(NtTeamTable.TABLENAME)).storeNTTeam(details);
+		((NtTeamTable) getTable(NtTeamTable.TABLENAME)).storeNTTeam(details);
 	}
 
 	public List<TrainingPerWeek> loadTrainingPerWeek(Timestamp startDate, boolean all) {
-		return ((TrainingsTable)getTable(TrainingsTable.TABLENAME)).loadTrainingPerWeek(startDate, all);
+		return ((TrainingsTable) getTable(TrainingsTable.TABLENAME)).loadTrainingPerWeek(startDate, all);
 	}
 
 	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, int status, Timestamp from, List<Integer> matchTypes) {
-		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId, status, from, matchTypes);
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId, status,
+				from, matchTypes);
 	}
 
 	public MatchKurzInfo loadMatchKurzInfo(SourceSystem sourceSystem, int matchId) {
-		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).loadMatchesKurzInfo(sourceSystem, matchId);
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).loadMatchesKurzInfo(sourceSystem,
+				matchId);
 	}
 
 	public String loadLatestTSINotInjured(int playerId) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME)).loadLatestTSINotInjured(playerId);
 	}
+
 	public String loadLatestTSIInjured(int playerId) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME)).loadLatestTSIInjured(playerId);
 	}
@@ -2387,25 +2449,29 @@ public class DBManager implements PersistenceManager {
 	public static String getPlaceholders(int count) {
 		return String.join(",", Collections.nCopies(count, "?"));
 	}
+
 	public void storeSquadInfo(SquadInfo squadInfo) {
-		((SquadInfoTable)getTable(SquadInfoTable.TABLENAME)).storeSquadInfo(squadInfo);
+		((SquadInfoTable) getTable(SquadInfoTable.TABLENAME)).storeSquadInfo(squadInfo);
 	}
 
 	public List<SquadInfo> loadSquadInfo(int teamId) {
-		return ((SquadInfoTable)getTable(SquadInfoTable.TABLENAME)).loadSquadInfo(teamId);
+		return ((SquadInfoTable) getTable(SquadInfoTable.TABLENAME)).loadSquadInfo(teamId);
 	}
 
 	public List<FuturePlayerSkillTraining> loadFuturePlayerSkillTrainings(int playerId) {
-		return ((FuturePlayerSkillTrainingTable)getTable(FuturePlayerSkillTrainingTable.TABLENAME)).loadFuturePlayerSkillTraining(playerId);
+		return ((FuturePlayerSkillTrainingTable) getTable(FuturePlayerSkillTrainingTable.TABLENAME))
+				.loadFuturePlayerSkillTraining(playerId);
 	}
 
-	public void storeFuturePlayerSkillTrainings(int playerId, List<FuturePlayerSkillTraining> futurePlayerSkillTrainings) {
-		((FuturePlayerSkillTrainingTable)getTable(FuturePlayerSkillTrainingTable.TABLENAME)).storeFuturePlayerSkillTraining(playerId, futurePlayerSkillTrainings);
+	public void storeFuturePlayerSkillTrainings(int playerId,
+			List<FuturePlayerSkillTraining> futurePlayerSkillTrainings) {
+		((FuturePlayerSkillTrainingTable) getTable(FuturePlayerSkillTrainingTable.TABLENAME))
+				.storeFuturePlayerSkillTraining(playerId, futurePlayerSkillTrainings);
 	}
 
-    public List<HOColor> loadHOColors(String theme) {
-		return ((HOColorTable)getTable(HOColorTable.TABLENAME)).load(theme);
-    }
+	public List<HOColor> loadHOColors(String theme) {
+		return ((HOColorTable) getTable(HOColorTable.TABLENAME)).load(theme);
+	}
 
 	public void storeHOColor(HOColor color) {
 		getTable(HOColorTable.TABLENAME).store(color);

@@ -10,19 +10,31 @@ import java.util.Vector;
 
 final class SpielplanTable extends AbstractTable {
 	static final String TABLENAME = "SPIELPLAN";
-	
-	SpielplanTable(ConnectionManager adapter){
-		super(TABLENAME,adapter);
+
+	SpielplanTable(ConnectionManager adapter) {
+		super(TABLENAME, adapter);
 		idColumns = 2;
 	}
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("LigaID").setGetter((p) -> ((MatchFixtures) p).getLigaId()).setSetter((p, v) -> ((MatchFixtures) p).setLigaId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Saison").setGetter((p) -> ((MatchFixtures) p).getSaison()).setSetter((p, v) -> ((MatchFixtures) p).setSaison((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LigaName").setGetter((p) -> ((MatchFixtures) p).getLigaName()).setSetter((p, v) -> ((MatchFixtures) p).setLigaName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("FetchDate").setGetter((p) -> ((MatchFixtures) p).getFetchDate().toDbTimestamp()).setSetter((p, v) -> ((MatchFixtures) p).setFetchDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build()
+		columns = new ColumnDescriptor[] {
+				ColumnDescriptor.Builder.newInstance().setColumnName("LigaID")
+						.setGetter((p) -> ((MatchFixtures) p).getLigaId())
+						.setSetter((p, v) -> ((MatchFixtures) p).setLigaId((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Saison")
+						.setGetter((p) -> ((MatchFixtures) p).getSaison())
+						.setSetter((p, v) -> ((MatchFixtures) p).setSaison((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LigaName")
+						.setGetter((p) -> ((MatchFixtures) p).getLigaName())
+						.setSetter((p, v) -> ((MatchFixtures) p).setLigaName((String) v)).setType(Types.VARCHAR)
+						.setLength(256).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("FetchDate")
+						.setGetter((p) -> ((MatchFixtures) p).getFetchDate().toDbTimestamp())
+						.setSetter((p, v) -> ((MatchFixtures) p).setFetchDate((HODateTime) v)).setType(Types.TIMESTAMP)
+						.isNullable(false).build()
 		};
 	}
 
@@ -32,11 +44,17 @@ final class SpielplanTable extends AbstractTable {
 	 * Returns all the game schedules from the database.
 	 */
 	List<MatchFixtures> getAllSpielplaene() {
-		return load(MatchFixtures.class, connectionManager.executePreparedQuery(getAllSpielplaeneSql));
+		try {
+			return load(MatchFixtures.class, connectionManager.executePreparedQuery(getAllSpielplaeneSql));
+		} catch (java.sql.SQLException e) {
+			HOLogger.instance().error(getClass(), e);
+			return java.util.Collections.emptyList();
+		}
 	}
 
 	/**
-	 * Gets a game schedule from the database; returns the latest if either param is -1.
+	 * Gets a game schedule from the database; returns the latest if either param is
+	 * -1.
 	 *
 	 * @param ligaId ID of the series.
 	 * @param saison Season number.
@@ -45,10 +63,12 @@ final class SpielplanTable extends AbstractTable {
 		return loadOne(MatchFixtures.class, ligaId, saison);
 	}
 
-	private final String getLigaID4SaisonIDSql = "SELECT LigaID FROM "+getTableName()+" WHERE Saison=? ORDER BY FETCHDATE DESC LIMIT 1";
+	private final String getLigaID4SaisonIDSql = "SELECT LigaID FROM " + getTableName()
+			+ " WHERE Saison=? ORDER BY FETCHDATE DESC LIMIT 1";
 
 	/**
-	 * Gibt eine Ligaid zu einer Seasonid zurück, oder -1, wenn kein Eintrag in der DB gefunden
+	 * Gibt eine Ligaid zu einer Seasonid zurück, oder -1, wenn kein Eintrag in der
+	 * DB gefunden
 	 * wurde
 	 */
 	int getLigaID4SaisonID(int seasonid) {
@@ -60,11 +80,11 @@ final class SpielplanTable extends AbstractTable {
 				ligaid = rs.getInt("LigaID");
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getLigaID4SeasonID : " + e);
+			HOLogger.instance().log(getClass(), "DatenbankZugriff.getLigaID4SeasonID : " + e);
 		}
 		return ligaid;
 	}
-	
+
 	/**
 	 * Saves a game schedule ({@link MatchFixtures}) with its associated fixtures.
 	 *
@@ -80,7 +100,12 @@ final class SpielplanTable extends AbstractTable {
 	private final String loadLatestSpielplanSql = createSelectStatement(" ORDER BY FetchDate DESC LIMIT 1");
 
 	public MatchFixtures getLatestSpielplan() {
-		return loadOne(MatchFixtures.class, this.connectionManager.executePreparedQuery(loadLatestSpielplanSql));
+		try {
+			return loadOne(MatchFixtures.class, this.connectionManager.executePreparedQuery(loadLatestSpielplanSql));
+		} catch (java.sql.SQLException e) {
+			HOLogger.instance().error(getClass(), e);
+			return null;
+		}
 	}
 
 	/**
@@ -101,7 +126,7 @@ final class SpielplanTable extends AbstractTable {
 				ligaids[i] = vligaids.get(i);
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getAllLigaIDs : " + e);
+			HOLogger.instance().log(getClass(), "DatenbankZugriff.getAllLigaIDs : " + e);
 		}
 
 		return ligaids;

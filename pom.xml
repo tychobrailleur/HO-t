@@ -9,9 +9,9 @@
   <name>HO</name>
 
   <properties>
+    <java.version>17</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <osx.build.resources>${basedir}/buildResources/Mac</osx.build.resources>
-    <kotlin.version>2.3.0-Beta1</kotlin.version>
   </properties>
 
   <repositories>
@@ -39,6 +39,12 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>33.5.0-jre</version>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.30</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.github.scribejava</groupId>
@@ -114,17 +120,7 @@
       <artifactId>jsoup</artifactId>
       <version>1.21.2</version>
     </dependency>
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-stdlib-jdk8</artifactId>
-      <version>${kotlin.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-test</artifactId>
-      <version>${kotlin.version}</version>
-      <scope>test</scope>
-    </dependency>
+
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>clojure</artifactId>
@@ -140,14 +136,6 @@
       <artifactId>assertj-core</artifactId>
       <version>4.0.0-M1</version>
       <scope>test</scope>
-    </dependency>
-
-    <!-- Aiming to delete the following dependencies. -->
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>1.18.42</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.groovy</groupId>
@@ -221,42 +209,6 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>kotlin-maven-plugin</artifactId>
-        <version>${kotlin.version}</version>
-        <executions>
-          <execution>
-            <id>compile</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-            <configuration>
-              <sourceDirs>
-                <source>src/main/java</source>
-                <source>target/generated-sources/annotations</source>
-              </sourceDirs>
-            </configuration>
-          </execution>
-          <execution>
-            <id>test-compile</id>
-            <phase>test-compile</phase>
-            <goals>
-              <goal>test-compile</goal>
-            </goals>
-            <configuration>
-              <sourceDirs>
-                <source>src/test/java</source>
-                <source>target/generated-test-sources/test-annotations</source>
-              </sourceDirs>
-            </configuration>
-          </execution>
-        </executions>
-        <configuration>
-          <jvmTarget>1.8</jvmTarget>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.13.0</version>
@@ -264,30 +216,6 @@
           <source>17</source>
           <target>17</target>
         </configuration>
-        <executions>
-          <execution>
-            <id>default-compile</id>
-            <phase>none</phase>
-          </execution>
-          <execution>
-            <id>default-testCompile</id>
-            <phase>none</phase>
-          </execution>
-          <execution>
-            <id>compile</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>testCompile</id>
-            <phase>test-compile</phase>
-            <goals>
-              <goal>testCompile</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>

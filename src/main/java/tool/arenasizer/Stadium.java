@@ -112,7 +112,7 @@ public class Stadium extends AbstractTable.Storable {
 		vipBoxUnderConstruction = NumberUtils.toInt(properties.getProperty("expandingvip"), 0);
 		underConstruction = NumberUtils.toInt(properties.getProperty("isexpanding"), 0) > 0;
 		if (underConstruction) {
-			expansionCosts = AmountOfMoney.Companion.parse(properties.getProperty("expandcost"));
+			expansionCosts = AmountOfMoney.parse(properties.getProperty("expandcost"));
 		}
 		rebuiltDate = getArenaDate(properties, "rebuiltdate");
 		expansionDate = getArenaDate(properties, "expansiondate");

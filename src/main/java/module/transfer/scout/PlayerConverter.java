@@ -576,7 +576,7 @@ Mindestgebot: [money]0[/money]
         AmountOfMoney ret = null;
         if ( sc.hasNextBigInteger()){
             txtTmp = new StringBuilder(sc.next());
-            ret = AmountOfMoney.Companion.parse(txtTmp.toString());
+            ret = AmountOfMoney.parse(txtTmp.toString());
         }
         sc.close();
         return ret;
@@ -1182,9 +1182,9 @@ Mindestgebot: [money]0[/money]
 
     public static AmountOfMoney getPrice(String bid, String curbid) {
     	try {
-    		var price = AmountOfMoney.Companion.parse(bid);
+    		var price = AmountOfMoney.parse(bid);
             if (!curbid.isEmpty()){
-                var currentBid = AmountOfMoney.Companion.parse(curbid);
+                var currentBid = AmountOfMoney.parse(curbid);
                 if (currentBid != null && price != null && !currentBid.isLessThan(price)){
                     price = currentBid;
                 }

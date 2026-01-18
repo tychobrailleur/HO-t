@@ -33,8 +33,9 @@ final class DBUpdater {
 
 		int version = ((UserConfigurationTable) dbManager.getTable(UserConfigurationTable.TABLENAME)).getDBVersion();
 
-		if ( DBManager.getVersion() < version ) {
-			// Sometimes dev versions increase the db version, although they shouldn't do so.
+		if (DBManager.getVersion() < version) {
+			// Sometimes dev versions increase the db version, although they shouldn't do
+			// so.
 			version = DBManager.getVersion();
 		}
 
@@ -42,7 +43,8 @@ final class DBUpdater {
 			try {
 				switch (version) {
 					default:
-						// Attention: Default case as first case is intended - do not move it to the last place
+						// Attention: Default case as first case is intended - do not move it to the
+						// last place
 						// Unsupported database version
 						// We upgrade database from version 300 (HO 3.0)
 						HOLogger.instance().log(getClass(), "DB version " + version + " is too old");
@@ -58,7 +60,7 @@ final class DBUpdater {
 
 					// hint: fall through (no breaks) is intended
 					case 301:
-						updateDBv300();  // Bug#509 requires another update run of v300
+						updateDBv300(); // Bug#509 requires another update run of v300
 						updateDBv301(DBVersion);
 					case 302:
 					case 399:
@@ -76,14 +78,15 @@ final class DBUpdater {
 					case 700:
 						updateDBv701(DBVersion);
 					case 701:
-						// user database found with corrupt v5 upgrade (see https://github.com/ho-dev/HattrickOrganizer/issues/1941)
+						// user database found with corrupt v5 upgrade (see
+						// https://github.com/ho-dev/HattrickOrganizer/issues/1941)
 						updateDBv500(DBVersion);
 						updateDBv800(DBVersion);
 					case 800:
-                        updateDBv900(DBVersion);
-                    case 900:
-                        updateDBv901(DBVersion);
-                    case 901:
+						updateDBv900(DBVersion);
+					case 900:
+						updateDBv901(DBVersion);
+					case 901:
 						updateDBv1000(DBVersion);
 					case 1000:
 				}
@@ -96,19 +99,21 @@ final class DBUpdater {
 		}
 	}
 
-	private void updateDBv1000(int dbVersion) throws  SQLException{
+	private void updateDBv1000(int dbVersion) throws SQLException {
 
-        var economyTable = dbManager.getTable(EconomyTable.TABLENAME);
-        for (var column : economyTable.getColumns()){
-            if ( column.getType() == Types.DECIMAL){
-                if (economyTable.columnHasDataType(column.getColumnName(), "DECIMAL")) break; // already done
-                economyTable.tryChangeColumnDataType(column.getColumnName(), "INTEGER", "DECIMAL");
-            }
-        }
+		var economyTable = dbManager.getTable(EconomyTable.TABLENAME);
+		for (var column : economyTable.getColumns()) {
+			if (column.getType() == Types.DECIMAL) {
+				if (economyTable.columnHasDataType(column.getColumnName(), "DECIMAL"))
+					break; // already done
+				economyTable.tryChangeColumnDataType(column.getColumnName(), "INTEGER", "DECIMAL");
+			}
+		}
 
-		// Add all available file infos to the world details table, especially the currency information
-		var worldDetailsTable  = dbManager.getTable(WorldDetailsTable.TABLENAME);
-		if ( worldDetailsTable.tryAddColumn("COUNTRY_CODE", "VARCHAR(128)") ) {
+		// Add all available file infos to the world details table, especially the
+		// currency information
+		var worldDetailsTable = dbManager.getTable(WorldDetailsTable.TABLENAME);
+		if (worldDetailsTable.tryAddColumn("COUNTRY_CODE", "VARCHAR(128)")) {
 			worldDetailsTable.tryAddColumn("CURRENCY_NAME", "VARCHAR(128)");
 			worldDetailsTable.tryAddColumn("CURRENCY_RATE", "VARCHAR(128)");
 			worldDetailsTable.tryAddColumn("DATE_FORMAT", "VARCHAR(128)");
@@ -117,7 +122,7 @@ final class DBUpdater {
 
 		// Change all amount of money columns to big decimal type
 		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
-		if ( playerTable.tryChangeColumnDataType("GEHALT", "INTEGER", "DECIMAL") ) {
+		if (playerTable.tryChangeColumnDataType("GEHALT", "INTEGER", "DECIMAL")) {
 
 			var scoutTable = dbManager.getTable(ScoutTable.TABLENAME);
 			scoutTable.tryChangeColumnDataType("PRICE", "INTEGER", "DECIMAL");
@@ -144,49 +149,50 @@ final class DBUpdater {
 		updateDBVersion(dbVersion, 1000);
 	}
 
-    private void updateDBv901(int dbVersion) throws SQLException {
+	private void updateDBv901(int dbVersion) throws SQLException {
 
-        var stadionTable = dbManager.getTable(StadionTable.TABLENAME);
-        var sql = "UPDATE " + StadionTable.TABLENAME + " SET AUSBAUKOSTEN=0 WHERE AUSBAUKOSTEN IS NULL";
-        connectionManager.executeUpdate(sql);
-        stadionTable.tryChangeColumn("AUSBAUKOSTEN", "NOT NULL");
+		var stadionTable = dbManager.getTable(StadionTable.TABLENAME);
+		var sql = "UPDATE " + StadionTable.TABLENAME + " SET AUSBAUKOSTEN=0 WHERE AUSBAUKOSTEN IS NULL";
+		connectionManager.executeUpdate(sql);
+		stadionTable.tryChangeColumn("AUSBAUKOSTEN", "NOT NULL");
 
-        updateDBVersion(dbVersion, 901);
-    }
+		updateDBVersion(dbVersion, 901);
+	}
 
 	private void updateDBv900(int dbVersion) throws SQLException {
 		var matchDetailsTable = dbManager.getTable(MatchDetailsTable.TABLENAME);
 		matchDetailsTable.tryChangeColumn("Matchreport", "VARCHAR(40000)");
 
-        var youthScoutCommentTable = dbManager.getTable(YouthScoutCommentTable.TABLENAME);
-        youthScoutCommentTable.tryChangeColumn("Text", "VARCHAR(1024)");
+		var youthScoutCommentTable = dbManager.getTable(YouthScoutCommentTable.TABLENAME);
+		youthScoutCommentTable.tryChangeColumn("Text", "VARCHAR(1024)");
 
-        var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
-        playerTable.tryAddColumn("SubForm", "FLOAT DEFAULT 0");
+		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
+		playerTable.tryAddColumn("SubForm", "FLOAT DEFAULT 0");
 
-        var arenaTable = dbManager.getTable(StadionTable.TABLENAME);
-        arenaTable.tryAddColumn("REBUILT_DATE", "TIMESTAMP");
-        arenaTable.tryAddColumn("EXPANSION_DATE", "TIMESTAMP");
+		var arenaTable = dbManager.getTable(StadionTable.TABLENAME);
+		arenaTable.tryAddColumn("REBUILT_DATE", "TIMESTAMP");
+		arenaTable.tryAddColumn("EXPANSION_DATE", "TIMESTAMP");
 
-        var userColumnTable = (UserColumnsTable)dbManager.getTable(UserColumnsTable.TABLENAME);
-        userColumnTable.tryAddColumn("SORT_ORDER", "VARCHAR(32)");
-        userColumnTable.tryAddColumn("SORT_PRIORITY", "INTEGER");
+		var userColumnTable = (UserColumnsTable) dbManager.getTable(UserColumnsTable.TABLENAME);
+		userColumnTable.tryAddColumn("SORT_ORDER", "VARCHAR(32)");
+		userColumnTable.tryAddColumn("SORT_PRIORITY", "INTEGER");
 
-        String sql = "UPDATE " + UserColumnsTable.TABLENAME + " SET COLUMN_WIDTH=80 WHERE COLUMN_ID IN (2001,3001) AND COLUMN_WIDTH=0";
-        connectionManager.executeUpdate(sql);
-        sql = "UPDATE " + UserColumnsTable.TABLENAME + " SET MODELL_INDEX=63 WHERE COLUMN_ID=3510";
-        connectionManager.executeUpdate(sql);
+		String sql = "UPDATE " + UserColumnsTable.TABLENAME
+				+ " SET COLUMN_WIDTH=80 WHERE COLUMN_ID IN (2001,3001) AND COLUMN_WIDTH=0";
+		connectionManager.executeUpdate(sql);
+		sql = "UPDATE " + UserColumnsTable.TABLENAME + " SET MODELL_INDEX=63 WHERE COLUMN_ID=3510";
+		connectionManager.executeUpdate(sql);
 
-        var xtraDataTable = dbManager.getTable(XtraDataTable.TABLENAME);
-        for ( int i=1; i<6; i++) {
-            xtraDataTable.tryAddColumn("DAILYUPDATE" + i, "TIMESTAMP");
-        }
-        updateDBVersion(dbVersion, 900);
-    }
+		var xtraDataTable = dbManager.getTable(XtraDataTable.TABLENAME);
+		for (int i = 1; i < 6; i++) {
+			xtraDataTable.tryAddColumn("DAILYUPDATE" + i, "TIMESTAMP");
+		}
+		updateDBVersion(dbVersion, 900);
+	}
 
 	private void updateDBv800(int dbVersion) throws SQLException {
-        assert dbManager.getConnectionManager() != null;
-        dbManager.getConnectionManager().executeUpdate("DROP TABLE IF EXISTS SPIELERSKILLUP");
+		assert dbManager.getConnectionManager() != null;
+		dbManager.getConnectionManager().executeUpdate("DROP TABLE IF EXISTS SPIELERSKILLUP");
 
 		if (!tableExists(FuturePlayerSkillTrainingTable.TABLENAME)) {
 			dbManager.getTable(FuturePlayerSkillTrainingTable.TABLENAME).createTable();
@@ -208,20 +214,31 @@ final class DBUpdater {
 		updateDBVersion(dbVersion, 800);
 	}
 
-	private String getMigrateEscapesStatement(String table, String column, String where){
-        return "Update "+ table + " SET " + column + "=REPLACE("+column+", ?, ?) " + where;
+	private String getMigrateEscapesStatement(String table, String column, String where) {
+		return "Update " + table + " SET " + column + "=REPLACE(" + column + ", ?, ?) " + where;
 	}
-	private void migrateEscapes(String table, String ... columns){
+
+	private void migrateEscapes(String table, String... columns) {
 		migrateSelectedEscapes(table, "", columns);
 	}
-	private void migrateSelectedEscapes(String table, String where, String ... columns){
-		for (var column:columns){
+
+	private void migrateSelectedEscapes(String table, String where, String... columns) {
+		for (var column : columns) {
 			var now = HODateTime.now();
-			HOLogger.instance().info(getClass(), "Migrating escapes in column " + column + " of table " + table + " at " + now.toLocaleDateTime()  );
-			connectionManager.executePreparedUpdate(getMigrateEscapesStatement(table, column, where), "§", "\\");
-			var rows = connectionManager.executePreparedUpdate(getMigrateEscapesStatement(table, column, where),    "#", "'");
-			var finished = HODateTime.now();
-			HOLogger.instance().info(getClass(), "Migrating escapes in column " + column + " of table " + table +  " " + rows + " rows finished  at " + finished.toLocaleDateTime() + " duration: " + Duration.between(now.instant, finished.instant).toSeconds() + "sec");
+			HOLogger.instance().info(getClass(),
+					"Migrating escapes in column " + column + " of table " + table + " at " + now.toLocaleDateTime());
+			try {
+				connectionManager.executePreparedUpdate(getMigrateEscapesStatement(table, column, where), "§", "\\");
+				var rows = connectionManager.executePreparedUpdate(getMigrateEscapesStatement(table, column, where),
+						"#", "'");
+				var finished = HODateTime.now();
+				HOLogger.instance().info(getClass(),
+						"Migrating escapes in column " + column + " of table " + table + " " + rows
+								+ " rows finished  at " + finished.toLocaleDateTime() + " duration: "
+								+ Duration.between(now.instant, finished.instant).toSeconds() + "sec");
+			} catch (SQLException e) {
+				HOLogger.instance().error(getClass(), "Error migrating escapes: " + e.getMessage());
+			}
 		}
 	}
 
@@ -245,13 +262,13 @@ final class DBUpdater {
 	private void updateDBv700(int dbVersion) throws SQLException {
 		boolean isFixed = false;
 		var users = UserManager.instance().getAllUser();
-		for ( var user : users){
-			if (user.getNumberOfBackups() == 0){	// repair backupLevel
+		for (var user : users) {
+			if (user.getNumberOfBackups() == 0) { // repair backupLevel
 				user.setNumberOfBackups(3);
-				isFixed=true;
+				isFixed = true;
 			}
 		}
-		if ( isFixed){
+		if (isFixed) {
 			UserManager.instance().save();
 		}
 		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
@@ -276,7 +293,6 @@ final class DBUpdater {
 
 			var hrfTable = dbManager.getTable(HRFTable.TABLENAME);
 			hrfTable.tryDeleteColumn("NAME");
-
 
 			connectionManager.executeUpdate("DROP TABLE IF EXISTS MATCHLINEUPPENALTYTAKER");
 
@@ -332,10 +348,9 @@ final class DBUpdater {
 		updateDBVersion(dbVersion, 700);
 	}
 
-
 	private void updateDBv601(int dbVersion) throws SQLException {
 		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
-		if ( playerTable.tryAddColumn("Statement", "VARCHAR(255)")){
+		if (playerTable.tryAddColumn("Statement", "VARCHAR(255)")) {
 			playerTable.tryAddColumn("OwnerNotes", "VARCHAR(255)");
 			playerTable.tryAddColumn("PlayerCategory", "INTEGER");
 		}
@@ -354,7 +369,7 @@ final class DBUpdater {
 		connectionManager.executeUpdate("DROP TABLE POSITIONEN IF EXISTS");
 
 		var matchLineupTeamTable = dbManager.getTable(MatchLineupTeamTable.TABLENAME);
-		if ( !matchLineupTeamTable.primaryKeyExists() ) {
+		if (!matchLineupTeamTable.primaryKeyExists()) {
 			matchLineupTeamTable.tryAddColumn("ATTITUDE", "INTEGER");
 			matchLineupTeamTable.tryAddColumn("TACTIC", "INTEGER");
 			matchLineupTeamTable.tryDropIndex("MATCHLINEUPTEAM_IDX");
@@ -376,12 +391,13 @@ final class DBUpdater {
 
 		if (!columnExistsInTable("IncomeSponsorsBonus", EconomyTable.TABLENAME)) {
 			try {
-				connectionManager.executeUpdate("ALTER TABLE ECONOMY ADD COLUMN LastIncomeSponsorsBonus INTEGER DEFAULT 0");
+				connectionManager
+						.executeUpdate("ALTER TABLE ECONOMY ADD COLUMN LastIncomeSponsorsBonus INTEGER DEFAULT 0");
 				connectionManager.executeUpdate("ALTER TABLE ECONOMY ADD COLUMN IncomeSponsorsBonus INTEGER DEFAULT 0");
 				HOLogger.instance().info(getClass(), "Sponsor Bonus columns have been added to Economy table");
-			}
-			catch (Exception e) {
-				HOLogger.instance().error(getClass(), "Error when trying to add Sponsor Bonus columns have been added to Economy table: " + e);
+			} catch (Exception e) {
+				HOLogger.instance().error(getClass(),
+						"Error when trying to add Sponsor Bonus columns have been added to Economy table: " + e);
 			}
 		}
 
@@ -390,9 +406,9 @@ final class DBUpdater {
 				connectionManager.executeUpdate("ALTER TABLE SPIELER ADD COLUMN GoalsCurrentTeam INTEGER DEFAULT 0");
 				connectionManager.executeUpdate("ALTER TABLE SPIELER ADD COLUMN ArrivalDate VARCHAR (100)");
 				HOLogger.instance().info(getClass(), "SPIELER table structure has been updated");
-			}
-			catch (Exception e) {
-				HOLogger.instance().error(getClass(), "Error when trying to add Sponsor Bonus columns have been added to Economy table: " + e);
+			} catch (Exception e) {
+				HOLogger.instance().error(getClass(),
+						"Error when trying to add Sponsor Bonus columns have been added to Economy table: " + e);
 			}
 		}
 		updateDBVersion(dbVersion, 600);
@@ -402,11 +418,13 @@ final class DBUpdater {
 		// Upgrade legacy FINANZEN table to new ECONOMY Table (since HO 5.0)
 		if (!tableExists(EconomyTable.TABLENAME)) {
 			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Datum RENAME TO FetchedDate");
-			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Supporter RENAME TO SupportersPopularity");
+			connectionManager
+					.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Supporter RENAME TO SupportersPopularity");
 			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Sponsoren RENAME TO SponsorsPopularity");
 			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Finanzen RENAME TO Cash");
 			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinSponsoren RENAME TO IncomeSponsors");
-			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinZuschauer RENAME TO IncomeSpectators");
+			connectionManager
+					.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinZuschauer RENAME TO IncomeSpectators");
 			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinZinsen RENAME TO IncomeFinancial");
 			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinSonstiges RENAME TO IncomeTemporary");
 			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinGesamt RENAME TO IncomeSum");
@@ -417,27 +435,43 @@ final class DBUpdater {
 			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostZinsen RENAME TO CostsFinancial");
 			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostSonstiges RENAME TO CostsTemporary");
 			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostGesamt RENAME TO CostsSum");
-			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN GewinnVerlust RENAME TO ExpectedWeeksTotal");
-			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinSponsoren RENAME TO LastIncomeSponsors");
-			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinZuschauer RENAME TO LastIncomeSpectators");
-			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinZinsen RENAME TO LastIncomeFinancial");
-			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinSonstiges RENAME TO LastIncomeTemporary");
-			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinGesamt RENAME TO LastIncomeSum");
-			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostSpieler RENAME TO LastCostsPlayers");
-			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostTrainer RENAME TO LastCostsStaff");
-			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostStadion RENAME TO LastCostsArena");
-			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostJugend RENAME TO LastCostsYouth");
-			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostZinsen RENAME TO LastCostsFinancial");
-			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostSonstiges RENAME TO LastCostsTemporary");
-			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostGesamt RENAME TO LastCostsSum");
-			connectionManager.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteGewinnVerlust RENAME TO LastWeeksTotal");
+			connectionManager
+					.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN GewinnVerlust RENAME TO ExpectedWeeksTotal");
+			connectionManager
+					.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinSponsoren RENAME TO LastIncomeSponsors");
+			connectionManager.executeUpdate(
+					"ALTER TABLE FINANZEN ALTER COLUMN LetzteEinZuschauer RENAME TO LastIncomeSpectators");
+			connectionManager
+					.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinZinsen RENAME TO LastIncomeFinancial");
+			connectionManager.executeUpdate(
+					"ALTER TABLE FINANZEN ALTER COLUMN LetzteEinSonstiges RENAME TO LastIncomeTemporary");
+			connectionManager
+					.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinGesamt RENAME TO LastIncomeSum");
+			connectionManager
+					.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostSpieler RENAME TO LastCostsPlayers");
+			connectionManager
+					.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostTrainer RENAME TO LastCostsStaff");
+			connectionManager
+					.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostStadion RENAME TO LastCostsArena");
+			connectionManager
+					.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostJugend RENAME TO LastCostsYouth");
+			connectionManager
+					.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostZinsen RENAME TO LastCostsFinancial");
+			connectionManager.executeUpdate(
+					"ALTER TABLE FINANZEN ALTER COLUMN LetzteKostSonstiges RENAME TO LastCostsTemporary");
+			connectionManager
+					.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostGesamt RENAME TO LastCostsSum");
+			connectionManager
+					.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteGewinnVerlust RENAME TO LastWeeksTotal");
 			connectionManager.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN ExpectedCash INTEGER DEFAULT 0");
 			connectionManager.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN IncomeSoldPlayers INTEGER DEFAULT 0");
-			connectionManager.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN IncomeSoldPlayersCommission INTEGER DEFAULT 0");
+			connectionManager
+					.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN IncomeSoldPlayersCommission INTEGER DEFAULT 0");
 			connectionManager.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN CostsBoughtPlayers INTEGER DEFAULT 0");
 			connectionManager.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN CostsArenaBuilding INTEGER DEFAULT 0");
 			connectionManager.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN LastIncomeSoldPlayers INTEGER DEFAULT 0");
-			connectionManager.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN LastIncomeSoldPlayersCommission INTEGER DEFAULT 0");
+			connectionManager
+					.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN LastIncomeSoldPlayersCommission INTEGER DEFAULT 0");
 			connectionManager.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN LastCostsBoughtPlayers INTEGER DEFAULT 0");
 			connectionManager.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN LastCostsArenaBuilding INTEGER DEFAULT 0");
 			connectionManager.executeUpdate("ALTER TABLE FINANZEN RENAME TO ECONOMY");
@@ -472,9 +506,11 @@ final class DBUpdater {
 			dbManager.getTable(TeamsLogoTable.TABLENAME).createTable();
 		}
 
-		// Upgrade TRAINING table =================================================================================
+		// Upgrade TRAINING table
+		// =================================================================================
 		if (columnExistsInTable("COACH_LEVEL", TrainingsTable.TABLENAME)) {
-			HOLogger.instance().debug(getClass(), "Upgrade of training table was already performed ... process skipped !");
+			HOLogger.instance().debug(getClass(),
+					"Upgrade of training table was already performed ... process skipped !");
 		} else {
 			// Step 1. Add new columns in TRAINING table ===========================
 			var trainingTable = dbManager.getTable(TrainingsTable.TABLENAME);
@@ -483,14 +519,15 @@ final class DBUpdater {
 			trainingTable.tryAddColumn("SOURCE", "INTEGER");
 			trainingTable.tryAddColumn("TRAINING_DATE", "TIMESTAMP");
 
-			// Step 2. Migrate existing entries ==================================================================
+			// Step 2. Migrate existing entries
+			// ==================================================================
 			var trainings = new ArrayList<int[]>();
 			final String statement = "SELECT * FROM " + TrainingsTable.TABLENAME;
 			ResultSet rs = connectionManager.executeQuery(statement);
 			try {
 				if (rs != null) {
 					while (rs.next()) {
-						var training = new int[]{
+						var training = new int[] {
 								rs.getInt("week"),
 								rs.getInt("year")
 						};
@@ -498,15 +535,17 @@ final class DBUpdater {
 					}
 				}
 
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+						.withZone(ZoneId.from(ZoneOffset.UTC));
 				var trainingAfterDateSql = "select TRAININGDATE,COTRAINER,TRAINER FROM XTRADATA " +
 						"INNER JOIN VEREIN ON VEREIN.HRF_ID=XTRADATA.HRF_ID " +
 						"INNER JOIN SPIELER ON SPIELER.HRF_ID=XTRADATA.HRF_ID AND TRAINER>0 " +
 						"WHERE TRAININGDATE> ? LIMIT 1";
-				var updateStatement = "update " + TrainingsTable.TABLENAME + " SET TRAINING_DATE=?, TRAINING_ASSISTANTS_LEVEL=?, COACH_LEVEL=?, SOURCE=? WHERE YEAR=? AND WEEK=?";
+				var updateStatement = "update " + TrainingsTable.TABLENAME
+						+ " SET TRAINING_DATE=?, TRAINING_ASSISTANTS_LEVEL=?, COACH_LEVEL=?, SOURCE=? WHERE YEAR=? AND WEEK=?";
 				for (var training : trainings) {
 					// Convert year, week to Date
-					int dayOfWeek = 1;  // 1-7, locale-dependent such as Sunday-Monday in US.
+					int dayOfWeek = 1; // 1-7, locale-dependent such as Sunday-Monday in US.
 					WeekFields weekFields = WeekFields.of(Locale.GERMANY);
 					LocalDate ld = LocalDate.now()
 							.withYear(training[1])
@@ -528,15 +567,18 @@ final class DBUpdater {
 							var trainer = rset.getInt("TRAINER");
 
 							// update new columns
-							connectionManager.executePreparedUpdate(updateStatement, trainingDate, coTrainer, trainer, DBDataSource.MANUAL.getValue(), training[1], training[0]);
+							connectionManager.executePreparedUpdate(updateStatement, trainingDate, coTrainer, trainer,
+									DBDataSource.MANUAL.getValue(), training[1], training[0]);
 						}
 					}
 				}
 			} catch (Exception e) {
-				HOLogger.instance().error(getClass(), "Error when trying to migrate existing entries of TRAININGS table: " + e);
+				HOLogger.instance().error(getClass(),
+						"Error when trying to migrate existing entries of TRAININGS table: " + e);
 			}
 
-			// Step 3. Finalize upgrade of Training table structure ===============================
+			// Step 3. Finalize upgrade of Training table structure
+			// ===============================
 			trainingTable.tryChangeColumn("COACH_LEVEL", "NOT NULL");
 			trainingTable.tryChangeColumn("TRAINING_ASSISTANTS_LEVEL", "NOT NULL");
 			trainingTable.tryChangeColumn("TRAINING_DATE", "NOT NULL");
@@ -548,27 +590,31 @@ final class DBUpdater {
 			trainingTable.tryDeleteColumn("WEEK");
 		}
 
-		// Upgrade FutureTraining table ======================================================================================
+		// Upgrade FutureTraining table
+		// ======================================================================================
 		if (columnExistsInTable("COACH_LEVEL", FutureTrainingTable.TABLENAME)) {
-			HOLogger.instance().debug(getClass(), "Upgrade of FutureTraining table was already performed ... process skipped !");
-		}
-		else {
-			// Step 1. Add new columns in FUTURETRAININGS table ===========================================================
+			HOLogger.instance().debug(getClass(),
+					"Upgrade of FutureTraining table was already performed ... process skipped !");
+		} else {
+			// Step 1. Add new columns in FUTURETRAININGS table
+			// ===========================================================
 			var futureTrainingTable = dbManager.getTable(FutureTrainingTable.TABLENAME);
 			futureTrainingTable.tryAddColumn("COACH_LEVEL", "INTEGER");
 			futureTrainingTable.tryAddColumn("TRAINING_ASSISTANTS_LEVEL", "INTEGER");
 			futureTrainingTable.tryAddColumn("TRAINING_DATE", "TIMESTAMP");
 			futureTrainingTable.tryAddColumn("SOURCE", "INTEGER");
 
-
-			// Step 2: update columns with non-null values to ensure NOT NULL clauses can be called
+			// Step 2: update columns with non-null values to ensure NOT NULL clauses can be
+			// called
 			// we store week and season information for future treatment
 			String sql = "UPDATE " + FutureTrainingTable.TABLENAME +
-					" SET TRAINING_DATE=timestamp('1900-01-01'), TRAINING_ASSISTANTS_LEVEL=WEEK, COACH_LEVEL=SEASON, SOURCE=" +
+					" SET TRAINING_DATE=timestamp('1900-01-01'), TRAINING_ASSISTANTS_LEVEL=WEEK, COACH_LEVEL=SEASON, SOURCE="
+					+
 					DBDataSource.MANUAL.getValue() + " WHERE TRUE";
 			connectionManager.executeUpdate(sql);
 
-			// Step 3. Finalize upgrade of FUTURETRAININGS table structure ===============================
+			// Step 3. Finalize upgrade of FUTURETRAININGS table structure
+			// ===============================
 			futureTrainingTable.tryChangeColumn("COACH_LEVEL", "NOT NULL");
 			futureTrainingTable.tryChangeColumn("TRAINING_ASSISTANTS_LEVEL", "NOT NULL");
 			futureTrainingTable.tryChangeColumn("TRAINING_DATE", "NOT NULL");
@@ -593,7 +639,8 @@ final class DBUpdater {
 			matchDetailsTable.tryDropPrimaryKey();
 			matchIFATable.tryDropPrimaryKey();
 
-			// Update primary key from matchID => (matchID, MATCHTYP) because doublons might otherwise exists
+			// Update primary key from matchID => (matchID, MATCHTYP) because doublons might
+			// otherwise exists
 			connectionManager.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD PRIMARY KEY (MATCHID, MATCHTYP)");
 			connectionManager.executeUpdate("ALTER TABLE MATCHLINEUP ADD PRIMARY KEY (MATCHID, MATCHTYP)");
 
@@ -622,7 +669,8 @@ final class DBUpdater {
 			dbManager.getTable(MatchSubstitutionTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
 			dbManager.getTable(YouthTrainingTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
 
-			// Correct history of MATCHESKURZINFO  ==============================================
+			// Correct history of MATCHESKURZINFO
+			// ==============================================
 			String sql = """
 					UPDATE MATCHESKURZINFO
 					SET MATCHTYP =
@@ -639,14 +687,19 @@ final class DBUpdater {
 
 			connectionManager.executeUpdate(sql);
 
-			// Set MatchType in all table but YouthTable from entry in MATCHESKURZINFO =============================
-			// use match lineup table to fix match types, since the lineup table holds the youth matches too
-			// the types in lineup table seems to be the correct one - at least in my database (ws) - no fake types of sapphire cup and co.
-			//List<String> lTables = List.of("IFA_MATCHES", "MATCHDETAILS", "MATCHLINEUP", "MATCHHIGHLIGHTS", "MATCHLINEUPPLAYER", "MATCHLINEUPTEAM",
-			//		"MATCHORDER", "MATCHSUBSTITUTION");
+			// Set MatchType in all table but YouthTable from entry in MATCHESKURZINFO
+			// =============================
+			// use match lineup table to fix match types, since the lineup table holds the
+			// youth matches too
+			// the types in lineup table seems to be the correct one - at least in my
+			// database (ws) - no fake types of sapphire cup and co.
+			// List<String> lTables = List.of("IFA_MATCHES", "MATCHDETAILS", "MATCHLINEUP",
+			// "MATCHHIGHLIGHTS", "MATCHLINEUPPLAYER", "MATCHLINEUPTEAM",
+			// "MATCHORDER", "MATCHSUBSTITUTION");
 
 			copyMatchTypes("MATCHESKURZINFO", "IFA_MATCHES");
-			if (tableExists("MATCHORDER") && dbVersion<600 ) copyMatchTypes("MATCHESKURZINFO", "MATCHORDER");		// no lineup available yet for match orders
+			if (tableExists("MATCHORDER") && dbVersion < 600)
+				copyMatchTypes("MATCHESKURZINFO", "MATCHORDER"); // no lineup available yet for match orders
 			copyMatchTypes("MATCHLINEUP", "MATCHDETAILS");
 			copyMatchTypes("MATCHLINEUP", "MATCHHIGHLIGHTS");
 			copyMatchTypes("MATCHLINEUP", "MATCHLINEUPPLAYER");
@@ -654,7 +707,8 @@ final class DBUpdater {
 			copyMatchTypes("MATCHLINEUP", "MATCHSUBSTITUTION");
 			copyMatchTypes("MATCHLINEUP", "YOUTHTRAINING");
 
-			// Update primary key from matchID => (matchID, MATCHTYP) because doublons might otherwise exists
+			// Update primary key from matchID => (matchID, MATCHTYP) because doublons might
+			// otherwise exists
 			connectionManager.executeUpdate("ALTER TABLE IFA_MATCHES ADD PRIMARY KEY (MATCHID, MATCHTYP)");
 			connectionManager.executeUpdate("ALTER TABLE MATCHDETAILS ADD PRIMARY KEY (MATCHID, MATCHTYP)");
 
@@ -666,12 +720,12 @@ final class DBUpdater {
 		}
 
 		// Delete corrupt entries (wrong week numbers) from TA_PLAYER table
-		var hrfTable = (HRFTable)dbManager.getTable(HRFTable.TABLENAME);
+		var hrfTable = (HRFTable) dbManager.getTable(HRFTable.TABLENAME);
 		var hrf = hrfTable.getLatestHrf();
-		if ( hrf.isOK() ) {
+		if (hrf.isOK()) {
 			connectionManager.executeUpdate("DELETE FROM " + TAPlayerTable.TABLENAME
 					+ " WHERE WEEK> (SELECT SAISON*16+SPIELTAG-1 FROM "
-					+ basicsTable.getTableName() + " WHERE HRF_ID=" + hrf.getHrfId() + ")" );
+					+ basicsTable.getTableName() + " WHERE HRF_ID=" + hrf.getHrfId() + ")");
 		}
 
 		dbManager.getTable(MatchesKurzInfoTable.TABLENAME).tryAddColumn("isObsolete", "BOOLEAN");
@@ -686,18 +740,27 @@ final class DBUpdater {
 	}
 
 	private void copyMatchTypes(String fromTable, String toTable) {
-		String sql = "UPDATE " + toTable + " t1 SET MATCHTYP = (SELECT MK.MATCHTYP FROM " + fromTable +" MK WHERE t1.MATCHID = MK.MATCHID)";
-		connectionManager.executeUpdate(sql);
-		sql = "UPDATE " + toTable + " SET MATCHTYP = 0 WHERE MATCHTYP IS NULL";
-		connectionManager.executeUpdate(sql);
+		String sql = "UPDATE " + toTable + " t1 SET MATCHTYP = (SELECT MK.MATCHTYP FROM " + fromTable
+				+ " MK WHERE t1.MATCHID = MK.MATCHID)";
+		try {
+			connectionManager.executeUpdate(sql);
+			sql = "UPDATE " + toTable + " SET MATCHTYP = 0 WHERE MATCHTYP IS NULL";
+			connectionManager.executeUpdate(sql);
+		} catch (SQLException e) {
+			HOLogger.instance().error(getClass(), "Error copying match types: " + e.getMessage());
+		}
 	}
 
 	private void updateDBv400(int dbVersion) throws SQLException {
 		// Delete existing values to provide sane defaults.
-		connectionManager.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'spielerUebersichtsPanel_horizontalRightSplitPane'");
-		connectionManager.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_verticalSplitPane'");
-		connectionManager.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalRightSplitPane'");
-		connectionManager.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalLeftSplitPane'");
+		connectionManager.executeUpdate(
+				"DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'spielerUebersichtsPanel_horizontalRightSplitPane'");
+		connectionManager.executeUpdate(
+				"DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_verticalSplitPane'");
+		connectionManager.executeUpdate(
+				"DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalRightSplitPane'");
+		connectionManager.executeUpdate(
+				"DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalLeftSplitPane'");
 
 		if (!columnExistsInTable("SeasonOffset", BasicsTable.TABLENAME)) {
 			connectionManager.executeUpdate("ALTER TABLE BASICS ADD COLUMN SeasonOffset INTEGER");
@@ -727,7 +790,8 @@ final class DBUpdater {
 			connectionManager.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN NAME VARCHAR (100) ");
 		}
 
-		// use defaults player formula from defaults.xml by resetting the value in the database
+		// use defaults player formula from defaults.xml by resetting the value in the
+		// database
 		try {
 			AbstractTable faktorenTab = dbManager.getTable(FaktorenTable.TABLENAME);
 			if (faktorenTab != null) {
@@ -741,7 +805,7 @@ final class DBUpdater {
 
 		resetUserColumns();
 
-		//create FuturePlayerTrainingTable
+		// create FuturePlayerTrainingTable
 		if (!tableExists(FuturePlayerTrainingTable.TABLENAME)) {
 			dbManager.getTable(FuturePlayerTrainingTable.TABLENAME).createTable();
 		}
@@ -763,7 +827,8 @@ final class DBUpdater {
 		}
 
 		if (columnExistsInTable("TYP", MatchHighlightsTable.TABLENAME)) {
-			connectionManager.executeUpdate("UPDATE MATCHHIGHLIGHTS SET MATCH_EVENT_ID = (TYP * 100) + SUBTYP WHERE MATCH_EVENT_ID IS NULL");
+			connectionManager.executeUpdate(
+					"UPDATE MATCHHIGHLIGHTS SET MATCH_EVENT_ID = (TYP * 100) + SUBTYP WHERE MATCH_EVENT_ID IS NULL");
 			connectionManager.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP TYP");
 		}
 
@@ -789,10 +854,14 @@ final class DBUpdater {
 
 		connectionManager.executeUpdate("CREATE INDEX IF NOT EXISTS matchdetails_heimid_idx ON MATCHDETAILS (HEIMID)");
 		connectionManager.executeUpdate("CREATE INDEX IF NOT EXISTS matchdetails_gastid_idx ON MATCHDETAILS (GASTID)");
-		connectionManager.executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_heimid_idx ON MATCHESKURZINFO (HEIMID)");
-		connectionManager.executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_gastid_idx ON MATCHESKURZINFO (GASTID)");
-		connectionManager.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_teamid_idx ON MATCHHIGHLIGHTS (TEAMID)");
-		connectionManager.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_eventid_idx ON MATCHHIGHLIGHTS (MATCH_EVENT_ID)");
+		connectionManager
+				.executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_heimid_idx ON MATCHESKURZINFO (HEIMID)");
+		connectionManager
+				.executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_gastid_idx ON MATCHESKURZINFO (GASTID)");
+		connectionManager
+				.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_teamid_idx ON MATCHHIGHLIGHTS (TEAMID)");
+		connectionManager.executeUpdate(
+				"CREATE INDEX IF NOT EXISTS matchhighlights_eventid_idx ON MATCHHIGHLIGHTS (MATCH_EVENT_ID)");
 
 		Arrays.asList("GlobalRanking", "LeagueRanking", "RegionRanking", "PowerRating").forEach(s -> {
 			try {
@@ -822,71 +891,73 @@ final class DBUpdater {
 		// HO 3.0
 
 		// delete old divider locations
-		connectionManager.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_LowerLefSplitPane'");
-		connectionManager.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_UpperLeftSplitPane'");
+		connectionManager
+				.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_LowerLefSplitPane'");
+		connectionManager
+				.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_UpperLeftSplitPane'");
 		connectionManager.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_MainSplitPane'");
 
-		//store ArenaId into MATCHESKURZINFO table
+		// store ArenaId into MATCHESKURZINFO table
 		if (!columnExistsInTable("ArenaId", MatchesKurzInfoTable.TABLENAME)) {
 			connectionManager.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN ArenaId INTEGER");
 		}
 
-		//store RegionId into MATCHESKURZINFO table
+		// store RegionId into MATCHESKURZINFO table
 		if (!columnExistsInTable("RegionId", MatchesKurzInfoTable.TABLENAME)) {
 			connectionManager.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN RegionId INTEGER");
 		}
 
-		//store Weather into MATCHESKURZINFO table
+		// store Weather into MATCHESKURZINFO table
 		if (!columnExistsInTable("Weather", MatchesKurzInfoTable.TABLENAME)) {
 			connectionManager.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN Weather INTEGER");
 		}
 
-		//store WeatherForecast into MATCHESKURZINFO table
+		// store WeatherForecast into MATCHESKURZINFO table
 		if (!columnExistsInTable("WeatherForecast", MatchesKurzInfoTable.TABLENAME)) {
 			connectionManager.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN WeatherForecast INTEGER");
 		}
 
-		//store isDerby into MATCHESKURZINFO table
+		// store isDerby into MATCHESKURZINFO table
 		if (!columnExistsInTable("isDerby", MatchesKurzInfoTable.TABLENAME)) {
 			connectionManager.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN isDerby BOOLEAN");
 		}
 
-		//store isNeutral into MATCHESKURZINFO table
+		// store isNeutral into MATCHESKURZINFO table
 		if (!columnExistsInTable("isNeutral", MatchesKurzInfoTable.TABLENAME)) {
 			connectionManager.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN isNeutral BOOLEAN");
 		}
 
-		//store Salary into TA_PLAYER table
+		// store Salary into TA_PLAYER table
 		if (!columnExistsInTable("SALARY", TAPlayerTable.TABLENAME)) {
 			connectionManager.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN SALARY INTEGER");
 		}
 
-		//store Stamina  into TA_PLAYER table
+		// store Stamina into TA_PLAYER table
 		if (!columnExistsInTable("STAMINA", TAPlayerTable.TABLENAME)) {
 			connectionManager.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN STAMINA INTEGER");
 		}
 
-		//store MotherClubBonus  into TA_PLAYER table
+		// store MotherClubBonus into TA_PLAYER table
 		if (!columnExistsInTable("MOTHERCLUBBONUS", TAPlayerTable.TABLENAME)) {
 			connectionManager.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN MOTHERCLUBBONUS BOOLEAN");
 		}
 
-		//store Loyalty  into TA_PLAYER table
+		// store Loyalty into TA_PLAYER table
 		if (!columnExistsInTable("LOYALTY", TAPlayerTable.TABLENAME)) {
 			connectionManager.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN LOYALTY INTEGER");
 		}
 
-		//store RATINGINDIRECTSETPIECESATT  into MATCHDETAILS table
+		// store RATINGINDIRECTSETPIECESATT into MATCHDETAILS table
 		if (!columnExistsInTable("RATINGINDIRECTSETPIECESATT", MatchDetailsTable.TABLENAME)) {
 			connectionManager.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN RATINGINDIRECTSETPIECESATT INTEGER");
 		}
 
-		//store RATINGINDIRECTSETPIECESDEF  into MATCHDETAILS table
+		// store RATINGINDIRECTSETPIECESDEF into MATCHDETAILS table
 		if (!columnExistsInTable("RATINGINDIRECTSETPIECESDEF", MatchDetailsTable.TABLENAME)) {
 			connectionManager.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN RATINGINDIRECTSETPIECESDEF INTEGER");
 		}
 
-		//store FirstName, Nickname  into Playertable
+		// store FirstName, Nickname into Playertable
 		if (!columnExistsInTable("FirstName", SpielerTable.TABLENAME)) {
 			connectionManager.executeUpdate("ALTER TABLE SPIELER ADD COLUMN FirstName VARCHAR (100)");
 			connectionManager.executeUpdate("ALTER TABLE SPIELER ADD COLUMN NickName VARCHAR (100)");
@@ -899,7 +970,8 @@ final class DBUpdater {
 			int teamId = getTeamId();
 			// select saison,ligaid from paarung where heimid=520472 group by saison,ligaid
 			HashMap<Integer, Integer> ownLeaguePlans = new HashMap<>();
-			ResultSet rs = connectionManager.executeQuery("select saison,ligaid from paarung where heimid=" + teamId + " group by saison,ligaid");
+			ResultSet rs = connectionManager.executeQuery(
+					"select saison,ligaid from paarung where heimid=" + teamId + " group by saison,ligaid");
 			if (rs != null) {
 				while (rs.next()) {
 					int saison = rs.getInt(1);
@@ -916,8 +988,10 @@ final class DBUpdater {
 					int league = rs.getInt(2);
 					if (!ownLeaguePlans.containsKey(saison) || ownLeaguePlans.get(saison) != league) {
 						// league is not our own one
-						connectionManager.executeUpdate("DELETE FROM spielplan WHERE ligaid=" + league + " and saison=" + saison);
-						connectionManager.executeUpdate("DELETE FROM paarung WHERE ligaid=" + league + " and saison=" + saison);
+						connectionManager.executeUpdate(
+								"DELETE FROM spielplan WHERE ligaid=" + league + " and saison=" + saison);
+						connectionManager
+								.executeUpdate("DELETE FROM paarung WHERE ligaid=" + league + " and saison=" + saison);
 					}
 				}
 				rs.close();
@@ -933,21 +1007,21 @@ final class DBUpdater {
 			if (!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update to " + updateVersion + " done. Updating DBVersion");
 				dbManager.saveUserParameter("DBVersion", updateVersion);
+			} else {
+				HOLogger.instance().debug(DBUpdater.class, "Update to " + updateVersion
+						+ " done but this is a development version so DBVersion will remain unchanged");
 			}
-			else {
-				HOLogger.instance().debug(DBUpdater.class, "Update to " + updateVersion + " done but this is a development version so DBVersion will remain unchanged");
-			}
-		}
-		else if (updateVersion == targetDBVersion) {
+		} else if (updateVersion == targetDBVersion) {
 			if (!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update complete, setting DBVersion to " + updateVersion);
 				dbManager.saveUserParameter("DBVersion", updateVersion);
 			} else {
-				HOLogger.instance().debug(DBUpdater.class, "Update to " + updateVersion + " complete but this is a development version so DBVersion will remain unchanged");
+				HOLogger.instance().debug(DBUpdater.class, "Update to " + updateVersion
+						+ " complete but this is a development version so DBVersion will remain unchanged");
 			}
-		}
-		else {
-			HOLogger.instance().error(DBUpdater.class, "Error trying to set DB version to unidentified value:  " + updateVersion
+		} else {
+			HOLogger.instance().error(DBUpdater.class,
+					"Error trying to set DB version to unidentified value:  " + updateVersion
 							+ " (isDevelopment=" + HO.isDevelopment() + ")");
 		}
 	}
@@ -971,24 +1045,31 @@ final class DBUpdater {
 		String sql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS WHERE TABLE_NAME = '" +
 				tableName.toUpperCase() + "' AND COLUMN_NAME = '" + columnName.toUpperCase() + "'";
 		ResultSet rs = this.connectionManager.executeQuery(sql);
-		if (rs != null) return rs.next();
+		if (rs != null)
+			return rs.next();
 		return false;
 	}
 
 	private boolean tableExists(String tableName) throws SQLException {
-		String sql = "SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE TABLE_NAME = '" + tableName.toUpperCase() + "'";
+		String sql = "SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE TABLE_NAME = '" + tableName.toUpperCase()
+				+ "'";
 		ResultSet rs = this.connectionManager.executeQuery(sql);
-		if (rs != null) return rs.next();
+		if (rs != null)
+			return rs.next();
 		return false;
 	}
 
 	private void resetUserColumns() {
 		HOLogger.instance().debug(getClass(), "Resetting player overview rows.");
 		String sql = "DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN 2000 AND 3000";
-		connectionManager.executeUpdate(sql);
+		try {
+			connectionManager.executeUpdate(sql);
 
-		HOLogger.instance().debug(getClass(), "Resetting lineup overview rows.");
-		sql = "DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN 3000 AND 4000";
-		connectionManager.executeUpdate(sql);
+			HOLogger.instance().debug(getClass(), "Resetting lineup overview rows.");
+			sql = "DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN 3000 AND 4000";
+			connectionManager.executeUpdate(sql);
+		} catch (SQLException e) {
+			HOLogger.instance().error(getClass(), "Error resetting user columns: " + e.getMessage());
+		}
 	}
 }

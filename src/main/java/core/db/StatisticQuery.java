@@ -27,7 +27,7 @@ public class StatisticQuery {
 
 	public static double[][] getSpielerDaten4Statistik(int spielerId, int anzahlHRF) {
 		final int anzahlSpalten = 17;
-		var exchangeRate = AmountOfMoney.Companion.getExchangeRate().doubleValue();
+		var exchangeRate = AmountOfMoney.getExchangeRate().doubleValue();
 
 		double[][] returnWerte = new double[0][0];
 		final Vector<double[]> vWerte = new Vector<>();
@@ -219,7 +219,7 @@ public class StatisticQuery {
 	}
 
 	public static double[][] getDataForTeamStatisticsPanel(int nbHRF, String group) {
-		var exchangeRate = AmountOfMoney.Companion.getExchangeRate().doubleValue();
+		var exchangeRate = AmountOfMoney.getExchangeRate().doubleValue();
 		double[][] returnValues = new double[0][0];
 		final Vector<double[]> values = new Vector<>();
 		final int nbColumns = 29;
@@ -394,7 +394,7 @@ public class StatisticQuery {
 	public static double[][] getDataForFinancesStatisticsPanel(int iNumberWeeks) {
 
 		final int iNumberColumns = 18;
-		var exchangeRate = AmountOfMoney.Companion.getExchangeRate().doubleValue();
+		var exchangeRate = AmountOfMoney.getExchangeRate().doubleValue();
 		double[][] returnValues;
 		Vector<double[]> values = new Vector<>();
 		var from = HODateTime.now().minus(iNumberWeeks * 7, ChronoUnit.DAYS);

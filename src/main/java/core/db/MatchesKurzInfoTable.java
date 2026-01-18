@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 /**
  * Class used to store in DB, [Matches] Table fetched via CHPP
  */
@@ -34,41 +33,111 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("MatchID").setGetter((o) -> ((MatchKurzInfo) o).getMatchID()).setSetter((o, v) -> ((MatchKurzInfo) o).setMatchID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("MatchTyp").setGetter((o) -> ((MatchKurzInfo) o).getMatchType().getId()).setSetter((o, v) -> ((MatchKurzInfo) o).setMatchType(MatchType.getById((int) v))).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("HeimName").setGetter((o) -> ((MatchKurzInfo) o).getHomeTeamName()).setSetter((o, v) -> ((MatchKurzInfo) o).setHomeTeamName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("HeimID").setGetter((o) -> ((MatchKurzInfo) o).getHomeTeamID()).setSetter((o, v) -> ((MatchKurzInfo) o).setHomeTeamID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("GastName").setGetter((o) -> ((MatchKurzInfo) o).getGuestTeamName()).setSetter((o, v) -> ((MatchKurzInfo) o).setGuestTeamName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("GastID").setGetter((o) -> ((MatchKurzInfo) o).getGuestTeamID()).setSetter((o, v) -> ((MatchKurzInfo) o).setGuestTeamID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("MatchDate").setGetter((o) -> ((MatchKurzInfo) o).getMatchSchedule().toDbTimestamp()).setSetter((o, v) -> ((MatchKurzInfo) o).setMatchSchedule((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("HeimTore").setGetter((o) -> ((MatchKurzInfo) o).getHomeTeamGoals()).setSetter((o, v) -> ((MatchKurzInfo) o).setHomeTeamGoals((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("GastTore").setGetter((o) -> ((MatchKurzInfo) o).getGuestTeamGoals()).setSetter((o, v) -> ((MatchKurzInfo) o).setGuestTeamGoals((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Aufstellung").setGetter((o) -> ((MatchKurzInfo) o).isOrdersGiven()).setSetter((o, v) -> ((MatchKurzInfo) o).setOrdersGiven((boolean) v)).setType(Types.BOOLEAN).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Status").setGetter((o) -> ((MatchKurzInfo) o).getMatchStatus()).setSetter((o, v) -> ((MatchKurzInfo) o).setMatchStatus((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("CupLevel").setGetter((o) -> ((MatchKurzInfo) o).getCupLevel().getId()).setSetter((o, v) -> ((MatchKurzInfo) o).setCupLevel(CupLevel.fromInt((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("CupLevelIndex").setGetter((o) -> ((MatchKurzInfo) o).getCupLevelIndex().getId()).setSetter((o, v) -> ((MatchKurzInfo) o).setCupLevelIndex(CupLevelIndex.fromInt((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("MatchContextId").setGetter((o) -> ((MatchKurzInfo) o).getMatchContextId()).setSetter((o, v) -> ((MatchKurzInfo) o).setMatchContextId((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("TournamentTypeID").setGetter((o) -> ((MatchKurzInfo) o).getTournamentTypeID()).setSetter((o, v) -> ((MatchKurzInfo) o).setTournamentTypeID((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("ArenaId").setGetter((o) -> ((MatchKurzInfo) o).getArenaId()).setSetter((o, v) -> ((MatchKurzInfo) o).setArenaId((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("RegionId").setGetter((o) -> ((MatchKurzInfo) o).getRegionId()).setSetter((o, v) -> ((MatchKurzInfo) o).setRegionId((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("isDerby").setGetter((o) -> ((MatchKurzInfo) o).isDerby()).setSetter((o, v) -> ((MatchKurzInfo) o).setIsDerby((Boolean) v)).setType(Types.BOOLEAN).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("isNeutral").setGetter((o) -> ((MatchKurzInfo) o).isNeutral()).setSetter((o, v) -> ((MatchKurzInfo) o).setIsNeutral((Boolean) v)).setType(Types.BOOLEAN).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Weather").setGetter((o) -> ((MatchKurzInfo) o).getWeather().getId()).setSetter((o, v) -> ((MatchKurzInfo) o).setWeather(Weather.getById((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("WeatherForecast").setGetter((o) -> ((MatchKurzInfo) o).getWeatherForecast().getId()).setSetter((o, v) -> ((MatchKurzInfo) o).setWeatherForecast(Weather.Forecast.getById((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Duration").setGetter((o) -> ((MatchKurzInfo) o).getDuration()).setSetter((o, v) -> ((MatchKurzInfo) o).setDuration((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("isObsolete").setGetter((o) -> ((MatchKurzInfo) o).isObsolet()).setSetter((o, v) -> ((MatchKurzInfo) o).setisObsolet((Boolean) v)).setType(Types.BOOLEAN).isNullable(true).build()
+		columns = new ColumnDescriptor[] {
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchID")
+						.setGetter((o) -> ((MatchKurzInfo) o).getMatchID())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setMatchID((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchTyp")
+						.setGetter((o) -> ((MatchKurzInfo) o).getMatchType().getId())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setMatchType(MatchType.getById((int) v)))
+						.setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("HeimName")
+						.setGetter((o) -> ((MatchKurzInfo) o).getHomeTeamName())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setHomeTeamName((String) v)).setType(Types.VARCHAR)
+						.setLength(256).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("HeimID")
+						.setGetter((o) -> ((MatchKurzInfo) o).getHomeTeamID())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setHomeTeamID((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("GastName")
+						.setGetter((o) -> ((MatchKurzInfo) o).getGuestTeamName())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setGuestTeamName((String) v)).setType(Types.VARCHAR)
+						.setLength(256).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("GastID")
+						.setGetter((o) -> ((MatchKurzInfo) o).getGuestTeamID())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setGuestTeamID((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchDate")
+						.setGetter((o) -> ((MatchKurzInfo) o).getMatchSchedule().toDbTimestamp())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setMatchSchedule((HODateTime) v))
+						.setType(Types.TIMESTAMP).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("HeimTore")
+						.setGetter((o) -> ((MatchKurzInfo) o).getHomeTeamGoals())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setHomeTeamGoals((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("GastTore")
+						.setGetter((o) -> ((MatchKurzInfo) o).getGuestTeamGoals())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setGuestTeamGoals((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Aufstellung")
+						.setGetter((o) -> ((MatchKurzInfo) o).isOrdersGiven())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setOrdersGiven((boolean) v)).setType(Types.BOOLEAN)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Status")
+						.setGetter((o) -> ((MatchKurzInfo) o).getMatchStatus())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setMatchStatus((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("CupLevel")
+						.setGetter((o) -> ((MatchKurzInfo) o).getCupLevel().getId())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setCupLevel(CupLevel.fromInt((Integer) v)))
+						.setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("CupLevelIndex")
+						.setGetter((o) -> ((MatchKurzInfo) o).getCupLevelIndex().getId())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setCupLevelIndex(CupLevelIndex.fromInt((Integer) v)))
+						.setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchContextId")
+						.setGetter((o) -> ((MatchKurzInfo) o).getMatchContextId())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setMatchContextId((Integer) v)).setType(Types.INTEGER)
+						.isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TournamentTypeID")
+						.setGetter((o) -> ((MatchKurzInfo) o).getTournamentTypeID())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setTournamentTypeID((Integer) v))
+						.setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("ArenaId")
+						.setGetter((o) -> ((MatchKurzInfo) o).getArenaId())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setArenaId((Integer) v)).setType(Types.INTEGER)
+						.isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("RegionId")
+						.setGetter((o) -> ((MatchKurzInfo) o).getRegionId())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setRegionId((Integer) v)).setType(Types.INTEGER)
+						.isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("isDerby")
+						.setGetter((o) -> ((MatchKurzInfo) o).isDerby())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setIsDerby((Boolean) v)).setType(Types.BOOLEAN)
+						.isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("isNeutral")
+						.setGetter((o) -> ((MatchKurzInfo) o).isNeutral())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setIsNeutral((Boolean) v)).setType(Types.BOOLEAN)
+						.isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Weather")
+						.setGetter((o) -> ((MatchKurzInfo) o).getWeather().getId())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setWeather(Weather.getById((Integer) v)))
+						.setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("WeatherForecast")
+						.setGetter((o) -> ((MatchKurzInfo) o).getWeatherForecast().getId())
+						.setSetter(
+								(o, v) -> ((MatchKurzInfo) o).setWeatherForecast(Weather.Forecast.getById((Integer) v)))
+						.setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Duration")
+						.setGetter((o) -> ((MatchKurzInfo) o).getDuration())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setDuration((Integer) v)).setType(Types.INTEGER)
+						.isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("isObsolete")
+						.setGetter((o) -> ((MatchKurzInfo) o).isObsolet())
+						.setSetter((o, v) -> ((MatchKurzInfo) o).setisObsolet((Boolean) v)).setType(Types.BOOLEAN)
+						.isNullable(true).build()
 		};
 	}
 
 	@Override
 	protected String[] getConstraintStatements() {
-		return new String[]{" PRIMARY KEY (MATCHID, MATCHTYP)"};
+		return new String[] { " PRIMARY KEY (MATCHID, MATCHTYP)" };
 	}
 
 	@Override
 	protected String[] getCreateIndexStatement() {
-		return new String[]{
+		return new String[] {
 				"CREATE INDEX IMATCHKURZINFO_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")",
 				"CREATE INDEX matchkurzinfo_heimid_idx ON " + getTableName() + "(" + columns[3].getColumnName() + ")",
 				"CREATE INDEX matchkurzinfo_gastid_idx ON " + getTableName() + "(" + columns[5].getColumnName() + ")",
@@ -79,7 +148,8 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	 * Saves matches into storeMatchKurzInfo table
 	 */
 	void storeMatchKurzInfos(List<MatchKurzInfo> matches) {
-		if (matches == null) return;
+		if (matches == null)
+			return;
 		for (var match : matches) {
 			match.setIsStored(isStored(match.getMatchID(), match.getMatchType().getId()));
 			store(match);
@@ -115,7 +185,12 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		sql.append(" AND HEIMTORE ").append(column2).append(" GASTTORE ");
 		sql.append(getMatchTypWhereClause(matchType));
 		sql.append(" ORDER BY DIFF DESC ");
-		return loadOne(MatchKurzInfo.class, connectionManager.executePreparedQuery(sql.toString(), teamId));
+		try {
+			return loadOne(MatchKurzInfo.class, connectionManager.executePreparedQuery(sql.toString(), teamId));
+		} catch (java.sql.SQLException e) {
+			HOLogger.instance().error(getClass(), e);
+			return null;
+		}
 
 	}
 
@@ -153,7 +228,8 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	 * @param includeUpcoming if false filter finished matches only
 	 * @return MatchKurzInfo[] – Array of match info.
 	 */
-	List<MatchKurzInfo> getMatchesKurzInfo(int teamId, int matchType, MatchLocation matchLocation, Timestamp from, boolean includeUpcoming) {
+	List<MatchKurzInfo> getMatchesKurzInfo(int teamId, int matchType, MatchLocation matchLocation, Timestamp from,
+			boolean includeUpcoming) {
 
 		final ArrayList<MatchKurzInfo> liste = new ArrayList<>();
 		// Without TeamID ino only All_Match possible
@@ -220,7 +296,8 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		if ((teamId < 0)) {
 			return new ArrayList<>();
 		}
-		return loadMatchesKurzInfo(" WHERE ( GastID = ? OR HeimID = ? ) AND Status= ? AND MatchTyp!= ? ORDER BY MatchDate DESC",
+		return loadMatchesKurzInfo(
+				" WHERE ( GastID = ? OR HeimID = ? ) AND Status= ? AND MatchTyp!= ? ORDER BY MatchDate DESC",
 				teamId,
 				teamId,
 				MatchKurzInfo.UPCOMING,
@@ -228,14 +305,16 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	}
 
 	public MatchKurzInfo loadLastMatchesKurzInfo(int teamId) {
-		return loadOneMatchesKurzInfo(" WHERE ( GastID = ? OR HeimID = ? ) AND Status = ? ORDER BY MatchDate DESC LIMIT 1",
+		return loadOneMatchesKurzInfo(
+				" WHERE ( GastID = ? OR HeimID = ? ) AND Status = ? ORDER BY MatchDate DESC LIMIT 1",
 				teamId,
 				teamId,
 				MatchKurzInfo.FINISHED);
 	}
 
 	public MatchKurzInfo loadNextMatchesKurzInfo(int teamId) {
-		return loadOneMatchesKurzInfo(" WHERE ( GastID = ? OR HeimID = ? ) AND MatchDate > ? AND Status = ? ORDER BY MatchDate ASC LIMIT 1",
+		return loadOneMatchesKurzInfo(
+				" WHERE ( GastID = ? OR HeimID = ? ) AND MatchDate > ? AND Status = ? ORDER BY MatchDate ASC LIMIT 1",
 				teamId,
 				teamId,
 				HODateTime.now().toDbTimestamp(),
@@ -244,7 +323,8 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	private MatchKurzInfo loadOneMatchesKurzInfo(String sql, Object... params) {
 		var matches = loadMatchesKurzInfo(sql, params);
-		if (!matches.isEmpty()) return matches.get(0);
+		if (!matches.isEmpty())
+			return matches.get(0);
 		return null;
 	}
 
@@ -265,20 +345,20 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		StringBuilder sql = new StringBuilder(100);
 		switch (iMatchType) {
 			case MatchesPanel.OWN_OFFICIAL_GAMES ->
-					sql.append(" AND ( MatchTyp=").append(MatchType.QUALIFICATION.getId())
-							.append(" OR MatchTyp=").append(MatchType.LEAGUE.getId()).append(" OR MatchTyp=")
-							.append(MatchType.CUP.getId()).append(" )");
+				sql.append(" AND ( MatchTyp=").append(MatchType.QUALIFICATION.getId())
+						.append(" OR MatchTyp=").append(MatchType.LEAGUE.getId()).append(" OR MatchTyp=")
+						.append(MatchType.CUP.getId()).append(" )");
 			case MatchesPanel.OWN_NATIONAL_CUP_GAMES -> sql.append(" AND MatchTyp = ").append(MatchType.CUP.getId())
 					.append(" AND CUPLEVEL = ").append(CupLevel.NATIONALorDIVISIONAL.getId());
 			case MatchesPanel.OWN_LEAGUE_GAMES -> sql.append(" AND MatchTyp=").append(MatchType.LEAGUE.getId());
 			case MatchesPanel.OWN_FRIENDLY_GAMES ->
-					sql.append(" AND ( MatchTyp=").append(MatchType.FRIENDLYNORMAL.getId())
-							.append(" OR MatchTyp=").append(MatchType.FRIENDLYCUPRULES.getId())
-							.append(" OR MatchTyp=").append(MatchType.INTFRIENDLYCUPRULES.getId())
-							.append(" OR MatchTyp=").append(MatchType.INTFRIENDLYNORMAL.getId()).append(" )");
+				sql.append(" AND ( MatchTyp=").append(MatchType.FRIENDLYNORMAL.getId())
+						.append(" OR MatchTyp=").append(MatchType.FRIENDLYCUPRULES.getId())
+						.append(" OR MatchTyp=").append(MatchType.INTFRIENDLYCUPRULES.getId())
+						.append(" OR MatchTyp=").append(MatchType.INTFRIENDLYNORMAL.getId()).append(" )");
 			case MatchesPanel.OWN_TOURNAMENT_GAMES ->
-					sql.append(" AND ( MatchTyp=").append(MatchType.TOURNAMENTGROUP.getId())
-							.append(" OR MatchTyp=").append(MatchType.TOURNAMENTPLAYOFF.getId()).append(" )");
+				sql.append(" AND ( MatchTyp=").append(MatchType.TOURNAMENTGROUP.getId())
+						.append(" OR MatchTyp=").append(MatchType.TOURNAMENTPLAYOFF.getId()).append(" )");
 			case MatchesPanel.OWN_SECONDARY_CUP_GAMES -> sql.append(" AND MatchTyp = ").append(MatchType.CUP.getId())
 					.append(" AND CUPLEVEL != ").append(CupLevel.NATIONALorDIVISIONAL.getId());
 			case MatchesPanel.OWN_QUALIF_GAMES -> sql.append(" AND MatchTyp=").append(MatchType.QUALIFICATION.getId());
@@ -296,11 +376,13 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	}
 
 	boolean hasUnsureWeatherForecast(int matchId) {
-		try (final ResultSet rs = connectionManager.executePreparedQuery("SELECT WeatherForecast FROM " + getTableName() + " WHERE MatchId=?", matchId)) {
+		try (final ResultSet rs = connectionManager
+				.executePreparedQuery("SELECT WeatherForecast FROM " + getTableName() + " WHERE MatchId=?", matchId)) {
 			assert rs != null;
 			if (rs.next()) {
 				Weather.Forecast forecast = Weather.Forecast.getById(rs.getInt(1));
-				if (rs.wasNull()) return true;
+				if (rs.wasNull())
+					return true;
 				return !forecast.isSure();
 			}
 		} catch (Exception e) {
@@ -340,7 +422,13 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	}
 
 	public List<MatchKurzInfo> loadMatchesKurzInfo(String sql, Object... params) {
-		return load(MatchKurzInfo.class, connectionManager.executePreparedQuery(createSelectStatement(sql), params));
+		try {
+			return load(MatchKurzInfo.class,
+					connectionManager.executePreparedQuery(createSelectStatement(sql), params));
+		} catch (java.sql.SQLException e) {
+			HOLogger.instance().error(getClass(), e);
+			return new ArrayList<>();
+		}
 	}
 
 	/**
@@ -351,7 +439,6 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	List<MatchKurzInfo> getMatchesKurzInfo(final int teamId) {
 		return getMatchesKurzInfo(teamId, -1);
 	}
-
 
 	/**
 	 * Returns the MatchKurzInfo for the match. Returns null if not found.
@@ -368,9 +455,11 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	public MatchKurzInfo getLastMatchWithMatchId(int matchId) {
 		// Find latest match with id = matchId
-		// Here we order by MatchDate, which happens to be string, which is somehow risky,
+		// Here we order by MatchDate, which happens to be string, which is somehow
+		// risky,
 		// but it seems to be done in other places.
-		return loadOneMatchesKurzInfo(" WHERE MATCHID=? AND Status=? ORDER BY MATCHDATE DESC LIMIT 1", matchId, MatchKurzInfo.FINISHED);
+		return loadOneMatchesKurzInfo(" WHERE MATCHID=? AND Status=? ORDER BY MATCHDATE DESC LIMIT 1", matchId,
+				MatchKurzInfo.FINISHED);
 	}
 
 	/**
@@ -402,7 +491,8 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		return loadMatchesKurzInfo(whereClause.toString(), params.toArray());
 	}
 
-	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, Timestamp from, Timestamp to, List<MatchType> matchTypes) {
+	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, Timestamp from, Timestamp to,
+			List<MatchType> matchTypes) {
 		var typeListAsInt = matchTypes.stream().map(MatchType::getId).toList();
 		var placeholders = String.join(",", Collections.nCopies(matchTypes.size(), "?"));
 		var params = new ArrayList<>();
@@ -413,9 +503,10 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		params.addAll(typeListAsInt);
 		params.add(MatchKurzInfo.UPCOMING);
 		params.add(MatchKurzInfo.FINISHED);
-		return loadMatchesKurzInfo("WHERE (HEIMID = ? OR GASTID = ?) AND MATCHDATE BETWEEN ? AND ? AND MATCHTYP in (" + placeholders + ") AND STATUS in (?, ?) ORDER BY MatchDate DESC",
-				params.toArray()
-		);
+		return loadMatchesKurzInfo(
+				"WHERE (HEIMID = ? OR GASTID = ?) AND MATCHDATE BETWEEN ? AND ? AND MATCHTYP in (" + placeholders
+						+ ") AND STATUS in (?, ?) ORDER BY MatchDate DESC",
+				params.toArray());
 	}
 
 	public MatchKurzInfo loadMatchesKurzInfo(SourceSystem sourceSystem, int matchId) {

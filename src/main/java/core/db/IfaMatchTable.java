@@ -19,22 +19,49 @@ public class IfaMatchTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("MATCHID").setGetter((o) -> ((IfaMatch) o).getMatchId()).setSetter((o, v) -> ((IfaMatch) o).setMatchId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("MatchTyp").setGetter((o) -> ((IfaMatch) o).getMatchTyp()).setSetter((o, v) -> ((IfaMatch) o).setMatchTyp((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("PLAYEDDATE").setGetter((o) -> ((IfaMatch) o).getPlayedDate().toDbTimestamp()).setSetter((o, v) -> ((IfaMatch) o).setPlayedDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("HOMETEAMID").setGetter((o) -> ((IfaMatch) o).getHomeTeamId()).setSetter((o, v) -> ((IfaMatch) o).setHomeTeamId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("AWAYTEAMID").setGetter((o) -> ((IfaMatch) o).getAwayTeamId()).setSetter((o, v) -> ((IfaMatch) o).setAwayTeamId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("HOMETEAMGOALS").setGetter((o) -> ((IfaMatch) o).getHomeTeamGoals()).setSetter((o, v) -> ((IfaMatch) o).setHomeTeamGoals((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("AWAYTEAMGOALS").setGetter((o) -> ((IfaMatch) o).getAwayTeamGoals()).setSetter((o, v) -> ((IfaMatch) o).setAwayTeamGoals((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("HOME_LEAGUEID").setGetter((o) -> ((IfaMatch) o).getHomeLeagueId()).setSetter((o, v) -> ((IfaMatch) o).setHomeLeagueId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("AWAY_LEAGUEID").setGetter((o) -> ((IfaMatch) o).getAwayLeagueId()).setSetter((o, v) -> ((IfaMatch) o).setAwayLeagueId((int) v)).setType(Types.INTEGER).isNullable(false).build()
+		columns = new ColumnDescriptor[] {
+				ColumnDescriptor.Builder.newInstance().setColumnName("MATCHID")
+						.setGetter((o) -> ((IfaMatch) o).getMatchId())
+						.setSetter((o, v) -> ((IfaMatch) o).setMatchId((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchTyp")
+						.setGetter((o) -> ((IfaMatch) o).getMatchTyp())
+						.setSetter((o, v) -> ((IfaMatch) o).setMatchTyp((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("PLAYEDDATE")
+						.setGetter((o) -> ((IfaMatch) o).getPlayedDate().toDbTimestamp())
+						.setSetter((o, v) -> ((IfaMatch) o).setPlayedDate((HODateTime) v)).setType(Types.TIMESTAMP)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("HOMETEAMID")
+						.setGetter((o) -> ((IfaMatch) o).getHomeTeamId())
+						.setSetter((o, v) -> ((IfaMatch) o).setHomeTeamId((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("AWAYTEAMID")
+						.setGetter((o) -> ((IfaMatch) o).getAwayTeamId())
+						.setSetter((o, v) -> ((IfaMatch) o).setAwayTeamId((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("HOMETEAMGOALS")
+						.setGetter((o) -> ((IfaMatch) o).getHomeTeamGoals())
+						.setSetter((o, v) -> ((IfaMatch) o).setHomeTeamGoals((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("AWAYTEAMGOALS")
+						.setGetter((o) -> ((IfaMatch) o).getAwayTeamGoals())
+						.setSetter((o, v) -> ((IfaMatch) o).setAwayTeamGoals((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("HOME_LEAGUEID")
+						.setGetter((o) -> ((IfaMatch) o).getHomeLeagueId())
+						.setSetter((o, v) -> ((IfaMatch) o).setHomeLeagueId((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("AWAY_LEAGUEID")
+						.setGetter((o) -> ((IfaMatch) o).getAwayLeagueId())
+						.setSetter((o, v) -> ((IfaMatch) o).setAwayLeagueId((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build()
 		};
 	}
 
 	@Override
 	protected String[] getConstraintStatements() {
-		return new String[]{" PRIMARY KEY (MATCHID, MATCHTYP)"};
+		return new String[] { " PRIMARY KEY (MATCHID, MATCHTYP)" };
 	}
 
 	boolean isMatchInDB(int matchId, int matchTyp) {
@@ -44,7 +71,12 @@ public class IfaMatchTable extends AbstractTable {
 
 	Timestamp getLastMatchDate() {
 		String select = "SELECT MAX(" + "PLAYEDDATE" + ") FROM " + getTableName();
-		ResultSet rs = connectionManager.executeQuery(select);
+		ResultSet rs = null;
+		try {
+			rs = connectionManager.executeQuery(select);
+		} catch (java.sql.SQLException e) {
+			HOLogger.instance().error(this.getClass(), e);
+		}
 		try {
 			if ((rs != null) && (rs.next())) {
 				return rs.getTimestamp(1);
@@ -59,9 +91,14 @@ public class IfaMatchTable extends AbstractTable {
 	private final String getAwayMatchesSql = createSelectStatement("WHERE AWAYTEAMID=? ORDER BY HOME_LEAGUEID ASC");
 
 	IfaMatch[] getMatches(boolean home) {
-		var list = load(IfaMatch.class,
-				connectionManager.executePreparedQuery(home? getHomeMatchesSql: getAwayMatchesSql,
-						HOVerwaltung.instance().getModel().getBasics().getTeamId()));
+		java.util.List<IfaMatch> list = java.util.Collections.emptyList();
+		try {
+			list = load(IfaMatch.class,
+					connectionManager.executePreparedQuery(home ? getHomeMatchesSql : getAwayMatchesSql,
+							HOVerwaltung.instance().getModel().getBasics().getTeamId()));
+		} catch (java.sql.SQLException e) {
+			HOLogger.instance().error(this.getClass(), e);
+		}
 		return list.toArray(new IfaMatch[0]);
 	}
 

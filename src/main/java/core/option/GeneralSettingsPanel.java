@@ -127,9 +127,9 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         add(m_jcbLanguage);
 
         // Currency selection
-        Set<String> currencyNames = AmountOfMoney.Companion.getCurrencyInfo();
+        Set<String> currencyNames = AmountOfMoney.getCurrencyInfo();
         this.currencyNameComboBox = new ComboBoxPanel(TranslationFacility.tr("options.misc.currency"), currencyNames.stream().sorted().toArray(), width);
-        this.currencyNameComboBox.setSelectedItem(AmountOfMoney.Companion.getSelectedCurrencyCode());
+        this.currencyNameComboBox.setSelectedItem(AmountOfMoney.getSelectedCurrencyCode());
         this.currencyNameComboBox.addItemListener(this);
         // When settings are changed the temp instance is used to set the currency setting. Init it here:
         UserParameter.temp().currencyName = (String)this.currencyNameComboBox.getSelectedItem();

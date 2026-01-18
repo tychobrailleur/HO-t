@@ -24,9 +24,14 @@ public final class HRFTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID").setGetter((o) -> ((HRF) o).getHrfId()).setSetter((o, v) -> ((HRF) o).setHrfId((int) v)).setType(Types.INTEGER).isNullable(false).isPrimaryKey(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Datum").setGetter((o) -> ((HRF) o).getDatum().toDbTimestamp()).setSetter((o, v) -> ((HRF) o).setDatum((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build()
+		columns = new ColumnDescriptor[] {
+				ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID").setGetter((o) -> ((HRF) o).getHrfId())
+						.setSetter((o, v) -> ((HRF) o).setHrfId((int) v)).setType(Types.INTEGER).isNullable(false)
+						.isPrimaryKey(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Datum")
+						.setGetter((o) -> ((HRF) o).getDatum().toDbTimestamp())
+						.setSetter((o, v) -> ((HRF) o).setDatum((HODateTime) v)).setType(Types.TIMESTAMP)
+						.isNullable(false).build()
 		};
 	}
 
@@ -38,8 +43,8 @@ public final class HRFTable extends AbstractTable {
 
 	HRF getLatestHrf() {
 		if (latestHrf.getHrfId() == -1) {
-			var hrf =  loadLatestDownloadedHRF();
-			if ( hrf != null){
+			var hrf = loadLatestDownloadedHRF();
+			if (hrf != null) {
 				latestHrf = hrf;
 			}
 		}
@@ -49,7 +54,7 @@ public final class HRFTable extends AbstractTable {
 	HRF getMaxHrf() {
 		if (maxHrf.getHrfId() == -1) {
 			var hrf = loadMaxHrf();
-			if ( hrf != null){
+			if (hrf != null) {
 				maxHrf = hrf;
 			}
 		}
@@ -72,7 +77,8 @@ public final class HRFTable extends AbstractTable {
 	}
 
 	/**
-	 * Load id of latest hrf downloaded before time if available, otherwise the first after time
+	 * Load id of latest hrf downloaded before time if available, otherwise the
+	 * first after time
 	 */
 	int getHrfIdNearDate(Timestamp time) {
 		int hrfID = 0;
@@ -109,12 +115,17 @@ public final class HRFTable extends AbstractTable {
 	 */
 	HRF[] loadAllHRFs(boolean asc) {
 		List<HRF> list;
-		if (asc){
-			String loadAllHrfAscendingSql = createSelectStatement("ORDER BY DATUM ASC");
-			list = load(HRF.class, connectionManager.executePreparedQuery(loadAllHrfAscendingSql));
-		} else {
-			String loadAllHrfDescendingSql = createSelectStatement("ORDER BY DATUM DESC");
-			list = load(HRF.class, connectionManager.executePreparedQuery(loadAllHrfDescendingSql));
+		try {
+			if (asc) {
+				String loadAllHrfAscendingSql = createSelectStatement("ORDER BY DATUM ASC");
+				list = load(HRF.class, connectionManager.executePreparedQuery(loadAllHrfAscendingSql));
+			} else {
+				String loadAllHrfDescendingSql = createSelectStatement("ORDER BY DATUM DESC");
+				list = load(HRF.class, connectionManager.executePreparedQuery(loadAllHrfDescendingSql));
+			}
+		} catch (java.sql.SQLException e) {
+			HOLogger.instance().error(getClass(), e);
+			list = new ArrayList<>();
 		}
 		// Convert to array
 		return list.toArray(new HRF[0]);
@@ -122,7 +133,12 @@ public final class HRFTable extends AbstractTable {
 
 	public List<HRF> getHRFsSince(Timestamp from) {
 		String loadHRFOrderedSql = createSelectStatement(" WHERE Datum>=? ORDER BY Datum ASC");
-		return load(HRF.class, connectionManager.executePreparedQuery(loadHRFOrderedSql, from));
+		try {
+			return load(HRF.class, connectionManager.executePreparedQuery(loadHRFOrderedSql, from));
+		} catch (java.sql.SQLException e) {
+			HOLogger.instance().error(getClass(), e);
+			return new ArrayList<>();
+		}
 	}
 
 	public HRF loadLatestHRFDownloadedBefore(Timestamp fetchDate) {
@@ -150,7 +166,12 @@ public final class HRFTable extends AbstractTable {
 	}
 
 	private HRF loadHRF(String query, Object... params) {
-		return loadOne(HRF.class, connectionManager.executePreparedQuery(query, params));
+		try {
+			return loadOne(HRF.class, connectionManager.executePreparedQuery(query, params));
+		} catch (java.sql.SQLException e) {
+			HOLogger.instance().error(getClass(), e);
+			return null;
+		}
 	}
 
 	public List<Integer> getHrfIdPerWeekList(int nWeeks) {

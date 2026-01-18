@@ -21,14 +21,35 @@ public final class FutureTrainingTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("TRAINING_DATE").setGetter((p)->((TrainingPerWeek)p).getTrainingDate().toDbTimestamp()).setSetter((p, v)->((TrainingPerWeek)p).setTrainingDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("TRAINING_TYPE").setGetter((p)->((TrainingPerWeek)p).getTrainingType()).setSetter((p, v)->((TrainingPerWeek)p).setTrainingType((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("TRAINING_INTENSITY").setGetter((p)->((TrainingPerWeek)p).getTrainingIntensity()).setSetter((p, v)->((TrainingPerWeek)p).setTrainingIntensity((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("STAMINA_SHARE").setGetter((p)->((TrainingPerWeek)p).getStaminaShare()).setSetter((p, v)->((TrainingPerWeek)p).setStaminaShare((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("COACH_LEVEL").setGetter((p)->((TrainingPerWeek)p).getCoachLevel()).setSetter((p, v)->((TrainingPerWeek)p).setCoachLevel((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("TRAINING_ASSISTANTS_LEVEL").setGetter((p)->((TrainingPerWeek)p).getTrainingAssistantsLevel()).setSetter((p, v)->((TrainingPerWeek)p).setTrainingAssistantLevel((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("SOURCE").setGetter((p)->((TrainingPerWeek)p).getSource().getValue()).setSetter((p, v)->((TrainingPerWeek)p).setSource(DBDataSource.getCode((int) v))).setType(Types.INTEGER).isNullable(false).build(),
+		columns = new ColumnDescriptor[] {
+				ColumnDescriptor.Builder.newInstance().setColumnName("TRAINING_DATE")
+						.setGetter((p) -> ((TrainingPerWeek) p).getTrainingDate().toDbTimestamp())
+						.setSetter((p, v) -> ((TrainingPerWeek) p).setTrainingDate((HODateTime) v))
+						.setType(Types.TIMESTAMP).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TRAINING_TYPE")
+						.setGetter((p) -> ((TrainingPerWeek) p).getTrainingType())
+						.setSetter((p, v) -> ((TrainingPerWeek) p).setTrainingType((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TRAINING_INTENSITY")
+						.setGetter((p) -> ((TrainingPerWeek) p).getTrainingIntensity())
+						.setSetter((p, v) -> ((TrainingPerWeek) p).setTrainingIntensity((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("STAMINA_SHARE")
+						.setGetter((p) -> ((TrainingPerWeek) p).getStaminaShare())
+						.setSetter((p, v) -> ((TrainingPerWeek) p).setStaminaShare((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("COACH_LEVEL")
+						.setGetter((p) -> ((TrainingPerWeek) p).getCoachLevel())
+						.setSetter((p, v) -> ((TrainingPerWeek) p).setCoachLevel((int) v)).setType(Types.INTEGER)
+						.isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TRAINING_ASSISTANTS_LEVEL")
+						.setGetter((p) -> ((TrainingPerWeek) p).getTrainingAssistantsLevel())
+						.setSetter((p, v) -> ((TrainingPerWeek) p).setTrainingAssistantLevel((int) v))
+						.setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SOURCE")
+						.setGetter((p) -> ((TrainingPerWeek) p).getSource().getValue())
+						.setSetter((p, v) -> ((TrainingPerWeek) p).setSource(DBDataSource.getCode((int) v)))
+						.setType(Types.INTEGER).isNullable(false).build(),
 		};
 	}
 
@@ -36,7 +57,12 @@ public final class FutureTrainingTable extends AbstractTable {
 			" ORDER BY TRAINING_DATE");
 
 	List<TrainingPerWeek> getFutureTrainingsVector() {
-		return load(TrainingPerWeek.class, this.connectionManager.executePreparedQuery(loadAllFutureTrainingSql));
+		try {
+			return load(TrainingPerWeek.class, this.connectionManager.executePreparedQuery(loadAllFutureTrainingSql));
+		} catch (java.sql.SQLException e) {
+			HOLogger.instance().error(getClass(), e);
+			return java.util.Collections.emptyList();
+		}
 	}
 
 	TrainingPerWeek loadFutureTrainings(Timestamp trainingDate) {
@@ -47,9 +73,9 @@ public final class FutureTrainingTable extends AbstractTable {
 		store(training);
 	}
 
-	void storeFutureTrainings(List<TrainingPerWeek> trainings){
+	void storeFutureTrainings(List<TrainingPerWeek> trainings) {
 		clearFutureTrainingsTable();
-		for (TrainingPerWeek futureTraining: trainings){
+		for (TrainingPerWeek futureTraining : trainings) {
 			futureTraining.setIsStored(false);
 			storeFutureTraining(futureTraining);
 		}
@@ -60,7 +86,7 @@ public final class FutureTrainingTable extends AbstractTable {
 		return createDeleteStatement(" WHERE TRUE");
 	}
 
-	void clearFutureTrainingsTable(){
+	void clearFutureTrainingsTable() {
 		executePreparedDelete();
 		HOLogger.instance().debug(getClass(), "FutureTraining table has been cleared !");
 	}

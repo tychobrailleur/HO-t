@@ -185,7 +185,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             tempPlayer.setLeadership(((CBItem)jcbLeadership.getSelectedItem()).getId());
             tempPlayer.setHomeGrown(jchHomegrown.isSelected());
             tempPlayer.setHrfDate(HODateTime.now());
-            tempPlayer.setWage(AmountOfMoney.Companion.parse(jtfWage.getText()));
+            tempPlayer.setWage(AmountOfMoney.parse(jtfWage.getText()));
             HOVerwaltung.instance().getModel().addPlayer(tempPlayer);
             RefreshManager.instance().doReInit();
             HOMainFrame.instance().showTab(IModule.PLAYEROVERVIEW);
@@ -195,14 +195,14 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 		}
     	else {
             clScoutEntry.setPlayerID(Integer.parseInt(jtfPlayerID.getText()));
-            clScoutEntry.setPrice(AmountOfMoney.Companion.parse(jtfPrice.getText()));
+            clScoutEntry.setPrice(AmountOfMoney.parse(jtfPrice.getText()));
             clScoutEntry.setAlter(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
             clScoutEntry.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
             clScoutEntry.setTSI(Integer.parseInt(jtfTSI.getText()));
             clScoutEntry.setName(jtfName.getText());
             clScoutEntry.setInfo(jtaNotes.getText());
             clScoutEntry.setDeadline(new java.sql.Timestamp(clSpinnerModel.getDate().getTime()));
-            clScoutEntry.setbaseWage(AmountOfMoney.Companion.parse(jtfWage.getText()));
+            clScoutEntry.setbaseWage(AmountOfMoney.parse(jtfWage.getText()));
             if (actionEvent.getSource().equals(jbAdd)) {
                 clOwner.addScoutEintrag(clScoutEntry);
             } else if (actionEvent.getSource().equals(jbRemove)) {
@@ -228,7 +228,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
     public final void focusLost(FocusEvent focusEvent) {
         if (!Helper.parseInt(HOMainFrame.instance(), jtfTSI, false)
             || !Helper.parseInt(HOMainFrame.instance(), jtfPlayerID, false)
-            || AmountOfMoney.Companion.parse( jtfPrice.getText()) == null) {
+            || AmountOfMoney.parse( jtfPrice.getText()) == null) {
             return;
         }
         checkFields();

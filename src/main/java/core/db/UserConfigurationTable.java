@@ -10,7 +10,8 @@ import java.util.Map;
 /**
  * The Table UserConfiguration contain all User properties.
  * CONFIG_KEY = Primary Key, fieldname of the class
- * CONFIG_VALUE = value of the field, save as VARCHAR. Convert to right datatype if loaded
+ * CONFIG_VALUE = value of the field, save as VARCHAR. Convert to right datatype
+ * if loaded
  * 
  * @since 1.36
  *
@@ -24,9 +25,15 @@ final class UserConfigurationTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("CONFIG_KEY").setGetter((p) -> ((_Configuration) p).getKey()).setSetter((p, v) -> ((_Configuration) p).setKey((String) v)).setType(Types.VARCHAR).setLength(50).isPrimaryKey(true).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("CONFIG_VALUE").setGetter((p) -> ((_Configuration) p).getValue()).setSetter((p, v) -> ((_Configuration) p).setValue((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(true).build()
+		columns = new ColumnDescriptor[] {
+				ColumnDescriptor.Builder.newInstance().setColumnName("CONFIG_KEY")
+						.setGetter((p) -> ((_Configuration) p).getKey())
+						.setSetter((p, v) -> ((_Configuration) p).setKey((String) v)).setType(Types.VARCHAR)
+						.setLength(50).isPrimaryKey(true).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("CONFIG_VALUE")
+						.setGetter((p) -> ((_Configuration) p).getValue())
+						.setSetter((p, v) -> ((_Configuration) p).setValue((String) v)).setType(Types.VARCHAR)
+						.setLength(256).isNullable(true).build()
 		};
 	}
 
@@ -40,7 +47,13 @@ final class UserConfigurationTable extends AbstractTable {
 
 	private HashMap<String, String> getAllStringValues() {
 		HashMap<String, String> map = new HashMap<>();
-		var _configs = load(_Configuration.class, connectionManager.executePreparedQuery(createSelectStatement("")));
+		java.util.List<_Configuration> _configs;
+		try {
+			_configs = load(_Configuration.class, connectionManager.executePreparedQuery(createSelectStatement("")));
+		} catch (java.sql.SQLException e) {
+			core.util.HOLogger.instance().error(getClass(), e);
+			_configs = java.util.Collections.emptyList();
+		}
 		for (var _config : _configs) {
 			map.put(_config.getKey(), _config.getValue());
 		}
@@ -49,7 +62,8 @@ final class UserConfigurationTable extends AbstractTable {
 
 	int getDBVersion() {
 		var config = loadOne(_Configuration.class, "DBVersion");
-		if (config != null) return Integer.parseInt(config.getValue());
+		if (config != null)
+			return Integer.parseInt(config.getValue());
 		HOLogger.instance().log(getClass(), "Old DB version.");
 		try (final ResultSet rs = connectionManager.executeQuery("SELECT DBVersion FROM UserParameter")) {
 			if ((rs != null) && rs.next()) {
@@ -70,7 +84,8 @@ final class UserConfigurationTable extends AbstractTable {
 	 */
 	double getLastConfUpdate() {
 		var config = loadOne(_Configuration.class, "LastConfUpdate");
-		if (config != null) return Double.parseDouble(config.getValue());
+		if (config != null)
+			return Double.parseDouble(config.getValue());
 		return 0.;
 	}
 
@@ -81,7 +96,7 @@ final class UserConfigurationTable extends AbstractTable {
 	 */
 	void storeConfigurations(Configuration obj) {
 		final Map<String, String> values = obj.getValues();
-		for ( var configuration : values.entrySet()){
+		for (var configuration : values.entrySet()) {
 			var key = configuration.getKey();
 			var val = configuration.getValue();
 			storeConfiguration(key, (val != null) ? val : "");
@@ -101,7 +116,8 @@ final class UserConfigurationTable extends AbstractTable {
 
 			// this will allow to detect further problems
 			if (storedValue == null) {
-				HOLogger.instance().info(UserConfigurationTable.class, "parameter " + key + " is not stored in UserConfigurationTable. Default is used: " + value);
+				HOLogger.instance().info(UserConfigurationTable.class,
+						"parameter " + key + " is not stored in UserConfigurationTable. Default is used: " + value);
 			} else {
 				map.put(key, storedValue); // update map with value store in DB (in UserConfiguration table)
 			}
@@ -111,12 +127,14 @@ final class UserConfigurationTable extends AbstractTable {
 
 	public String loadParameter(String key) {
 		var value = loadOne(_Configuration.class, key);
-		if (value != null) return value.getValue();
+		if (value != null)
+			return value.getValue();
 		return null;
 	}
 
 	public static class _Configuration extends AbstractTable.Storable {
-		public _Configuration(){}
+		public _Configuration() {
+		}
 
 		private String key;
 		private String value;

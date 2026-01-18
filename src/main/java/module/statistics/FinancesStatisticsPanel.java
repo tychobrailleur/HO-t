@@ -240,7 +240,7 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 		add(panel2);
 
 		// initialize Development Chart
-		var currencySymbol = AmountOfMoney.Companion.getCurrencyName();
+		var currencySymbol = AmountOfMoney.getCurrencyName();
 		c_jpDevelopmentChart = new HOLinesChart(true, null, null, "#,##0 " + currencySymbol, "#,##0 " + currencySymbol, true);
 		c_jpBalanceChart = new HOLinesChart(true, null, null, "#,##0 " + currencySymbol, "#,##0 " + currencySymbol, true);
 		c_jpRevenueAndExpensesChart = new HODoublePieChart(true);
