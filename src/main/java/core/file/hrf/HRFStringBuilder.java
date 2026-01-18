@@ -12,11 +12,9 @@ import core.model.match.MatchTacticType;
 import core.model.match.MatchTeamAttitude;
 import core.model.match.StyleOfPlay;
 import core.model.player.IMatchRoleID;
-import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.StringUtils;
 import hattrickdata.Arena;
-import hattrickdata.Capacity;
 import hattrickdata.ExpandedCapacity;
 import module.lineup.substitution.model.Substitution;
 import module.youth.YouthPlayer;
@@ -117,28 +115,29 @@ public class HRFStringBuilder {
      */
     public void createArena(Arena arena) {
         arenaStringBuilder = new StringBuilder("[arena]\n");
-        appendKeyValue(arenaStringBuilder, "arenaname", arena.getName());
-        appendKeyValue(arenaStringBuilder, "arenaid", arena.getId());
-        appendKeyValue(arenaStringBuilder, "antalStaplats", arena.getCurrentCapacity().getTerraces());
-        appendKeyValue(arenaStringBuilder, "antalSitt", arena.getCurrentCapacity().getBasic());
-        appendKeyValue(arenaStringBuilder, "antalTak", arena.getCurrentCapacity().getRoof());
-        appendKeyValue(arenaStringBuilder, "antalVIP", arena.getCurrentCapacity().getVip());
-        appendKeyValue(arenaStringBuilder, "seatTotal", arena.getCurrentCapacity().getTotal());
+        appendKeyValue(arenaStringBuilder, "arenaname", arena.name());
+        appendKeyValue(arenaStringBuilder, "arenaid", arena.id());
+
+        appendKeyValue(arenaStringBuilder, "antalStaplats", arena.currentCapacity().terraces());
+        appendKeyValue(arenaStringBuilder, "antalSitt", arena.currentCapacity().basic());
+        appendKeyValue(arenaStringBuilder, "antalTak", arena.currentCapacity().roof());
+        appendKeyValue(arenaStringBuilder, "antalVIP", arena.currentCapacity().vip());
+        appendKeyValue(arenaStringBuilder, "seatTotal", arena.currentCapacity().total());
+
         appendKeyValue(arenaStringBuilder, "expandingStaplats",
-                arena.getExpandedCapacityOptional().map(Capacity::getTerraces).orElse(0));
+                arena.expandedCapacity().map(ExpandedCapacity::terraces).orElse(0));
         appendKeyValue(arenaStringBuilder, "expandingSitt",
-                arena.getExpandedCapacityOptional().map(Capacity::getBasic).orElse(0));
+                arena.expandedCapacity().map(ExpandedCapacity::basic).orElse(0));
         appendKeyValue(arenaStringBuilder, "expandingTak",
-                arena.getExpandedCapacityOptional().map(Capacity::getRoof).orElse(0));
+                arena.expandedCapacity().map(ExpandedCapacity::roof).orElse(0));
         appendKeyValue(arenaStringBuilder, "expandingVIP",
-                arena.getExpandedCapacityOptional().map(Capacity::getVip).orElse(0));
+                arena.expandedCapacity().map(ExpandedCapacity::vip).orElse(0));
         appendKeyValue(arenaStringBuilder, "expandingSseatTotal",
-                arena.getExpandedCapacityOptional().map(Capacity::getTotal).orElse(0));
-        appendKeyValue(arenaStringBuilder, "isExpanding", arena.getExpandedCapacityOptional().isPresent());
+                arena.expandedCapacity().map(ExpandedCapacity::total).orElse(0));
+        appendKeyValue(arenaStringBuilder, "isExpanding", arena.expandedCapacity().isPresent());
         appendKeyValue(arenaStringBuilder, "RebuiltDate",
-                arena.getCurrentCapacity().getRebuiltDate().map(HODateTime::toHT).orElse(HO_DATE_TIME_NOT_SET));
-        appendKeyValue(arenaStringBuilder, "ExpansionDate", arena.getExpandedCapacityOptional()
-                .map(ExpandedCapacity::getExpansionDate).map(HODateTime::toHT).orElse(HO_DATE_TIME_NOT_SET));
+                arena.currentCapacity().rebuildDate().toHT());
+        appendKeyValue(arenaStringBuilder, "ExpansionDate", arena.expandedCapacity().map(e -> e.expansionDate().toHT()).orElse(""));
     }
 
     /**
@@ -171,15 +170,17 @@ public class HRFStringBuilder {
      * Create the club data.
      */
     public void createClub(Map<String, String> clubDataMap, Map<String, String> economyDataMap,
-            Map<String, String> teamdetailsDataMap) {
+                           Map<String, String> teamdetailsDataMap) {
         clubStringBuilder = new StringBuilder("[club]\n");
         appendKeyValue(clubStringBuilder, "hjTranare", clubDataMap.get("AssistantTrainers"));
         appendKeyValue(clubStringBuilder, "psykolog", clubDataMap.get("Psychologists"));
         appendKeyValue(clubStringBuilder, "presstalesman", clubDataMap.get("PressSpokesmen"));
         appendKeyValue(clubStringBuilder, "lakare", clubDataMap.get("Doctors"));
-        appendKeyValue(clubStringBuilder, "financialDirectorLevels", clubDataMap.get("FinancialDirectorLevels"));
+        appendKeyValue(clubStringBuilder, "financialDirectorLevels",
+                clubDataMap.get("FinancialDirectorLevels"));
         appendKeyValue(clubStringBuilder, "formCoachLevels", clubDataMap.get("FormCoachLevels"));
-        appendKeyValue(clubStringBuilder, "tacticalAssistantLevels", clubDataMap.get("TacticalAssistantLevels"));
+        appendKeyValue(clubStringBuilder, "tacticalAssistantLevels",
+                clubDataMap.get("TacticalAssistantLevels"));
         appendKeyValue(clubStringBuilder, "juniorverksamhet", clubDataMap.get("YouthLevel"));
         appendKeyValue(clubStringBuilder, "undefeated", teamdetailsDataMap.get("NumberOfUndefeated"));
         appendKeyValue(clubStringBuilder, "victories", teamdetailsDataMap.get("NumberOfVictories"));
@@ -199,8 +200,10 @@ public class HRFStringBuilder {
         appendKeyValue(economyStringBuilder, "ExpectedCash", economyDataMap.get("ExpectedCash"));
 
         if (economyDataMap.get("SponsorsPopularity") != null) {
-            appendKeyValue(economyStringBuilder, "SupportersPopularity", economyDataMap.get("SupportersPopularity"));
-            appendKeyValue(economyStringBuilder, "SponsorsPopularity", economyDataMap.get("SponsorsPopularity"));
+            appendKeyValue(economyStringBuilder, "SupportersPopularity",
+                    economyDataMap.get("SupportersPopularity"));
+            appendKeyValue(economyStringBuilder, "SponsorsPopularity",
+                    economyDataMap.get("SponsorsPopularity"));
             appendKeyValue(economyStringBuilder, "PlayingMatch", "false");
         } else {
             appendKeyValue(economyStringBuilder, "PlayingMatch", "true");
@@ -225,8 +228,10 @@ public class HRFStringBuilder {
         appendKeyValue(economyStringBuilder, "IncomeSoldPlayers", economyDataMap.get("IncomeSoldPlayers"));
         appendKeyValue(economyStringBuilder, "IncomeSoldPlayersCommission",
                 economyDataMap.get("IncomeSoldPlayersCommission"));
-        appendKeyValue(economyStringBuilder, "IncomeTemporary", iIncomeTemporary); // recreate defect IncomeTemporary
-                                                                                   // field for compatibility reasons
+        appendKeyValue(economyStringBuilder, "IncomeTemporary", iIncomeTemporary); // recreate defect
+        // IncomeTemporary
+        // field for compatibility
+        // reasons
         appendKeyValue(economyStringBuilder, "IncomeSum", economyDataMap.get("IncomeSum"));
         appendKeyValue(economyStringBuilder, "CostsArena", economyDataMap.get("CostsArena"));
         appendKeyValue(economyStringBuilder, "CostsPlayers", economyDataMap.get("CostsPlayers"));
@@ -234,31 +239,41 @@ public class HRFStringBuilder {
         appendKeyValue(economyStringBuilder, "CostsStaff", economyDataMap.get("CostsStaff"));
         appendKeyValue(economyStringBuilder, "CostsBoughtPlayers", economyDataMap.get("CostsBoughtPlayers"));
         appendKeyValue(economyStringBuilder, "CostsArenaBuilding", economyDataMap.get("CostsArenaBuilding"));
-        appendKeyValue(economyStringBuilder, "CostsTemporary", iCostsTemporary); // recreate defect CostsTemporary field
-                                                                                 // for compatibility reasons
+        appendKeyValue(economyStringBuilder, "CostsTemporary", iCostsTemporary); // recreate defect
+        // CostsTemporary field
+        // for compatibility reasons
         appendKeyValue(economyStringBuilder, "CostsYouth", economyDataMap.get("CostsYouth"));
         appendKeyValue(economyStringBuilder, "CostsSum", economyDataMap.get("CostsSum"));
         appendKeyValue(economyStringBuilder, "ExpectedWeeksTotal", economyDataMap.get("ExpectedWeeksTotal"));
-        appendKeyValue(economyStringBuilder, "LastIncomeSpectators", economyDataMap.get("LastIncomeSpectators"));
+        appendKeyValue(economyStringBuilder, "LastIncomeSpectators",
+                economyDataMap.get("LastIncomeSpectators"));
         appendKeyValue(economyStringBuilder, "LastIncomeSponsors", economyDataMap.get("LastIncomeSponsors"));
-        appendKeyValue(economyStringBuilder, "LastIncomeSponsorsBonus", economyDataMap.get("LastIncomeSponsorsBonus"));
+        appendKeyValue(economyStringBuilder, "LastIncomeSponsorsBonus",
+                economyDataMap.get("LastIncomeSponsorsBonus"));
         appendKeyValue(economyStringBuilder, "LastIncomeFinancial", economyDataMap.get("LastIncomeFinancial"));
-        appendKeyValue(economyStringBuilder, "LastIncomeSoldPlayers", economyDataMap.get("LastIncomeSoldPlayers"));
+        appendKeyValue(economyStringBuilder, "LastIncomeSoldPlayers",
+                economyDataMap.get("LastIncomeSoldPlayers"));
         appendKeyValue(economyStringBuilder, "LastIncomeSoldPlayersCommission",
                 economyDataMap.get("LastIncomeSoldPlayersCommission"));
         appendKeyValue(economyStringBuilder, "LastIncomeTemporary", iLastIncomeTemporary); // recreate defect
-                                                                                           // LastIncomeTemporary field
-                                                                                           // for compatibility reasons
+        // LastIncomeTemporary
+        // field
+        // for compatibility
+        // reasons
         appendKeyValue(economyStringBuilder, "LastIncomeSum", economyDataMap.get("LastIncomeSum"));
         appendKeyValue(economyStringBuilder, "lastCostsArena", economyDataMap.get("LastCostsArena"));
         appendKeyValue(economyStringBuilder, "LastCostsPlayers", economyDataMap.get("LastCostsPlayers"));
         appendKeyValue(economyStringBuilder, "LastCostsFinancial", economyDataMap.get("LastCostsFinancial"));
         appendKeyValue(economyStringBuilder, "lastCostsPersonal", economyDataMap.get("LastCostsStaff"));
-        appendKeyValue(economyStringBuilder, "LastCostsBoughtPlayers", economyDataMap.get("LastCostsBoughtPlayers"));
-        appendKeyValue(economyStringBuilder, "LastCostsArenaBuilding", economyDataMap.get("LastCostsArenaBuilding"));
+        appendKeyValue(economyStringBuilder, "LastCostsBoughtPlayers",
+                economyDataMap.get("LastCostsBoughtPlayers"));
+        appendKeyValue(economyStringBuilder, "LastCostsArenaBuilding",
+                economyDataMap.get("LastCostsArenaBuilding"));
         appendKeyValue(economyStringBuilder, "LastCostsTemporary", iLastCostsTemporary); // recreate defect
-                                                                                         // LastCostsTemporary field for
-                                                                                         // compatibility reasons
+        // LastCostsTemporary
+        // field for
+        // compatibility
+        // reasons
         appendKeyValue(economyStringBuilder, "LastCostsYouth", economyDataMap.get("LastCostsYouth"));
         appendKeyValue(economyStringBuilder, "LastCostsSum", economyDataMap.get("LastCostsSum"));
         appendKeyValue(economyStringBuilder, "LastWeeksTotal", economyDataMap.get("LastWeeksTotal"));
@@ -303,21 +318,27 @@ public class HRFStringBuilder {
                 appendKeyValue(lastLineupStringBuilder, "rightBack",
                         getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.rightBack));
                 appendKeyValue(lastLineupStringBuilder, "insideBack1",
-                        getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.rightCentralDefender));
+                        getPlayerIdByPositionValue(matchLineupTeam,
+                                IMatchRoleID.rightCentralDefender));
                 appendKeyValue(lastLineupStringBuilder, "insideBack2",
-                        getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.leftCentralDefender));
+                        getPlayerIdByPositionValue(matchLineupTeam,
+                                IMatchRoleID.leftCentralDefender));
                 appendKeyValue(lastLineupStringBuilder, "insideBack3",
-                        getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.middleCentralDefender));
+                        getPlayerIdByPositionValue(matchLineupTeam,
+                                IMatchRoleID.middleCentralDefender));
                 appendKeyValue(lastLineupStringBuilder, "leftBack",
                         getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.leftBack));
                 appendKeyValue(lastLineupStringBuilder, "rightWinger",
                         getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.rightWinger));
                 appendKeyValue(lastLineupStringBuilder, "insideMid1",
-                        getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.rightInnerMidfield));
+                        getPlayerIdByPositionValue(matchLineupTeam,
+                                IMatchRoleID.rightInnerMidfield));
                 appendKeyValue(lastLineupStringBuilder, "insideMid2",
-                        getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.leftInnerMidfield));
+                        getPlayerIdByPositionValue(matchLineupTeam,
+                                IMatchRoleID.leftInnerMidfield));
                 appendKeyValue(lastLineupStringBuilder, "insideMid3",
-                        getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.centralInnerMidfield));
+                        getPlayerIdByPositionValue(matchLineupTeam,
+                                IMatchRoleID.centralInnerMidfield));
                 appendKeyValue(lastLineupStringBuilder, "leftWinger",
                         getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.leftWinger));
                 appendKeyValue(lastLineupStringBuilder, "forward1",
@@ -325,7 +346,8 @@ public class HRFStringBuilder {
                 appendKeyValue(lastLineupStringBuilder, "forward2",
                         getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.leftForward));
                 appendKeyValue(lastLineupStringBuilder, "forward3",
-                        getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.centralForward));
+                        getPlayerIdByPositionValue(matchLineupTeam,
+                                IMatchRoleID.centralForward));
                 appendKeyValue(lastLineupStringBuilder, "substBack",
                         getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.substCD1));
                 appendKeyValue(lastLineupStringBuilder, "substInsideMid",
@@ -336,48 +358,64 @@ public class HRFStringBuilder {
                         getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.substGK1));
                 appendKeyValue(lastLineupStringBuilder, "substForward",
                         getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.substFW1));
-                appendKeyValue(lastLineupStringBuilder, "captain", matchLineupTeam.getLineup().getCaptain());
-                appendKeyValue(lastLineupStringBuilder, "kicker1", matchLineupTeam.getLineup().getKicker());
+                appendKeyValue(lastLineupStringBuilder, "captain",
+                        matchLineupTeam.getLineup().getCaptain());
+                appendKeyValue(lastLineupStringBuilder, "kicker1",
+                        matchLineupTeam.getLineup().getKicker());
 
                 appendKeyValue(lastLineupStringBuilder, "behrightBack",
                         getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.rightBack));
                 appendKeyValue(lastLineupStringBuilder, "behinsideBack1",
-                        getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.rightCentralDefender));
+                        getBehaviourByPositionValue(matchLineupTeam,
+                                IMatchRoleID.rightCentralDefender));
                 appendKeyValue(lastLineupStringBuilder, "behinsideBack2",
-                        getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.leftCentralDefender));
+                        getBehaviourByPositionValue(matchLineupTeam,
+                                IMatchRoleID.leftCentralDefender));
                 appendKeyValue(lastLineupStringBuilder, "behinsideBack3",
-                        getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.middleCentralDefender));
+                        getBehaviourByPositionValue(matchLineupTeam,
+                                IMatchRoleID.middleCentralDefender));
                 appendKeyValue(lastLineupStringBuilder, "behleftBack",
                         getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.leftBack));
                 appendKeyValue(lastLineupStringBuilder, "behrightWinger",
                         getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.rightWinger));
                 appendKeyValue(lastLineupStringBuilder, "behinsideMid1",
-                        getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.rightInnerMidfield));
+                        getBehaviourByPositionValue(matchLineupTeam,
+                                IMatchRoleID.rightInnerMidfield));
                 appendKeyValue(lastLineupStringBuilder, "behinsideMid2",
-                        getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.leftInnerMidfield));
+                        getBehaviourByPositionValue(matchLineupTeam,
+                                IMatchRoleID.leftInnerMidfield));
                 appendKeyValue(lastLineupStringBuilder, "behinsideMid3",
-                        getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.centralInnerMidfield));
+                        getBehaviourByPositionValue(matchLineupTeam,
+                                IMatchRoleID.centralInnerMidfield));
                 appendKeyValue(lastLineupStringBuilder, "behleftWinger",
                         getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.leftWinger));
                 appendKeyValue(lastLineupStringBuilder, "behforward1",
-                        getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.rightForward));
+                        getBehaviourByPositionValue(matchLineupTeam,
+                                IMatchRoleID.rightForward));
                 appendKeyValue(lastLineupStringBuilder, "behforward2",
                         getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.leftForward));
                 appendKeyValue(lastLineupStringBuilder, "behforward3",
-                        getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.centralForward));
+                        getBehaviourByPositionValue(matchLineupTeam,
+                                IMatchRoleID.centralForward));
 
                 int i = 0;
                 for (Substitution sub : matchLineupTeam.getSubstitutions()) {
                     if (sub != null) {
-                        appendKeyValue(lastLineupStringBuilder, "subst" + i + "playerOrderID", sub.getPlayerOrderId());
-                        appendKeyValue(lastLineupStringBuilder, "subst" + i + "playerIn", sub.getObjectPlayerID());
-                        appendKeyValue(lastLineupStringBuilder, "subst" + i + "playerOut", sub.getSubjectPlayerID());
+                        appendKeyValue(lastLineupStringBuilder, "subst" + i + "playerOrderID",
+                                sub.getPlayerOrderId());
+                        appendKeyValue(lastLineupStringBuilder, "subst" + i + "playerIn",
+                                sub.getObjectPlayerID());
+                        appendKeyValue(lastLineupStringBuilder, "subst" + i + "playerOut",
+                                sub.getSubjectPlayerID());
                         appendKeyValue(lastLineupStringBuilder, "subst" + i + "orderType",
                                 (int) sub.getOrderType().getId());
-                        appendKeyValue(lastLineupStringBuilder, "subst" + i + "matchMinuteCriteria",
+                        appendKeyValue(lastLineupStringBuilder,
+                                "subst" + i + "matchMinuteCriteria",
                                 sub.getMatchMinuteCriteria());
-                        appendKeyValue(lastLineupStringBuilder, "subst" + i + "pos", (int) sub.getRoleId());
-                        appendKeyValue(lastLineupStringBuilder, "subst" + i + "behaviour", (int) sub.getBehaviour());
+                        appendKeyValue(lastLineupStringBuilder, "subst" + i + "pos",
+                                (int) sub.getRoleId());
+                        appendKeyValue(lastLineupStringBuilder, "subst" + i + "behaviour",
+                                (int) sub.getBehaviour());
                         appendKeyValue(lastLineupStringBuilder, "subst" + i + "card",
                                 (int) sub.getRedCardCriteria().getId());
                         appendKeyValue(lastLineupStringBuilder, "subst" + i + "standing",
@@ -407,13 +445,10 @@ public class HRFStringBuilder {
 
     /**
      * Creates the lineup data.
-     * 
-     * @param trainerId
-     *                   The playerId of the trainer of the club.
-     * @param teamId
-     *                   team id (-1 for lineup templates)
-     * @param nextLineup
-     *                   map containing the lineup
+     *
+     * @param trainerId  The playerId of the trainer of the club.
+     * @param teamId     team id (-1 for lineup templates)
+     * @param nextLineup map containing the lineup
      */
     public void createLineUp(String trainerId, int teamId, Map<String, String> nextLineup) {
         lineupStringBuilder = new StringBuilder("[lineup]\n");
@@ -429,44 +464,66 @@ public class HRFStringBuilder {
                 appendKeyValue(lineupStringBuilder, "installning", nextLineup.get("Attitude"));
                 appendKeyValue(lineupStringBuilder, "styleOfPlay", nextLineup.get("StyleOfPlay"));
                 appendKeyValue(lineupStringBuilder, "tactictype", nextLineup.get("TacticType"));
-                appendKeyValue(lineupStringBuilder, "keeper", getPlayerForNextLineup("KeeperID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "rightBack", getPlayerForNextLineup("RightBackID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "keeper",
+                        getPlayerForNextLineup("KeeperID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "rightBack",
+                        getPlayerForNextLineup("RightBackID", nextLineup));
                 appendKeyValue(lineupStringBuilder, "rightCentralDefender",
                         getPlayerForNextLineup("RightCentralDefenderID", nextLineup));
                 appendKeyValue(lineupStringBuilder, "leftCentralDefender",
                         getPlayerForNextLineup("LeftCentralDefenderID", nextLineup));
                 appendKeyValue(lineupStringBuilder, "middleCentralDefender",
                         getPlayerForNextLineup("MiddleCentralDefenderID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "leftBack", getPlayerForNextLineup("LeftBackID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "rightwinger", getPlayerForNextLineup("RightWingerID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "leftBack",
+                        getPlayerForNextLineup("LeftBackID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "rightwinger",
+                        getPlayerForNextLineup("RightWingerID", nextLineup));
                 appendKeyValue(lineupStringBuilder, "rightInnerMidfield",
                         getPlayerForNextLineup("RightInnerMidfieldID", nextLineup));
                 appendKeyValue(lineupStringBuilder, "leftInnerMidfield",
                         getPlayerForNextLineup("LeftInnerMidfieldID", nextLineup));
                 appendKeyValue(lineupStringBuilder, "middleInnerMidfield",
                         getPlayerForNextLineup("CentralInnerMidfieldID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "leftwinger", getPlayerForNextLineup("LeftWingerID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "leftwinger",
+                        getPlayerForNextLineup("LeftWingerID", nextLineup));
                 appendKeyValue(lineupStringBuilder, "rightForward",
                         getPlayerForNextLineup("RightForwardID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "leftForward", getPlayerForNextLineup("LeftForwardID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "leftForward",
+                        getPlayerForNextLineup("LeftForwardID", nextLineup));
                 appendKeyValue(lineupStringBuilder, "centralForward",
                         getPlayerForNextLineup("CentralForwardID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "substgk1", getPlayerForNextLineup("substGK1ID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "substgk2", getPlayerForNextLineup("substGK2ID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "substcd1", getPlayerForNextLineup("substCD1ID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "substcd2", getPlayerForNextLineup("substCD2ID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "substwb1", getPlayerForNextLineup("substWB1ID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "substwb2", getPlayerForNextLineup("substWB2ID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "substim1", getPlayerForNextLineup("substIM1ID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "substim2", getPlayerForNextLineup("substIM2ID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "substwi1", getPlayerForNextLineup("substWI1ID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "substwi2", getPlayerForNextLineup("substWI2ID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "substfw1", getPlayerForNextLineup("substFW1ID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "substfw2", getPlayerForNextLineup("substFW2ID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "substxt1", getPlayerForNextLineup("substXT1ID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "substxt2", getPlayerForNextLineup("substXT2ID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "captain", getPlayerForNextLineup("CaptainID", nextLineup));
-                appendKeyValue(lineupStringBuilder, "kicker1", getPlayerForNextLineup("KickerID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "substgk1",
+                        getPlayerForNextLineup("substGK1ID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "substgk2",
+                        getPlayerForNextLineup("substGK2ID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "substcd1",
+                        getPlayerForNextLineup("substCD1ID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "substcd2",
+                        getPlayerForNextLineup("substCD2ID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "substwb1",
+                        getPlayerForNextLineup("substWB1ID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "substwb2",
+                        getPlayerForNextLineup("substWB2ID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "substim1",
+                        getPlayerForNextLineup("substIM1ID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "substim2",
+                        getPlayerForNextLineup("substIM2ID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "substwi1",
+                        getPlayerForNextLineup("substWI1ID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "substwi2",
+                        getPlayerForNextLineup("substWI2ID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "substfw1",
+                        getPlayerForNextLineup("substFW1ID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "substfw2",
+                        getPlayerForNextLineup("substFW2ID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "substxt1",
+                        getPlayerForNextLineup("substXT1ID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "substxt2",
+                        getPlayerForNextLineup("substXT2ID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "captain",
+                        getPlayerForNextLineup("CaptainID", nextLineup));
+                appendKeyValue(lineupStringBuilder, "kicker1",
+                        getPlayerForNextLineup("KickerID", nextLineup));
 
                 appendKeyValue(lineupStringBuilder, "order_rightback",
                         getPlayerOrderForNextLineup("RightBackOrder", nextLineup));
@@ -497,12 +554,14 @@ public class HRFStringBuilder {
 
                 int iSub = -1;
                 String playerOrderIdString;
-                while ((playerOrderIdString = getMatchOrderInfo(nextLineup, ++iSub, "playerOrderID")) != null) {
+                while ((playerOrderIdString = getMatchOrderInfo(nextLineup, ++iSub,
+                        "playerOrderID")) != null) {
                     lineupStringBuilder.append(playerOrderIdString)
                             .append(getMatchOrderInfo(nextLineup, iSub, "playerIn"))
                             .append(getMatchOrderInfo(nextLineup, iSub, "playerOut"))
                             .append(getMatchOrderInfo(nextLineup, iSub, "orderType"))
-                            .append(getMatchOrderInfo(nextLineup, iSub, "matchMinuteCriteria"))
+                            .append(getMatchOrderInfo(nextLineup, iSub,
+                                    "matchMinuteCriteria"))
                             .append(getMatchOrderInfo(nextLineup, iSub, "pos"))
                             .append(getMatchOrderInfo(nextLineup, iSub, "behaviour"))
                             .append(getMatchOrderInfo(nextLineup, iSub, "card"))
@@ -511,7 +570,8 @@ public class HRFStringBuilder {
 
                 for (int i = 0; i < 11; i++) {
                     String key = "PenaltyTaker" + i;
-                    appendKeyValue(lineupStringBuilder, "penalty" + i, getPlayerForNextLineup(key, nextLineup));
+                    appendKeyValue(lineupStringBuilder, "penalty" + i,
+                            getPlayerForNextLineup(key, nextLineup));
                 }
 
             } catch (Exception e) {
@@ -543,7 +603,8 @@ public class HRFStringBuilder {
             var lastName = ht.get("LastName");
             var nickName = ht.get("NickName");
             if (nickName != null && !nickName.isEmpty()) {
-                appendKeyValue(playersStringBuilder, "name", firstName + " '" + nickName + "' " + lastName);
+                appendKeyValue(playersStringBuilder, "name",
+                        firstName + " '" + nickName + "' " + lastName);
             } else {
                 appendKeyValue(playersStringBuilder, "name", firstName + " " + lastName);
             }
@@ -585,7 +646,8 @@ public class HRFStringBuilder {
             appendKeyValue(playersStringBuilder, "gentlenessLabel",
                     PlayerAgreeability.toString(ToInteger(ht.get("Agreeability"))));
             appendKeyValue(playersStringBuilder, "honesty", ht.get("Honesty"));
-            appendKeyValue(playersStringBuilder, "honestyLabel", PlayerHonesty.toString(ToInteger(ht.get("Honesty"))));
+            appendKeyValue(playersStringBuilder, "honestyLabel",
+                    PlayerHonesty.toString(ToInteger(ht.get("Honesty"))));
             appendKeyValue(playersStringBuilder, "Aggressiveness", ht.get("Aggressiveness"));
             appendKeyValue(playersStringBuilder, "AggressivenessLabel",
                     PlayerAggressiveness.toString(ToInteger(ht.get("Aggressiveness"))));
@@ -599,9 +661,12 @@ public class HRFStringBuilder {
             appendKeyValue(playersStringBuilder, "LastMatch_Date", ht.get("LastMatch_Date"));
             appendKeyValue(playersStringBuilder, "LastMatch_Rating", ht.get("LastMatch_Rating"));
             appendKeyValue(playersStringBuilder, "LastMatch_id", ht.get("LastMatch_id"));
-            appendKeyValue(playersStringBuilder, "LastMatch_PositionCode", ht.get("LastMatch_PositionCode"));
-            appendKeyValue(playersStringBuilder, "LastMatch_PlayedMinutes", ht.get("LastMatch_PlayedMinutes"));
-            appendKeyValue(playersStringBuilder, "LastMatch_RatingEndOfGame", ht.get("LastMatch_RatingEndOfGame"));
+            appendKeyValue(playersStringBuilder, "LastMatch_PositionCode",
+                    ht.get("LastMatch_PositionCode"));
+            appendKeyValue(playersStringBuilder, "LastMatch_PlayedMinutes",
+                    ht.get("LastMatch_PlayedMinutes"));
+            appendKeyValue(playersStringBuilder, "LastMatch_RatingEndOfGame",
+                    ht.get("LastMatch_RatingEndOfGame"));
 
             String lastMatchType = ht.getOrDefault("LastMatch_Type", "0");
             appendKeyValue(playersStringBuilder, "LastMatch_Type", lastMatchType);
@@ -754,9 +819,11 @@ public class HRFStringBuilder {
             appendKeyValue(teamStringBuilder, "stamningValue", trainingDataMap.get("Morale"));
             appendKeyValue(teamStringBuilder, "stamning",
                     TeamSpirit.toString(Integer.parseInt(trainingDataMap.get("Morale"))));
-            appendKeyValue(teamStringBuilder, "sjalvfortroendeValue", trainingDataMap.get("SelfConfidence"));
+            appendKeyValue(teamStringBuilder, "sjalvfortroendeValue",
+                    trainingDataMap.get("SelfConfidence"));
             appendKeyValue(teamStringBuilder, "sjalvfortroende",
-                    TeamConfidence.toString(Integer.parseInt(trainingDataMap.get("SelfConfidence"))));
+                    TeamConfidence.toString(
+                            Integer.parseInt(trainingDataMap.get("SelfConfidence"))));
         } else {
             appendKeyValue(teamStringBuilder, "playingMatch", "true");
         }
@@ -777,9 +844,9 @@ public class HRFStringBuilder {
      * Create the world data.
      */
     public void createWorld(Map<String, String> clubDataMap,
-            Map<String, String> teamdetailsDataMap,
-            Map<String, String> trainingDataMap,
-            Map<String, String> worldDataMap) {
+                            Map<String, String> teamdetailsDataMap,
+                            Map<String, String> trainingDataMap,
+                            Map<String, String> worldDataMap) {
         xtraStringBuilder = new StringBuilder("[xtra]\n");
         appendKeyValue(xtraStringBuilder, "TrainingDate", worldDataMap.get("TrainingDate"));
         appendKeyValue(xtraStringBuilder, "EconomyDate", worldDataMap.get("EconomyDate"));
@@ -821,7 +888,7 @@ public class HRFStringBuilder {
     }
 
     private static String getPlayerOrderForNextLineup(String position,
-            Map<?, ?> map) {
+                                                      Map<?, ?> map) {
         if (map != null) {
             String ret = (String) map.get(position);
 

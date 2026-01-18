@@ -1,3 +1,4 @@
 package hattrickdata;
 
-public record League(int id, String name) {}
+public record League(int id, String name) {
+}

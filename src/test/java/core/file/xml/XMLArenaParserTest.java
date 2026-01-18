@@ -7,89 +7,77 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class XMLArenaParserTest {
 
-        private static final String FILENAME = "arenadetails.xml";
-        private static final String VERSION = "1.3";
+    private static final String FILENAME = "arenadetails.xml";
+    private static final String VERSION = "1.3";
 
-        @Test
-        void parseArenaFromString_noExpansion() throws IOException {
-                // given
-                final var content = ResourceUtils.getResourceFileAsString("arenaDetails_noExpansion.xml");
+    @Test
+    void parseArenaFromString_noExpansion() throws IOException {
+        // given
+        final var content = ResourceUtils.getResourceFileAsString("arenaDetails_noExpansion.xml");
 
-                final var expected = Pair.of(
-                                HattrickDataInfo.builder()
-                                                .fileName(FILENAME)
-                                                .version(VERSION)
-                                                .userId(1234567)
-                                                .fetchedDate(HODateTime.fromHT("2024-08-21 01:13:12"))
-                                                .build(),
-                                Arena.builder()
-                                                .id(2345678)
-                                                .name("ArenaName")
-                                                .team(new Team(3456789, "TeamName"))
-                                                .league(new League(3, "LeagueName"))
-                                                .region(new Region(227, "RegionName"))
-                                                .currentCapacity(new CurrentCapacity.Builder()
-                                                                .rebuildDate(HODateTime.fromHT("2024-08-13 00:05:26"))
-                                                                .terraces(8000)
-                                                                .basic(3000)
-                                                                .roof(1792)
-                                                                .vip(282)
-                                                                .total(13074)
-                                                                .build())
-                                                .expandedCapacity(null)
-                                                .build());
+        final var expected = Pair.of(
+                new HattrickDataInfo(FILENAME,
+                        VERSION,
+                        1234567,
+                        HODateTime.fromHT("2024-08-21 01:13:12")),
+                new Arena(2345678,
+                        "ArenaName",
+                        new Team(3456789, "TeamName"),
+                        new League(3, "LeagueName"),
+                        new Region(227, "RegionName"),
+                        new CurrentCapacity(8000,
+                                3000,
+                                1792,
+                                282,
+                                13074,
+                                HODateTime.fromHT("2024-08-13 00:05:26")),
+                        null));
 
-                // when
-                final var result = XMLArenaParser.parseArenaFromString(content);
+        // when
+        final var result = XMLArenaParser.parseArenaFromString(content);
 
-                // then
-                assertThat(result).isEqualTo(expected);
-        }
+        // then
+        assertThat(result).isEqualTo(expected);
+    }
 
-        @Test
-        void parseArenaFromString_withExpansion() throws IOException {
-                // given
-                final var content = ResourceUtils.getResourceFileAsString("arenaDetails_withExpansion.xml");
+    @Test
+    void parseArenaFromString_withExpansion() throws IOException {
+        // given
+        final var content = ResourceUtils.getResourceFileAsString("arenaDetails_withExpansion.xml");
 
-                final var expected = Pair.of(
-                                HattrickDataInfo.builder()
-                                                .fileName(FILENAME)
-                                                .version(VERSION)
-                                                .userId(1234567)
-                                                .fetchedDate(HODateTime.fromHT("2024-08-21 11:08:22"))
-                                                .build(),
-                                Arena.builder()
-                                                .id(2345678)
-                                                .name("ArenaName")
-                                                .team(new Team(3456789, "TeamName"))
-                                                .league(new League(3, "LeagueName"))
-                                                .region(new Region(227, "RegionName"))
-                                                .currentCapacity(new CurrentCapacity.Builder()
-                                                                .rebuildDate(null)
-                                                                .terraces(8000)
-                                                                .basic(3000)
-                                                                .roof(1792)
-                                                                .vip(282)
-                                                                .total(13074)
-                                                                .build())
-                                                .expandedCapacity(new ExpandedCapacity.Builder()
-                                                                .expansionDate(HODateTime.fromHT("2024-08-30 11:07:17"))
-                                                                .terraces(226)
-                                                                .basic(234)
-                                                                .roof(1138)
-                                                                .vip(78)
-                                                                .total(1676)
-                                                                .build())
-                                                .build());
-                // when
-                final var result = XMLArenaParser.parseArenaFromString(content);
+        final var expected = Pair.of(
+                new HattrickDataInfo(FILENAME,
+                        VERSION,
+                        1234567,
+                        HODateTime.fromHT("2024-08-21 11:08:22")),
+                new Arena(
+                        2345678,
+                        "ArenaName",
+                        new Team(3456789, "TeamName"),
+                        new League(3, "LeagueName"),
+                        new Region(227, "RegionName"),
+                        new CurrentCapacity(8000,
+                                3000,
+                                1792,
+                                282,
+                                13074,
+                                null),
+                        Optional.of(new ExpandedCapacity(226,
+                                234,
+                                1138,
+                                78,
+                                1676,
+                                HODateTime.fromHT("2024-08-30 11:07:17")))));
+        // when
+        final var result = XMLArenaParser.parseArenaFromString(content);
 
-                // then
-                assertThat(result).isEqualTo(expected);
-        }
+        // then
+        assertThat(result).isEqualTo(expected);
+    }
 }

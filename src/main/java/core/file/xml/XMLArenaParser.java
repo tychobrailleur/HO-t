@@ -7,6 +7,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.util.Optional;
+
 public class XMLArenaParser {
 
     private static final String ELEMENT_NAME_FILE_NAME = "FileName";
@@ -52,33 +54,30 @@ public class XMLArenaParser {
         }
 
         try {
-            var hattrickDataInfoBuilder = HattrickDataInfo.builder();
-
             Element root = doc.getDocumentElement();
 
             // FileName
             Element element = (Element) root.getElementsByTagName(ELEMENT_NAME_FILE_NAME).item(0);
-            hattrickDataInfoBuilder.fileName(XMLManager.getFirstChildNodeValue(element));
+            String fileName = XMLManager.getFirstChildNodeValue(element);
             // Version
             element = (Element) root.getElementsByTagName(ELEMENT_NAME_VERSION).item(0);
-            hattrickDataInfoBuilder.version(XMLManager.getFirstChildNodeValue(element));
+            String version = XMLManager.getFirstChildNodeValue(element);
             // UserId
             element = (Element) root.getElementsByTagName(ELEMENT_NAME_USER_ID).item(0);
-            hattrickDataInfoBuilder.userId(Integer.parseInt(XMLManager.getFirstChildNodeValue(element)));
+            int userId = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
             // FetchedDate
             element = (Element) root.getElementsByTagName(ELEMENT_NAME_FETCHED_DATE).item(0);
-            hattrickDataInfoBuilder.fetchedDate(HODateTime.fromHT(XMLManager.getFirstChildNodeValue(element)));
+            HODateTime fetchedDate = HODateTime.fromHT(XMLManager.getFirstChildNodeValue(element));
 
-            final var hattrickDataInfo = hattrickDataInfoBuilder.build();
+            final var hattrickDataInfo = new HattrickDataInfo(fileName, version, userId, fetchedDate);
 
             // Root wechseln
             root = (Element) root.getElementsByTagName(ELEMENT_NAME_ARENA).item(0);
             element = (Element) root.getElementsByTagName(ELEMENT_NAME_ARENA_ID).item(0);
 
-            var arenaBuilder = Arena.builder();
-            arenaBuilder.id(Integer.parseInt(XMLManager.getFirstChildNodeValue(element)));
+            int arenaId = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
             element = (Element) root.getElementsByTagName(ELEMENT_NAME_ARENA_NAME).item(0);
-            arenaBuilder.name(XMLManager.getFirstChildNodeValue(element));
+            String arenaName = XMLManager.getFirstChildNodeValue(element);
 
             // Team
             Element tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_TEAM).item(0);
@@ -86,7 +85,7 @@ public class XMLArenaParser {
             int id = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_TEAM_NAME).item(0);
             String name = XMLManager.getFirstChildNodeValue(element);
-            arenaBuilder.team(new Team(id, name));
+            Team team = new Team(id, name);
 
             // League
             tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_LEAGUE).item(0);
@@ -94,7 +93,7 @@ public class XMLArenaParser {
             id = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_LEAGUE_NAME).item(0);
             name = XMLManager.getFirstChildNodeValue(element);
-            arenaBuilder.league(new League(id, name));
+            League league = new League(id, name);
 
             // Region
             tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_REGION).item(0);
@@ -102,54 +101,56 @@ public class XMLArenaParser {
             id = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_REGION_NAME).item(0);
             name = XMLManager.getFirstChildNodeValue(element);
-            arenaBuilder.region(new Region(id, name));
+            Region region = new Region(id, name);
 
             // Current Capacity
             tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_CURRENT_CAPACITY).item(0);
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CURRENT_CAPACITY_REBUILT_DATE).item(0);
 
-            var currentCapacityBuilder = new CurrentCapacity.Builder();
             final boolean rebuiltDateAvailable = getXmlAttributeAsBoolean(element, ATTRIBUTE_NAME_CAPACITY_AVAILABLE);
+            HODateTime rebuildDate = null;
             if (rebuiltDateAvailable) {
-                currentCapacityBuilder.rebuildDate(HODateTime.fromHT(XMLManager.getFirstChildNodeValue(element)));
+                rebuildDate = HODateTime.fromHT(XMLManager.getFirstChildNodeValue(element));
             }
 
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_TERRACES).item(0);
-            currentCapacityBuilder.terraces(Integer.parseInt(XMLManager.getFirstChildNodeValue(element)));
+            int terraces = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_BASIC).item(0);
-            currentCapacityBuilder.basic(Integer.parseInt(XMLManager.getFirstChildNodeValue(element)));
+            int basic = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_ROOF).item(0);
-            currentCapacityBuilder.roof(Integer.parseInt(XMLManager.getFirstChildNodeValue(element)));
+            int roof = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_VIP).item(0);
-            currentCapacityBuilder.vip(Integer.parseInt(XMLManager.getFirstChildNodeValue(element)));
+            int vip = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_TOTAL).item(0);
-            currentCapacityBuilder.total(Integer.parseInt(XMLManager.getFirstChildNodeValue(element)));
+            int total = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
 
-            arenaBuilder.currentCapacity(currentCapacityBuilder.build());
+            CurrentCapacity currentCapacity = new CurrentCapacity(terraces, basic, roof, vip, total, rebuildDate);
 
             tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_EXPANDED_CAPACITY).item(0);
 
             final boolean expandedCapacityAvailable = getXmlAttributeAsBoolean(tmpRoot,
                     ATTRIBUTE_NAME_CAPACITY_AVAILABLE);
+            ExpandedCapacity expandedCapacity = null;
             if (expandedCapacityAvailable) {
-                var expandedCapacityBuilder = new ExpandedCapacity.Builder();
                 element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_EXPANDED_CAPACITY_EXPANSION_DATE).item(0);
-                expandedCapacityBuilder.expansionDate(HODateTime.fromHT(XMLManager.getFirstChildNodeValue(element)));
+                HODateTime expansionDate = HODateTime.fromHT(XMLManager.getFirstChildNodeValue(element));
                 element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_TERRACES).item(0);
-                expandedCapacityBuilder.terraces(Integer.parseInt(XMLManager.getFirstChildNodeValue(element)));
+                terraces = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
                 element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_BASIC).item(0);
-                expandedCapacityBuilder.basic(Integer.parseInt(XMLManager.getFirstChildNodeValue(element)));
+                basic = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
                 element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_ROOF).item(0);
-                expandedCapacityBuilder.roof(Integer.parseInt(XMLManager.getFirstChildNodeValue(element)));
+                roof = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
                 element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_VIP).item(0);
-                expandedCapacityBuilder.vip(Integer.parseInt(XMLManager.getFirstChildNodeValue(element)));
+                vip = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
                 element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_TOTAL).item(0);
-                expandedCapacityBuilder.total(Integer.parseInt(XMLManager.getFirstChildNodeValue(element)));
+                total = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
 
-                arenaBuilder.expandedCapacity(expandedCapacityBuilder.build());
+                expandedCapacity = new ExpandedCapacity(terraces, basic, roof, vip, total, expansionDate);
             }
 
-            return Pair.of(hattrickDataInfo, arenaBuilder.build());
+            Arena arena = new Arena(arenaId, arenaName, team, league, region, currentCapacity, Optional.ofNullable(expandedCapacity));
+
+            return Pair.of(hattrickDataInfo, arena);
         } catch (Exception e) {
             HOLogger.instance().log(XMLArenaParser.class, e);
         }

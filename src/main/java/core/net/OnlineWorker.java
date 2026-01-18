@@ -39,7 +39,6 @@ import java.util.*;
  */
 public class OnlineWorker {
 
-
 	/**
 	 * Utility class - private constructor enforces noninstantiability.
 	 */
@@ -104,13 +103,13 @@ public class OnlineWorker {
 							Objects.requireNonNull(HOMainFrame.instance().getLineupPanel()).backupRealGameSettings();
 						}
 						// Info
-						saveHRFToFile(parent,hrf);
+						saveHRFToFile(parent, hrf);
 					}
 				}
 			}
 		} finally {
-			HOMainFrame.instance().setInformation(getLangString("HRFErfolg"),0);
-			//HOMainFrame.instance().resetInformation();
+			HOMainFrame.instance().setInformation(getLangString("HRFErfolg"), 0);
+			// HOMainFrame.instance().resetInformation();
 		}
 		return ok;
 	}
@@ -119,12 +118,13 @@ public class OnlineWorker {
 	 * saugt das Archiv
 	 *
 	 * @param teamId
-	 *            null falls unnötig sonst im Format 2004-02-01
+	 *                  null falls unnötig sonst im Format 2004-02-01
 	 * @param firstDate
-	 *            null falls unnötig sonst im Format 2004-02-01
+	 *                  null falls unnötig sonst im Format 2004-02-01
 	 * @param store
-	 *            True if matches are to be downloaded and stored. False if only
-	 *            a match list is wanted.
+	 *                  True if matches are to be downloaded and stored. False if
+	 *                  only
+	 *                  a match list is wanted.
 	 *
 	 * @return The list of MatchKurzInfo. This can be null on error, or empty.
 	 */
@@ -140,14 +140,14 @@ public class OnlineWorker {
 			String matchesString;
 
 			while (firstDate.isBefore(endDate)) {
-				var lastDate=firstDate.plus(90, ChronoUnit.DAYS);
+				var lastDate = firstDate.plus(90, ChronoUnit.DAYS);
 				if (!lastDate.isBefore(endDate)) {
 					lastDate = endDate;
 				}
 
 				try {
 					HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), 20);
-					matchesString = MyConnector.instance().getMatchesArchive(teamId, firstDate,	lastDate);
+					matchesString = MyConnector.instance().getMatchesArchive(teamId, firstDate, lastDate);
 					HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), 20);
 				} catch (Exception e) {
 					// Info
@@ -199,8 +199,7 @@ public class OnlineWorker {
 				info = new MatchKurzInfo();
 				info.setMatchID(details.getMatchID());
 				info.setMatchType(details.getMatchType());
-			}
-			else {
+			} else {
 				return false;
 			}
 		}
@@ -221,11 +220,11 @@ public class OnlineWorker {
 	 * downloaded.
 	 *
 	 * @param matchid
-	 *            ID for the match to be downloaded
+	 *                  ID for the match to be downloaded
 	 * @param matchType
-	 *            matchType for the match to be downloaded.
+	 *                  matchType for the match to be downloaded.
 	 * @param refresh
-	 *            If true the match will always be downloaded.
+	 *                  If true the match will always be downloaded.
 	 *
 	 * @return true if the match is in the db afterwards
 	 */
@@ -233,8 +232,7 @@ public class OnlineWorker {
 		MatchKurzInfo info;
 		if (DBManager.instance().isMatchInDB(matchid, matchType)) {
 			info = DBManager.instance().getMatchesKurzInfoByMatchID(matchid, matchType);
-		}
-		else {
+		} else {
 			info = new MatchKurzInfo();
 			info.setMatchID(matchid);
 			info.setMatchType(matchType);
@@ -245,17 +243,23 @@ public class OnlineWorker {
 	/**
 	 * Downloads all the data for a match whose <code>kurzInfo</code> is passed.
 	 *
-	 * <p>This includes:</p>
+	 * <p>
+	 * This includes:
+	 * </p>
 	 * <ul>
-	 *     <li>{@link Matchdetails} for that match, incl. opponents, date, location, weather, events, etc.;</li>
-	 *     <li>The teams' logo;</li>
-	 *     <li>The match lineup for both teams;</li>
-	 *     <li>The team details (for ratings) for both teams;</li>
-	 *     <li>and {@link Matchdetails} again for highlights?</li>
+	 * <li>{@link Matchdetails} for that match, incl. opponents, date, location,
+	 * weather, events, etc.;</li>
+	 * <li>The teams' logo;</li>
+	 * <li>The match lineup for both teams;</li>
+	 * <li>The team details (for ratings) for both teams;</li>
+	 * <li>and {@link Matchdetails} again for highlights?</li>
 	 * </ul>
-	 * @param info High level match info.
-	 * @param refresh Forces a new download of the match details, even if they already exist.
-	 * @return boolean – <code>true</code> if download is successful, <code>false</code> otherwise.
+	 * 
+	 * @param info    High level match info.
+	 * @param refresh Forces a new download of the match details, even if they
+	 *                already exist.
+	 * @return boolean – <code>true</code> if download is successful,
+	 *         <code>false</code> otherwise.
 	 */
 	public static boolean downloadMatchData(MatchKurzInfo info, boolean refresh) {
 		if (info.isObsolet()) {
@@ -270,12 +274,12 @@ public class OnlineWorker {
 		}
 
 		HOMainFrame.instance().setWaitInformation();
-		// Only download if not present in the database, or if refresh is true or if match not obsolete
+		// Only download if not present in the database, or if refresh is true or if
+		// match not obsolete
 		if (refresh
 				|| !DBManager.instance().isMatchInDB(matchID, info.getMatchType())
 				|| DBManager.instance().hasUnsureWeatherForecast(matchID)
-				|| DBManager.instance().matchLineupIsNotStored(info.getMatchType(), matchID)
-		) {
+				|| DBManager.instance().matchLineupIsNotStored(info.getMatchType(), matchID)) {
 			try {
 				Matchdetails details;
 
@@ -312,7 +316,8 @@ public class OnlineWorker {
 										info.setWeatherForecast(Weather.Forecast.TODAY);
 										info.setWeather(regiondetails.getWeather());
 									} else {
-										var forecastDate = regiondetails.getFetchDatum().plus(1, ChronoUnit.DAYS).toLocaleDate();
+										var forecastDate = regiondetails.getFetchDatum().plus(1, ChronoUnit.DAYS)
+												.toLocaleDate();
 										if (matchDate.equals(forecastDate)) {
 											info.setWeatherForecast(Weather.Forecast.TOMORROW);
 										} else {
@@ -355,7 +360,8 @@ public class OnlineWorker {
 				MatchLineup lineup;
 				boolean success;
 				if ((info.getMatchStatus() == MatchKurzInfo.FINISHED) && (!info.isObsolet())) {
-					lineup = downloadMatchlineup(matchID, info.getMatchType(), info.getHomeTeamID(), info.getGuestTeamID());
+					lineup = downloadMatchlineup(matchID, info.getMatchType(), info.getHomeTeamID(),
+							info.getGuestTeamID());
 					if (lineup == null) {
 						if (!isSilentDownload()) {
 							String msg = getLangString("Downloadfehler") + " : Error fetching Matchlineup :";
@@ -409,7 +415,8 @@ public class OnlineWorker {
 	private static void downloadTeamRatings(int matchID, MatchType matchType, int teamID) {
 		try {
 			var xml = MyConnector.instance().getTeamDetails(teamID);
-			var teamrating = new MatchTeamRating(matchID, matchType, XMLTeamDetailsParser.parseTeamdetailsFromString(xml, teamID));
+			var teamrating = new MatchTeamRating(matchID, matchType,
+					XMLTeamDetailsParser.parseTeamdetailsFromString(xml, teamID));
 			DBManager.instance().storeTeamRatings(teamrating);
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + " : Error fetching Team ratings :";
@@ -426,26 +433,27 @@ public class OnlineWorker {
 	}
 
 	private static int getRegionId(Map<String, String> team) {
-		String  str = team.get("RegionID");
-		if ( str != null ) return Integer.parseInt(str);
+		String str = team.get("RegionID");
+		if (str != null)
+			return Integer.parseInt(str);
 		return 0;
 	}
 
-	private  static int getArenaId(Map<String, String> team) {
+	private static int getArenaId(Map<String, String> team) {
 		String str = team.get("ArenaID");
-		if ( str != null ) return Integer.parseInt(str);
+		if (str != null)
+			return Integer.parseInt(str);
 		return 0;
 	}
-
 
 	/**
 	 * Loads the data for the given match from HT and updates the data for this
 	 * match in the DB.
 	 *
 	 * @param teamId
-	 *            the id of the team
+	 *               the id of the team
 	 * @param match
-	 *            the match to update
+	 *               the match to update
 	 * @return a new MatchKurzInfo object with the current data from HT or null
 	 *         if match could not be downloaded.
 	 */
@@ -455,7 +463,7 @@ public class OnlineWorker {
 		List<MatchKurzInfo> matches = getMatches(teamId, matchDate.plus(1, ChronoUnit.MINUTES));
 		for (MatchKurzInfo m : matches) {
 			if (m.getMatchID() == match.getMatchID()) {
-				//DBManager.instance().updateMatchKurzInfo(m);
+				// DBManager.instance().updateMatchKurzInfo(m);
 				return m;
 			}
 		}
@@ -467,9 +475,9 @@ public class OnlineWorker {
 	 * specific date. Nothing is stored to DB.
 	 *
 	 * @param teamId
-	 *            the id of the team.
+	 *               the id of the team.
 	 * @param date
-	 *            last date (+time) to get matches to.
+	 *               last date (+time) to get matches to.
 	 * @return the most recent and upcoming matches up to the given date.
 	 */
 	public static List<MatchKurzInfo> getMatches(int teamId, HODateTime date) {
@@ -501,13 +509,16 @@ public class OnlineWorker {
 			tournamentString = MyConnector.instance().getTournamentDetails(tournamentId);
 		} catch (IOException e) {
 			Helper.showMessage(HOMainFrame.instance(), getLangString("Downloadfehler")
-							+ " : Error fetching Tournament Details : " + e, getLangString("Fehler"),
+					+ " : Error fetching Tournament Details : " + e, getLangString("Fehler"),
 					JOptionPane.ERROR_MESSAGE);
 			HOLogger.instance().log(OnlineWorker.class, e);
 		}
 
 		if (!StringUtils.isEmpty(tournamentString)) {
-			oTournamentDetails = XMLTournamentDetailsParser.parseTournamentDetailsFromString(tournamentString);  // TODO: create function parseTournamentDetailsFromString
+			oTournamentDetails = XMLTournamentDetailsParser.parseTournamentDetailsFromString(tournamentString); // TODO:
+																												// create
+																												// function
+																												// parseTournamentDetailsFromString
 		}
 
 		return oTournamentDetails;
@@ -517,12 +528,13 @@ public class OnlineWorker {
 	 * Download series data
 	 *
 	 * @param teamId
-	 *            team id (optional <1 for current team
+	 *                     team id (optional <1 for current team
 	 * @param forceRefresh (unused?!)
 	 * @param store
-	 *            true if the full match details are to be stored, false if not.
+	 *                     true if the full match details are to be stored, false if
+	 *                     not.
 	 * @param upcoming
-	 *            true if upcoming matches should be included
+	 *                     true if upcoming matches should be included
 	 *
 	 * @return The list of MatchKurzInfos found or null if an exception
 	 *         occurred.
@@ -564,7 +576,8 @@ public class OnlineWorker {
 				for (MatchKurzInfo match : matches) {
 					int curMatchId = match.getMatchID();
 					boolean refresh = !DBManager.instance().isMatchInDB(curMatchId, match.getMatchType())
-							|| (match.getMatchStatus() != MatchKurzInfo.FINISHED && DBManager.instance().hasUnsureWeatherForecast(curMatchId))
+							|| (match.getMatchStatus() != MatchKurzInfo.FINISHED
+									&& DBManager.instance().hasUnsureWeatherForecast(curMatchId))
 							|| DBManager.instance().matchLineupIsNotStored(match.getMatchType(), curMatchId);
 
 					if (refresh) {
@@ -583,9 +596,11 @@ public class OnlineWorker {
 
 	public static List<MatchKurzInfo> FilterUserSelection(List<MatchKurzInfo> matches) {
 		ArrayList<MatchKurzInfo> ret = new ArrayList<>();
-		for (MatchKurzInfo m: matches) {
+		for (MatchKurzInfo m : matches) {
 			switch (m.getMatchType()) {
-				case INTSPIEL, NATIONALCOMPNORMAL, NATIONALCOMPCUPRULES, NATIONALFRIENDLY, PREPARATION, LEAGUE, QUALIFICATION, CUP, FRIENDLYNORMAL, FRIENDLYCUPRULES, INTFRIENDLYNORMAL, INTFRIENDLYCUPRULES, MASTERS -> {
+				case INTSPIEL, NATIONALCOMPNORMAL, NATIONALCOMPCUPRULES, NATIONALFRIENDLY, PREPARATION, LEAGUE,
+						QUALIFICATION, CUP, FRIENDLYNORMAL, FRIENDLYCUPRULES, INTFRIENDLYNORMAL, INTFRIENDLYCUPRULES,
+						MASTERS -> {
 					if (UserParameter.instance().downloadCurrentMatchlist) {
 						ret.add(m);
 					}
@@ -620,7 +635,8 @@ public class OnlineWorker {
 					}
 				}
 				default ->
-						HOLogger.instance().warning(OnlineWorker.class, "Unknown Matchtyp:" + m.getMatchType() + ". Is not downloaded!");
+					HOLogger.instance().warning(OnlineWorker.class,
+							"Unknown Matchtyp:" + m.getMatchType() + ". Is not downloaded!");
 			}
 		}
 		return ret;
@@ -630,18 +646,18 @@ public class OnlineWorker {
 	 * Download match lineup
 	 *
 	 * @param matchId
-	 * 			Match Id
+	 *                  Match Id
 	 * @param matchType
-	 * 			MatchType
+	 *                  MatchType
 	 * @param teamId1
-	 * 			Id of first team to include to the returned lineup
+	 *                  Id of first team to include to the returned lineup
 	 * @param teamId2
-	 * 			Optional id of second team
+	 *                  Optional id of second team
 	 * @return
-	 * 			MatchLineup containing specified teams
+	 *         MatchLineup containing specified teams
 	 */
 	private static MatchLineup downloadMatchlineup(int matchId, MatchType matchType, int teamId1,
-												   int teamId2) {
+			int teamId2) {
 		MatchLineup lineUp2 = null;
 
 		HOMainFrame.instance().setWaitInformation();
@@ -680,9 +696,9 @@ public class OnlineWorker {
 	 * Get the Fixtures list
 	 *
 	 * @param season
-	 *            - The season, -1 for current
+	 *                 - The season, -1 for current
 	 * @param leagueID
-	 *            - The ID of the league to get the fixtures for
+	 *                 - The ID of the league to get the fixtures for
 	 *
 	 * @return true on sucess, false on failure
 	 */
@@ -708,17 +724,18 @@ public class OnlineWorker {
 	 * Uploads the given order to Hattrick
 	 *
 	 * @param matchId
-	 *            The id of the match in question. If left at 0 the match ID
-	 *            from the model will be used (next match).
+	 *                The id of the match in question. If left at 0 the match ID
+	 *                from the model will be used (next match).
 	 * @param lineup
-	 *            The lineup object to be uploaded
+	 *                The lineup object to be uploaded
 	 * @return A string response with any error message
 	 */
 	public static String uploadMatchOrder(int matchId, MatchType matchType, Lineup lineup) {
 		String result;
 		String orders = lineup.toJson();
 		try {
-			result = MyConnector.instance().uploadMatchOrder(matchId, HOVerwaltung.instance().getModel().getBasics().getTeamId(), matchType, orders);
+			result = MyConnector.instance().uploadMatchOrder(matchId,
+					HOVerwaltung.instance().getModel().getBasics().getTeamId(), matchType, orders);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -727,7 +744,8 @@ public class OnlineWorker {
 	}
 
 	/**
-	 * Try to recover missing matchType information by querying HT with different source system and returning first result
+	 * Try to recover missing matchType information by querying HT with different
+	 * source system and returning first result
 	 *
 	 * @param _match the match id
 	 * @return the match type
@@ -740,10 +758,9 @@ public class OnlineWorker {
 
 		try {
 			matchDetails = conn.downloadMatchdetails(_match.getMatchID(), MatchType.LEAGUE);
-			if((matchDetails != null) && (!matchDetails.isEmpty())) {
+			if ((matchDetails != null) && (!matchDetails.isEmpty())) {
 				details = XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, null);
-			}
-			else{
+			} else {
 				details = null;
 			}
 			if (details != null) {
@@ -758,10 +775,9 @@ public class OnlineWorker {
 			}
 
 			matchDetails = conn.downloadMatchdetails(_match.getMatchID(), MatchType.LADDER);
-			if((matchDetails != null) && (!matchDetails.isEmpty())) {
+			if ((matchDetails != null) && (!matchDetails.isEmpty())) {
 				details = XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, null);
-			}
-			else{
+			} else {
 				details = null;
 			}
 			if (details != null) {
@@ -776,10 +792,9 @@ public class OnlineWorker {
 			}
 
 			matchDetails = conn.downloadMatchdetails(_match.getMatchID(), MatchType.YOUTHLEAGUE);
-			if((matchDetails != null) && (!matchDetails.isEmpty())) {
+			if ((matchDetails != null) && (!matchDetails.isEmpty())) {
 				details = XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, null);
-			}
-			else{
+			} else {
 				details = null;
 			}
 			if (details != null) {
@@ -797,8 +812,7 @@ public class OnlineWorker {
 			_match.setisObsolet(true);
 			conn.setSilentDownload(false);
 			return _match;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			HOLogger.instance().error(OnlineWorker.class, "can't infer MatchType of match: " + _match.getMatchID());
 			_match.setMatchType(MatchType.NONE);
 			conn.setSilentDownload(false);
@@ -824,7 +838,7 @@ public class OnlineWorker {
 			}
 			String arenaString = MyConnector.instance().downloadArena(details.getArenaID());
 			HOMainFrame.instance().setWaitInformation();
-			details.setRegionId(XMLArenaParser.parseArenaFromString(arenaString).getRight().getRegion().id());
+			details.setRegionId(XMLArenaParser.parseArenaFromString(arenaString).getRight().region().id());
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + ": Error fetching Matchdetails XML.: ";
 			// Info
@@ -845,7 +859,7 @@ public class OnlineWorker {
 
 	public static MatchLineup downloadMatchLineup(int matchID, int teamID, MatchType matchType) {
 		String matchLineup;
-		MatchLineup lineUp=null;
+		MatchLineup lineUp = null;
 		boolean bOK;
 		try {
 			matchLineup = MyConnector.instance().downloadMatchLineup(matchID, teamID, matchType);
@@ -871,17 +885,17 @@ public class OnlineWorker {
 
 		final List<MatchKurzInfo> infos;
 
-		if (nbGames == null){
+		if (nbGames == null) {
 			infos = DBManager.instance().getMatchesKurzInfo(-1);
-		}
-		else{
+		} else {
 			infos = DBManager.instance().getPlayedMatchInfo(nbGames, false, false);
 		}
 
 		boolean bOK;
 		for (MatchKurzInfo info : infos) {
 			int curMatchId = info.getMatchID();
-			if ((!(info.isObsolet())) && (DBManager.instance().matchLineupIsNotStored(info.getMatchType(), curMatchId))) {
+			if ((!(info.isObsolet()))
+					&& (DBManager.instance().matchLineupIsNotStored(info.getMatchType(), curMatchId))) {
 				if (info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 					bOK = downloadMatchData(curMatchId, info.getMatchType(), false);
 					if (!bOK) {
@@ -896,9 +910,9 @@ public class OnlineWorker {
 	/**
 	 *
 	 * @param matchId
-	 *            The match ID for the match to download
+	 *                  The match ID for the match to download
 	 * @param matchType
-	 *            The matchTyp for the match to download
+	 *                  The matchTyp for the match to download
 	 * @return The Lineup object with the downloaded match data
 	 */
 	public static MatchLineupTeam getLineupbyMatchId(int matchId, MatchType matchType) {
@@ -915,7 +929,7 @@ public class OnlineWorker {
 							.getPlayerId());
 
 				} catch (Exception e) {
-					//It is possible that NTs struggle here.
+					// It is possible that NTs struggle here.
 				}
 				var hrfStringBuilder = new HRFStringBuilder();
 				hrfStringBuilder.createLineUp(trainerID, teamId, map);
@@ -932,15 +946,13 @@ public class OnlineWorker {
 		return null;
 	}
 
-	public static Regiondetails getRegionDetails(int regionId)
-	{
+	public static Regiondetails getRegionDetails(int regionId) {
 		try {
 			String xml = MyConnector.instance().getRegion(regionId);
-			if ( !StringUtils.isEmpty(xml)){
+			if (!StringUtils.isEmpty(xml)) {
 				return new Regiondetails(XMLRegionParser.parseRegionDetailsFromString(xml));
 			}
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + " : Error fetching region details :";
 			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
 			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
@@ -979,7 +991,7 @@ public class OnlineWorker {
 	 * it to the location chosen by the user.
 	 *
 	 * @param hrfData
-	 *            the HRF data as string
+	 *                the HRF data as string
 	 */
 	private static void saveHRFToFile(JDialog parent, String hrfData) {
 		setInfoMsg(getLangString("HRFSave"));
@@ -1000,7 +1012,8 @@ public class OnlineWorker {
 			int value = JOptionPane.OK_OPTION;
 			if (file.exists()) {
 				value = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
-						getLangString("overwrite"), TranslationFacility.tr("confirmation.title"), JOptionPane.YES_NO_OPTION);
+						getLangString("overwrite"), TranslationFacility.tr("confirmation.title"),
+						JOptionPane.YES_NO_OPTION);
 			}
 
 			// Save
@@ -1009,7 +1022,8 @@ public class OnlineWorker {
 					saveFile(file.getPath(), hrfData);
 				} catch (IOException e) {
 					Helper.showMessage(HOMainFrame.instance(),
-							TranslationFacility.tr("Show_SaveHRF_Failed") + " " + file.getParentFile() + ".\nError: " + e.getMessage(),
+							TranslationFacility.tr("Show_SaveHRF_Failed") + " " + file.getParentFile() + ".\nError: "
+									+ e.getMessage(),
 							getLangString("Fehler"), JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
@@ -1054,7 +1068,7 @@ public class OnlineWorker {
 	 * HRF file.
 	 *
 	 * @param file
-	 *            the recommendation for the file name/location.
+	 *             the recommendation for the file name/location.
 	 * @return the file location choosen by the user or null if the canceled the
 	 *         dialog.
 	 */
@@ -1099,9 +1113,9 @@ public class OnlineWorker {
 	 * HOMainFrame.instance().getInfoPanel().setLangInfoText(msg, color);
 	 *
 	 * @param msg
-	 *            the message to show
+	 *              the message to show
 	 * @param color
-	 *            the color
+	 *              the color
 	 */
 	private static void setInfoMsg(String msg, Color color) {
 		HOMainFrame.instance().setInformation(msg, color);
@@ -1145,13 +1159,13 @@ public class OnlineWorker {
 		MyConnector.instance().setSilentDownload(silentDownload);
 	}
 
-	public static List<MatchKurzInfo> downloadMatchesOfSeason(int teamId, int season){
-		try{
+	public static List<MatchKurzInfo> downloadMatchesOfSeason(int teamId, int season) {
+		try {
 			var xml = MyConnector.instance().getMatchesOfSeason(teamId, season);
 			return XMLMatchArchivParser.parseMatchesFromString(xml);
-		}
-		catch (Exception exception) {
-			HOLogger.instance().error(OnlineWorker.class,"downloadMatchData:  Error in downloading matches of season: " + exception);
+		} catch (Exception exception) {
+			HOLogger.instance().error(OnlineWorker.class,
+					"downloadMatchData:  Error in downloading matches of season: " + exception);
 		}
 		return null;
 	}
@@ -1160,24 +1174,25 @@ public class OnlineWorker {
 		var youthteamid = model.getBasics().getYouthTeamId();
 		var lastStoredYouthMatchDate = HODateTime.fromDbTimestamp(DBManager.instance().getLastYouthMatchDate());
 
-		if ( dateSince == null || lastStoredYouthMatchDate != null && lastStoredYouthMatchDate.isAfter(dateSince) ){
-			// if there are no youth matches in database, take the limit from arrival date of 'oldest' youth players
+		if (dateSince == null || lastStoredYouthMatchDate != null && lastStoredYouthMatchDate.isAfter(dateSince)) {
+			// if there are no youth matches in database, take the limit from arrival date
+			// of 'oldest' youth players
 			dateSince = lastStoredYouthMatchDate;
 		}
 
 		for (HODateTime dateUntil; dateSince != null; dateSince = dateUntil) {
-			if (dateSince.isBefore(HODateTime.now().minus(90, ChronoUnit.DAYS))){
+			if (dateSince.isBefore(HODateTime.now().minus(90, ChronoUnit.DAYS))) {
 				dateUntil = dateSince.plus(90, ChronoUnit.DAYS);
-			}
-			else {
-				dateUntil = null;	// until now
+			} else {
+				dateUntil = null; // until now
 			}
 			var mc = MyConnector.instance();
 			try {
 				var xml = mc.getMatchesArchive(SourceSystem.YOUTH, youthteamid, dateSince, dateUntil);
 				var youthMatches = XMLMatchArchivParser.parseMatchesFromString(xml);
-				for ( var match: youthMatches){
-					MatchLineup lineup = downloadMatchlineup(match.getMatchID(), match.getMatchType(), match.getHomeTeamID(), match.getGuestTeamID());
+				for (var match : youthMatches) {
+					MatchLineup lineup = downloadMatchlineup(match.getMatchID(), match.getMatchType(),
+							match.getHomeTeamID(), match.getGuestTeamID());
 					if (lineup != null) {
 						var details = downloadMatchDetails(match.getMatchID(), match.getMatchType(), lineup);
 						DBManager.instance().storeMatchDetails(details);
@@ -1194,15 +1209,15 @@ public class OnlineWorker {
 
 	public static void downloadNtTeams(List<NtTeamDetails> ntTeams, List<MatchKurzInfo> matches) {
 		var ret = new ArrayList<NtTeamDetails>();
-		for ( var team : ntTeams){
+		for (var team : ntTeams) {
 			ret.add(downloadNtTeam(team.getTeamId()));
 		}
-		for ( var match : matches){
-			for ( var teamid: match.getTeamIds()) {
-				if ( teamid != HOVerwaltung.instance().getModel().getBasics().getTeamId()){
+		for (var match : matches) {
+			for (var teamid : match.getTeamIds()) {
+				if (teamid != HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
 					// not the own team
-					var found = ret.stream().anyMatch(t->t.getTeamId()==teamid);
-					if (!found){
+					var found = ret.stream().anyMatch(t -> t.getTeamId() == teamid);
+					if (!found) {
 						// new team in match found
 						ret.add(downloadNtTeam(teamid));
 					}
@@ -1227,7 +1242,8 @@ public class OnlineWorker {
 
 	public static void downloadTeamLogo(Map<String, String> team) {
 		String url = team.get("LogoURL");
-		if (StringUtils.isEmpty(url)) return;
+		if (StringUtils.isEmpty(url))
+			return;
 		var teamIdString = team.get("TeamID");
 		var teamId = NumberUtils.toInt(teamIdString);
 
@@ -1241,13 +1257,15 @@ public class OnlineWorker {
 		}
 	}
 
-	public static MatchLineupTeam downloadLastLineup(List<MatchKurzInfo> matches, int teamId){
+	public static MatchLineupTeam downloadLastLineup(List<MatchKurzInfo> matches, int teamId) {
 		MatchLineupTeam matchLineupTeam = null;
 		MatchLineup matchLineup = null;
-		var lastFinishedMatch = matches.stream().filter(f->f.getMatchStatus()==MatchKurzInfo.FINISHED).max(MatchKurzInfo::compareTo);
-		if ( lastFinishedMatch.isPresent()) {
+		var lastFinishedMatch = matches.stream().filter(f -> f.getMatchStatus() == MatchKurzInfo.FINISHED)
+				.max(MatchKurzInfo::compareTo);
+		if (lastFinishedMatch.isPresent()) {
 			var match = lastFinishedMatch.get();
-			var matchLineupString = MyConnector.instance().downloadMatchLineup(match.getMatchID(), teamId, match.getMatchType());
+			var matchLineupString = MyConnector.instance().downloadMatchLineup(match.getMatchID(), teamId,
+					match.getMatchType());
 			if (!matchLineupString.isEmpty()) {
 				matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(matchLineupString);
 			}
@@ -1260,7 +1278,8 @@ public class OnlineWorker {
 			Matchdetails md = XMLMatchdetailsParser
 					.parseMatchdetailsFromString(
 							MyConnector.instance().downloadMatchdetails(matchLineup.getMatchID(),
-									matchLineup.getMatchTyp()), null);
+									matchLineup.getMatchTyp()),
+							null);
 
 			if (matchLineup.getHomeTeamId() == teamId) {
 				matchLineupTeam = matchLineup.getHomeTeam();
@@ -1285,14 +1304,14 @@ public class OnlineWorker {
 	public static Map<String, String> downloadNextMatchOrder(List<MatchKurzInfo> matches, int teamId) {
 		try {
 			// next upcoming match
-			var nextMatch = matches.stream().filter(f -> f.getMatchStatus() == MatchKurzInfo.UPCOMING).min(MatchKurzInfo::compareTo);
-			if ( nextMatch.isPresent()){
+			var nextMatch = matches.stream().filter(f -> f.getMatchStatus() == MatchKurzInfo.UPCOMING)
+					.min(MatchKurzInfo::compareTo);
+			if (nextMatch.isPresent()) {
 				var match = nextMatch.get();
 				return XMLMatchOrderParser.parseMatchOrderFromString(MyConnector.instance().downloadMatchOrder(
 						match.getMatchID(), match.getMatchType(), teamId));
 			}
-		}
-		catch (Exception ignore) {
+		} catch (Exception ignore) {
 		}
 		return new SafeInsertMap();
 	}
