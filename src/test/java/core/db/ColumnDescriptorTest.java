@@ -37,10 +37,10 @@ class ColumnDescriptorTest {
         Assertions.assertEquals(Types.VARCHAR, descriptor.getType());
         Assertions.assertEquals(true, descriptor.isNullable());
         Assertions.assertEquals(true, descriptor.isPrimaryKey());
-        Assertions.assertEquals(12, descriptor.getGetter().apply(storer));
+        Assertions.assertEquals(12, descriptor.getter.apply(storer));
 
         // Invoke setter
-        descriptor.getSetter().accept(storer, 66);
+        descriptor.setter.accept(storer, 66);
         Assertions.assertEquals(66, storer.v);
 
         // Check length

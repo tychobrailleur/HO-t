@@ -75,9 +75,9 @@ class ConnectionManagerTest {
 
     @Test
     void testGetAllTableNamesReturnsAllTables() {
-        List<String> tableNames = connectionManager.getAllTableNames();
-        Assertions.assertEquals(1, tableNames.size());
-        Assertions.assertEquals("TEST", tableNames.get(0));
+        String[] tableNames = connectionManager.getAllTableNames();
+        Assertions.assertEquals(1, tableNames.length);
+        Assertions.assertEquals("TEST", tableNames[0]);
     }
 
     @Test

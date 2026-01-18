@@ -37,9 +37,9 @@ class DBInfoTest {
             conn.createStatement().execute("CREATE TABLE TEST (ID INTEGER PRIMARY KEY)");
 
             DBInfo dbInfo = new DBInfo(conn.getMetaData());
-            List<String> tableNames = dbInfo.getAllTablesNames();
-            Assertions.assertEquals(1, tableNames.size());
-            Assertions.assertEquals("TEST", tableNames.get(0));
+            String[] tableNames = dbInfo.getAllTablesNames();
+            Assertions.assertEquals(1, tableNames.length);
+            Assertions.assertEquals("TEST", tableNames[0]);
         }
     }
 

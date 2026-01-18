@@ -29,10 +29,10 @@ class BasicsTableTest {
 
     @Test
     void testCreateIndexStatementCreatesCorrectStatement() {
-        List<String> indices = basicsTable.getCreateIndexStatement();
+        String[] indices = basicsTable.getCreateIndexStatement();
         Assertions.assertNotNull(indices);
-        Assertions.assertEquals(1, indices.size());
-        Assertions.assertEquals("CREATE INDEX IBASICS_2 ON BASICS(Datum)", indices.get(0));
+        Assertions.assertEquals(1, indices.length);
+        Assertions.assertEquals("CREATE INDEX IBASICS_2 ON BASICS(Datum)", indices[0]);
     }
 
     @Test
