@@ -254,7 +254,7 @@ public class OnlineWorker {
 	 * <li>The team details (for ratings) for both teams;</li>
 	 * <li>and {@link Matchdetails} again for highlights?</li>
 	 * </ul>
-	 * 
+	 *
 	 * @param info    High level match info.
 	 * @param refresh Forces a new download of the match details, even if they
 	 *                already exist.
@@ -838,7 +838,7 @@ public class OnlineWorker {
 			}
 			String arenaString = MyConnector.instance().downloadArena(details.getArenaID());
 			HOMainFrame.instance().setWaitInformation();
-			details.setRegionId(XMLArenaParser.parseArenaFromString(arenaString).getRight().region().id());
+			details.setRegionId(XMLArenaParser.parseArenaFromString(arenaString).getRight().regionIdName().id());
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + ": Error fetching Matchdetails XML.: ";
 			// Info
