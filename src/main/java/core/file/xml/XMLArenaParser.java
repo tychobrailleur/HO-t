@@ -82,36 +82,33 @@ public class XMLArenaParser {
 
             // Team
             Element tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_TEAM).item(0);
-            var teamBuilder = Team.builder();
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_TEAM_ID).item(0);
-            teamBuilder.id(Integer.parseInt(XMLManager.getFirstChildNodeValue(element)));
+            int id = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_TEAM_NAME).item(0);
-            teamBuilder.name(XMLManager.getFirstChildNodeValue(element));
-            arenaBuilder.team(teamBuilder.build());
+            String name = XMLManager.getFirstChildNodeValue(element);
+            arenaBuilder.team(new Team(id, name));
 
             // League
-            var leagueBuilder = League.builder();
             tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_LEAGUE).item(0);
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_LEAGUE_ID).item(0);
-            leagueBuilder.id(Integer.parseInt(XMLManager.getFirstChildNodeValue(element)));
+            id = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_LEAGUE_NAME).item(0);
-            leagueBuilder.name(XMLManager.getFirstChildNodeValue(element));
-            arenaBuilder.league(leagueBuilder.build());
+            name = XMLManager.getFirstChildNodeValue(element);
+            arenaBuilder.league(new League(id, name));
 
             // Region
-            var regionBuilder = Region.builder();
             tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_REGION).item(0);
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_REGION_ID).item(0);
-            regionBuilder.id(Integer.parseInt(XMLManager.getFirstChildNodeValue(element)));
+            id = Integer.parseInt(XMLManager.getFirstChildNodeValue(element));
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_REGION_NAME).item(0);
-            regionBuilder.name(XMLManager.getFirstChildNodeValue(element));
-            arenaBuilder.region(regionBuilder.build());
+            name = XMLManager.getFirstChildNodeValue(element);
+            arenaBuilder.region(new Region(id, name));
 
             // Current Capacity
             tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_CURRENT_CAPACITY).item(0);
             element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CURRENT_CAPACITY_REBUILT_DATE).item(0);
 
-            var currentCapacityBuilder = CurrentCapacity.builder();
+            var currentCapacityBuilder = new CurrentCapacity.Builder();
             final boolean rebuiltDateAvailable = getXmlAttributeAsBoolean(element, ATTRIBUTE_NAME_CAPACITY_AVAILABLE);
             if (rebuiltDateAvailable) {
                 currentCapacityBuilder.rebuildDate(HODateTime.fromHT(XMLManager.getFirstChildNodeValue(element)));
@@ -132,9 +129,10 @@ public class XMLArenaParser {
 
             tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_EXPANDED_CAPACITY).item(0);
 
-            final boolean expandedCapacityAvailable = getXmlAttributeAsBoolean(tmpRoot, ATTRIBUTE_NAME_CAPACITY_AVAILABLE);
+            final boolean expandedCapacityAvailable = getXmlAttributeAsBoolean(tmpRoot,
+                    ATTRIBUTE_NAME_CAPACITY_AVAILABLE);
             if (expandedCapacityAvailable) {
-                var expandedCapacityBuilder = ExpandedCapacity.builder();
+                var expandedCapacityBuilder = new ExpandedCapacity.Builder();
                 element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_EXPANDED_CAPACITY_EXPANSION_DATE).item(0);
                 expandedCapacityBuilder.expansionDate(HODateTime.fromHT(XMLManager.getFirstChildNodeValue(element)));
                 element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_TERRACES).item(0);
@@ -159,7 +157,6 @@ public class XMLArenaParser {
         return null;
     }
 
-    @SuppressWarnings(value = "SameParameterValue")
     private static boolean getXmlAttributeAsBoolean(Element element, String attributeName) {
         return Boolean.parseBoolean(XMLManager.getAttributeValue(element, attributeName).trim());
     }

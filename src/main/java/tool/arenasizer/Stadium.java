@@ -4,16 +4,13 @@ import core.db.AbstractTable;
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.HOLogger;
-import lombok.Getter;
-import lombok.Setter;
+
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.Properties;
 
-@Setter
-@Getter
 public class Stadium extends AbstractTable.Storable {
 
 	/**
@@ -84,15 +81,11 @@ public class Stadium extends AbstractTable.Storable {
 	/**
 	 * Rebuilt date
 	 */
-	@Setter
-	@Getter
 	private HODateTime rebuiltDate;
 
 	/**
 	 * Expansion date
 	 */
-	@Setter
-	@Getter
 	private HODateTime expansionDate;
 
 	public Stadium() {
@@ -121,9 +114,9 @@ public class Stadium extends AbstractTable.Storable {
 	private HODateTime getArenaDate(Properties properties, String key) {
 		try {
 			return HODateTime.fromHT(properties.getProperty(key));
-		}
-		catch (Exception e) {
-			HOLogger.instance().warning(this.getClass(), e.getMessage() + " parsing arena " + key + ": " + properties.getProperty(key));
+		} catch (Exception e) {
+			HOLogger.instance().warning(this.getClass(),
+					e.getMessage() + " parsing arena " + key + ": " + properties.getProperty(key));
 			return null;
 		}
 	}
@@ -133,9 +126,8 @@ public class Stadium extends AbstractTable.Storable {
 	}
 
 	public Optional<Integer> getTotalSizeUnderConstruction() {
-		return isUnderConstruction() ?
-			Optional.of(getTerracesUnderConstruction() + getBasicSeatingUnderConstruction() + getUnderRoofSeatingUnderConstruction() + getVipBoxUnderConstruction()) :
-			Optional.empty();
+		return isUnderConstruction() ? Optional.of(getTerracesUnderConstruction() + getBasicSeatingUnderConstruction()
+				+ getUnderRoofSeatingUnderConstruction() + getVipBoxUnderConstruction()) : Optional.empty();
 	}
 
 	public Optional<Integer> getFutureTotalSize() {
@@ -147,23 +139,142 @@ public class Stadium extends AbstractTable.Storable {
 	}
 
 	public Optional<Integer> getFutureBasicSeating() {
-		return isUnderConstruction() ? Optional.of(getBasicSeating() + getBasicSeatingUnderConstruction()) : Optional.empty();
+		return isUnderConstruction() ? Optional.of(getBasicSeating() + getBasicSeatingUnderConstruction())
+				: Optional.empty();
 	}
 
 	public Optional<Integer> getFutureUnderRoofSeating() {
-		return isUnderConstruction() ? Optional.of(getUnderRoofSeating() + getUnderRoofSeatingUnderConstruction()) : Optional.empty();
+		return isUnderConstruction() ? Optional.of(getUnderRoofSeating() + getUnderRoofSeatingUnderConstruction())
+				: Optional.empty();
 	}
 
 	public Optional<Integer> getFutureVipBoxes() {
 		return isUnderConstruction() ? Optional.of(getVipBox() + getVipBoxUnderConstruction()) : Optional.empty();
 	}
 
-	public void setExpansionCosts(AmountOfMoney v){
-		this.expansionCosts = v;
+	public BigDecimal getExpansionCostsInSwedishKrona() {
+		if (this.expansionCosts != null)
+			return this.expansionCosts.getSwedishKrona();
+		return null;
 	}
 
-	public BigDecimal getExpansionCostsInSwedishKrona() {
-		if ( this.expansionCosts != null) return this.expansionCosts.getSwedishKrona();
-		return null;
+	public int getHrfId() {
+		return hrfId;
+	}
+
+	public void setHrfId(int hrfId) {
+		this.hrfId = hrfId;
+	}
+
+	public int getArenaId() {
+		return arenaId;
+	}
+
+	public void setArenaId(int arenaId) {
+		this.arenaId = arenaId;
+	}
+
+	public String getStadiumName() {
+		return stadiumName;
+	}
+
+	public void setStadiumName(String stadiumName) {
+		this.stadiumName = stadiumName;
+	}
+
+	public int getTerraces() {
+		return terraces;
+	}
+
+	public void setTerraces(int terraces) {
+		this.terraces = terraces;
+	}
+
+	public int getBasicSeating() {
+		return basicSeating;
+	}
+
+	public void setBasicSeating(int basicSeating) {
+		this.basicSeating = basicSeating;
+	}
+
+	public int getUnderRoofSeating() {
+		return underRoofSeating;
+	}
+
+	public void setUnderRoofSeating(int underRoofSeating) {
+		this.underRoofSeating = underRoofSeating;
+	}
+
+	public int getVipBox() {
+		return vipBox;
+	}
+
+	public void setVipBox(int vipBox) {
+		this.vipBox = vipBox;
+	}
+
+	public boolean isUnderConstruction() {
+		return underConstruction;
+	}
+
+	public void setUnderConstruction(boolean underConstruction) {
+		this.underConstruction = underConstruction;
+	}
+
+	public int getTerracesUnderConstruction() {
+		return terracesUnderConstruction;
+	}
+
+	public void setTerracesUnderConstruction(int terracesUnderConstruction) {
+		this.terracesUnderConstruction = terracesUnderConstruction;
+	}
+
+	public int getBasicSeatingUnderConstruction() {
+		return basicSeatingUnderConstruction;
+	}
+
+	public void setBasicSeatingUnderConstruction(int basicSeatingUnderConstruction) {
+		this.basicSeatingUnderConstruction = basicSeatingUnderConstruction;
+	}
+
+	public int getUnderRoofSeatingUnderConstruction() {
+		return underRoofSeatingUnderConstruction;
+	}
+
+	public void setUnderRoofSeatingUnderConstruction(int underRoofSeatingUnderConstruction) {
+		this.underRoofSeatingUnderConstruction = underRoofSeatingUnderConstruction;
+	}
+
+	public int getVipBoxUnderConstruction() {
+		return vipBoxUnderConstruction;
+	}
+
+	public void setVipBoxUnderConstruction(int vipBoxUnderConstruction) {
+		this.vipBoxUnderConstruction = vipBoxUnderConstruction;
+	}
+
+	public AmountOfMoney getExpansionCosts() {
+		return expansionCosts;
+	}
+
+	public void setExpansionCosts(AmountOfMoney expansionCosts) {
+		this.expansionCosts = expansionCosts;
+	}
+
+	public HODateTime getRebuiltDate() {
+		return rebuiltDate;
+	}
+
+	public void setRebuiltDate(HODateTime rebuiltDate) {
+		this.rebuiltDate = rebuiltDate;
+	}
+
+	public HODateTime getExpansionDate() {
+		return expansionDate;
+	}
+
+	public void setExpansionDate(HODateTime expansionDate) {
+		this.expansionDate = expansionDate;
 	}
 }
