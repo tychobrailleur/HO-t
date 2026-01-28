@@ -23,30 +23,32 @@ import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Panel that displays the list of stored HRFs, which can be selected to perform
  * comparisons with current team.
  */
 public class SpielerTrainingsVergleichsPanel extends ImagePanel
-    implements Refreshable, ListSelectionListener, ActionListener {
+        implements Refreshable, ListSelectionListener, ActionListener {
 
-	@Serial
+    @Serial
     private static final long serialVersionUID = 7090555271664890027L;
 
-	//~ Static fields/initializers -----------------------------------------------------------------
+    // ~ Static fields/initializers
+    // -----------------------------------------------------------------
 
     private static List<Player> vergleichsPlayer = new ArrayList<>();
     private static Integer hrfId;
     private static boolean vergleichsMarkierung;
 
-    //~ Instance fields ----------------------------------------------------------------------------
+    // ~ Instance fields
+    // ----------------------------------------------------------------------------
 
     private final JButton m_jbLoeschen = new JButton(TranslationFacility.tr("ls.button.delete"));
     private final JList<CBItem> m_jlHRFs = new JList<>();
     private final List<ChangeListener> changeListeners = new ArrayList<>();
 
-    //~ Constructors -------------------------------------------------------------------------------
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
 
     /**
      * Creates a new SpielerTrainingsVergleichsPanel object.
@@ -57,7 +59,8 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
         loadHRFListe(true);
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    // ~ Methods
+    // ------------------------------------------------------------------------------------
     public static boolean isDevelopmentStageSelected() {
         return vergleichsMarkierung;
     }
@@ -80,20 +83,19 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
         }
 
         var MAX_NUMBER_OF_FILENAMES_IN_DELETEINFOTEXT = 11;
-        int i=0;
-        for (CBItem hrf : hrfs){
+        int i = 0;
+        for (CBItem hrf : hrfs) {
             deleteInfoText.append("\n");
-            if ( i++ < MAX_NUMBER_OF_FILENAMES_IN_DELETEINFOTEXT){
+            if (i++ < MAX_NUMBER_OF_FILENAMES_IN_DELETEINFOTEXT) {
                 deleteInfoText.append(hrf.toString());
-            }
-            else {
+            } else {
                 deleteInfoText.append(" ... ");
                 break;
             }
         }
 
         final int value = JOptionPane.showConfirmDialog(this, deleteInfoText.toString(),
-				TranslationFacility.tr("confirmation.title"), JOptionPane.YES_NO_OPTION);
+                TranslationFacility.tr("confirmation.title"), JOptionPane.YES_NO_OPTION);
 
         if (value == JOptionPane.OK_OPTION) {
             for (CBItem hrf : hrfs) {
@@ -113,64 +115,64 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
     }
 
     public void refresh() {
-        //nix
+        // nix
     }
 
-    public static Integer getSelectedHrfId(){
+    public static Integer getSelectedHrfId() {
         return hrfId;
     }
 
     /**
      * Handle valueChanged() events.
      */
-	public final void valueChanged(ListSelectionEvent listSelectionEvent) {
-		// Markierung vorhanden
-		if (m_jlHRFs.getSelectedValue() != null) {
+    public final void valueChanged(ListSelectionEvent listSelectionEvent) {
+        // Markierung vorhanden
+        if (m_jlHRFs.getSelectedValue() != null) {
             hrfId = m_jlHRFs.getSelectedValue().getId();
-			vergleichsPlayer = DBManager.instance().getSpieler(hrfId);
-			vergleichsMarkierung = true;
+            vergleichsPlayer = DBManager.instance().getSpieler(hrfId);
+            vergleichsMarkierung = true;
 
             m_jbLoeschen.setEnabled(m_jlHRFs.getSelectedIndex() > 0);
-		}
-		// Keine Markierung -> Alles löschen
-		else {
+        }
+        // Keine Markierung -> Alles löschen
+        else {
             hrfId = null;
-			vergleichsPlayer.clear();
-			vergleichsMarkierung = false;
-			m_jbLoeschen.setEnabled(false);
-		}
+            vergleichsPlayer.clear();
+            vergleichsMarkierung = false;
+            m_jbLoeschen.setEnabled(false);
+        }
 
         ChangeEvent changeEvent = new ChangeEvent(this);
         fireChangeEvent(changeEvent);
 
-		// Manual update of the table, so no reInit to keep the current sorting.
-		HOMainFrame.instance().getSpielerUebersichtPanel().refreshHRFComparison();
-	}
+        // Manual update of the table, so no reInit to keep the current sorting.
+        HOMainFrame.instance().getSpielerUebersichtPanel().refreshHRFComparison();
+    }
 
     /**
      * Init GUI components.
      */
-	private void initComponents() {
-		setLayout(new BorderLayout());
+    private void initComponents() {
+        setLayout(new BorderLayout());
 
         final JLabel hrfComparisonLabel = new JLabel(TranslationFacility.tr("VergleichsHRF"));
         hrfComparisonLabel.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 0));
 
-		add(hrfComparisonLabel, BorderLayout.NORTH);
-		m_jlHRFs.setOpaque(false);
-		// use the default renderer for all non-classic skins
-		if ("Classic".equals(UserParameter.instance().skin)) {
-			m_jlHRFs.setCellRenderer(new AufstellungsListRenderer());
-		}
+        add(hrfComparisonLabel, BorderLayout.NORTH);
+        m_jlHRFs.setOpaque(false);
+        // use the default renderer for all non-classic skins
+        if ("Classic".equals(UserParameter.instance().skin)) {
+            m_jlHRFs.setCellRenderer(new AufstellungsListRenderer());
+        }
 
-		m_jlHRFs.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		m_jlHRFs.addListSelectionListener(this);
-		add(new JScrollPane(m_jlHRFs), BorderLayout.CENTER);
+        m_jlHRFs.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        m_jlHRFs.addListSelectionListener(this);
+        add(new JScrollPane(m_jlHRFs), BorderLayout.CENTER);
 
-		m_jbLoeschen.setEnabled(false);
-		m_jbLoeschen.addActionListener(this);
-		add(m_jbLoeschen, BorderLayout.SOUTH);
-	}
+        m_jbLoeschen.setEnabled(false);
+        m_jbLoeschen.addActionListener(this);
+        add(m_jbLoeschen, BorderLayout.SOUTH);
+    }
 
     /**
      * load all hrf file entries and creates a list of combo box items
@@ -205,15 +207,16 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
         m_jlHRFs.removeListSelectionListener(this);
 
         Object lastSelectedEntry = m_jlHRFs.getSelectedValue();
-        if (lastSelectedEntry == null && m_jlHRFs.getModel() instanceof DefaultListModel<CBItem> && m_jlHRFs.getModel().getSize() > 0) {
+        if (lastSelectedEntry == null && m_jlHRFs.getModel() instanceof DefaultListModel<CBItem>
+                && m_jlHRFs.getModel().getSize() > 0) {
             // Memorize first entry
             lastSelectedEntry = m_jlHRFs.getModel().getElementAt(0);
         }
 
         DefaultListModel listmodel;
 
-        if (m_jlHRFs.getModel() instanceof DefaultListModel) {
-            listmodel = (DefaultListModel) m_jlHRFs.getModel();
+        if (m_jlHRFs.getModel() instanceof DefaultListModel model) {
+            listmodel = model;
             listmodel.removeAllElements();
         } else {
             listmodel = new DefaultListModel();
@@ -241,12 +244,12 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
     }
 
     public void addChangeListener(ChangeListener changeListener) {
-	    changeListeners.add(changeListener);
+        changeListeners.add(changeListener);
     }
 
     private void fireChangeEvent(ChangeEvent event) {
-	    for (ChangeListener listener: changeListeners) {
-	        listener.stateChanged(event);
+        for (ChangeListener listener : changeListeners) {
+            listener.stateChanged(event);
         }
     }
 }

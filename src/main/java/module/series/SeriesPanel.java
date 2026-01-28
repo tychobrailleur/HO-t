@@ -24,14 +24,13 @@ public class SeriesPanel extends LazyImagePanel {
 	private SeriesHistoryPanel seriesHistoryPanel;
 	private Model model;
 
-    @Override
+	@Override
 	protected void initialize() {
 		initComponents();
 		fillSaisonCB();
 		addListeners();
 		registerRefreshable(true);
 	}
-
 
 	@Override
 	protected void update() {
@@ -44,7 +43,8 @@ public class SeriesPanel extends LazyImagePanel {
 			int value = JOptionPane.showConfirmDialog(this,
 					TranslationFacility.tr("ls.button.delete") + " "
 							+ TranslationFacility.tr("Ligatabelle") + ":\n"
-							+ spielplan.toString(), TranslationFacility.tr("confirmation.title"), JOptionPane.YES_NO_OPTION);
+							+ spielplan.toString(),
+					TranslationFacility.tr("confirmation.title"), JOptionPane.YES_NO_OPTION);
 
 			if (value == JOptionPane.YES_OPTION) {
 				DBManager.instance().deleteSpielplanTabelle(spielplan.getSaison(), spielplan.getLigaId());
@@ -60,8 +60,8 @@ public class SeriesPanel extends LazyImagePanel {
 
 		this.seasonComboBox.addActionListener(e -> {
 			// Determine current match schedule
-			if (seasonComboBox.getSelectedItem() instanceof MatchFixtures) {
-				model.setCurrentSeries((MatchFixtures) seasonComboBox.getSelectedItem());
+			if (seasonComboBox.getSelectedItem() instanceof MatchFixtures fixtures) {
+				model.setCurrentSeries(fixtures);
 			} else {
 				model.setCurrentSeries(null);
 			}
@@ -102,7 +102,7 @@ public class SeriesPanel extends LazyImagePanel {
 			seasonComboBox.addItem(fixture);
 		}
 
-		//  Restore old marking
+		// Restore old marking
 		seasonComboBox.setSelectedItem(markierterPlan);
 
 		if ((seasonComboBox.getSelectedIndex() < 0) && (seasonComboBox.getItemCount() > 0)) {
@@ -110,8 +110,8 @@ public class SeriesPanel extends LazyImagePanel {
 		}
 
 		// Aktuellen Spielplan bestimmen
-		if (seasonComboBox.getSelectedItem() instanceof MatchFixtures) {
-			this.model.setCurrentSeries((MatchFixtures) seasonComboBox.getSelectedItem());
+		if (seasonComboBox.getSelectedItem() instanceof MatchFixtures fixtures) {
+			this.model.setCurrentSeries(fixtures);
 		} else {
 			this.model.setCurrentSeries(null);
 		}
@@ -153,10 +153,11 @@ public class SeriesPanel extends LazyImagePanel {
 		deleteButton.setLocation(xLocation, yLocation);
 		deleteButton.setBackground(ThemeManager.getColor(HOColorName.BUTTON_BG));
 		toolbarPanel.add(deleteButton);
-		toolbarPanel.setPreferredSize(new Dimension(xLocation+width, yLocation + height));
+		toolbarPanel.setPreferredSize(new Dimension(xLocation + width, yLocation + height));
 		panel.add(toolbarPanel, BorderLayout.NORTH);
 
-		JSplitPane leagueStatsPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, initLigaTabelle(), initTabellenverlaufStatistik());
+		JSplitPane leagueStatsPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, initLigaTabelle(),
+				initTabellenverlaufStatistik());
 		UserParameter.instance().series_tableSplitPaneDivider.init(leagueStatsPanel);
 
 		final JPanel tablePanel = new ImagePanel(new BorderLayout());

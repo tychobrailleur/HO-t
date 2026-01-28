@@ -38,13 +38,13 @@ import static core.model.UserParameter.GOALKEEPER_AT_TOP;
 import static core.model.UserParameter.POSITIONNAMES_SHORT;
 import static core.model.player.IMatchRoleID.*;
 
-
 public class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListener {
 
     private static final PlayerCBItem oNullPlayer = new PlayerCBItem("", 0f, null, false, true);
     private static final Color defaultBorderColor = ThemeManager.getColor(HOColorName.PLAYER_POSITION_PANEL_BORDER);
 
-    //~ Instance fields ----------------------------------------------------------------------------
+    // ~ Instance fields
+    // ----------------------------------------------------------------------------
     private final JComboBox<PlayerCBItem> m_jcbPlayer = new JComboBox<>();
     private final JComboBox<CBItem> m_jcbTactic = new JComboBox<>();
     private final JLabel m_jlPosition = new JLabel();
@@ -60,8 +60,9 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     private boolean m_useWeatherImpact;
     private Integer matchMinute;
 
-    //constructor
-    protected PlayerPositionPanel(Updatable updater, int positionsID, @Nullable Weather weather, boolean useWeatherImpact, Integer matchMinute) {
+    // constructor
+    protected PlayerPositionPanel(Updatable updater, int positionsID, @Nullable Weather weather,
+            boolean useWeatherImpact, Integer matchMinute) {
         super(false);
 
         m_clUpdater = updater;
@@ -87,19 +88,18 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
 
     private byte getTactic() {
         CBItem cbTactic = (CBItem) m_jcbTactic.getSelectedItem();
-        return (cbTactic != null) ? (byte)cbTactic.getId() : IMatchRoleID.NORMAL;
+        return (cbTactic != null) ? (byte) cbTactic.getId() : IMatchRoleID.NORMAL;
     }
 
     public @Nullable Player getSelectedPlayer() {
         final Object obj = m_jcbPlayer.getSelectedItem();
 
-        if (obj instanceof PlayerCBItem) {
-            return ((PlayerCBItem) obj).getPlayer();
+        if (obj instanceof PlayerCBItem item) {
+            return item.getPlayer();
         }
 
         return null;
     }
-
 
     @Override
     public void focusGained(FocusEvent event) {
@@ -109,7 +109,8 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     }
 
     @Override
-    public void focusLost(FocusEvent event) { }
+    public void focusLost(FocusEvent event) {
+    }
 
     private void initComponents() {
         final GridBagConstraints constraints = new GridBagConstraints();
@@ -139,7 +140,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         m_jcbPlayer.setRenderer(new PlayerCBItemRenderer());
         m_jcbPlayer.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 
-        //Show only if more than one tactic is possible
+        // Show only if more than one tactic is possible
         if (m_jcbTactic.getItemCount() > 1) {
 
             constraints.insets = new Insets(2, 4, 0, 4);
@@ -149,15 +150,13 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             constraints.insets = new Insets(2, 4, 5, 4);
             m_jcbTactic.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
             jlp.add(m_jcbTactic, constraints, layerIndex);
-        }
-        else {
+        } else {
             constraints.insets = new Insets(2, 4, 5, 4);
             jlp.add(m_jcbPlayer, constraints, layerIndex);
         }
 
         add(jlp, BorderLayout.CENTER);
     }
-
 
     @Override
     public void itemStateChanged(java.awt.event.ItemEvent itemEvent) {
@@ -167,9 +166,9 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             final Player player = getSelectedPlayer();
             setPlayerTooltip(player);
 
-            //set player
+            // set player
             if (itemEvent.getSource().equals(m_jcbPlayer)) {
-                //set pieces
+                // set pieces
                 if (m_iPositionID == IMatchRoleID.setPieces) {
                     if (player != null) {
                         lineup.setKicker(player.getPlayerId());
@@ -177,7 +176,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                         lineup.setKicker(0);
                     }
                 }
-                //captain
+                // captain
                 else if (m_iPositionID == IMatchRoleID.captain) {
                     if (player != null) {
                         lineup.setCaptain(player.getPlayerId());
@@ -185,7 +184,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                         lineup.setCaptain(0);
                     }
                 }
-                //Others
+                // Others
                 else {
                     if (player != null) {
                         lineup.setSpielerAtPosition(m_iPositionID, player.getPlayerId());
@@ -196,7 +195,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                     lineup.adjustBackupPlayers();
                 }
 
-                //Adjust tactic values
+                // Adjust tactic values
                 setTactic(getTactic(), player);
             } else if (itemEvent.getSource().equals(m_jcbTactic)) {
                 Objects.requireNonNull(lineup.getPositionById(m_iPositionID)).setBehaviour(getTactic());
@@ -206,14 +205,14 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 HOMainFrame.instance().selectPlayer(player);
             }
 
-            //Update all other positions
+            // Update all other positions
             m_clUpdater.update();
         }
     }
 
     private void setPlayerTooltip(@Nullable Player player) {
         if (player != null) {
-            String tooltipMessage ="<html>";
+            String tooltipMessage = "<html>";
             tooltipMessage += "<b>" + player.getFullName() + "</b>";
             String trainingMsg = TrainingPreviewPlayers.instance().getTrainPreviewPlayer(player).getText();
             if (trainingMsg != null) {
@@ -223,11 +222,10 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             if (!((PlayerCBItem) Objects.requireNonNull(m_jcbPlayer.getSelectedItem())).isSetInBestPosition()) {
                 tooltipMessage += "<br>" + getLangStr("ls.lineup.position.warning");
             }
-            tooltipMessage +=  "</html>";
+            tooltipMessage += "</html>";
             m_jcbPlayer.setToolTipText(tooltipMessage);
         }
     }
-
 
     /**
      * Update the list of player in the ComboBox except for backup
@@ -237,7 +235,8 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
      * @param plSubstitutes    the substitute players (not the backup)
      * @param matchMinute      minute used for rating calculation
      */
-    public void refresh(List<Player> inCandidates, List<Player> plStartingLineup, List<Player> plSubstitutes, Weather weather, Boolean useWeatherImpact, int matchMinute) {
+    public void refresh(List<Player> inCandidates, List<Player> plStartingLineup, List<Player> plSubstitutes,
+            Weather weather, Boolean useWeatherImpact, int matchMinute) {
         var plCandidates = new ArrayList<>(inCandidates);
         Player selectedPlayer = null;
         HOModel model = HOVerwaltung.instance().getModel();
@@ -276,7 +275,8 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                     m_jcbPlayer.setEnabled(true); // To be sure
                     iSelectedPlayerId = selectedPlayer.getPlayerId();
                 } else {
-                    // We want to enable the combobox if there is room in the lineup or if it is a substitute position
+                    // We want to enable the combobox if there is room in the lineup or if it is a
+                    // substitute position
                     m_jcbPlayer.setEnabled((lineup.hasFreePosition()) || (m_iPositionID >= IMatchRoleID.startReserves));
                 }
 
@@ -286,7 +286,8 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
 
         setPlayersList(plCandidates, selectedPlayer);
 
-        // for all players in the combobox set correct values for isSelect (starting 11) and isAssis (it is a subsitute)
+        // for all players in the combobox set correct values for isSelect (starting 11)
+        // and isAssis (it is a subsitute)
         for (int i = 0; i < m_jcbPlayer.getModel().getSize(); i++) {
             PlayerCBItem obj = m_jcbPlayer.getItemAt(i);
             if (obj != null) {
@@ -326,14 +327,14 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         repaint();
     }
 
-
-    public void refresh2(List<Player> lPlayers, int playerIDcorrespondingSub, Weather weather, Boolean useWeatherImpact) {
+    public void refresh2(List<Player> lPlayers, int playerIDcorrespondingSub, Weather weather,
+            Boolean useWeatherImpact) {
         Player selectedPlayer = null;
         iSelectedPlayerId = -1;
         m_weather = weather;
         m_useWeatherImpact = useWeatherImpact;
 
-        //Get currently setup player in that position
+        // Get currently setup player in that position
         var team = HOVerwaltung.instance().getModel().getCurrentLineup();
         final MatchRoleID position = team.getPositionById(m_iPositionID);
         if (position != null) {
@@ -349,36 +350,40 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
 
         m_jcbPlayer.removeItemListener(this);
 
-        final DefaultComboBoxModel<PlayerCBItem> cbModel = ((DefaultComboBoxModel<PlayerCBItem>) m_jcbPlayer.getModel());
+        final DefaultComboBoxModel<PlayerCBItem> cbModel = ((DefaultComboBoxModel<PlayerCBItem>) m_jcbPlayer
+                .getModel());
 
-        //Remove all items
+        // Remove all items
         cbModel.removeAllElements();
 
-        //Ensure the number of m_clCBItems objects match what is needed
+        // Ensure the number of m_clCBItems objects match what is needed
 
         assert m_clCBItems != null;
         if (m_clCBItems.length != oCandidates.size()) {
             PlayerCBItem[] tempCB = new PlayerCBItem[oCandidates.size()];
 
-            //Fill with SpielerCBItem: Preferably reuse old ones
+            // Fill with SpielerCBItem: Preferably reuse old ones
             for (int i = 0; i < tempCB.length; i++) {
-                //Reuse
+                // Reuse
                 if ((m_clCBItems.length > i) && (m_clCBItems[i] != null)) {
                     tempCB[i] = m_clCBItems[i];
 
-                    //HOLogger.instance().log(getClass(), "Use old SpielerCBItem " + this.m_iPositionsID );
+                    // HOLogger.instance().log(getClass(), "Use old SpielerCBItem " +
+                    // this.m_iPositionsID );
                 }
-                //Create new
+                // Create new
                 else {
-                    tempCB[i] = new PlayerCBItem("", 0f, null, true, true);//HOLogger.instance().log(getClass(), "Create new SpielerCBItem " + this.m_iPositionsID );
+                    tempCB[i] = new PlayerCBItem("", 0f, null, true, true);// HOLogger.instance().log(getClass(),
+                                                                           // "Create new SpielerCBItem " +
+                                                                           // this.m_iPositionsID );
                 }
             }
 
-            //Empty reference and reset
+            // Empty reference and reset
             m_clCBItems = tempCB;
         }
 
-        //Put back current player if new filters allows it
+        // Put back current player if new filters allows it
         this.iSelectedPlayerId = -1;
         if (oSelectedPlayer != null) {
             int iSelectedPlayerID = oSelectedPlayer.getPlayerId();
@@ -393,17 +398,17 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
 
         Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
         if (iSelectedPlayerId == -1) {
-            switch (m_iPositionID){
+            switch (m_iPositionID) {
                 case IMatchRoleID.setPieces -> lineup.setKicker(0);
                 case IMatchRoleID.captain -> lineup.setCaptain(0);
                 default -> lineup.setSpielerAtPosition(m_iPositionID, 0);
             }
         }
 
-        //No Player
+        // No Player
         cbModel.addElement(oNullPlayer);
 
-        //Sort Player List
+        // Sort Player List
         PlayerCBItem[] cbItems = new PlayerCBItem[oCandidates.size()];
 
         for (int i = 0; i < oCandidates.size(); i++) {
@@ -413,10 +418,9 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         Arrays.sort(cbItems);
 
         for (PlayerCBItem cbItem : cbItems) {
-            //All Other players
+            // All Other players
             cbModel.addElement(cbItem);
         }
-
 
         m_jcbPlayer.addItemListener(this);
 
@@ -424,7 +428,8 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         setPlayerTooltip(m_clSelectedPlayer.getPlayer());
     }
 
-    protected void setPlayersList2(List<Player> allPlayers, @Nullable Player selectedPlayer, int playerIDcorrespondingSub) {
+    protected void setPlayersList2(List<Player> allPlayers, @Nullable Player selectedPlayer,
+            int playerIDcorrespondingSub) {
 
         m_jcbPlayer.removeItemListener(this);
 
@@ -437,33 +442,34 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             }
         }
 
-        final DefaultComboBoxModel<PlayerCBItem> cbModel = ((DefaultComboBoxModel<PlayerCBItem>) m_jcbPlayer.getModel());
+        final DefaultComboBoxModel<PlayerCBItem> cbModel = ((DefaultComboBoxModel<PlayerCBItem>) m_jcbPlayer
+                .getModel());
 
-        //Remove all items
+        // Remove all items
         cbModel.removeAllElements();
 
-        //Ensure the number of m_clCBItems objects match what is needed
+        // Ensure the number of m_clCBItems objects match what is needed
         assert m_clCBItems != null;
         if (m_clCBItems.length != lSubs.size()) {
             PlayerCBItem[] tempCB = new PlayerCBItem[lSubs.size()];
 
-            //Fill with SpielerCBItem: Preferably reuse old ones
+            // Fill with SpielerCBItem: Preferably reuse old ones
             for (int i = 0; i < tempCB.length; i++) {
-                //Reuse
+                // Reuse
                 if ((m_clCBItems.length > i) && (m_clCBItems[i] != null)) {
                     tempCB[i] = m_clCBItems[i];
                 }
-                //Create new
+                // Create new
                 else {
                     tempCB[i] = new PlayerCBItem("", 0f, null, true, true);
                 }
             }
 
-            //Empty reference and reset
+            // Empty reference and reset
             m_clCBItems = tempCB;
         }
 
-        //Remove current Player if not a sub anymore
+        // Remove current Player if not a sub anymore
         if (selectedPlayer != null) {
             for (Player p : lSubs) {
                 if (p.getPlayerId() == selectedPlayer.getPlayerId())
@@ -471,10 +477,10 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             }
         }
 
-        //No Player
+        // No Player
         cbModel.addElement(oNullPlayer);
 
-        //Sort Player List
+        // Sort Player List
         PlayerCBItem[] cbItems = new PlayerCBItem[lSubs.size()];
 
         Player pp;
@@ -490,10 +496,9 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         java.util.Arrays.sort(cbItems);
 
         for (PlayerCBItem cbItem : cbItems) {
-            //All Other players
+            // All Other players
             cbModel.addElement(cbItem);
         }
-
 
         m_jcbPlayer.addItemListener(this);
 
@@ -501,16 +506,16 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     }
 
     private void setTactic(byte tactic, @Nullable Player currentPlayer) {
-        //remove listener
+        // remove listener
         m_jcbTactic.removeItemListener(this);
 
-        //Update Tactic!
+        // Update Tactic!
         initTaktik(currentPlayer);
 
-        //Suche nach der Taktik
+        // Suche nach der Taktik
         Helper.setComboBoxFromID(m_jcbTactic, tactic);
 
-        //Listener hinzu
+        // Listener hinzu
         m_jcbTactic.addItemListener(this);
     }
 
@@ -520,11 +525,9 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
 
         if (m_iPositionID == IMatchRoleID.setPieces) {
             m_jlPosition.setText(getLangStr("match.setpiecestaker"));
-        }
-        else if (m_iPositionID == IMatchRoleID.captain) {
+        } else if (m_iPositionID == IMatchRoleID.captain) {
             m_jlPosition.setText(getLangStr("Spielfuehrer"));
-        }
-        else {
+        } else {
             final MatchRoleID position = lineup.getPositionById(m_iPositionID);
 
             if (position != null) {
@@ -534,22 +537,24 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 String fontFamily = defaultFont.getFamily();
                 String hexColor = ImageUtilities.getHexColor(HOColorName.RED);
 
-                final String  nameForPosition1 = "<html> <font family=" + fontFamily +  "size=" + fontSize + "pt>";
-                final String  nameForPosition2 = "</font> <font family=" + fontFamily + "size=" + fontSize + "pt color=" + hexColor + ">&nbsp&nbsp";
-                final String  nameForPosition3 = "</font></html>";
-                final String nameForPosition = nameForPosition1 + getNameForLineupPosition(position.getPosition()) + nameForPosition2 + getTacticSymbol() + nameForPosition3;
+                final String nameForPosition1 = "<html> <font family=" + fontFamily + "size=" + fontSize + "pt>";
+                final String nameForPosition2 = "</font> <font family=" + fontFamily + "size=" + fontSize + "pt color="
+                        + hexColor + ">&nbsp&nbsp";
+                final String nameForPosition3 = "</font></html>";
+                final String nameForPosition = nameForPosition1 + getNameForLineupPosition(position.getPosition())
+                        + nameForPosition2 + getTacticSymbol() + nameForPosition3;
 
                 // Players on the lineup
                 if (IMatchRoleID.aFieldMatchRoleID.contains(position.getId())) {
                     m_jlPosition.setText(nameForPosition);
 
                     if (MatchRoleID.isFullTrainPosition(position.getPosition(), nextWeekTrain)) {
-                        this.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3,ThemeManager.getColor(HOColorName.LINEUP_FULL_TRAINING)));
-                    }
-                    else if (MatchRoleID.isPartialTrainPosition(position.getPosition(), nextWeekTrain)) {
-                        this.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3,ThemeManager.getColor(HOColorName.LINEUP_PARTIAL_TRAINING)));
-                    }
-                    else{
+                        this.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3,
+                                ThemeManager.getColor(HOColorName.LINEUP_FULL_TRAINING)));
+                    } else if (MatchRoleID.isPartialTrainPosition(position.getPosition(), nextWeekTrain)) {
+                        this.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3,
+                                ThemeManager.getColor(HOColorName.LINEUP_PARTIAL_TRAINING)));
+                    } else {
                         this.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, defaultBorderColor));
                     }
                 }
@@ -579,12 +584,14 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         m_jcbTactic.removeAllItems();
 
         switch (m_iPositionID) {
-            case keeper -> m_jcbTactic.addItem(new CBItem(getLangStr("ls.player.behaviour.normal"), IMatchRoleID.NORMAL));
+            case keeper ->
+                m_jcbTactic.addItem(new CBItem(getLangStr("ls.player.behaviour.normal"), IMatchRoleID.NORMAL));
             case IMatchRoleID.rightBack, IMatchRoleID.leftBack, IMatchRoleID.leftWinger, IMatchRoleID.rightWinger -> {
                 addTactic(aktuellerPlayer, getLangStr("ls.player.behaviour.normal"), IMatchRoleID.NORMAL);
                 addTactic(aktuellerPlayer, getLangStr("ls.player.behaviour.offensive"), IMatchRoleID.OFFENSIVE);
                 addTactic(aktuellerPlayer, getLangStr("ls.player.behaviour.defensive"), IMatchRoleID.DEFENSIVE);
-                addTactic(aktuellerPlayer, getLangStr("ls.player.behaviour.towardsmiddle"), IMatchRoleID.TOWARDS_MIDDLE);
+                addTactic(aktuellerPlayer, getLangStr("ls.player.behaviour.towardsmiddle"),
+                        IMatchRoleID.TOWARDS_MIDDLE);
             }
             case IMatchRoleID.rightCentralDefender, IMatchRoleID.leftCentralDefender -> {
                 addTactic(aktuellerPlayer, getLangStr("ls.player.behaviour.normal"), IMatchRoleID.NORMAL);
@@ -624,17 +631,18 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         if (currentPlayer != null) {
             var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
             double rating;
-            if ( matchMinute == null || matchMinute < 0 || matchMinute >= 120) {
-                rating = ratingPredictionModel.getPlayerMatchAverageRating(currentPlayer, m_iPositionID, playerPosition);
-            }
-            else {
-                rating = ratingPredictionModel.getPlayerRating(currentPlayer, m_iPositionID, playerPosition, matchMinute);
+            if (matchMinute == null || matchMinute < 0 || matchMinute >= 120) {
+                rating = ratingPredictionModel.getPlayerMatchAverageRating(currentPlayer, m_iPositionID,
+                        playerPosition);
+            } else {
+                rating = ratingPredictionModel.getPlayerRating(currentPlayer, m_iPositionID, playerPosition,
+                        matchMinute);
             }
             text += String.format(" (%.2f)", rating);
         }
         m_jcbTactic.addItem(new CBItem(text, playerPosition));
     }
-    //-------------private-------------------------------------------------
+    // -------------private-------------------------------------------------
 
     private PlayerCBItem createPlayerCBItem(PlayerCBItem item, @Nullable Player player) {
         if (player != null) {
@@ -648,7 +656,8 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             } else if (m_iPositionID == IMatchRoleID.captain) {
                 item.setValues(playerName,
                         Helper.round(
-                                HOVerwaltung.instance().getModel().getCurrentLineup().getAverageExperience(player.getPlayerId()),
+                                HOVerwaltung.instance().getModel().getCurrentLineup()
+                                        .getAverageExperience(player.getPlayerId()),
                                 core.model.UserParameter.instance().nbDecimals),
                         player, true);
                 return item;
@@ -668,14 +677,17 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                         case substFW1, substFW2 -> roleId = leftForward;
                     }
 
-                    double value=0.;
+                    double value = 0.;
                     boolean bestPosition = false;
-                    if ( roleId != substXT2 && roleId != substXT1) {
+                    if (roleId != substXT2 && roleId != substXT1) {
                         var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
                         if (this.matchMinute == null || this.matchMinute < 0 || this.matchMinute > 120) {
-                            value = ratingPredictionModel.getPlayerMatchAverageRating(player, roleId, position.getBehaviour(), this.m_useWeatherImpact ? this.m_weather : Weather.UNKNOWN);
+                            value = ratingPredictionModel.getPlayerMatchAverageRating(player, roleId,
+                                    position.getBehaviour(),
+                                    this.m_useWeatherImpact ? this.m_weather : Weather.UNKNOWN);
                         } else {
-                            value = ratingPredictionModel.getPlayerRating(player, roleId, position.getBehaviour(), this.matchMinute, this.m_useWeatherImpact ? this.m_weather : Weather.UNKNOWN);
+                            value = ratingPredictionModel.getPlayerRating(player, roleId, position.getBehaviour(),
+                                    this.matchMinute, this.m_useWeatherImpact ? this.m_weather : Weather.UNKNOWN);
                         }
                         var alternativePositions = player.getAlternativeBestPositions();
                         for (byte altPos : alternativePositions) {
@@ -699,8 +711,8 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         return iSelectedPlayerId;
     }
 
-
-    // return a tactic symbol if a player is offensive, defensive, towards wings etc.
+    // return a tactic symbol if a player is offensive, defensive, towards wings
+    // etc.
     // used for lineup export
     public String getTacticSymbol() {
         byte tactic = getTactic();
@@ -760,7 +772,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         constraints.gridy = 0;
         constraints.gridwidth = 2;
         constraints.gridheight = 3;
-        jlp.add(overlay, constraints, layerIndex+1);
+        jlp.add(overlay, constraints, layerIndex + 1);
         repaint();
     }
 
@@ -769,8 +781,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         repaint();
     }
 
-
-    public void addCaptainIcon(){
+    public void addCaptainIcon() {
 
         JLabel jlCaptain = new JLabel();
         jlCaptain.setIcon(ImageUtilities.getSmileyIcon("smiley-coach"));
@@ -786,7 +797,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
 
     }
 
-    public void addSetPiecesIcon(){
+    public void addSetPiecesIcon() {
 
         JLabel jlSetPieces = new JLabel();
         jlSetPieces.setIcon(ImageUtilities.getSetPiecesIcon(21, 21));

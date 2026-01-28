@@ -329,11 +329,11 @@ public class FilterPanel extends JPanel {
 
 		Collections.sort(list, new Comparator<>() {
 
-            @Override
-            public int compare(CBItem o1, CBItem o2) {
-                return o1.getText().compareTo(o2.getText());
-            }
-        });
+			@Override
+			public int compare(CBItem o1, CBItem o2) {
+				return o1.getText().compareTo(o2.getText());
+			}
+		});
 
 		list.add(0, new CBItem(getLangStr("ls.team.tactic_short.normal"), IMatchDetails.TAKTIK_NORMAL));
 		list.add(0, null);
@@ -431,15 +431,15 @@ public class FilterPanel extends JPanel {
 
 		Comparator<Player> comparator = new Comparator<>() {
 
-            @Override
-            public int compare(Player o1, Player o2) {
-                return o1.getFullName().compareTo(o2.getFullName());
-            }
-        };
+			@Override
+			public int compare(Player o1, Player o2) {
+				return o1.getFullName().compareTo(o2.getFullName());
+			}
+		};
 
 		List<CBItem> playerItems = new ArrayList<>();
 		List<Player> players = new ArrayList<>(HOVerwaltung.instance().getModel()
-                .getCurrentPlayers());
+				.getCurrentPlayers());
 		Collections.sort(players, comparator);
 		for (Player player : players) {
 			playerItems.add(new PlayerCBItem(player.getFullName(), player.getPlayerId(), player
@@ -504,16 +504,17 @@ public class FilterPanel extends JPanel {
 			Component component = this.delegate.getListCellRendererComponent(list, text, index,
 					isSelected, cellHasFocus);
 
-			if (component instanceof JLabel) {
+			if (component instanceof JLabel label) {
 				if (item != null && item.getId() >= 0) {
 					if (item.getSpeciality() > 0) {
-						((JLabel) component).setIcon(ImageUtilities.getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[item.getSpeciality()]));
+						label.setIcon(ImageUtilities
+								.getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[item.getSpeciality()]));
 
 					} else {
-						((JLabel) component).setIcon(ThemeManager.getIcon(HOIconName.EMPTY));
+						label.setIcon(ThemeManager.getIcon(HOIconName.EMPTY));
 					}
 				} else {
-					((JLabel) component).setIcon(null);
+					label.setIcon(null);
 				}
 			}
 

@@ -5,7 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 
 public class SerieTableEntry implements Comparable<SerieTableEntry> {
-    //~ Instance fields ----------------------------------------------------------------------------
+    // ~ Instance fields
+    // ----------------------------------------------------------------------------
     public static final byte H_SIEG = 1;
     public static final byte A_SIEG = 2;
     /** HOME DRAW */
@@ -35,14 +36,15 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
     protected int m_iH_ToreGegen = -1;
     protected int m_iH_Un = -1;
 
-    ///////////MEMBER////////////////////////
+    /////////// MEMBER////////////////////////
     protected int m_iPosition = -1;
     protected int m_iPunkte = -1;
     protected int m_iTeamId = -1;
     protected int m_iToreFuer = -1;
     protected int m_iToreGegen = -1;
 
-    //~ Constructors -------------------------------------------------------------------------------
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
     /**
      * Creates a new instance of LigaTabellenEintrag
      */
@@ -50,7 +52,8 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
         Arrays.fill(m_aSerie, UNKOWN);
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    // ~ Methods
+    // ------------------------------------------------------------------------------------
 
     /**
      * Setter for property m_iA_Nied.
@@ -215,8 +218,8 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
     }
 
     /////////////////////////////////////////////////////////////////////////////////
-    // EXTENDED Funcs    
-    ////////////////////////////////////////////////////////////////////////////////7
+    // EXTENDED Funcs
+    //////////////////////////////////////////////////////////////////////////////// 7
     public final int getGoalsDiff() {
         return (m_iToreFuer - m_iToreGegen);
     }
@@ -404,7 +407,7 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
     /**
      * fügt einen Eintrag hinzu
      *
-     * @param index = (Spieltag-1)
+     * @param index      = (Spieltag-1)
      * @param serienInfo serienInfo Info
      */
     public final void addSerienEintrag(int index, byte serienInfo) {
@@ -433,7 +436,7 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
                 } else if (m_iToreFuer < obj.getGoalsFor()) {
                     return 1;
                 }
-                //nun gilt der Auswärtsfaktor
+                // nun gilt der Auswärtsfaktor
                 else if (getA_Punkte() > obj.getA_Punkte()) {
                     return -1;
                 } else if (getA_Punkte() < obj.getA_Punkte()) {
@@ -451,15 +454,11 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
     }
 
     /////////////////////////////////////////////////////////////////////////////////
-    //Overwrite
-    ////////////////////////////////////////////////////////////////////////////////7    
+    // Overwrite
+    //////////////////////////////////////////////////////////////////////////////// 7
     @Override
-	public final boolean equals(Object obj) {
-        SerieTableEntry lte;
-
-        if (obj instanceof SerieTableEntry) {
-            lte = (SerieTableEntry) obj;
-
+    public final boolean equals(Object obj) {
+        if (obj instanceof SerieTableEntry lte) {
             return (lte.getAnzSpiele() == m_iAnzSpiele)
                     && (lte.getPosition() == m_iPosition)
                     && (lte.getPoints() == m_iPunkte)

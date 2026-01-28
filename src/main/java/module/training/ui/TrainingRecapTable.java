@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
-
 public class TrainingRecapTable extends JScrollPane {
 
     static final int fixedColumns = 5;
@@ -52,7 +51,7 @@ public class TrainingRecapTable extends JScrollPane {
         columns.add("Speed");
         columns.add(TranslationFacility.tr("ls.player.id"));
 
-        var actualWeek = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek(); //.getSpieltag();
+        var actualWeek = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek(); // .getSpieltag();
 
         // We are in the middle where season has not been updated!
         try {
@@ -89,14 +88,14 @@ public class TrainingRecapTable extends JScrollPane {
         deleteRows(scroll);
         deleteRows(fixed);
         var rows = createRows();
-        var model = (DefaultTableModel)scroll.getModel();
-        for (var row: rows) {
+        var model = (DefaultTableModel) scroll.getModel();
+        for (var row : rows) {
             model.addRow(row);
         }
     }
 
     private void deleteRows(JTable table) {
-        var model = (DefaultTableModel)table.getModel();
+        var model = (DefaultTableModel) table.getModel();
         model.setNumRows(0);
     }
 
@@ -120,7 +119,8 @@ public class TrainingRecapTable extends JScrollPane {
             row.add(player.getFullName());
             row.add(player.getAgeWithDaysAsString());
             byte bIdealPosition = player.getIdealPosition();
-            row.add(String.format(MatchRoleID.getNameForPosition(bIdealPosition) + " (%.2f)", player.getIdealPositionRating()));
+            row.add(String.format(MatchRoleID.getNameForPosition(bIdealPosition) + " (%.2f)",
+                    player.getIdealPositionRating()));
             row.add(Integer.toString(ftm.getTrainingSpeed()));
             row.add(Integer.toString(player.getPlayerId()));
 
@@ -144,16 +144,21 @@ public class TrainingRecapTable extends JScrollPane {
     }
 
     /**
-     * Fixed table renderer to add special background colors depending on training speed
+     * Fixed table renderer to add special background colors depending on training
+     * speed
      */
     private static class FixedTrainingRecapRenderer extends DefaultTableCellRenderer {
 
-        /* (non-Javadoc)
-         * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, Object, boolean, boolean, int, int)
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing
+         * .JTable, Object, boolean, boolean, int, int)
          */
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                                                       boolean hasFocus, int row, int column) {
+                boolean hasFocus, int row, int column) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
             this.setIcon(null);
@@ -164,7 +169,7 @@ public class TrainingRecapTable extends JScrollPane {
                 int playerId = Integer.parseInt((String) table.getValueAt(row, table.getColumnCount() - 1));
                 Player player = HOVerwaltung.instance().getModel().getCurrentPlayer(playerId);
 
-                if ( player != null ) {
+                if (player != null) {
                     this.setOpaque(true);
                     this.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
                     this.setText(player.getFullName());
@@ -177,7 +182,7 @@ public class TrainingRecapTable extends JScrollPane {
                     this.setIcon(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(player).getIcon());
                 }
             }
-            
+
             if (isSelected) {
                 return this;
             }
@@ -201,7 +206,7 @@ public class TrainingRecapTable extends JScrollPane {
     /**
      * Creates a new TrainingRecapTable object.
      *
-     * @param model         training model
+     * @param model training model
      */
     public TrainingRecapTable(LazyImagePanel panel, TrainingModel model) {
         trainingModel = model;
@@ -225,7 +230,7 @@ public class TrainingRecapTable extends JScrollPane {
         fixed.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE); //$NON-NLS-1$
         scroll.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE); //$NON-NLS-1$
 
-        //  Remove the fixed columns from the main table
+        // Remove the fixed columns from the main table
         for (int i = 0; i < fixedColumns; i++) {
             TableColumnModel _columnModel = scroll.getColumnModel();
 
@@ -235,7 +240,7 @@ public class TrainingRecapTable extends JScrollPane {
         scroll.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         fixed.setSelectionModel(scroll.getSelectionModel());
 
-        //  Remove the non-fixed columns from the fixed table
+        // Remove the non-fixed columns from the fixed table
         while (fixed.getColumnCount() > fixedColumns) {
             TableColumnModel _columnModel = fixed.getColumnModel();
 
@@ -243,15 +248,15 @@ public class TrainingRecapTable extends JScrollPane {
         }
 
         var fontSize = UserParameter.instance().fontSize;
-        fixed.getColumnModel().getColumn(0).setMaxWidth(12*fontSize);
-        fixed.getColumnModel().getColumn(0).setMinWidth(12*fontSize);
-        fixed.getColumnModel().getColumn(0).setWidth(12*fontSize);
-        fixed.getColumnModel().getColumn(1).setMaxWidth(5*fontSize);
-        fixed.getColumnModel().getColumn(1).setMinWidth(5*fontSize);
-        fixed.getColumnModel().getColumn(1).setWidth(5*fontSize);
-        fixed.getColumnModel().getColumn(2).setMaxWidth(17*fontSize);
-        fixed.getColumnModel().getColumn(2).setMinWidth(17*fontSize);
-        fixed.getColumnModel().getColumn(2).setPreferredWidth(17*fontSize);
+        fixed.getColumnModel().getColumn(0).setMaxWidth(12 * fontSize);
+        fixed.getColumnModel().getColumn(0).setMinWidth(12 * fontSize);
+        fixed.getColumnModel().getColumn(0).setWidth(12 * fontSize);
+        fixed.getColumnModel().getColumn(1).setMaxWidth(5 * fontSize);
+        fixed.getColumnModel().getColumn(1).setMinWidth(5 * fontSize);
+        fixed.getColumnModel().getColumn(1).setWidth(5 * fontSize);
+        fixed.getColumnModel().getColumn(2).setMaxWidth(17 * fontSize);
+        fixed.getColumnModel().getColumn(2).setMinWidth(17 * fontSize);
+        fixed.getColumnModel().getColumn(2).setPreferredWidth(17 * fontSize);
         fixed.getColumnModel().getColumn(3).setMaxWidth(0);
         fixed.getColumnModel().getColumn(3).setMinWidth(0);
         fixed.getColumnModel().getColumn(3).setPreferredWidth(0);
@@ -259,14 +264,15 @@ public class TrainingRecapTable extends JScrollPane {
         fixed.getColumnModel().getColumn(4).setMinWidth(0);
         fixed.getColumnModel().getColumn(4).setPreferredWidth(0);
 
-        //  Add the fixed table to the scroll pane
+        // Add the fixed table to the scroll pane
         fixed.setPreferredScrollableViewportSize(fixed.getPreferredSize());
         setRowHeaderView(fixed);
 
         fixed.setDefaultRenderer(Object.class, new FixedTrainingRecapRenderer());
         scroll.setDefaultRenderer(Object.class, new TrainingRecapRenderer(this.trainingModel));
-//        // Required for darklaf, see https://github.com/weisJ/darklaf/issues/164
-//        scroll.setDefaultRenderer(String.class, new TrainingRecapRenderer(this.trainingModel));
+        // // Required for darklaf, see https://github.com/weisJ/darklaf/issues/164
+        // scroll.setDefaultRenderer(String.class, new
+        // TrainingRecapRenderer(this.trainingModel));
 
         setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, fixed.getTableHeader());
 
@@ -288,10 +294,10 @@ public class TrainingRecapTable extends JScrollPane {
                 if (table.getSelectedRow() < 0)
                     return;
 
-                if ( e.getComponent() instanceof JTable ) {
+                if (e.getComponent() instanceof JTable component) {
                     var cols = table.getSelectedColumns();
                     trainingPrioPopUp.setSelectedColumns(cols);
-                    trainingPrioPopUp.show(e.getComponent(), e.getX(), e.getY());
+                    trainingPrioPopUp.show(component, e.getX(), e.getY());
                 }
             }
         });

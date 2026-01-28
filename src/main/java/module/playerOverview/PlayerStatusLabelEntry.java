@@ -14,19 +14,21 @@ import java.awt.*;
 /**
  * Displays the status of a player using icons.
  *
- * <p>SpielerStatusLabelEntry is a {@link DoubleLabelEntries} that displays:</p>
+ * <p>
+ * SpielerStatusLabelEntry is a {@link DoubleLabelEntries} that displays:
+ * </p>
  * <ul>
- *     <li>On the left, card status and whether the player is transferlisted;</li>
- *     <li>On the right, injury details.</li>
+ * <li>On the left, card status and whether the player is transferlisted;</li>
+ * <li>On the right, injury details.</li>
  * </ul>
  */
 public class PlayerStatusLabelEntry extends DoubleLabelEntries {
 
-    //~ Instance fields ----------------------------------------------------------------------------
+    // ~ Instance fields
+    // ----------------------------------------------------------------------------
 
     private Player player;
     private Boolean m_isLarge;
-
 
     public PlayerStatusLabelEntry(Color colorBG, Boolean isLarge) {
         super();
@@ -54,9 +56,8 @@ public class PlayerStatusLabelEntry extends DoubleLabelEntries {
     }
 
     @Override
-	public final int compareTo(@NotNull IHOTableEntry obj) {
-        if (obj instanceof PlayerStatusLabelEntry) {
-            final PlayerStatusLabelEntry entry = (PlayerStatusLabelEntry) obj;
+    public final int compareTo(@NotNull IHOTableEntry obj) {
+        if (obj instanceof PlayerStatusLabelEntry entry) {
 
             if ((entry.getPlayer() != null) && (getPlayer() != null)) {
                 if (entry.getPlayer().getInjuryWeeks() > getPlayer().getInjuryWeeks()) {
@@ -73,7 +74,7 @@ public class PlayerStatusLabelEntry extends DoubleLabelEntries {
     }
 
     @Override
-	public final void updateComponent() {
+    public final void updateComponent() {
         if (player != null) {
             getLeft().clear();
             getLeft().setIcon(new StatusIcon(player, m_isLarge));
@@ -82,10 +83,9 @@ public class PlayerStatusLabelEntry extends DoubleLabelEntries {
                 getRight().setText("");
                 getRight().setIcon(ImageUtilities.getPlasterIcon(12, 12));
             } else if (player.getInjuryWeeks() > 0) {
-                if(player.getInjuryWeeks() != 999) {
+                if (player.getInjuryWeeks() != 999) {
                     getRight().setText(player.getInjuryWeeks() + "  ");
-                }
-                else {
+                } else {
                     getRight().setText("\u221E  ");
                 }
                 getRight().setIcon(ImageUtilities.getInjuryIcon(12, 12));

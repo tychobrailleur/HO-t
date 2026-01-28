@@ -98,7 +98,6 @@ public class LookAndFeelDialog extends JDialog {
 		}
 	}
 
-
 	/**
 	 * Decorator renderer to display colours using {@link ColorIcon}.
 	 */
@@ -109,17 +108,14 @@ public class LookAndFeelDialog extends JDialog {
 			this.tableCellRenderer = renderer;
 		}
 
-
 		public Component getTableCellRendererComponent(JTable table, Object value,
-													   boolean isSelected, boolean hasFocus, int row, int column) {
+				boolean isSelected, boolean hasFocus, int row, int column) {
 
-			Component comp = tableCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			Component comp = tableCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
+					column);
 
-			if (value instanceof Color) {
-				Color colorUI = (Color)value;
-				JLabel compLabel = (JLabel)comp;
+			if (value instanceof Color colorUI && comp instanceof JLabel compLabel) {
 				compLabel.setIcon(new ColorIcon(colorUI));
-
 				return compLabel;
 			}
 

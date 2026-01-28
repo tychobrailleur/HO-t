@@ -18,28 +18,50 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TableSorter is a decorator for TableModels; adding sorting functionality to a supplied
- * TableModel. TableSorter does not store or copy the data in its TableModel; instead it maintains
- * a map from the row indexes of the view to the row indexes of the model. As requests are made of
- * the sorter (like getValueAt(row, col)) they are passed to the underlying model after the row
- * numbers have been translated via the internal mapping array. This way, the TableSorter appears
- * to hold another copy of the table with the rows in a different order.  TableSorter registers
- * itself as a listener to the underlying model, just as the JTable itself would. Events recieved
- * from the model are examined, sometimes manipulated (typically widened), and then passed on to
- * the TableSorter's listeners (typically the JTable). If a change to the model has invalidated
- * the order of TableSorter's rows, a note of this is made and the sorter will resort the rows the
- * next time a value is requested.  When the tableHeader property is set, either by using the
- * setTableHeader() method or the two argument constructor, the table header may be used as a
- * complete UI for TableSorter. The default renderer of the tableHeader is decorated with a
- * renderer that indicates the sorting status of each column. In addition, a mouse listener is
- * installed with the following behavior:   Mouse-click: Clears the sorting status of all other
- * columns and advances the sorting status of that column through three values: {NOT_SORTED,
- * ASCENDING, DESCENDING} (then back to NOT_SORTED again).  SHIFT-mouse-click: Clears the sorting
- * status of all other columns and cycles the sorting status of the column through the same three
- * values, in the opposite order: {NOT_SORTED, DESCENDING, ASCENDING}.  CONTROL-mouse-click and
- * CONTROL-SHIFT-mouse-click: as above except that the changes to the column do not cancel the
- * statuses of columns that are already sorting - giving a way to initiate a compound sort.   This
- * is a long overdue rewrite of a class of the same name that first appeared in the swing table
+ * TableSorter is a decorator for TableModels; adding sorting functionality to a
+ * supplied
+ * TableModel. TableSorter does not store or copy the data in its TableModel;
+ * instead it maintains
+ * a map from the row indexes of the view to the row indexes of the model. As
+ * requests are made of
+ * the sorter (like getValueAt(row, col)) they are passed to the underlying
+ * model after the row
+ * numbers have been translated via the internal mapping array. This way, the
+ * TableSorter appears
+ * to hold another copy of the table with the rows in a different order.
+ * TableSorter registers
+ * itself as a listener to the underlying model, just as the JTable itself
+ * would. Events recieved
+ * from the model are examined, sometimes manipulated (typically widened), and
+ * then passed on to
+ * the TableSorter's listeners (typically the JTable). If a change to the model
+ * has invalidated
+ * the order of TableSorter's rows, a note of this is made and the sorter will
+ * resort the rows the
+ * next time a value is requested. When the tableHeader property is set, either
+ * by using the
+ * setTableHeader() method or the two argument constructor, the table header may
+ * be used as a
+ * complete UI for TableSorter. The default renderer of the tableHeader is
+ * decorated with a
+ * renderer that indicates the sorting status of each column. In addition, a
+ * mouse listener is
+ * installed with the following behavior: Mouse-click: Clears the sorting status
+ * of all other
+ * columns and advances the sorting status of that column through three values:
+ * {NOT_SORTED,
+ * ASCENDING, DESCENDING} (then back to NOT_SORTED again). SHIFT-mouse-click:
+ * Clears the sorting
+ * status of all other columns and cycles the sorting status of the column
+ * through the same three
+ * values, in the opposite order: {NOT_SORTED, DESCENDING, ASCENDING}.
+ * CONTROL-mouse-click and
+ * CONTROL-SHIFT-mouse-click: as above except that the changes to the column do
+ * not cancel the
+ * statuses of columns that are already sorting - giving a way to initiate a
+ * compound sort. This
+ * is a long overdue rewrite of a class of the same name that first appeared in
+ * the swing table
  * demos in 1997.
  *
  * @author Philip Milne
@@ -49,19 +71,19 @@ import java.util.Map;
  * @version 2.0 02/27/04
  */
 public abstract class AbstractTableSorter extends AbstractTableModel {
-	@Serial
+    @Serial
     private static final long serialVersionUID = 1943995728912103888L;
     public static final int DESCENDING = -1;
     public static final int NOT_SORTED = 0;
     private static final Directive EMPTY_DIRECTIVE = new Directive(-1, NOT_SORTED);
     @SuppressWarnings("unchecked")
-	public static final Comparator COMPARABLE_COMPARATOR = (o1, o2) -> ((Comparable) o1).compareTo(o2);
+    public static final Comparator COMPARABLE_COMPARATOR = (o1, o2) -> ((Comparable) o1).compareTo(o2);
     public static final Comparator LEXICAL_COMPARATOR = (o1, o2) -> o1.toString().compareTo(o2.toString());
 
     protected TableModel tableModel;
     private JTableHeader tableHeader;
     private final List<Directive> sortingColumns = new ArrayList<>();
-    private final Map<Class<?>,Comparator> columnComparators = new HashMap<>();
+    private final Map<Class<?>, Comparator> columnComparators = new HashMap<>();
     private final MouseListener mouseListener;
     private final TableModelListener tableModelListener;
     private int[] modelToView;
@@ -88,7 +110,7 @@ public abstract class AbstractTableSorter extends AbstractTableModel {
     /**
      * Creates a new TableSorter object.
      *
-     * @param tableModel Table model
+     * @param tableModel  Table model
      * @param tableHeader Header
      */
     public AbstractTableSorter(TableModel tableModel, JTableHeader tableHeader) {
@@ -98,12 +120,12 @@ public abstract class AbstractTableSorter extends AbstractTableModel {
     }
 
     @Override
-	public boolean isCellEditable(int row, int column) {
+    public boolean isCellEditable(int row, int column) {
         return tableModel.isCellEditable(modelIndex(row), column);
     }
 
     @Override
-	public Class<?> getColumnClass(int column) {
+    public Class<?> getColumnClass(int column) {
         return tableModel.getColumnClass(column);
     }
 
@@ -112,13 +134,13 @@ public abstract class AbstractTableSorter extends AbstractTableModel {
     }
 
     @Override
-	public String getColumnName(int column) {
+    public String getColumnName(int column) {
         return tableModel.getColumnName(column);
     }
 
     public abstract Comparator getCustomComparator(int column);
 
-    // TableModel interface methods 
+    // TableModel interface methods
     public int getRowCount() {
         return (tableModel == null) ? 0 : tableModel.getRowCount();
     }
@@ -154,11 +176,10 @@ public abstract class AbstractTableSorter extends AbstractTableModel {
             this.tableHeader.removeMouseListener(mouseListener);
 
             TableCellRenderer defaultRenderer = this.tableHeader
-                .getDefaultRenderer();
+                    .getDefaultRenderer();
 
-            if (defaultRenderer instanceof SortableHeaderRenderer) {
-                this.tableHeader.setDefaultRenderer(((SortableHeaderRenderer) defaultRenderer)
-                    .getTableCellRenderer());
+            if (defaultRenderer instanceof SortableHeaderRenderer renderer) {
+                this.tableHeader.setDefaultRenderer(renderer.getTableCellRenderer());
             }
         }
 
@@ -195,7 +216,7 @@ public abstract class AbstractTableSorter extends AbstractTableModel {
     }
 
     @Override
-	public void setValueAt(Object aValue, int row, int column) {
+    public void setValueAt(Object aValue, int row, int column) {
         tableModel.setValueAt(aValue, modelIndex(row), column);
     }
 
@@ -241,7 +262,7 @@ public abstract class AbstractTableSorter extends AbstractTableModel {
         }
 
         return new Arrow(directive.getDirection() == DESCENDING, size,
-            sortingColumns.indexOf(directive));
+                sortingColumns.indexOf(directive));
     }
 
     protected void cancelSorting() {

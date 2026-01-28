@@ -10,12 +10,13 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
 public class PlayerPositionTableCellRenderer extends DefaultTableCellRenderer {
-    //~ Static fields/initializers -----------------------------------------------------------------
+    // ~ Static fields/initializers
+    // -----------------------------------------------------------------
     private static final long serialVersionUID = 3258412837305923127L;
     private static Map<Object, Icon> map;
 
-
-    //~ Constructors -------------------------------------------------------------------------------
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
     public PlayerPositionTableCellRenderer() {
         super();
 
@@ -25,21 +26,22 @@ public class PlayerPositionTableCellRenderer extends DefaultTableCellRenderer {
 
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    // ~ Methods
+    // ------------------------------------------------------------------------------------
 
     /*
      * (non-Javadoc)
      *
-     * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,
-     *      Object, boolean, boolean, int, int)
+     * @see
+     * javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing
+     * .JTable,
+     * Object, boolean, boolean, int, int)
      */
     @Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                                                   boolean hasFocus, int row, int col) {
-        if (value instanceof Integer) {
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+            boolean hasFocus, int row, int col) {
+        if (value instanceof Integer pos) {
             super.getTableCellRendererComponent(table, null, isSelected, hasFocus, row, col);
-
-            int pos = (Integer) value;
 
             Icon icon;
 
@@ -49,12 +51,12 @@ public class PlayerPositionTableCellRenderer extends DefaultTableCellRenderer {
             } else {
                 // Make new icon and cache it.
                 icon = ImageUtilities.getImage4Position(HelperWrapper.instance().getPosition(pos),
-                                                                        (byte) 0,0);
+                        (byte) 0, 0);
                 map.put(value, icon);
             }
 
             this.setIcon(icon);
-            this.setText(MatchRoleID.getNameForPosition((byte) pos));
+            this.setText(MatchRoleID.getNameForPosition((byte) (int) pos));
         } else {
             this.setIcon(null);
             this.setText(null);

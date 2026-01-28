@@ -4,7 +4,8 @@ import core.db.AbstractTable;
 import core.util.AmountOfMoney;
 
 public class ScoutEintrag extends AbstractTable.Storable {
-    //~ Instance fields ----------------------------------------------------------------------------
+    // ~ Instance fields
+    // ----------------------------------------------------------------------------
 
     /**
      * Info
@@ -114,8 +115,8 @@ public class ScoutEintrag extends AbstractTable.Storable {
     protected int m_iLeadership = 0;
     private core.model.player.Player player;
 
-
-    //~ Constructors -------------------------------------------------------------------------------
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
 
     /**
      * Creates a new ScoutEintrag object.
@@ -123,7 +124,8 @@ public class ScoutEintrag extends AbstractTable.Storable {
     public ScoutEintrag() {
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    // ~ Methods
+    // ------------------------------------------------------------------------------------
 
     /**
      * Setter for property m_iAlter.
@@ -165,7 +167,7 @@ public class ScoutEintrag extends AbstractTable.Storable {
      * Calculates full age with days
      *
      * @return Double value of age & agedays combined,
-     * i.e. age + agedays/112
+     *         i.e. age + agedays/112
      */
     public double getAlterWithAgeDays() {
         double retVal = getAlter();
@@ -177,7 +179,7 @@ public class ScoutEintrag extends AbstractTable.Storable {
      * Calculates String for full age with days
      *
      * @return String of age & agedays combined,
-     * format is "YY.DDD"
+     *         format is "YY.DDD"
      */
     public String getAlterWithAgeDaysAsString() {
         // format = yy.ddd
@@ -619,8 +621,8 @@ public class ScoutEintrag extends AbstractTable.Storable {
 
     @Override
     public final boolean equals(Object obj) {
-        if (obj instanceof ScoutEintrag) {
-            return ((ScoutEintrag) obj).getPlayerID() == getPlayerID();
+        if (obj instanceof ScoutEintrag entry) {
+            return entry.getPlayerID() == getPlayerID();
         }
 
         return false;
@@ -634,8 +636,8 @@ public class ScoutEintrag extends AbstractTable.Storable {
     public core.model.player.Player getPlayer() {
         if (player == null) {
             this.player = new core.model.player.Player();
-            player.setFirstName("");  //TODO: fix this
-            player.setNickName(" "); //TODO: fix this
+            player.setFirstName(""); // TODO: fix this
+            player.setNickName(" "); // TODO: fix this
             player.setLastName(this.getName());
             player.setSpecialty(this.getSpeciality());
             player.setExperience(this.getErfahrung());

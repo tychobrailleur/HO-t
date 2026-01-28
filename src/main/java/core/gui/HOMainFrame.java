@@ -93,20 +93,20 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 
 		// Log HO! version
 		HOLogger.instance().info(getClass(),
-			"This is HO! version " + HO.getVersionString() + ", have fun!");
+				"This is HO! version " + HO.getVersionString() + ", have fun!");
 
 		// Log Operating System
 		HOLogger.instance().info(
-			getClass(),
-			"Operating system found: " + System.getProperty("os.name") + " on "
-				+ System.getProperty("os.arch") + " (" + System.getProperty("os.version")
-				+ ")");
+				getClass(),
+				"Operating system found: " + System.getProperty("os.name") + " on "
+						+ System.getProperty("os.arch") + " (" + System.getProperty("os.version")
+						+ ")");
 
 		// Log Java version
 		HOLogger.instance().info(
-			getClass(),
-			"Using java: " + System.getProperty("java.version") + " ("
-				+ System.getProperty("java.vendor") + ")");
+				getClass(),
+				"Using java: " + System.getProperty("java.version") + " ("
+						+ System.getProperty("java.vendor") + ")");
 
 		RefreshManager.instance().registerRefreshable(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -131,7 +131,8 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		String frameTitle = StringUtils.isEmpty(teamName) ? "" : teamName;
 
 		if (!HO.isRelease()) {
-			frameTitle += " (" + TranslationFacility.tr("ls.java.version") + ": " + System.getProperty("java.version") + ")";
+			frameTitle += " (" + TranslationFacility.tr("ls.java.version") + ": " + System.getProperty("java.version")
+					+ ")";
 		}
 
 		setTitle(frameTitle);
@@ -193,15 +194,16 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		if (m_selectedPlayer != player) {
 			m_selectedPlayer = player;
 			var lineupPanel = getLineupPanel();
-			if (lineupPanel != null) lineupPanel.setPlayer(player.getPlayerId());
+			if (lineupPanel != null)
+				lineupPanel.setPlayer(player.getPlayerId());
 			getSpielerUebersichtPanel().setPlayer(player);
 		}
 	}
 
 	public LineupPanel getLineupPanel() {
 		Container c = getTabbedPane().getModulePanel(IModule.LINEUP);
-		if (c instanceof LineupPanel) {
-			return (LineupPanel) c;
+		if (c instanceof LineupPanel lineupPanel) {
+			return lineupPanel;
 		} else if (c != null) {
 			return ((LineupMasterView) c).getLineupPanel();
 		} else {
@@ -233,17 +235,20 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 	}
 
 	public void setInformation(String information, int progress) {
-		if (launching.get()) return;
+		if (launching.get())
+			return;
 		getInfoPanel().setInformation(information, progress);
 	}
 
 	public void setInformation(String information, Color color) {
-		if (launching.get()) return;
+		if (launching.get())
+			return;
 		getInfoPanel().setInformation(information, color);
 	}
 
 	public void updateProgress(int progress) {
-		if (launching.get()) return;
+		if (launching.get())
+			return;
 		getInfoPanel().setProgressbarValue(progress);
 	}
 
@@ -267,7 +272,8 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 			return Weather.PARTIALLY_CLOUDY;
 		}
 		var lineup = instance().getLineupPanel();
-		if (lineup != null) return lineup.getWeather();
+		if (lineup != null)
+			return lineup.getWeather();
 		return Weather.NULL;
 	}
 
@@ -295,7 +301,8 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		try {
 			fireApplicationClosing();
 
-			// TODO: instead of calling XY.instance().save() from here, those classes should register an ApplicationClosingListener
+			// TODO: instead of calling XY.instance().save() from here, those classes should
+			// register an ApplicationClosingListener
 			HOLogger.instance().debug(getClass(), "Shutting down HO!");
 			// save current UserParameter
 			saveUserParameter();
@@ -316,7 +323,8 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 			isAppTerminated.set(true); // enable System.exit in windowClosed()
 			HOLogger.instance().info(getClass(), "Shutdown complete! isAppTerminated: " + isAppTerminated.get());
 
-			// Dispose makes frame windowClosed as soon as all modules windowClosing all complete.
+			// Dispose makes frame windowClosed as soon as all modules windowClosing all
+			// complete.
 			try {
 				dispose();
 			} catch (Exception ignored) {
@@ -361,9 +369,9 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		getContentPane().add(getInfoPanel(), BorderLayout.SOUTH);
 
 		setLocation(UserParameter.instance().hoMainFrame_PositionX,
-			UserParameter.instance().hoMainFrame_PositionY);
+				UserParameter.instance().hoMainFrame_PositionY);
 		setSize(UserParameter.instance().hoMainFrame_width,
-			UserParameter.instance().hoMainFrame_height);
+				UserParameter.instance().hoMainFrame_height);
 	}
 
 	/**
@@ -376,12 +384,13 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		final JMenuBar menuBar = new JMenuBar();
 		menuBar.add(createFileMenu());
 
-		final JMenu functionsMenu = new JMenu(TranslationFacility.tr("ls.menu.functions")); //Functions
-		final JMenu modulesMenu = new JMenu(TranslationFacility.tr("ls.menu.modules"));   //Modules
+		final JMenu functionsMenu = new JMenu(TranslationFacility.tr("ls.menu.functions")); // Functions
+		final JMenu modulesMenu = new JMenu(TranslationFacility.tr("ls.menu.modules")); // Modules
 
 		initModuleFunctionMenus(functionsMenu, modulesMenu);
 
-		// Help =========================================================================
+		// Help
+		// =========================================================================
 
 		// add Top Level Menus
 		menuBar.add(functionsMenu);
@@ -422,18 +431,24 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 	}
 
 	private JMenu createHelpMenu() {
-		final JMenu helpMenu = new JMenu(TranslationFacility.tr("ls.menu.help"));      //Help
+		final JMenu helpMenu = new JMenu(TranslationFacility.tr("ls.menu.help")); // Help
 
 		final JMenuItem homepageMenuItem = new JMenuItem(TranslationFacility.tr("ls.menu.help.projecthomepage"));
-		homepageMenuItem.addActionListener(e -> openURL("https://ho-dev.github.io/HattrickOrganizer/"));  //   Help | HomePage
+		homepageMenuItem.addActionListener(e -> openURL("https://ho-dev.github.io/HattrickOrganizer/")); // Help |
+																											// HomePage
 		helpMenu.add(homepageMenuItem);
 
 		final JMenuItem helpMenuItem = new JMenuItem(TranslationFacility.tr("ls.menu.help.help"));
-		helpMenuItem.addActionListener(e -> openURL("https://ho.readthedocs.io/"));     //   Help | Wiki
+		helpMenuItem.addActionListener(e -> openURL("https://ho.readthedocs.io/")); // Help | Wiki
 		helpMenu.add(helpMenuItem);
 
 		final JMenuItem bugReportMenuItem = new JMenuItem(TranslationFacility.tr("ls.menu.help.reportabug"));
-		bugReportMenuItem.addActionListener(e -> openURL("https://github.com/ho-dev/HattrickOrganizer/issues/new/choose"));    //   Help | Report a bug
+		bugReportMenuItem
+				.addActionListener(e -> openURL("https://github.com/ho-dev/HattrickOrganizer/issues/new/choose")); // Help
+																													// |
+																													// Report
+																													// a
+																													// bug
 		helpMenu.add(bugReportMenuItem);
 		helpMenu.addSeparator();
 
@@ -446,35 +461,36 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		changelogMenuItem.addActionListener(e -> {
 			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
 				try {
-					File jarFile = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
+					File jarFile = new File(
+							this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
 					URI logFile;
 					if (!OSUtils.isMac()) {
 						logFile = jarFile.getParentFile().toPath().resolve("changelog.html").toUri();
 					} else {
-						logFile = jarFile.getParentFile().getParentFile().getParentFile().toPath().resolve("changelog.html").toUri();
+						logFile = jarFile.getParentFile().getParentFile().getParentFile().toPath()
+								.resolve("changelog.html").toUri();
 					}
 					Desktop.getDesktop().browse(logFile);
 				} catch (Exception exc) {
 					JOptionPane.showMessageDialog(this,
-						TranslationFacility.tr("Changelog.error"),
-						TranslationFacility.tr("Fehler"),
-						JOptionPane.ERROR_MESSAGE
-					);
+							TranslationFacility.tr("Changelog.error"),
+							TranslationFacility.tr("Fehler"),
+							JOptionPane.ERROR_MESSAGE);
 					HOLogger.instance().error(HOMainFrame.class, "Error opening changelog panel: " + exc);
 				}
 			}
 		});
-		helpMenu.add(changelogMenuItem);                // Help | changelog
+		helpMenu.add(changelogMenuItem); // Help | changelog
 		helpMenu.addSeparator();
 
 		final JMenuItem aboutMenuItem = new JMenuItem(TranslationFacility.tr("ls.menu.help.about"));
-		aboutMenuItem.addActionListener(e -> Credits.showCredits(HOMainFrame.instance()));   // Help | About
+		aboutMenuItem.addActionListener(e -> Credits.showCredits(HOMainFrame.instance())); // Help | About
 		helpMenu.add(aboutMenuItem);
 		return helpMenu;
 	}
 
 	private JMenu createFileMenu() {
-		final JMenu fileMenu = new JMenu(TranslationFacility.tr("ls.menu.file"));       //File
+		final JMenu fileMenu = new JMenu(TranslationFacility.tr("ls.menu.file")); // File
 
 		final JMenuItem downloadMenuItem = new JMenuItem(TranslationFacility.tr("ls.menu.file.download"));
 		downloadMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0));
@@ -488,27 +504,32 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		fileMenu.addSeparator();
 
 		// Sub-skill recalculation
-		final JMenuItem subSkillFullRecalcMenuItem = new JMenuItem(TranslationFacility.tr("ls.menu.file.subskillrecalculation"));
+		final JMenuItem subSkillFullRecalcMenuItem = new JMenuItem(
+				TranslationFacility.tr("ls.menu.file.subskillrecalculation"));
 		subSkillFullRecalcMenuItem.addActionListener(e -> {
 			var from = HODateTime.now().minus(128 * 7, ChronoUnit.DAYS);
 			if (JOptionPane.showConfirmDialog(this,
-				TranslationFacility.tr("Subskill.Recalc.Full") + "\n" + TranslationFacility.tr("subskill.Recalc.Start"),
-				Helper.getTranslation("ls.menu.file.subskillrecalculation"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+					TranslationFacility.tr("Subskill.Recalc.Full") + "\n"
+							+ TranslationFacility.tr("subskill.Recalc.Start"),
+					Helper.getTranslation("ls.menu.file.subskillrecalculation"),
+					JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
 			}
 		});
 		fileMenu.add(subSkillFullRecalcMenuItem);
 
-		final JMenuItem subSkillRecalc7WeeksMenuItem = new JMenuItem(TranslationFacility.tr("ls.menu.file.subskillrecalculation7weeks"));
+		final JMenuItem subSkillRecalc7WeeksMenuItem = new JMenuItem(
+				TranslationFacility.tr("ls.menu.file.subskillrecalculation7weeks"));
 		subSkillRecalc7WeeksMenuItem.addActionListener(e -> {
 			var nextTraining = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
 			var from = nextTraining.minus(7 * 7, ChronoUnit.DAYS);
 			if (JOptionPane.showConfirmDialog(this,
-				TranslationFacility.tr("subskill.Recalc.7w") + "\n" +
-					TranslationFacility.tr("subskill.Recalc.1stTrainingweek") + ": " +
-					from.toLocaleHTWeek().toString() + "\n" +
-					TranslationFacility.tr("subskill.Recalc.Start"),
-				Helper.getTranslation("ls.menu.file.subskillrecalculation7weeks"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+					TranslationFacility.tr("subskill.Recalc.7w") + "\n" +
+							TranslationFacility.tr("subskill.Recalc.1stTrainingweek") + ": " +
+							from.toLocaleHTWeek().toString() + "\n" +
+							TranslationFacility.tr("subskill.Recalc.Start"),
+					Helper.getTranslation("ls.menu.file.subskillrecalculation7weeks"),
+					JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
 			}
 		});
@@ -520,10 +541,12 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		preferencesMenuItem.addActionListener(e -> new OptionenDialog(this).setVisible(true));
 		fileMenu.add(preferencesMenuItem);
 
-		final JMenuItem userAdministrationOptionsMenu = new JMenuItem(TranslationFacility.tr("ls.menu.file.database.dbuseradministration"));
+		final JMenuItem userAdministrationOptionsMenu = new JMenuItem(
+				TranslationFacility.tr("ls.menu.file.database.dbuseradministration"));
 		userAdministrationOptionsMenu.addActionListener(e -> new UserAdministrationDialog(this).setVisible(true));
 
-		final JMenuItem m_jmiDbCleanupTool = new JMenuItem(TranslationFacility.tr("ls.menu.file.database.databasecleanup"));
+		final JMenuItem m_jmiDbCleanupTool = new JMenuItem(
+				TranslationFacility.tr("ls.menu.file.database.databasecleanup"));
 		m_jmiDbCleanupTool.addActionListener(e -> {
 			DBCleanupTool dbCleanupTool = new DBCleanupTool();
 			dbCleanupTool.showDialog(HOMainFrame.instance());
@@ -538,7 +561,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		final JMenuItem fullScreenMenuItem = new JMenuItem(TranslationFacility.tr("ls.menu.file.fullscreen"));
 		if (FullScreen.instance().isFullScreenSupported(this)) {
 			fullScreenMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11,
-				KeyEvent.SHIFT_DOWN_MASK));
+					KeyEvent.SHIFT_DOWN_MASK));
 		} else {
 			fullScreenMenuItem.setEnabled(false);
 		}
@@ -600,7 +623,8 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		// Set the currency from the HRF file.
 		try {
 			var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
-			if (xtra == null) return;
+			if (xtra == null)
+				return;
 			float faktorgeld = (float) xtra.getCurrencyRate();
 
 			if (faktorgeld > -1) {
@@ -652,9 +676,11 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		final GraphicsDevice currentDevice = this.getGraphicsConfiguration().getDevice();
 
 		parameter.hoMainFrame_width = Math.min(getSize().width,
-			getToolkit().getScreenSize().width - parameter.hoMainFrame_PositionX + currentDevice.getDefaultConfiguration().getBounds().x);
+				getToolkit().getScreenSize().width - parameter.hoMainFrame_PositionX
+						+ currentDevice.getDefaultConfiguration().getBounds().x);
 		parameter.hoMainFrame_height = Math.min(getSize().height,
-			getToolkit().getScreenSize().height - parameter.hoMainFrame_PositionY + currentDevice.getDefaultConfiguration().getBounds().y);
+				getToolkit().getScreenSize().height - parameter.hoMainFrame_PositionY
+						+ currentDevice.getDefaultConfiguration().getBounds().y);
 
 		final var lineupPanel = getLineupPanel();
 
@@ -676,7 +702,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 			parameter.spielerUebersichtsPanel_horizontalLeftSplitPane = sup[0];
 			parameter.spielerUebersichtsPanel_horizontalRightSplitPane = sup[1];
 			parameter.spielerUebersichtsPanel_verticalSplitPane = sup[2];
-//			getSpielerUebersichtPanel().saveColumnOrder();
+			// getSpielerUebersichtPanel().saveColumnOrder();
 		}
 
 		// Lineup Panel
@@ -689,7 +715,8 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 
 		// TransferScoutPanel
 		if (getTabbedPane().isModuleTabVisible(IModule.TRANSFERS)) {
-			parameter.transferScoutPanel_horizontalSplitPane = getTransferScoutPanel().getScoutPanel().getDividerLocation();
+			parameter.transferScoutPanel_horizontalSplitPane = getTransferScoutPanel().getScoutPanel()
+					.getDividerLocation();
 		}
 
 		for (var module : ModuleManager.instance().getModules(true)) {
@@ -709,7 +736,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 			 * screen mode, too.
 			 *
 			 * @param windowEvent
-			 *            is ignored
+			 *                    is ignored
 			 */
 			@Override
 			public void windowClosed(WindowEvent windowEvent) {

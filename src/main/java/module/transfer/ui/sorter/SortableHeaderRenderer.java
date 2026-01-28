@@ -18,7 +18,7 @@ class SortableHeaderRenderer implements TableCellRenderer {
      * @param tableCellRenderer
      */
     public SortableHeaderRenderer(AbstractTableSorter sorter,
-        TableCellRenderer tableCellRenderer) {
+            TableCellRenderer tableCellRenderer) {
         this.tableCellRenderer = tableCellRenderer;
         this.sorter = sorter;
     }
@@ -28,12 +28,11 @@ class SortableHeaderRenderer implements TableCellRenderer {
     }
 
     public Component getTableCellRendererComponent(JTable table, Object value,
-        boolean isSelected, boolean hasFocus, int row, int column) {
+            boolean isSelected, boolean hasFocus, int row, int column) {
         Component c = tableCellRenderer.getTableCellRendererComponent(table,
                 value, isSelected, hasFocus, row, column);
 
-        if (c instanceof JLabel) {
-            JLabel l = (JLabel) c;
+        if (c instanceof JLabel l) {
 
             l.setHorizontalTextPosition(SwingConstants.LEFT);
 

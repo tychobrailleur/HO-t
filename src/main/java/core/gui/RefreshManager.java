@@ -5,21 +5,22 @@ import core.util.HOLogger;
 
 import java.util.Vector;
 
-
-
 /**
  * Managed das Refreshen
  */
 public class RefreshManager {
-    //~ Static fields/initializers -----------------------------------------------------------------
+    // ~ Static fields/initializers
+    // -----------------------------------------------------------------
 
     private static RefreshManager m_clRefreshManager;
 
-    //~ Instance fields ----------------------------------------------------------------------------
+    // ~ Instance fields
+    // ----------------------------------------------------------------------------
 
     private Vector<IRefreshable> m_clRefreshable = new Vector<>();
 
-    //~ Constructors -------------------------------------------------------------------------------
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
 
     /**
      * Creates a new RefreshManager object.
@@ -27,7 +28,8 @@ public class RefreshManager {
     private RefreshManager() {
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    // ~ Methods
+    // ------------------------------------------------------------------------------------
 
     public static RefreshManager instance() {
         if (m_clRefreshManager == null) {
@@ -43,11 +45,11 @@ public class RefreshManager {
     public void doReInit() {
         for (IRefreshable iRefreshable : m_clRefreshable) {
             try {
-                //no plugin
-                if (iRefreshable instanceof Refreshable) {
-                    ((Refreshable) iRefreshable).reInit();
+                // no plugin
+                if (iRefreshable instanceof Refreshable refreshable) {
+                    refreshable.reInit();
                 }
-                //plugin
+                // plugin
                 else {
                     iRefreshable.refresh();
                 }

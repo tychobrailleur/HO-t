@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-
 public class NtTeamChooser extends JDialog implements ActionListener {
 
 	private long selectedTeamId = -1;
@@ -28,10 +27,10 @@ public class NtTeamChooser extends JDialog implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent ev) {
-		if (ev != null && ev.getSource() instanceof JButton) {
-			String btnTxt = ((JButton)ev.getSource()).getText();
+		if (ev != null && ev.getSource() instanceof JButton btn) {
+			String btnTxt = btn.getText();
 			System.out.println("btnTxt: " + btnTxt);
-			btnTxt = btnTxt.substring(btnTxt.lastIndexOf("(")+1, btnTxt.lastIndexOf(")"));
+			btnTxt = btnTxt.substring(btnTxt.lastIndexOf("(") + 1, btnTxt.lastIndexOf(")"));
 			selectedTeamId = Long.parseLong(btnTxt);
 			System.out.println("selectedTeamId: " + selectedTeamId);
 			this.dispose();
@@ -45,15 +44,17 @@ public class NtTeamChooser extends JDialog implements ActionListener {
 	/**
 	 * @param args
 	 *//*
-	public static void main(String[] args) {
-		var teams = new ArrayList<String[]>();
-		teams.add(new String[]{"526156", "Club Team"});
-		teams.add(new String[]{"3216", "National Team"});
-		NtTeamChooser chooser = new NtTeamChooser(teams);
-		chooser.setModal(true);
-		chooser.setVisible(true);
-		//JOptionPane.showMessageDialog(new JLabel("test"), chooser, "Choose team", JOptionPane.QUESTION_MESSAGE);
-		System.out.println("Result is: " + chooser.getSelectedTeamId());
-		chooser.dispose();
-	}*/
+		 * public static void main(String[] args) {
+		 * var teams = new ArrayList<String[]>();
+		 * teams.add(new String[]{"526156", "Club Team"});
+		 * teams.add(new String[]{"3216", "National Team"});
+		 * NtTeamChooser chooser = new NtTeamChooser(teams);
+		 * chooser.setModal(true);
+		 * chooser.setVisible(true);
+		 * //JOptionPane.showMessageDialog(new JLabel("test"), chooser, "Choose team",
+		 * JOptionPane.QUESTION_MESSAGE);
+		 * System.out.println("Result is: " + chooser.getSelectedTeamId());
+		 * chooser.dispose();
+		 * }
+		 */
 }

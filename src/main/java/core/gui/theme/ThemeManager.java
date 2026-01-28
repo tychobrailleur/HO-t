@@ -45,7 +45,7 @@ public final class ThemeManager {
 	/** Name of the default theme. */
 	public static final String DEFAULT_THEME_NAME = NimbusTheme.THEME_NAME;
 
-	private static final Path tempImgPath = Paths.get(UserManager.instance().getDbParentFolder() , "img");
+	private static final Path tempImgPath = Paths.get(UserManager.instance().getDbParentFolder(), "img");
 	private static final Path teamLogoPath = tempImgPath.resolve("clubLogos");
 	private static final File teamLogoDir = new File(String.valueOf(teamLogoPath));
 	private static final Path playerAvatarPath = tempImgPath.resolve("playersAvatar");
@@ -55,15 +55,13 @@ public final class ThemeManager {
 
 	HOClassicSchema classicSchema = new HOClassicSchema();
 
-
-	private ThemeManager(){
+	private ThemeManager() {
 		initialize();
 	}
 
-	public static ThemeManager instance(){
+	public static ThemeManager instance() {
 		return MANAGER;
 	}
-
 
 	private void initialize() {
 
@@ -80,7 +78,8 @@ public final class ThemeManager {
 			try {
 				Files.createDirectories(teamLogoPath);
 			} catch (IOException e) {
-				HOLogger.instance().log(this.getClass(),"Failed to create directory for team logos: " + e.getMessage());
+				HOLogger.instance().log(this.getClass(),
+						"Failed to create directory for team logos: " + e.getMessage());
 			}
 		}
 
@@ -88,13 +87,15 @@ public final class ThemeManager {
 			try {
 				Files.createDirectories(playerAvatarPath);
 			} catch (IOException e) {
-				HOLogger.instance().log(this.getClass(),"Failed to create directory for player Avatars: " + e.getMessage());
+				HOLogger.instance().log(this.getClass(),
+						"Failed to create directory for player Avatars: " + e.getMessage());
 			}
 		}
 
 		IconLoader.updateThemeStatus(new Object());
 
-		// TODO: Workaround some warnings which are issued incorrectly. To silence them you can call
+		// TODO: Workaround some warnings which are issued incorrectly. To silence them
+		// you can call
 		LogUtil.getLogger(IconLoader.class).setLevel(Level.SEVERE);
 		Logger.getLogger("com.github.weisj.jsvg.parser.SVGLoader").setLevel(Level.SEVERE);
 	}
@@ -112,6 +113,7 @@ public final class ThemeManager {
 		var theme = getCurrentTheme();
 		return theme.getColor(key);
 	}
+
 	public static Color getColor(HOColor hoColor) {
 		if (hoColor.getColorReference() != null) {
 			var theme = getTheme(hoColor.getTheme());
@@ -123,20 +125,23 @@ public final class ThemeManager {
 	public static BaseTheme getCurrentTheme() {
 		return getTheme(getCurrentThemeName());
 	}
-	public static BaseTheme getTheme(String name){ return (BaseTheme) themes.get(Objects.equals(name, "default") ?DEFAULT_THEME_NAME:name); }
+
+	public static BaseTheme getTheme(String name) {
+		return (BaseTheme) themes.get(Objects.equals(name, "default") ? DEFAULT_THEME_NAME : name);
+	}
 
 	public boolean isSet(String key) {
-		Boolean tmp = (Boolean)classicSchema.get(key);
-		if(tmp == null)
+		Boolean tmp = (Boolean) classicSchema.get(key);
+		if (tmp == null)
 			tmp = Boolean.FALSE;
 		return tmp;
 	}
 
-	public void put(String key, Object value){
+	public void put(String key, Object value) {
 		classicSchema.put(key, value);
 	}
 
-	private  <T> T get(String key, Class<T> type) {
+	private <T> T get(String key, Class<T> type) {
 		Object obj = classicSchema.get(key);
 		if (type.isInstance(obj)) {
 			return type.cast(obj);
@@ -144,10 +149,10 @@ public final class ThemeManager {
 		return null;
 	}
 
-	public Object get(String key){
+	public Object get(String key) {
 		Object tmp = classicSchema.get(key);
 
-		if(tmp == null)
+		if (tmp == null)
 			tmp = UIManager.get(key);
 
 		return tmp;
@@ -155,19 +160,20 @@ public final class ThemeManager {
 
 	private Icon getIconImpl(String key) {
 		Object tmp = classicSchema.get(key);
-		if(tmp == null)
+		if (tmp == null)
 			return null;
-		if(tmp instanceof Icon)
-			return (Icon)tmp;
+		if (tmp instanceof Icon)
+			return (Icon) tmp;
 		return classicSchema.loadImageIcon(tmp.toString());
 	}
 
-	private Icon getScaledIconImpl(String key, int x, int y){
+	private Icon getScaledIconImpl(String key, int x, int y) {
 		String scaledKey = key + "(" + x + "," + y + ")";
 		Icon icon = get(scaledKey, Icon.class);
 		if (icon == null) {
 			icon = ImageUtilities.getScaledIcon(getIconImpl(key), x, y);
-			if (icon != null) put(scaledKey, icon);
+			if (icon != null)
+				put(scaledKey, icon);
 		}
 		return icon;
 	}
@@ -176,32 +182,32 @@ public final class ThemeManager {
 		return instance().getIconImpl(key);
 	}
 
-	public static Object getIconPath(String key){
+	public static Object getIconPath(String key) {
 		return instance().get(key);
 	}
 
-	public static Icon getScaledIcon(String key, int x,int y) {
+	public static Icon getScaledIcon(String key, int x, int y) {
 		final Icon scaledIcon = instance().getScaledIconImpl(key, x, y);
 
 		// If darklaf, retrieve image, and use as icon.
-		if (scaledIcon instanceof DerivableImageIcon) {
-			return new ImageIcon(((DerivableImageIcon)scaledIcon).getImage());
+		if (scaledIcon instanceof DerivableImageIcon derivable) {
+			return new ImageIcon(derivable.getImage());
 		}
 
 		return scaledIcon;
 	}
 
-	public Icon getSmallClubLogo(int teamID){
+	public Icon getSmallClubLogo(int teamID) {
 		return getClubLogo(teamID, 18);
 	}
 
-	public Icon getClubLogo(int teamID){
+	public Icon getClubLogo(int teamID) {
 		return getClubLogo(teamID, 36);
 	}
 
-	public String getTeamLogoFilename(int teamID){
+	public String getTeamLogoFilename(int teamID) {
 		var info = DBManager.instance().loadTeamLogoInfo(teamID);
-		if ( info != null){
+		if (info != null) {
 			return teamLogoPath.resolve(info.getFilename()).toString();
 		}
 		return null;
@@ -211,7 +217,7 @@ public final class ThemeManager {
 		int height = Math.round(width * 260f / 210f);
 		String logoPath = null;
 		var info = DBManager.instance().loadTeamLogoInfo(teamID);
-		if ( info != null ) {
+		if (info != null) {
 			var url = info.getUrl();
 			if (url != null && !url.isEmpty() && !url.equals("null")) {
 				// Check if the logo has already been downloaded
@@ -224,12 +230,12 @@ public final class ThemeManager {
 					boolean bSuccess = UpdateHelper.download(url, logo);
 					if (bSuccess) {
 						logoPath = filename;
-					}
-					else {
-						HOLogger.instance().error(this.getClass(), "error when trying to download logo of team ID: " + teamID + "\n" + url);
+					} else {
+						HOLogger.instance().error(this.getClass(),
+								"error when trying to download logo of team ID: " + teamID + "\n" + url);
 					}
 				}
-				//we update LAST_ACCESS value
+				// we update LAST_ACCESS value
 				info.setLastAccess(HODateTime.now());
 				DBManager.instance().storeTeamLogoInfo(info);
 			}
@@ -248,23 +254,22 @@ public final class ThemeManager {
 			try {
 				var logoFile = new File(logoPath);
 				img = ImageIO.read(logoFile);
-				if ( img != null) {
+				if (img != null) {
 					ImageIcon iconOriginal = new ImageIcon(img);
 					scaledIcon = ImageUtilities.getScaledIcon(iconOriginal, width, height);
-				}
-				else {
+				} else {
 					// remove damaged icon file
-					if ( !logoFile.delete() ) {
+					if (!logoFile.delete()) {
 						HOLogger.instance().debug(this.getClass(), "damaged logo file can not be deleted: " + logoPath);
 					}
 					return getScaledIcon(HOIconName.NO_CLUB_LOGO, width, height);
 				}
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
-			if (scaledIcon != null) put(scaledKey, scaledIcon);
+			if (scaledIcon != null)
+				put(scaledKey, scaledIcon);
 		}
 
 		return scaledIcon;
@@ -277,15 +282,15 @@ public final class ThemeManager {
 	 *
 	 * @param playersAvatar list of player avatars fetched avatars CSV
 	 */
-	public void generateAllPlayerAvatar(List<PlayerAvatar> playersAvatar, int progress){
+	public void generateAllPlayerAvatar(List<PlayerAvatar> playersAvatar, int progress) {
 
 		String avatarPath;
 		File avatarImg;
 
-		//1. estimate number of avatar to download
+		// 1. estimate number of avatar to download
 		List<PlayerAvatar> missingAvatars = new ArrayList<>();
 
-		for (var avatar : playersAvatar){
+		for (var avatar : playersAvatar) {
 
 			avatarPath = playerAvatarPath.resolve(avatar.getPlayerID() + ".png").toString();
 			avatarImg = new File(avatarPath);
@@ -295,23 +300,24 @@ public final class ThemeManager {
 			}
 		}
 
-		//2. Download missing avatar
-		int i=1;
+		// 2. Download missing avatar
+		int i = 1;
 		int iMax = missingAvatars.size();
 
-		for (var avatar:missingAvatars) {
+		for (var avatar : missingAvatars) {
 			HOLogger.instance().info(this.getClass(), "Downloading player's avatar: %s/%s".formatted(i, iMax));
 			HOMainFrame.instance().setInformation("Downloading player's avatar: %s/%s".formatted(i, iMax), progress);
 			try {
 				avatar.generateAvatar(playerAvatarPath);
 			} catch (IOException e) {
-				HOLogger.instance().error(ThemeManager.class, "Error processing Player Avatar for player: " + avatar.getPlayerID());
+				HOLogger.instance().error(ThemeManager.class,
+						"Error processing Player Avatar for player: " + avatar.getPlayerID());
 			}
 			i++;
 		}
 	}
 
-	public Icon getPlayerAvatar(int playerID){
+	public Icon getPlayerAvatar(int playerID) {
 		return getPlayerAvatar(playerID, 92);
 	}
 
@@ -322,7 +328,8 @@ public final class ThemeManager {
 		File avatarImg = new File(avatarPath);
 
 		if (!avatarImg.exists()) {
-			HOLogger.instance().log(this.getClass(), "avatar for player " + playerID + " not found locally. It will be downloaded");
+			HOLogger.instance().log(this.getClass(),
+					"avatar for player " + playerID + " not found locally. It will be downloaded");
 			return getScaledIcon(HOIconName.NO_CLUB_LOGO, width, height);
 		}
 
@@ -332,27 +339,26 @@ public final class ThemeManager {
 			BufferedImage img;
 			try {
 				img = ImageIO.read(new File(avatarPath));
-				if ( img != null) {
+				if (img != null) {
 					ImageIcon iconOriginal = new ImageIcon(img);
 					scaledIcon = ImageUtilities.getScaledIcon(iconOriginal, width, height);
-				}
-				else {
+				} else {
 					return getScaledIcon(HOIconName.NO_CLUB_LOGO, width, height);
 				}
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
-			if (scaledIcon != null) put(scaledKey, scaledIcon);
+			if (scaledIcon != null)
+				put(scaledKey, scaledIcon);
 		}
 
 		return scaledIcon;
 	}
 
-	public static String getCurrentThemeName(){
+	public static String getCurrentThemeName() {
 		var ret = themes.get(UserParameter.instance().skin);
-		if (ret==null){
+		if (ret == null) {
 			ret = themes.get(DEFAULT_THEME_NAME);
 		}
 		return ret.getName();
@@ -362,7 +368,7 @@ public final class ThemeManager {
 		setTheme(UserParameter.instance().skin);
 	}
 
-	public void setTheme(String name){
+	public void setTheme(String name) {
 		try {
 			boolean success = false;
 
@@ -396,7 +402,8 @@ public final class ThemeManager {
 	}
 
 	private void initializeMacKeyBindings(boolean success) {
-		// #177 Standard shortcuts for copy/cut/paste don't work in MacOSX if LookAndFeel changes
+		// #177 Standard shortcuts for copy/cut/paste don't work in MacOSX if
+		// LookAndFeel changes
 		if (success && OSUtils.isMac()) {
 			InputMap im = (InputMap) UIManager.get("TextField.focusInputMap");
 			im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
@@ -407,19 +414,22 @@ public final class ThemeManager {
 	}
 
 	/**
-	 * Download all player avatars and replace the cached image file of requested player id.
+	 * Download all player avatars and replace the cached image file of requested
+	 * player id.
+	 * 
 	 * @param playerId int
 	 */
 	public void downloadPlayerAvatar(int playerId) {
 		var xml = MyConnector.instance().getAvatars(HOVerwaltung.instance().getModel().getBasics().getTeamId());
 		List<PlayerAvatar> playersAvatar = XMLAvatarsParser.parseAvatarsFromString(xml);
-		var playerAvatar = playersAvatar.stream().filter(a->a.getPlayerID()==playerId).toList();
-		for ( var p : playerAvatar ){
+		var playerAvatar = playersAvatar.stream().filter(a -> a.getPlayerID() == playerId).toList();
+		for (var p : playerAvatar) {
 			var avatarPath = playerAvatarPath.resolve(p.getPlayerID() + ".png");
 			var file = new File(avatarPath.toString());
 			if (file.exists()) {
-				if ( !file.delete() ) {
-					HOLogger.instance().error(getClass(), "Unable to delete existing avatar file " + file.getAbsolutePath());
+				if (!file.delete()) {
+					HOLogger.instance().error(getClass(),
+							"Unable to delete existing avatar file " + file.getAbsolutePath());
 				}
 			}
 		}

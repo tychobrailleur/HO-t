@@ -82,7 +82,7 @@ public class OutputPanel extends LazyImagePanel {
 
         JTextField tf = new JTextField();
         tf.setDocument(new NumericDocument(10));
-        Object[] objs = {TranslationFacility.tr("ls.match.id"), tf};
+        Object[] objs = { TranslationFacility.tr("ls.match.id"), tf };
 
         int value = JOptionPane.showConfirmDialog(HOMainFrame.instance(), objs,
                 TranslationFacility.tr("ImportMatch"), JOptionPane.OK_CANCEL_OPTION);
@@ -107,8 +107,9 @@ public class OutputPanel extends LazyImagePanel {
     }
 
     private void addListeners() {
-        var playerIdColumnIndex = this.outputTable.getColumnCount()-1;
-        this.outputTable.getSelectionModel().addListSelectionListener(new PlayerSelectionListener(this.model, this.outputTable, playerIdColumnIndex));
+        var playerIdColumnIndex = this.outputTable.getColumnCount() - 1;
+        this.outputTable.getSelectionModel().addListSelectionListener(
+                new PlayerSelectionListener(this.model, this.outputTable, playerIdColumnIndex));
         this.outputTable.getSelectionModel().addListSelectionListener(e -> {
             var index = outputTable.getSelectedRow();
             fixedOutputTable.getSelectionModel().setSelectionInterval(index, index);
@@ -136,9 +137,9 @@ public class OutputPanel extends LazyImagePanel {
             public void mouseReleased(MouseEvent e) {
                 if (outputTable.getSelectedRow() < 0)
                     return;
-                if (e.getComponent() instanceof JTable) {
+                if (e.getComponent() instanceof JTable table) {
                     trainingPrioPopUp.updateActivePlayer();
-                    trainingPrioPopUp.show(e.getComponent(), e.getX(), e.getY());
+                    trainingPrioPopUp.show(table, e.getX(), e.getY());
                 }
             }
         });
@@ -177,13 +178,12 @@ public class OutputPanel extends LazyImagePanel {
         outputTable.setDefaultRenderer(Object.class, new OutputTableRenderer(false));
 
         // Setup column models
-        for (int i=0; i< outputTable.getModel().getColumnCount(); i++){
+        for (int i = 0; i < outputTable.getModel().getColumnCount(); i++) {
             int fixedColumns = 1;
-            if ( i < fixedColumns){
+            if (i < fixedColumns) {
                 var col = outputTable.getColumnModel().getColumn(0);
                 outputTable.getColumnModel().removeColumn(col);
-            }
-            else {
+            } else {
                 var col = fixedOutputTable.getColumnModel().getColumn(fixedColumns);
                 fixedOutputTable.getColumnModel().removeColumn(col);
             }
@@ -201,7 +201,7 @@ public class OutputPanel extends LazyImagePanel {
 
         // Hide playerId column
         var nColumns = outputTable.getColumnModel().getColumnCount();
-        var playerIDCol = outputTable.getColumnModel().getColumn(nColumns-1);
+        var playerIDCol = outputTable.getColumnModel().getColumn(nColumns - 1);
         playerIDCol.setPreferredWidth(0);
         playerIDCol.setMinWidth(0);
         playerIDCol.setMaxWidth(0);

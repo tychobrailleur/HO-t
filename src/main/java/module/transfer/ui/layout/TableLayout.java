@@ -46,26 +46,36 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 
 /**
- * TableLayout is a layout manager that arranges components in rows and columns like a spreadsheet.
- * TableLayout allows each row or column to be a different size.  A row or column can be given an
- * absolute size in pixels, a percentage of the available space, or it can grow and shrink to fill
+ * TableLayout is a layout manager that arranges components in rows and columns
+ * like a spreadsheet.
+ * TableLayout allows each row or column to be a different size. A row or column
+ * can be given an
+ * absolute size in pixels, a percentage of the available space, or it can grow
+ * and shrink to fill
  * the remaining space after other rows and columns have been resized.
  *
  * <p>
- * Using spreadsheet terminology, a cell is the intersection of a row and column.  Cells have
- * finite, non-negative sizes measured in pixels.  The dimensions of a cell depend solely upon the
+ * Using spreadsheet terminology, a cell is the intersection of a row and
+ * column. Cells have
+ * finite, non-negative sizes measured in pixels. The dimensions of a cell
+ * depend solely upon the
  * dimensions of its row and column.
  * </p>
  *
  * <p>
- * A component occupies a rectangular group of one or more cells.  The component can be aligned in
+ * A component occupies a rectangular group of one or more cells. The component
+ * can be aligned in
  * four ways within that cell.
  * </p>
  *
  * <p>
- * A component can be stretched horizontally to fit the cell set (full justification), or it can be
- * placed in the center of the cell.  The component could also be left justified or right
- * justified.  Similarly, the component can be full, center, top, or bottom justified along the
+ * A component can be stretched horizontally to fit the cell set (full
+ * justification), or it can be
+ * placed in the center of the cell. The component could also be left justified
+ * or right
+ * justified. Similarly, the component can be full, center, top, or bottom
+ * justified along the
+ * 
  * <pre>
  * public static void main (String args[])
  * {
@@ -125,25 +135,25 @@ import java.util.ListIterator;
  */
 public class TableLayout implements LayoutManager2, Serializable, TableLayoutConstants {
     /*
-       Note: In this file, a cr refers to either a column or a row.  cr[C] always
-       means column and cr[R] always means row.  A cr size is either a column
-       width or a row Height.  TableLayout views columns and rows as being
-       conceptually symmetric.  Therefore, much of the code applies to both
-       columns and rows, and the use of the cr terminology eliminates redundancy.
-       Also, for ease of reading, z always indicates a parameter whose value is
-       either C or R.
+     * Note: In this file, a cr refers to either a column or a row. cr[C] always
+     * means column and cr[R] always means row. A cr size is either a column
+     * width or a row Height. TableLayout views columns and rows as being
+     * conceptually symmetric. Therefore, much of the code applies to both
+     * columns and rows, and the use of the cr terminology eliminates redundancy.
+     * Also, for ease of reading, z always indicates a parameter whose value is
+     * either C or R.
      */
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -3520320698489212868L;
+     * 
+     */
+    private static final long serialVersionUID = -3520320698489212868L;
 
-	/** Default row/column size */
+    /** Default row/column size */
     protected static final double[][] defaultSize = {
-            {  },
-            {  }
-        };
+            {},
+            {}
+    };
 
     /** Indicates a column */
     protected static final int C = 0;
@@ -155,8 +165,10 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     protected static boolean checkForComponentOrientationSupport = true;
 
     /**
-     * Method used to get component orientation while preserving compatability with earlier
-     * versions of java.awt.Container.  Necessary for supporting older JDKs and MicroEdition
+     * Method used to get component orientation while preserving compatability with
+     * earlier
+     * versions of java.awt.Container. Necessary for supporting older JDKs and
+     * MicroEdition
      * versions of Java.
      */
     protected static Method methodGetComponentOrientation;
@@ -165,8 +177,10 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     protected LinkedList<Entry> list;
 
     /**
-     * Offsets of crs in pixels.  The left boarder of column n is at crOffset[C][n] and the right
-     * boarder is at cr[C][n + 1] for all columns including the last one.  crOffset[C].length =
+     * Offsets of crs in pixels. The left boarder of column n is at crOffset[C][n]
+     * and the right
+     * boarder is at cr[C][n + 1] for all columns including the last one.
+     * crOffset[C].length =
      * crSize[C].length + 1
      */
     protected int[][] crOffset = { null, null };
@@ -178,8 +192,10 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     protected double[][] crSpec = { null, null };
 
     /**
-     * Indicates whether or not the size of the cells are known for the last known size of the
-     * container.  If dirty is true or the container has been resized, the cell sizes must be
+     * Indicates whether or not the size of the cells are known for the last known
+     * size of the
+     * container. If dirty is true or the container has been resized, the cell sizes
+     * must be
      * recalculated using calculateSize.
      */
     protected boolean dirty;
@@ -196,13 +212,15 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     /** Vertical gap between rows */
     protected int vGap;
 
-    //******************************************************************************
-    //** Constructors                                                            ***
-    //******************************************************************************
+    // ******************************************************************************
+    // ** Constructors ***
+    // ******************************************************************************
 
     /**
-     * Constructs an instance of TableLayout.  This TableLayout will have no columns or rows.  This
-     * constructor is most useful for bean-oriented programming and dynamically adding columns and
+     * Constructs an instance of TableLayout. This TableLayout will have no columns
+     * or rows. This
+     * constructor is most useful for bean-oriented programming and dynamically
+     * adding columns and
      * rows.
      */
     public TableLayout() {
@@ -212,9 +230,11 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     /**
      * Constructs an instance of TableLayout.
      *
-     * @param size widths of columns and heights of rows in the format, {{col0, col1, col2, ...,
-     *        colN}, {row0, row1, row2, ..., rowM}} If this parameter is invalid, the TableLayout
-     *        will have exactly one row and one column.
+     * @param size widths of columns and heights of rows in the format, {{col0,
+     *             col1, col2, ...,
+     *             colN}, {row0, row1, row2, ..., rowM}} If this parameter is
+     *             invalid, the TableLayout
+     *             will have exactly one row and one column.
      *
      * @throws IllegalArgumentException
      */
@@ -222,12 +242,11 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
         // Make sure columns and rows and nothing else is specified
         if ((size != null) && (size.length == 2)) {
             init(size[C], size[R]);
-        }
-        else {
+        } else {
             throw new IllegalArgumentException(
-                "Parameter size should be an array, a[2], where a[0] is the " //$NON-NLS-1$
-                + "is an array of column widths and a[1] is an array or row " //$NON-NLS-1$
-                + "heights."); //$NON-NLS-1$
+                    "Parameter size should be an array, a[2], where a[0] is the " //$NON-NLS-1$
+                            + "is an array of column widths and a[1] is an array or row " //$NON-NLS-1$
+                            + "heights."); //$NON-NLS-1$
         }
     }
 
@@ -242,18 +261,25 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     }
 
     /**
-     * Adjusts the number and sizes of rows in this layout.  After calling this method, the caller
-     * should request this layout manager to perform the layout.  This can be done with the
+     * Adjusts the number and sizes of rows in this layout. After calling this
+     * method, the caller
+     * should request this layout manager to perform the layout. This can be done
+     * with the
      * following code:
+     * 
      * <pre>
-     *     layout.layoutContainer(container);
-     *     container.repaint();
+     * layout.layoutContainer(container);
+     * container.repaint();
      * </pre>
+     * 
      * or
+     * 
      * <pre>
-     *     window.pack()
+     * window.pack()
      * </pre>
-     * If this is not done, the changes in the layout will not be seen until the container is
+     * 
+     * If this is not done, the changes in the layout will not be seen until the
+     * container is
      * resized.
      *
      * @param column widths of each of the columns
@@ -265,18 +291,25 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     }
 
     /**
-     * Adjusts the width of a single column in this layout.  After calling this method, the caller
-     * should request this layout manager to perform the layout.  This can be done with the
-     * following code: <code> layout.layoutContainer(container); container.repaint(); </code> or
+     * Adjusts the width of a single column in this layout. After calling this
+     * method, the caller
+     * should request this layout manager to perform the layout. This can be done
+     * with the
+     * following code:
+     * <code> layout.layoutContainer(container); container.repaint(); </code> or
+     * 
      * <pre>
-     *     window.pack()
+     * window.pack()
      * </pre>
-     * If this is not done, the changes in the layout will not be seen until the container is
+     * 
+     * If this is not done, the changes in the layout will not be seen until the
+     * container is
      * resized.
      *
-     * @param i zero-based index of column to set.  If this parameter is not valid, an
-     *        ArrayOutOfBoundsException will be thrown.
-     * @param size width of the column.  This parameter cannot be null.
+     * @param i    zero-based index of column to set. If this parameter is not
+     *             valid, an
+     *             ArrayOutOfBoundsException will be thrown.
+     * @param size width of the column. This parameter cannot be null.
      *
      * @see #getColumn
      */
@@ -303,8 +336,8 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     /**
      * Gets the width of a single column in this layout.
      *
-     * @param i zero-based index of row to get.  If this parameter is not valid, an
-     *        ArrayOutOfBoundsException will be thrown.
+     * @param i zero-based index of row to get. If this parameter is not valid, an
+     *          ArrayOutOfBoundsException will be thrown.
      *
      * @return width of the requested column
      *
@@ -317,21 +350,20 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     /**
      * Sets the constraints of a given component.
      *
-     * @param component desired component.  This parameter cannot be null.
-     * @param constraint new set of constraints.  This parameter cannot be null.
+     * @param component  desired component. This parameter cannot be null.
+     * @param constraint new set of constraints. This parameter cannot be null.
      *
      * @throws IllegalArgumentException
      */
     public void setConstraints(Component component,
-        TableLayoutConstraints constraint) {
+            TableLayoutConstraints constraint) {
         // Check parameters
         if (component == null) {
             throw new IllegalArgumentException(
-                "Parameter component cannot be null."); //$NON-NLS-1$
-        }
-        else if (constraint == null) {
+                    "Parameter component cannot be null."); //$NON-NLS-1$
+        } else if (constraint == null) {
             throw new IllegalArgumentException(
-                "Parameter constraint cannot be null."); //$NON-NLS-1$
+                    "Parameter constraint cannot be null."); //$NON-NLS-1$
         }
 
         // Find and update constraints for the given component
@@ -346,16 +378,17 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
         }
     }
 
-    //******************************************************************************
-    //** Get/Set methods                                                         ***
-    //******************************************************************************
+    // ******************************************************************************
+    // ** Get/Set methods ***
+    // ******************************************************************************
 
     /**
      * Gets the constraints of a given component.
      *
      * @param component desired component
      *
-     * @return If the given component is found, the constraints associated with that component.  If
+     * @return If the given component is found, the constraints associated with that
+     *         component. If
      *         the given component is null or is not found, null is returned.
      */
     public TableLayoutConstraints getConstraints(Component component) {
@@ -366,8 +399,8 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
 
             if (entry.component == component) {
                 return new TableLayoutConstraints(entry.cr1[C], entry.cr1[R],
-                    entry.cr2[C], entry.cr2[R], entry.alignment[C],
-                    entry.alignment[R]);
+                        entry.cr2[C], entry.cr2[R], entry.alignment[C],
+                        entry.alignment[R]);
             }
         }
 
@@ -384,10 +417,9 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     public void setHGap(int hGap) {
         if (hGap >= 0) {
             this.hGap = hGap;
-        }
-        else {
+        } else {
             throw new IllegalArgumentException(
-                "Parameter hGap must be non-negative."); //$NON-NLS-1$
+                    "Parameter hGap must be non-negative."); //$NON-NLS-1$
         }
     }
 
@@ -401,11 +433,15 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     }
 
     /**
-     * Determines whether or not there are any components with invalid constraints. An invalid
-     * constraint is one that references a non-existing row or column. For example, on a table
-     * with five rows, row -1 and row 5 are both invalid. Valid rows are 0 through 4, inclusively.
+     * Determines whether or not there are any components with invalid constraints.
+     * An invalid
+     * constraint is one that references a non-existing row or column. For example,
+     * on a table
+     * with five rows, row -1 and row 5 are both invalid. Valid rows are 0 through
+     * 4, inclusively.
      *
-     * @return a list of TableLayout.Entry instances refering to the invalid constraints and
+     * @return a list of TableLayout.Entry instances refering to the invalid
+     *         constraints and
      *         corresponding components
      *
      * @throws RuntimeException
@@ -422,13 +458,12 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
                 Entry entry = iterator.next();
 
                 if ((entry.cr1[R] < 0) || (entry.cr1[C] < 0)
-                    || (entry.cr2[R] >= crSpec[R].length)
-                    || (entry.cr2[C] >= crSpec[C].length)) {
+                        || (entry.cr2[R] >= crSpec[R].length)
+                        || (entry.cr2[C] >= crSpec[C].length)) {
                     listInvalid.add(entry.copy());
                 }
             }
-        }
-        catch (CloneNotSupportedException error) {
+        } catch (CloneNotSupportedException error) {
             throw new RuntimeException("Unexpected CloneNotSupportedException"); //$NON-NLS-1$
         }
 
@@ -436,9 +471,12 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     }
 
     /**
-     * Returns the alignment along the x axis.  This specifies how the component would like to be
-     * aligned relative to other components.  The value should be a number between 0 and 1 where 0
-     * represents alignment along the origin, 1 is aligned the furthest away from the origin, 0.5
+     * Returns the alignment along the x axis. This specifies how the component
+     * would like to be
+     * aligned relative to other components. The value should be a number between 0
+     * and 1 where 0
+     * represents alignment along the origin, 1 is aligned the furthest away from
+     * the origin, 0.5
      * is centered, etc.
      *
      * @param parent -
@@ -450,9 +488,12 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     }
 
     /**
-     * Returns the alignment along the y axis.  This specifies how the component would like to be
-     * aligned relative to other components.  The value should be a number between 0 and 1 where 0
-     * represents alignment along the origin, 1 is aligned the furthest away from the origin, 0.5
+     * Returns the alignment along the y axis. This specifies how the component
+     * would like to be
+     * aligned relative to other components. The value should be a number between 0
+     * and 1 where 0
+     * represents alignment along the origin, 1 is aligned the furthest away from
+     * the origin, 0.5
      * is centered, etc.
      *
      * @param parent
@@ -482,7 +523,8 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     }
 
     /**
-     * Gets a list of overlapping components and their constraints.  Two components overlap if they
+     * Gets a list of overlapping components and their constraints. Two components
+     * overlap if they
      * cover at least one common cell.
      *
      * @return a list of zero or more TableLayout.Entry instances
@@ -508,22 +550,20 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
 
             // Check all components
             for (int knowUnique = 1; knowUnique < numEntry; knowUnique++) {
-                for (int checking = knowUnique - 1; checking >= 0;
-                    checking--) {
+                for (int checking = knowUnique - 1; checking >= 0; checking--) {
                     if (((entry[checking].cr1[C] >= entry[knowUnique].cr1[C])
-                        && (entry[checking].cr1[C] <= entry[knowUnique].cr2[C])
-                        && (entry[checking].cr1[R] >= entry[knowUnique].cr1[R])
-                        && (entry[checking].cr1[R] <= entry[knowUnique].cr2[R]))
-                        || ((entry[checking].cr2[C] >= entry[knowUnique].cr1[C])
-                        && (entry[checking].cr2[C] <= entry[knowUnique].cr2[C])
-                        && (entry[checking].cr2[R] >= entry[knowUnique].cr1[R])
-                        && (entry[checking].cr2[R] <= entry[knowUnique].cr2[R]))) {
+                            && (entry[checking].cr1[C] <= entry[knowUnique].cr2[C])
+                            && (entry[checking].cr1[R] >= entry[knowUnique].cr1[R])
+                            && (entry[checking].cr1[R] <= entry[knowUnique].cr2[R]))
+                            || ((entry[checking].cr2[C] >= entry[knowUnique].cr1[C])
+                                    && (entry[checking].cr2[C] <= entry[knowUnique].cr2[C])
+                                    && (entry[checking].cr2[R] >= entry[knowUnique].cr1[R])
+                                    && (entry[checking].cr2[R] <= entry[knowUnique].cr2[R]))) {
                         listOverlapping.add(entry[checking].copy());
                     }
                 }
             }
-        }
-        catch (CloneNotSupportedException error) {
+        } catch (CloneNotSupportedException error) {
             throw new RuntimeException("Unexpected CloneNotSupportedException"); //$NON-NLS-1$
         }
 
@@ -531,16 +571,22 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     }
 
     /**
-     * Adjusts the number and sizes of rows in this layout.  After calling this method, the caller
-     * should request this layout manager to perform the layout.  This can be done with the
-     * following code: <code> layout.layoutContainer(container); container.repaint(); </code> or
+     * Adjusts the number and sizes of rows in this layout. After calling this
+     * method, the caller
+     * should request this layout manager to perform the layout. This can be done
+     * with the
+     * following code:
+     * <code> layout.layoutContainer(container); container.repaint(); </code> or
+     * 
      * <pre>
-     *     window.pack()
+     * window.pack()
      * </pre>
-     * If this is not done, the changes in the layout will not be seen until the container is
+     * 
+     * If this is not done, the changes in the layout will not be seen until the
+     * container is
      * resized.
      *
-     * @param row heights of each of the rows.  This parameter cannot be null.
+     * @param row heights of each of the rows. This parameter cannot be null.
      *
      * @see #getRow
      */
@@ -549,18 +595,25 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     }
 
     /**
-     * Adjusts the height of a single row in this layout.  After calling this method, the caller
-     * should request this layout manager to perform the layout.  This can be done with the
-     * following code: <code> layout.layoutContainer(container); container.repaint(); </code> or
+     * Adjusts the height of a single row in this layout. After calling this method,
+     * the caller
+     * should request this layout manager to perform the layout. This can be done
+     * with the
+     * following code:
+     * <code> layout.layoutContainer(container); container.repaint(); </code> or
+     * 
      * <pre>
-     *     window.pack()
+     * window.pack()
      * </pre>
-     * If this is not done, the changes in the layout will not be seen until the container is
+     * 
+     * If this is not done, the changes in the layout will not be seen until the
+     * container is
      * resized.
      *
-     * @param i zero-based index of row to set.  If this parameter is not valid, an
-     *        ArrayOutOfBoundsException will be thrown.
-     * @param size height of the row.  This parameter cannot be null.
+     * @param i    zero-based index of row to set. If this parameter is not valid,
+     *             an
+     *             ArrayOutOfBoundsException will be thrown.
+     * @param size height of the row. This parameter cannot be null.
      *
      * @see #getRow
      */
@@ -587,8 +640,8 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     /**
      * Gets the sizes of a row in this layout.
      *
-     * @param i zero-based index of row to get.  If this parameter is not valid, an
-     *        ArrayOutOfBoundsException will be thrown.
+     * @param i zero-based index of row to get. If this parameter is not valid, an
+     *          ArrayOutOfBoundsException will be thrown.
      *
      * @return height of each of the requested row
      *
@@ -608,10 +661,9 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     public void setVGap(int vGap) {
         if (vGap >= 0) {
             this.vGap = vGap;
-        }
-        else {
+        } else {
             throw new IllegalArgumentException(
-                "Parameter vGap must be non-negative."); //$NON-NLS-1$
+                    "Parameter vGap must be non-negative."); //$NON-NLS-1$
         }
     }
 
@@ -627,56 +679,55 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     /**
      * Adds the specified component with the specified name to the layout.
      *
-     * @param name indicates entry's position and anchor
+     * @param name      indicates entry's position and anchor
      * @param component component to add
      */
     public void addLayoutComponent(String name, Component component) {
         addLayoutComponent(component, name);
     }
 
-    //******************************************************************************
-    //** java.awt.event.LayoutManager2 methods                                   ***
-    //******************************************************************************
+    // ******************************************************************************
+    // ** java.awt.event.LayoutManager2 methods ***
+    // ******************************************************************************
 
     /**
      * Adds the specified component with the specified name to the layout.
      *
-     * @param component component to add
+     * @param component  component to add
      * @param constraint indicates entry's position and alignment
      *
      * @throws IllegalArgumentException -
      */
     public void addLayoutComponent(Component component, Object constraint) {
-        if (constraint instanceof String) {
+        if (constraint instanceof String constraintStr) {
             // Create an entry to associate component with its constraints
-            constraint = new TableLayoutConstraints((String) constraint);
+            constraint = new TableLayoutConstraints(constraintStr);
 
             // Add component and constraints to the list
             list.add(new Entry(component, (TableLayoutConstraints) constraint));
 
             // Indicate that the cell sizes are not known
             dirty = true;
-        }
-        else if (constraint instanceof TableLayoutConstraints) {
+        } else if (constraint instanceof TableLayoutConstraints constraintLayout) {
             // Add component and constraints to the list
-            list.add(new Entry(component, (TableLayoutConstraints) constraint));
+            list.add(new Entry(component, constraintLayout));
 
             // Indicate that the cell sizes are not known
             dirty = true;
-        }
-        else if (constraint == null) {
+        } else if (constraint == null) {
             throw new IllegalArgumentException(
-                "No constraint for the component"); //$NON-NLS-1$
-        }
-        else {
+                    "No constraint for the component"); //$NON-NLS-1$
+        } else {
             throw new IllegalArgumentException(
-                "Cannot accept a constraint of class " + constraint.getClass()); //$NON-NLS-1$
+                    "Cannot accept a constraint of class " + constraint.getClass()); //$NON-NLS-1$
         }
     }
 
     /**
-     * Deletes a column in this layout.  All components to the right of the deletion point are
-     * moved left one column.  The container will need to be laid out after this method returns.
+     * Deletes a column in this layout. All components to the right of the deletion
+     * point are
+     * moved left one column. The container will need to be laid out after this
+     * method returns.
      * See <code>setColumn</code>.
      *
      * @param i zero-based index of column to delete
@@ -689,8 +740,10 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     }
 
     /**
-     * Deletes a row in this layout.  All components below the deletion point are moved up one row.
-     * The container will need to be laid out after this method returns.  See <code>setRow</code>.
+     * Deletes a row in this layout. All components below the deletion point are
+     * moved up one row.
+     * The container will need to be laid out after this method returns. See
+     * <code>setRow</code>.
      * There must be at least two rows in order to delete a row.
      *
      * @param i zero-based index of row to delete
@@ -702,16 +755,18 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
         deleteCr(R, i);
     }
 
-    //******************************************************************************
-    //** Insertion/Deletion methods                                              ***
-    //******************************************************************************
+    // ******************************************************************************
+    // ** Insertion/Deletion methods ***
+    // ******************************************************************************
 
     /**
-     * Inserts a column in this layout.  All components to the right of the insertion point are
-     * moved right one column.  The container will need to be laid out after this method returns.
+     * Inserts a column in this layout. All components to the right of the insertion
+     * point are
+     * moved right one column. The container will need to be laid out after this
+     * method returns.
      * See <code>setColumn</code>.
      *
-     * @param i zero-based index at which to insert the column
+     * @param i    zero-based index at which to insert the column
      * @param size size of the column to be inserted
      *
      * @see #setColumn
@@ -724,8 +779,8 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     /**
      * Inserts a cr for the methods insertRow or insertColumn.
      *
-     * @param z indicates row or column
-     * @param i zero-based index at which to insert the cr
+     * @param z    indicates row or column
+     * @param i    zero-based index at which to insert the cr
      * @param size size of cr being inserted
      *
      * @throws IllegalArgumentException -
@@ -734,13 +789,13 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
         // Make sure position is valid
         if ((i < 0) || (i > crSpec[z].length)) {
             throw new IllegalArgumentException("Parameter i is invalid.  i = "
-                + i + ".  Valid range is [0, " //$NON-NLS-1$ 
-                + crSpec[z].length + "]."); //$NON-NLS-1$
+                    + i + ".  Valid range is [0, " //$NON-NLS-1$
+                    + crSpec[z].length + "]."); //$NON-NLS-1$
         }
 
         // Make sure row size is valid
         if ((size < 0.0) && (size != FILL) && (size != PREFERRED)
-            && (size != MINIMUM)) {
+                && (size != MINIMUM)) {
             size = 0.0;
         }
 
@@ -779,11 +834,12 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     }
 
     /**
-     * Inserts a row in this layout.  All components below the insertion point are moved down one
-     * row.  The container will need to be laid out after this method returns.  See
+     * Inserts a row in this layout. All components below the insertion point are
+     * moved down one
+     * row. The container will need to be laid out after this method returns. See
      * <code>setRow</code>.
      *
-     * @param i zero-based index at which to insert the row
+     * @param i    zero-based index at which to insert the row
      * @param size size of the row to be inserted
      *
      * @see #setRow
@@ -794,7 +850,8 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     }
 
     /**
-     * Invalidates the layout, indicating that if the layout manager has cached information it
+     * Invalidates the layout, indicating that if the layout manager has cached
+     * information it
      * should be discarded.
      *
      * @param target -
@@ -803,13 +860,15 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
         dirty = true;
     }
 
-    //******************************************************************************
-    //** java.awt.event.LayoutManager methods                                    ***
-    //******************************************************************************
+    // ******************************************************************************
+    // ** java.awt.event.LayoutManager methods ***
+    // ******************************************************************************
 
     /**
-     * To lay out the specified container using this layout.  This method reshapes the components
-     * in the specified target container in order to satisfy the constraints of all components.
+     * To lay out the specified container using this layout. This method reshapes
+     * the components
+     * in the specified target container in order to satisfy the constraints of all
+     * components.
      *
      * <p>
      * User code should not have to call this method directly.
@@ -855,7 +914,7 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
 
                 // The following block of code has been optimized so that the
                 // preferred size of the component is only obtained if it is
-                // needed.  There are components in which the getPreferredSize
+                // needed. There are components in which the getPreferredSize
                 // method is extremely expensive, such as data driven controls
                 // with a large amount of data.
                 // Get the preferred size of the component
@@ -901,12 +960,14 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     }
 
     /**
-     * Returns the maximum dimensions for this layout given the components in the specified target
+     * Returns the maximum dimensions for this layout given the components in the
+     * specified target
      * container.
      *
      * @param target the component which needs to be laid out
      *
-     * @return unconditionally, a Dimension of Integer.MAX_VALUE by Integer.MAX_VALUE since
+     * @return unconditionally, a Dimension of Integer.MAX_VALUE by
+     *         Integer.MAX_VALUE since
      *         TableLayout does not limit the maximum size of a container
      */
     public Dimension maximumLayoutSize(Container target) {
@@ -914,14 +975,22 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     }
 
     /**
-     * Determines the minimum size of the container argument using this layout. The minimum size is
-     * the smallest size that, if used for the container's size, will ensure that all components
-     * are at least as large as their minimum size.  This method cannot guarantee that all
-     * components will be their minimum size.  For example, if component A and component B are
-     * each allocate half of the container's width and component A wants to be 10 pixels wide
-     * while component B wants to be 100 pixels wide, they cannot both be accommodated.  Since in
-     * general components rather be larger than their minimum size instead of smaller, component
-     * B's request will be fulfilled. The minimum size of the container would be 200 pixels.
+     * Determines the minimum size of the container argument using this layout. The
+     * minimum size is
+     * the smallest size that, if used for the container's size, will ensure that
+     * all components
+     * are at least as large as their minimum size. This method cannot guarantee
+     * that all
+     * components will be their minimum size. For example, if component A and
+     * component B are
+     * each allocate half of the container's width and component A wants to be 10
+     * pixels wide
+     * while component B wants to be 100 pixels wide, they cannot both be
+     * accommodated. Since in
+     * general components rather be larger than their minimum size instead of
+     * smaller, component
+     * B's request will be fulfilled. The minimum size of the container would be 200
+     * pixels.
      *
      * @param container container being served by this layout manager
      *
@@ -932,14 +1001,22 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     }
 
     /**
-     * Determines the preferred size of the container argument using this layout. The preferred
-     * size is the smallest size that, if used for the container's size, will ensure that all
-     * components are at least as large as their preferred size.  This method cannot guarantee
-     * that all components will be their preferred size.  For example, if component A and
-     * component B are each allocate half of the container's width and component A wants to be 10
-     * pixels wide while component B wants to be 100 pixels wide, they cannot both be
-     * accommodated.  Since in general components rather be larger than their preferred size
-     * instead of smaller, component B's request will be fulfilled. The preferred size of the
+     * Determines the preferred size of the container argument using this layout.
+     * The preferred
+     * size is the smallest size that, if used for the container's size, will ensure
+     * that all
+     * components are at least as large as their preferred size. This method cannot
+     * guarantee
+     * that all components will be their preferred size. For example, if component A
+     * and
+     * component B are each allocate half of the container's width and component A
+     * wants to be 10
+     * pixels wide while component B wants to be 100 pixels wide, they cannot both
+     * be
+     * accommodated. Since in general components rather be larger than their
+     * preferred size
+     * instead of smaller, component B's request will be fulfilled. The preferred
+     * size of the
      * container would be 200 pixels.
      *
      * @param container container being served by this layout manager
@@ -971,18 +1048,19 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
         dirty = true;
     }
 
-    //******************************************************************************
-    //** Misc methods                                                            ***
-    //******************************************************************************
+    // ******************************************************************************
+    // ** Misc methods ***
+    // ******************************************************************************
 
     /**
      * Converts this TableLayout to a string.
      *
-     * @return a string representing the columns and row sizes in the form "{{col0, col1, col2,
+     * @return a string representing the columns and row sizes in the form "{{col0,
+     *         col1, col2,
      *         ..., colN}, {row0, row1, row2, ..., rowM}}"
      */
     @Override
-	public String toString() {
+    public String toString() {
         int counter;
 
         String value = "TableLayout {{"; //$NON-NLS-1$
@@ -993,8 +1071,7 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
             }
 
             value += (crSpec[C][crSpec[C].length - 1] + "}, {"); //$NON-NLS-1$
-        }
-        else {
+        } else {
             value += "}, {"; //$NON-NLS-1$
         }
 
@@ -1004,8 +1081,7 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
             }
 
             value += (crSpec[R][crSpec[R].length - 1] + "}}"); //$NON-NLS-1$
-        }
-        else {
+        } else {
             value += "}}"; //$NON-NLS-1$
         }
 
@@ -1013,7 +1089,8 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     }
 
     /**
-     * Gets the container's component orientation.  If a JDK that does not support component
+     * Gets the container's component orientation. If a JDK that does not support
+     * component
      * orientation is being used, then null is returned.
      *
      * @param container Container whose orientation is being queried
@@ -1022,7 +1099,7 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
      */
     protected ComponentOrientation getComponentOrientation(Container container) {
         // This method is implemented to only get the class and method objects
-        // once so as to reduce expensive reflection operations.  If the reflection
+        // once so as to reduce expensive reflection operations. If the reflection
         // fails, then component orientation is not supported.
         ComponentOrientation co = null;
 
@@ -1030,17 +1107,16 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
             if (checkForComponentOrientationSupport) {
                 methodGetComponentOrientation = Class.forName(
                         "java.awt.Container").getMethod //$NON-NLS-1$
-                    ("getComponentOrientation", new Class[0]); //$NON-NLS-1$
+                ("getComponentOrientation", new Class[0]); //$NON-NLS-1$
 
                 checkForComponentOrientationSupport = false;
             }
 
             if (methodGetComponentOrientation != null) {
                 co = (ComponentOrientation) methodGetComponentOrientation
-                    .invoke(container, new Object[0]);
+                        .invoke(container, new Object[0]);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
         }
 
         return co;
@@ -1049,7 +1125,7 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     /**
      * Sets the sizes of rows or columns for the methods setRow or setColumn.
      *
-     * @param z indicates row or column
+     * @param z    indicates row or column
      * @param size new cr size
      */
     protected void setCr(int z, double[] size) {
@@ -1060,8 +1136,8 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
         // Make sure rows are valid
         for (int counter = 0; counter < crSpec[z].length; counter++) {
             if ((crSpec[z][counter] < 0.0) && (crSpec[z][counter] != FILL)
-                && (crSpec[z][counter] != PREFERRED)
-                && (crSpec[z][counter] != MINIMUM)) {
+                    && (crSpec[z][counter] != PREFERRED)
+                    && (crSpec[z][counter] != MINIMUM)) {
                 crSpec[z][counter] = 0.0;
             }
         }
@@ -1073,14 +1149,14 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     /**
      * Sets the sizes of rows or columns for the methods setRow or setColumn.
      *
-     * @param z indicates row or column
-     * @param i indicates which cr to resize
+     * @param z    indicates row or column
+     * @param i    indicates which cr to resize
      * @param size new cr size
      */
     protected void setCr(int z, int i, double size) {
         // Make sure size is valid
         if ((size < 0.0) && (size != FILL) && (size != PREFERRED)
-            && (size != MINIMUM)) {
+                && (size != MINIMUM)) {
             size = 0.0;
         }
 
@@ -1094,10 +1170,11 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     /**
      * Assigns absolute sizes.
      *
-     * @param z indicates row or column
+     * @param z             indicates row or column
      * @param availableSize amount of space available in the container
      *
-     * @return the amount of space available after absolute crs have been assigned sizes
+     * @return the amount of space available after absolute crs have been assigned
+     *         sizes
      */
     protected int assignAbsoluteSize(int z, int availableSize) {
         int numCr = crSpec[z].length;
@@ -1115,7 +1192,7 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     /**
      * Assigns FILL sizes.
      *
-     * @param z indicates row or column
+     * @param z             indicates row or column
      * @param availableSize amount of space available in the container
      */
     protected void assignFillSize(int z, int availableSize) {
@@ -1150,8 +1227,7 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
 
         // Assign one pixel of slack to each FILL cr, starting at the last one,
         // until all slack has been consumed
-        for (int counter = numCr - 1; (counter >= 0) && (slackSize > 0);
-            counter--) {
+        for (int counter = numCr - 1; (counter >= 0) && (slackSize > 0); counter--) {
             if (crSpec[z][counter] == FILL) {
                 crSize[z][counter]++;
                 slackSize--;
@@ -1160,17 +1236,22 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
     }
 
     /**
-     * Assigned widths to preferred and minimum size columns and rows.  This reduces the available
-     * width and height.  Minimum widths/heights must be calculated first because they affect
-     * preferred widths/heights, but not vice versa.  The end result is that any component
-     * contained wholly or partly in a column/row of minimum/preferred width will get at least its
+     * Assigned widths to preferred and minimum size columns and rows. This reduces
+     * the available
+     * width and height. Minimum widths/heights must be calculated first because
+     * they affect
+     * preferred widths/heights, but not vice versa. The end result is that any
+     * component
+     * contained wholly or partly in a column/row of minimum/preferred width will
+     * get at least its
      * minimum/preferred width, respectively.
      *
-     * @param z indicates row or column
+     * @param z             indicates row or column
      * @param availableSize amount of space available in the container
-     * @param typeOfSize indicates preferred or minimum
+     * @param typeOfSize    indicates preferred or minimum
      *
-     * @return the amount of space available after absolute crs have been assigned sizes
+     * @return the amount of space available after absolute crs have been assigned
+     *         sizes
      */
     protected int assignPrefMinSize(int z, int availableSize, double typeOfSize) {
         // Get variables referring to columns or rows (crs)
@@ -1187,8 +1268,7 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
                 // or partially contained within this cr
                 ListIterator<Entry> iterator = list.listIterator(0);
 
-nextComponent: 
-                while (iterator.hasNext()) {
+                nextComponent: while (iterator.hasNext()) {
                     Entry entry = iterator.next();
 
                     // Skip invalid entries
@@ -1201,22 +1281,22 @@ nextComponent:
                     if ((entry.cr1[z] <= counter) && (entry.cr2[z] >= counter)) {
                         // Setup size and number of adjustable crs
                         Dimension p = (typeOfSize == PREFERRED)
-                            ? entry.component.getPreferredSize()
-                            : entry.component.getMinimumSize();
+                                ? entry.component.getPreferredSize()
+                                : entry.component.getMinimumSize();
 
-                        int size = (p == null) ? 0 : ((z == C) ? p.width
-                                                               : p.height);
+                        int size = (p == null) ? 0
+                                : ((z == C) ? p.width
+                                        : p.height);
                         int numAdjustable = 0;
 
                         // Calculate for preferred size
                         if (typeOfSize == PREFERRED) {
                             // Consider all crs this component occupies
-                            for (int entryCr = entry.cr1[z];
-                                entryCr <= entry.cr2[z]; entryCr++) {
+                            for (int entryCr = entry.cr1[z]; entryCr <= entry.cr2[z]; entryCr++) {
                                 // Subtract absolute, relative, and minumum cr
                                 // sizes, which have already been calculated
                                 if ((crSpec[z][entryCr] >= 0.0)
-                                    || (crSpec[z][entryCr] == MINIMUM)) {
+                                        || (crSpec[z][entryCr] == MINIMUM)) {
                                     size -= crSize[z][entryCr];
                                 }
 
@@ -1237,8 +1317,7 @@ nextComponent:
                         // Calculate for minimum size
                         else {
                             // Consider all crs this component occupies
-                            for (int entryCr = entry.cr1[z];
-                                entryCr <= entry.cr2[z]; entryCr++) {
+                            for (int entryCr = entry.cr1[z]; entryCr <= entry.cr2[z]; entryCr++) {
                                 // Subtract absolute and relative cr sizes, which
                                 // have already been calculated
                                 if (crSpec[z][entryCr] >= 0.0) {
@@ -1247,7 +1326,7 @@ nextComponent:
 
                                 // Count preferred/min width columns
                                 else if ((crSpec[z][entryCr] == PREFERRED)
-                                    || (crSpec[z][entryCr] == MINIMUM)) {
+                                        || (crSpec[z][entryCr] == MINIMUM)) {
                                     numAdjustable++;
                                 }
 
@@ -1284,10 +1363,11 @@ nextComponent:
     /**
      * Assigns relative sizes.
      *
-     * @param z indicates row or column
+     * @param z             indicates row or column
      * @param availableSize amount of space available in the container
      *
-     * @return the amount of space available after relative crs have been assigned sizes
+     * @return the amount of space available after relative crs have been assigned
+     *         sizes
      */
     protected int assignRelativeSize(int z, int availableSize) {
         int relativeSize = (availableSize < 0) ? 0 : availableSize;
@@ -1296,7 +1376,7 @@ nextComponent:
         for (int counter = 0; counter < numCr; counter++) {
             if ((crSpec[z][counter] > 0.0) && (crSpec[z][counter] < 1.0)) {
                 crSize[z][counter] = (int) ((crSpec[z][counter] * relativeSize)
-                    + 0.5);
+                        + 0.5);
 
                 availableSize -= crSize[z][counter];
             }
@@ -1306,25 +1386,26 @@ nextComponent:
     }
 
     /**
-     * Calculates the preferred or minimum size for the methods preferredLayoutSize and
+     * Calculates the preferred or minimum size for the methods preferredLayoutSize
+     * and
      * minimumLayoutSize.
      *
-     * @param container container whose size is being calculated
+     * @param container  container whose size is being calculated
      * @param typeOfSize indicates preferred or minimum
      *
      * @return a dimension indicating the container's preferred or minimum size
      */
     protected Dimension calculateLayoutSize(Container container,
-        double typeOfSize) {
-        //  Get preferred/minimum sizes
+            double typeOfSize) {
+        // Get preferred/minimum sizes
         Entry[] entryList = list.toArray(new Entry[list.size()]);
         int numEntry = entryList.length;
         Dimension[] prefMinSize = new Dimension[numEntry];
 
         for (int i = 0; i < numEntry; i++) {
             prefMinSize[i] = (typeOfSize == PREFERRED)
-                ? entryList[i].component.getPreferredSize()
-                : entryList[i].component.getMinimumSize();
+                    ? entryList[i].component.getPreferredSize()
+                    : entryList[i].component.getMinimumSize();
         }
 
         // Calculate sizes
@@ -1344,21 +1425,24 @@ nextComponent:
     }
 
     /**
-     * Calculates the preferred or minimum size for the method calculateLayoutSize(Container
-     * container, double typeOfSize).  This method is passed the preferred/minimum sizes of the
-     * components so that the potentially expensive methods getPreferredSize()/getMinimumSize()
+     * Calculates the preferred or minimum size for the method
+     * calculateLayoutSize(Container
+     * container, double typeOfSize). This method is passed the preferred/minimum
+     * sizes of the
+     * components so that the potentially expensive methods
+     * getPreferredSize()/getMinimumSize()
      * are not called twice for the same component.
      *
-     * @param container container whose size is being calculated
-     * @param z -
-     * @param typeOfSize indicates preferred or minimum
-     * @param entryList list of Entry objects
+     * @param container   container whose size is being calculated
+     * @param z           -
+     * @param typeOfSize  indicates preferred or minimum
+     * @param entryList   list of Entry objects
      * @param prefMinSize list of preferred or minimum sizes
      *
      * @return a dimension indicating the container's preferred or minimum size
      */
     protected int calculateLayoutSize(Container container, int z,
-        double typeOfSize, Entry[] entryList, Dimension[] prefMinSize) {
+            double typeOfSize, Entry[] entryList, Dimension[] prefMinSize) {
         Dimension size; // Preferred/minimum size of current component
         int scaledSize = 0; // Preferred/minimum size of scaled components
         int temp; // Temporary variable used to compare sizes
@@ -1367,7 +1451,7 @@ nextComponent:
         // Get number of crs
         int numCr = crSpec[z].length;
 
-        // Determine percentage of space allocated to fill components.  This is
+        // Determine percentage of space allocated to fill components. This is
         // one minus the sum of all scalable components.
         double fillSizeRatio = 1.0;
         int numFillSize = 0;
@@ -1375,8 +1459,7 @@ nextComponent:
         for (counter = 0; counter < numCr; counter++) {
             if ((crSpec[z][counter] > 0.0) && (crSpec[z][counter] < 1.0)) {
                 fillSizeRatio -= crSpec[z][counter];
-            }
-            else if (crSpec[z][counter] == FILL) {
+            } else if (crSpec[z][counter] == FILL) {
                 numFillSize++;
             }
         }
@@ -1406,7 +1489,7 @@ nextComponent:
 
         for (counter = 0; counter < numCr; counter++) {
             if ((crSpec[z][counter] == PREFERRED)
-                || (crSpec[z][counter] == MINIMUM)) {
+                    || (crSpec[z][counter] == MINIMUM)) {
                 crPrefMin[counter] = crSize[z][counter];
             }
         }
@@ -1422,8 +1505,8 @@ nextComponent:
 
             // Make sure entry is in valid rows and columns
             if ((entry.cr1[C] < 0) || (entry.cr1[C] >= numColumn)
-                || (entry.cr2[C] >= numColumn) || (entry.cr1[R] < 0)
-                || (entry.cr1[R] >= numRow) || (entry.cr2[R] >= numRow)) {
+                    || (entry.cr2[C] >= numColumn) || (entry.cr1[R] < 0)
+                    || (entry.cr1[R] >= numRow) || (entry.cr2[R] >= numRow)) {
                 // Skip the bad component
                 continue;
             }
@@ -1431,21 +1514,20 @@ nextComponent:
             // Get preferred/minimum size of current component
             size = prefMinSize[entryCounter];
 
-            //----------------------------------------------------------------------
+            // ----------------------------------------------------------------------
             // Calculate portion of component that is not absolutely sized
             int scalableSize = (z == C) ? size.width : size.height;
 
             for (counter = entry.cr1[z]; counter <= entry.cr2[z]; counter++) {
                 if (crSpec[z][counter] >= 1.0) {
                     scalableSize -= crSpec[z][counter];
-                }
-                else if ((crSpec[z][counter] == PREFERRED)
-                    || (crSpec[z][counter] == MINIMUM)) {
+                } else if ((crSpec[z][counter] == PREFERRED)
+                        || (crSpec[z][counter] == MINIMUM)) {
                     scalableSize -= crPrefMin[counter];
                 }
             }
 
-            //----------------------------------------------------------------------
+            // ----------------------------------------------------------------------
             // Determine total percentage of scalable space that the component
             // occupies by adding the relative columns and the fill columns
             double relativeSize = 0.0;
@@ -1467,12 +1549,11 @@ nextComponent:
             // Determine the total scaled size as estimated by this component
             if (relativeSize == 0) {
                 temp = 0;
-            }
-            else {
+            } else {
                 temp = (int) ((scalableSize / relativeSize) + 0.5);
             }
 
-            //----------------------------------------------------------------------
+            // ----------------------------------------------------------------------
             // If the container needs to be bigger, make it so
             if (scaledSize < temp) {
                 scaledSize = temp;
@@ -1491,7 +1572,7 @@ nextComponent:
 
             // Is the current cr a preferred/minimum size
             else if ((crSpec[z][counter] == PREFERRED)
-                || (crSpec[z][counter] == MINIMUM)) {
+                    || (crSpec[z][counter] == MINIMUM)) {
                 // Add preferred/minimum width
                 totalSize += crPrefMin[counter];
             }
@@ -1508,7 +1589,7 @@ nextComponent:
     /**
      * Calculates the offset of each cr.
      *
-     * @param z indicates row or column
+     * @param z     indicates row or column
      * @param inset -
      */
     protected void calculateOffset(int z, Insets inset) {
@@ -1519,18 +1600,21 @@ nextComponent:
 
         for (int counter = 0; counter < numCr; counter++) {
             crOffset[z][counter + 1] = crOffset[z][counter]
-                + crSize[z][counter];
+                    + crSize[z][counter];
         }
     }
 
-    //******************************************************************************
-    //** Calculation methods                                                     ***
-    //******************************************************************************
+    // ******************************************************************************
+    // ** Calculation methods ***
+    // ******************************************************************************
 
     /**
-     * Calculates the sizes of the rows and columns based on the absolute and relative sizes
-     * specified in <code>crSpec[R]</code> and <code>crSpec[C]</code> and the size of the
-     * container.  The result is stored in <code>crSize[R]</code> and <code>crSize[C]</code>.
+     * Calculates the sizes of the rows and columns based on the absolute and
+     * relative sizes
+     * specified in <code>crSpec[R]</code> and <code>crSpec[C]</code> and the size
+     * of the
+     * container. The result is stored in <code>crSize[R]</code> and
+     * <code>crSize[C]</code>.
      *
      * @param container container using this TableLayout
      */
@@ -1588,31 +1672,33 @@ nextComponent:
     /**
      * Calculates the vertical/horizontal offset and size of a component.
      *
-     * @param entry entry containing component and contraints
-     * @param preferredSize previously calculated preferred width/height of component
-     * @param isColumn if true, this method is being called to calculate the offset/size of a
-     *        column.  if false,... of a row.
+     * @param entry         entry containing component and contraints
+     * @param preferredSize previously calculated preferred width/height of
+     *                      component
+     * @param isColumn      if true, this method is being called to calculate the
+     *                      offset/size of a
+     *                      column. if false,... of a row.
      *
-     * @return an array, a, of two integers such that a[0] is the offset and a[1] is the size
+     * @return an array, a, of two integers such that a[0] is the offset and a[1] is
+     *         the size
      */
     protected int[] calculateSizeAndOffset(Entry entry, int preferredSize,
-        boolean isColumn) {
+            boolean isColumn) {
         // Get references to cr properties
         int[] crOffset = isColumn ? this.crOffset[C] : this.crOffset[R];
         int entryAlignment = isColumn ? entry.alignment[C] : entry.alignment[R];
 
         // Determine cell set size
         int cellSetSize = isColumn
-            ? (crOffset[entry.cr2[C] + 1] - crOffset[entry.cr1[C]])
-            : (crOffset[entry.cr2[R] + 1] - crOffset[entry.cr1[R]]);
+                ? (crOffset[entry.cr2[C] + 1] - crOffset[entry.cr1[C]])
+                : (crOffset[entry.cr2[R] + 1] - crOffset[entry.cr1[R]]);
 
         // Determine the size of the component
         int size;
 
         if ((entryAlignment == FULL) || (cellSetSize < preferredSize)) {
             size = cellSetSize;
-        }
-        else {
+        } else {
             size = preferredSize;
         }
 
@@ -1631,38 +1717,37 @@ nextComponent:
         int offset;
 
         switch (entryAlignment) {
-        case LEFT: // Align left/top side along left edge of cell
-            offset = crOffset[isColumn ? entry.cr1[C] : entry.cr1[R]];
+            case LEFT: // Align left/top side along left edge of cell
+                offset = crOffset[isColumn ? entry.cr1[C] : entry.cr1[R]];
 
-            break;
+                break;
 
-        case RIGHT: // Align right/bottom side along right edge of cell
-            offset = crOffset[(isColumn ? entry.cr2[C] : entry.cr2[R]) + 1]
-                - size;
+            case RIGHT: // Align right/bottom side along right edge of cell
+                offset = crOffset[(isColumn ? entry.cr2[C] : entry.cr2[R]) + 1]
+                        - size;
 
-            break;
+                break;
 
-        case CENTER: // Center justify component
-            offset = crOffset[isColumn ? entry.cr1[C] : entry.cr1[R]]
-                + ((cellSetSize - size) >> 1);
+            case CENTER: // Center justify component
+                offset = crOffset[isColumn ? entry.cr1[C] : entry.cr1[R]]
+                        + ((cellSetSize - size) >> 1);
 
-            break;
+                break;
 
-        case FULL: // Align left/top side along left/top edge of cell
-            offset = crOffset[isColumn ? entry.cr1[C] : entry.cr1[R]];
+            case FULL: // Align left/top side along left/top edge of cell
+                offset = crOffset[isColumn ? entry.cr1[C] : entry.cr1[R]];
 
-            break;
+                break;
 
-        default: // This is a never should happen case, but just in case
-            offset = 0;
+            default: // This is a never should happen case, but just in case
+                offset = 0;
         }
 
         // Compensate for gaps
         if (isColumn) {
             offset += (hGap * entry.cr1[C]);
             size += (hGap * (entry.cr2[C] - entry.cr1[C]));
-        }
-        else {
+        } else {
             offset += (vGap * entry.cr1[R]);
             size += (vGap * (entry.cr2[R] - entry.cr1[R]));
         }
@@ -1685,8 +1770,8 @@ nextComponent:
         // Make sure position is valid
         if ((i < 0) || (i >= crSpec[z].length)) {
             throw new IllegalArgumentException("Parameter i is invalid.  i = "
-                + i + ".  Valid range is [0, " //$NON-NLS-1$ 
-                + (crSpec[z].length - 1) + "]."); //$NON-NLS-1$
+                    + i + ".  Valid range is [0, " //$NON-NLS-1$
+                    + (crSpec[z].length - 1) + "]."); //$NON-NLS-1$
         }
 
         // Copy rows
@@ -1751,16 +1836,16 @@ nextComponent:
         // Make sure rows and columns are valid
         for (int counter = 0; counter < crSpec[C].length; counter++) {
             if ((crSpec[C][counter] < 0.0) && (crSpec[C][counter] != FILL)
-                && (crSpec[C][counter] != PREFERRED)
-                && (crSpec[C][counter] != MINIMUM)) {
+                    && (crSpec[C][counter] != PREFERRED)
+                    && (crSpec[C][counter] != MINIMUM)) {
                 crSpec[C][counter] = 0.0;
             }
         }
 
         for (int counter = 0; counter < crSpec[R].length; counter++) {
             if ((crSpec[R][counter] < 0.0) && (crSpec[R][counter] != FILL)
-                && (crSpec[R][counter] != PREFERRED)
-                && (crSpec[R][counter] != MINIMUM)) {
+                    && (crSpec[R][counter] != PREFERRED)
+                    && (crSpec[R][counter] != MINIMUM)) {
                 crSpec[R][counter] = 0.0;
             }
         }
@@ -1772,9 +1857,9 @@ nextComponent:
         dirty = true;
     }
 
-    //******************************************************************************
-    //*** Inner Class                                                            ***
-    //******************************************************************************
+    // ******************************************************************************
+    // *** Inner Class ***
+    // ******************************************************************************
     // The following inner class is used to bind components to their constraints
     public static class Entry implements Cloneable {
         /** Component bound by the constraints */
@@ -1792,7 +1877,7 @@ nextComponent:
         /**
          * Constructs an Entry that binds a component to a set of constraints.
          *
-         * @param component component being bound
+         * @param component  component being bound
          * @param constraint constraints being applied
          */
         public Entry(Component component, TableLayoutConstraints constraint) {
@@ -1820,10 +1905,11 @@ nextComponent:
         /**
          * Gets the string representation of this Entry.
          *
-         * @return a string in the form "(col1, row1, col2, row2, vAlign, hAlign) component"
+         * @return a string in the form "(col1, row1, col2, row2, vAlign, hAlign)
+         *         component"
          */
         @Override
-		public String toString() {
+        public String toString() {
             TableLayoutConstraints c = new TableLayoutConstraints(cr1[C],
                     cr1[R], cr2[C], cr2[R], alignment[C], alignment[R]);
 

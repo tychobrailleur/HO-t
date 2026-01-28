@@ -15,7 +15,8 @@ import java.util.stream.Collectors;
  * Spielplan represents a game schedule, i.e. a particular season in a series.
  */
 public class MatchFixtures extends AbstractTable.Storable {
-    //~ Instance fields ----------------------------------------------------------------------------
+    // ~ Instance fields
+    // ----------------------------------------------------------------------------
 
     protected LigaTabelle m_clTabelle;
     protected String m_sLigaName = "";
@@ -24,15 +25,19 @@ public class MatchFixtures extends AbstractTable.Storable {
     protected List<Paarung> m_vEintraege = new ArrayList<>();
     protected int m_iLigaId = -1;
     protected int m_iSaison = -1;
-    //~ Constructors -------------------------------------------------------------------------------
-    // Always keep a single entry per season in the db so old data is kept in the new schedule.
+
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
+    // Always keep a single entry per season in the db so old data is kept in the
+    // new schedule.
     /**
      * Creates a new instance of Spielplan
      */
     public MatchFixtures() {
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    // ~ Methods
+    // ------------------------------------------------------------------------------------
     public final List<Paarung> getMatches() {
         return m_vEintraege;
     }
@@ -107,6 +112,7 @@ public class MatchFixtures extends AbstractTable.Storable {
     /**
      * Get all teams that played during the season
      * There might be teams replaced
+     * 
      * @return Set of team ids (size >= 8)
      */
     public Set<Integer> getTeamsInSeries() {
@@ -137,7 +143,7 @@ public class MatchFixtures extends AbstractTable.Storable {
     }
 
     ////////////////////////////////////////////////////////////////////////////////
-    //Liga Tabelle
+    // Liga Tabelle
     ////////////////////////////////////////////////////////////////////////////////
     public final LigaTabelle getTable() {
         if (m_clTabelle == null) {
@@ -166,28 +172,30 @@ public class MatchFixtures extends AbstractTable.Storable {
     }
 
     @Override
-	public final boolean equals(Object o) {
-        if (o instanceof MatchFixtures) {
-            return (m_iLigaId == ((MatchFixtures) o).getLigaId())
-                    && (m_iSaison == ((MatchFixtures) o).getSaison());
+    public final boolean equals(Object o) {
+        if (o instanceof MatchFixtures other) {
+            return (m_iLigaId == other.getLigaId())
+                    && (m_iSaison == other.getSaison());
         } else {
             return false;
         }
     }
 
     @Override
-	public final String toString() {
+    public final String toString() {
         return TranslationFacility.tr("Season")
-               + " " + getSaison() + " "
-               + TranslationFacility.tr("Liga")
-               + " " + getLigaName() + " (" + getLigaId() + ")";
+                + " " + getSaison() + " "
+                + TranslationFacility.tr("Liga")
+                + " " + getLigaName() + " (" + getLigaId() + ")";
     }
 
     /**
-     * Retrieves the previous position in series table for each current position in <code>tabelle</code>.
+     * Retrieves the previous position in series table for each current position in
+     * <code>tabelle</code>.
      *
-     * @param tabelle       Current series table for which the previous positions are being set.
-     * @param currentTeams  List containing the current teams of the series
+     * @param tabelle      Current series table for which the previous positions are
+     *                     being set.
+     * @param currentTeams List containing the current teams of the series
      */
     protected final void calculatePreviousTablePositions(LigaTabelle tabelle, ArrayList<List<Integer>> currentTeams) {
 
@@ -214,6 +222,7 @@ public class MatchFixtures extends AbstractTable.Storable {
 
     /**
      * Calculates the series table
+     * 
      * @return LigaTabelle – Computed series table.
      */
     private LigaTabelle calculateSeriesTable() {
@@ -224,7 +233,9 @@ public class MatchFixtures extends AbstractTable.Storable {
      * Determine current teams of the series from last match day
      * Each entry is a list of team ids with
      * first entry specifying the id of the current team and
-     * next optional entry specifying a team which was replaced by the current team during the series
+     * next optional entry specifying a team which was replaced by the current team
+     * during the series
+     * 
      * @return List of Lists of team ids
      */
     private ArrayList<List<Integer>> GetCurrentTeams() {
@@ -247,8 +258,9 @@ public class MatchFixtures extends AbstractTable.Storable {
 
     /**
      * Calculates the series table of given match day
-     * @param maxMatchDay   1..14
-     * @param currentTeams  List of list of team ids
+     * 
+     * @param maxMatchDay  1..14
+     * @param currentTeams List of list of team ids
      * @return LigaTabelle
      */
     private LigaTabelle calculateSeriesTable(int maxMatchDay, ArrayList<List<Integer>> currentTeams) {
@@ -256,17 +268,16 @@ public class MatchFixtures extends AbstractTable.Storable {
         ligaTabelle.setLigaId(m_iLigaId);
         ligaTabelle.setLigaName(m_sLigaName);
 
-        for( var ids : currentTeams) {
+        for (var ids : currentTeams) {
             ligaTabelle.addEintrag(calculateTableEntry(ids, maxMatchDay));
         }
 
-        if(ligaTabelle.getEntries().get(0).getAnzSpiele() > 0) {
+        if (ligaTabelle.getEntries().get(0).getAnzSpiele() > 0) {
             ligaTabelle.sort();
             calculatePreviousTablePositions(ligaTabelle, currentTeams);
-        }
-        else {
+        } else {
             var seriesDetails = OnlineWorker.getSeriesDetails(this.getLigaId());
-            for ( var t : ligaTabelle.getEntries()){
+            for (var t : ligaTabelle.getEntries()) {
                 var details = seriesDetails.get(String.valueOf(t.getTeamId()));
                 var position = details.getPosition();
                 t.setPosition(position);
@@ -279,8 +290,10 @@ public class MatchFixtures extends AbstractTable.Storable {
     }
 
     /**
-     * Get all matches of the current team and eventually the team which was replaced by the current team
+     * Get all matches of the current team and eventually the team which was
+     * replaced by the current team
      * during the series
+     * 
      * @param ids Of the teams
      * @return List of fixtures
      */
@@ -293,9 +306,11 @@ public class MatchFixtures extends AbstractTable.Storable {
 
     /**
      * Find team replacements during the series
-     * The examined team's id will be added to the list of ids of the current teams if it was replaced during the series
-     * @param currentTeams  List of the current teams
-     * @param t             The examined team
+     * The examined team's id will be added to the list of ids of the current teams
+     * if it was replaced during the series
+     * 
+     * @param currentTeams List of the current teams
+     * @param t            The examined team
      */
     private void findReplacementOfTeam(ArrayList<List<Integer>> currentTeams, Integer t) {
         for (var ids : currentTeams) {
@@ -309,19 +324,24 @@ public class MatchFixtures extends AbstractTable.Storable {
         replaces.add(t);
 
         while (!replaces.isEmpty()) {
-            var replaceTeam = replaces.get(replaces.size()-1);
+            var replaceTeam = replaces.get(replaces.size() - 1);
             for (var i = 0; i < 14; i++) {
                 int finalI = i;
-                var match = m_vEintraege.stream().filter(p -> p.getSpieltag() == 1 + finalI && (p.getHeimId() == replaceTeam || p.getGastId() == replaceTeam)).findAny();
+                var match = m_vEintraege.stream().filter(p -> p.getSpieltag() == 1 + finalI
+                        && (p.getHeimId() == replaceTeam || p.getGastId() == replaceTeam)).findAny();
                 if (match.isPresent()) {
                     // Find reverse match
                     if (match.get().getHeimId() == replaceTeam) {
                         var opponentAtRound = match.get().getGastId();
-                        var reverseMatch = m_vEintraege.stream().filter(p -> p.getSpieltag() == 14 - finalI && (p.getHeimId() == opponentAtRound)).findAny();
+                        var reverseMatch = m_vEintraege.stream()
+                                .filter(p -> p.getSpieltag() == 14 - finalI && (p.getHeimId() == opponentAtRound))
+                                .findAny();
                         if (reverseMatch.isEmpty()) {
                             var replacedBy = isReplacedBy(currentTeams, opponentAtRound);
                             if (replacedBy != null) {
-                                reverseMatch = m_vEintraege.stream().filter(p -> p.getSpieltag() == 14 - finalI && (p.getHeimId() == replacedBy)).findAny();
+                                reverseMatch = m_vEintraege.stream()
+                                        .filter(p -> p.getSpieltag() == 14 - finalI && (p.getHeimId() == replacedBy))
+                                        .findAny();
                             }
                         }
                         if (reverseMatch.isPresent()) {
@@ -330,16 +350,21 @@ public class MatchFixtures extends AbstractTable.Storable {
                             replaces.remove(replaceTeam);
                             break;
                         } else if (isReplacedBy(currentTeams, opponentAtRound) == null) {
-                            // opponent of this round is also replaced, try next round to find replacement of replaceTeam
+                            // opponent of this round is also replaced, try next round to find replacement
+                            // of replaceTeam
                             replaces.add(opponentAtRound);
                         }
                     } else {
                         var opponentAtRound = match.get().getHeimId();
-                        var reverseMatch = m_vEintraege.stream().filter(p -> p.getSpieltag() == 14 - finalI && (p.getGastId() == opponentAtRound)).findAny();
+                        var reverseMatch = m_vEintraege.stream()
+                                .filter(p -> p.getSpieltag() == 14 - finalI && (p.getGastId() == opponentAtRound))
+                                .findAny();
                         if (reverseMatch.isEmpty()) {
                             var replacedBy = isReplacedBy(currentTeams, opponentAtRound);
                             if (replacedBy != null) {
-                                reverseMatch = m_vEintraege.stream().filter(p -> p.getSpieltag() == 14 - finalI && (p.getGastId() == replacedBy)).findAny();
+                                reverseMatch = m_vEintraege.stream()
+                                        .filter(p -> p.getSpieltag() == 14 - finalI && (p.getGastId() == replacedBy))
+                                        .findAny();
                             }
                         }
                         if (reverseMatch.isPresent()) {
@@ -348,7 +373,8 @@ public class MatchFixtures extends AbstractTable.Storable {
                             replaces.remove(replaceTeam);
                             break;
                         } else if (isReplacedBy(currentTeams, opponentAtRound) == null) {
-                            // opponent of this round is also replaced, try next round to find replacement of replaceTeam
+                            // opponent of this round is also replaced, try next round to find replacement
+                            // of replaceTeam
                             replaces.add(opponentAtRound);
                         }
                     }
@@ -359,9 +385,10 @@ public class MatchFixtures extends AbstractTable.Storable {
 
     /**
      * Check if team is already registered as replaced team in list of current teams
-     * @param currentTeams      Current teams including replacements
-     * @param opponentAtRound   Team id
-     * @return Integer          Null, if not replaced
+     * 
+     * @param currentTeams    Current teams including replacements
+     * @param opponentAtRound Team id
+     * @return Integer Null, if not replaced
      */
     private Integer isReplacedBy(ArrayList<List<Integer>> currentTeams, int opponentAtRound) {
         for (var t : currentTeams) {
@@ -374,13 +401,15 @@ public class MatchFixtures extends AbstractTable.Storable {
 
     /**
      * Add team id of replaced team to the replacement team in current team list
-     * @param currentTeams  List of current teams
-     * @param replacement   Id of the replacing team
-     * @param replaceTeam   Id of the replaced team
+     * 
+     * @param currentTeams List of current teams
+     * @param replacement  Id of the replacing team
+     * @param replaceTeam  Id of the replaced team
      */
-    private void CurrentTeamsAddReplacement(ArrayList<List<Integer>> currentTeams, int replacement, Integer replaceTeam) {
-        for ( var ids : currentTeams) {
-            if ( ids.contains(replacement)) {
+    private void CurrentTeamsAddReplacement(ArrayList<List<Integer>> currentTeams, int replacement,
+            Integer replaceTeam) {
+        for (var ids : currentTeams) {
+            if (ids.contains(replacement)) {
                 ids.add(replaceTeam);
                 return;
             }
@@ -412,11 +441,13 @@ public class MatchFixtures extends AbstractTable.Storable {
         eintrag.setTeamId(ids.get(0)); // First entry is the current existing teams
         var name = "";
 
-        for ( var match : matches) {
-            if ( match.getSpieltag() > maxMatchDay) { break; }
+        for (var match : matches) {
+            if (match.getSpieltag() > maxMatchDay) {
+                break;
+            }
 
             var isHomeTeam = ids.contains(match.getHeimId());
-            name = isHomeTeam?match.getHeimName():match.getGastName();
+            name = isHomeTeam ? match.getHeimName() : match.getGastName();
 
             // Games already played
             if (match.getToreHeim() > -1) {
@@ -480,7 +511,7 @@ public class MatchFixtures extends AbstractTable.Storable {
         eintrag.setTeamName(name);
         eintrag.setAnzSpiele(gameNumber);
 
-        //home
+        // home
         eintrag.setH_Nied(homeDefeats);
         eintrag.setH_Siege(homeVictories);
         eintrag.setH_Un(homeDraws);
@@ -488,7 +519,7 @@ public class MatchFixtures extends AbstractTable.Storable {
         eintrag.setH_ToreFuer(homeGoalsFor);
         eintrag.setH_ToreGegen(homeGoalsAgainst);
 
-        //Away
+        // Away
         eintrag.setA_Nied(awayDefeats);
         eintrag.setA_Siege(awayVictories);
         eintrag.setA_Un(awayDraws);
@@ -518,7 +549,7 @@ public class MatchFixtures extends AbstractTable.Storable {
         TabellenVerlaufEintrag[] eintraege = null;
 
         try {
-        	var spieltag = getTable().getEntries().elementAt(0).getAnzSpiele();
+            var spieltag = getTable().getEntries().elementAt(0).getAnzSpiele();
             var tabelle = new LigaTabelle[spieltag];
 
             var currentTeams = GetCurrentTeams();
@@ -554,7 +585,7 @@ public class MatchFixtures extends AbstractTable.Storable {
             verlauf.setEintraege(eintraege);
             return verlauf;
         } catch (Exception e) {
-        	HOLogger.instance().error(getClass(), "Error(generateTabellenVerlauf):" + e);
+            HOLogger.instance().error(getClass(), "Error(generateTabellenVerlauf):" + e);
             return new Tabellenverlauf();
         }
     }
@@ -567,24 +598,24 @@ public class MatchFixtures extends AbstractTable.Storable {
      * Map of indices used to generate series' fixtures
      */
     private static final List<List<Pair<Integer, Integer>>> fixtureEntryIndices = List.of(
-            List.of(new Pair<>(1,2), new Pair<>(3,4), new Pair<>(5,6), new Pair<>(7,8)),
-            List.of(new Pair<>(4,1), new Pair<>(2,7), new Pair<>(6,3), new Pair<>(8,5)),
-            List.of(new Pair<>(1,8), new Pair<>(3,5), new Pair<>(4,2), new Pair<>(7,6)),
-            List.of(new Pair<>(6,1), new Pair<>(2,3), new Pair<>(5,7), new Pair<>(8,4)),
-            List.of(new Pair<>(1,7), new Pair<>(4,5), new Pair<>(3,8), new Pair<>(2,6)),
-            List.of(new Pair<>(5,1), new Pair<>(7,3), new Pair<>(6,4), new Pair<>(8,2)),
-            List.of(new Pair<>(1,3), new Pair<>(2,5), new Pair<>(4,7), new Pair<>(6,8))
-    );
+            List.of(new Pair<>(1, 2), new Pair<>(3, 4), new Pair<>(5, 6), new Pair<>(7, 8)),
+            List.of(new Pair<>(4, 1), new Pair<>(2, 7), new Pair<>(6, 3), new Pair<>(8, 5)),
+            List.of(new Pair<>(1, 8), new Pair<>(3, 5), new Pair<>(4, 2), new Pair<>(7, 6)),
+            List.of(new Pair<>(6, 1), new Pair<>(2, 3), new Pair<>(5, 7), new Pair<>(8, 4)),
+            List.of(new Pair<>(1, 7), new Pair<>(4, 5), new Pair<>(3, 8), new Pair<>(2, 6)),
+            List.of(new Pair<>(5, 1), new Pair<>(7, 3), new Pair<>(6, 4), new Pair<>(8, 2)),
+            List.of(new Pair<>(1, 3), new Pair<>(2, 5), new Pair<>(4, 7), new Pair<>(6, 8)));
 
     /**
      * Create one fixture of match day
-     * @param date      Match date
-     * @param round     Match day
-     * @param team1     Id of home team
-     * @param team2     Id of away team
-     * @return Paarung  Fixture
+     * 
+     * @param date  Match date
+     * @param round Match day
+     * @param team1 Id of home team
+     * @param team2 Id of away team
+     * @return Paarung Fixture
      */
-    private static Paarung createFixture(HODateTime date, int round,  TeamStats team1, TeamStats team2) {
+    private static Paarung createFixture(HODateTime date, int round, TeamStats team1, TeamStats team2) {
         var ret = new Paarung();
         ret.setDatum(date);
         ret.setHeimId(team1.getTeamId());
@@ -597,8 +628,9 @@ public class MatchFixtures extends AbstractTable.Storable {
 
     /**
      * Create all fixtures of a series
-     * @param seriesStartDate   Start date of the series
-     * @param teams             List of 8 teams
+     * 
+     * @param seriesStartDate Start date of the series
+     * @param teams           List of 8 teams
      * @return List of fixtures
      */
     public static List<Paarung> createFixtures(HODateTime seriesStartDate, List<TeamStats> teams) {
@@ -608,9 +640,10 @@ public class MatchFixtures extends AbstractTable.Storable {
         int roundNumber = 1;
 
         // First series half
-        for (var round : fixtureEntryIndices){
-            for ( var match  : round){
-                newFixtures.add(createFixture(date, roundNumber, teams.get(match.getValue0()-1), teams.get(match.getValue1()-1)));
+        for (var round : fixtureEntryIndices) {
+            for (var match : round) {
+                newFixtures.add(createFixture(date, roundNumber, teams.get(match.getValue0() - 1),
+                        teams.get(match.getValue1() - 1)));
             }
             roundNumber++;
             date = date.plusDaysAtSameLocalTime(7);
@@ -619,9 +652,10 @@ public class MatchFixtures extends AbstractTable.Storable {
         var copy = new ArrayList<>(fixtureEntryIndices);
         Collections.reverse(copy);
         // Second series half
-        for (var round : copy){
-            for ( var match  : round){
-                newFixtures.add(createFixture(date, roundNumber, teams.get(match.getValue1()-1), teams.get(match.getValue0()-1)));
+        for (var round : copy) {
+            for (var match : round) {
+                newFixtures.add(createFixture(date, roundNumber, teams.get(match.getValue1() - 1),
+                        teams.get(match.getValue0() - 1)));
             }
             roundNumber++;
             date = date.plusDaysAtSameLocalTime(7);

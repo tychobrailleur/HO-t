@@ -22,8 +22,10 @@ public class HODateTime implements Comparable<HODateTime> {
     /**
      * Date time format of chpp files
      */
-    private static final DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(DEFAULT_TIMEZONE);
-    private static final DateTimeFormatter cl_ShortFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(DEFAULT_TIMEZONE);
+    private static final DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            .withZone(DEFAULT_TIMEZONE);
+    private static final DateTimeFormatter cl_ShortFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            .withZone(DEFAULT_TIMEZONE);
 
     /**
      * the birthday of hattrick
@@ -31,7 +33,6 @@ public class HODateTime implements Comparable<HODateTime> {
      *
      */
     public static final HODateTime HT_START = HODateTime.fromHT("1997-09-22 00:00:00");
-
 
     /**
      * internal time representation
@@ -46,7 +47,10 @@ public class HODateTime implements Comparable<HODateTime> {
     public HODateTime(@NotNull Instant in) {
         this.instant = in;
     }
-    public HODateTime(@NotNull HODateTime in){this.instant=in.instant;}
+
+    public HODateTime(@NotNull HODateTime in) {
+        this.instant = in.instant;
+    }
 
     public Instant getInstant() {
         return instant;
@@ -67,8 +71,7 @@ public class HODateTime implements Comparable<HODateTime> {
             try {
                 LocalDateTime htTime = LocalDateTime.parse(htString, cl_Formatter);
                 return new HODateTime(htTime.atZone(DEFAULT_TIMEZONE).toInstant());
-            }
-            catch (Exception ignored){
+            } catch (Exception ignored) {
                 var date = LocalDate.parse(htString, cl_ShortFormatter).atStartOfDay();
                 return new HODateTime(date.atZone(DEFAULT_TIMEZONE).toInstant());
             }
@@ -91,6 +94,7 @@ public class HODateTime implements Comparable<HODateTime> {
 
     /**
      * Convert to database timestamp
+     * 
      * @param time HODatetime
      * @return Timestamp
      */
@@ -122,11 +126,13 @@ public class HODateTime implements Comparable<HODateTime> {
 
     /**
      * Convert to seconds since epoch (1-1-1070)
+     * 
      * @param ts HODateTime
      * @return long, seconds since epoch
      */
-    public static long toEpochSecond(HODateTime ts){
-        if ( ts!= null) return ts.instant.getEpochSecond();
+    public static long toEpochSecond(HODateTime ts) {
+        if (ts != null)
+            return ts.instant.getEpochSecond();
         return 0L;
     }
 
@@ -150,6 +156,7 @@ public class HODateTime implements Comparable<HODateTime> {
 
     /**
      * Convert date only string
+     * 
      * @param style, FormatStyle
      * @return String
      */
@@ -169,16 +176,19 @@ public class HODateTime implements Comparable<HODateTime> {
 
     /**
      * Convert HODateTime to date and time string
+     * 
      * @param in HODateTime
      * @return String
      */
-    public static String toLocaleDateTime(HODateTime in){
-        if ( in != null) return in.toLocaleDateTime(FormatStyle.MEDIUM);
+    public static String toLocaleDateTime(HODateTime in) {
+        if (in != null)
+            return in.toLocaleDateTime(FormatStyle.MEDIUM);
         return "";
     }
 
     /**
      * Convert to date and time string
+     * 
      * @param style, FormatStyle
      * @return String
      */
@@ -189,12 +199,14 @@ public class HODateTime implements Comparable<HODateTime> {
 
     /**
      * Convert HODateTime to date and time string
-     * @param in, HODateTime
+     * 
+     * @param in,    HODateTime
      * @param style, FormatStyle
      * @return String
      */
-    public static String toLocaleDateTime(HODateTime in, FormatStyle style){
-        if ( in != null) return in.toLocaleDateTime(style);
+    public static String toLocaleDateTime(HODateTime in, FormatStyle style) {
+        if (in != null)
+            return in.toLocaleDateTime(style);
         return "";
     }
 
@@ -260,6 +272,7 @@ public class HODateTime implements Comparable<HODateTime> {
 
     /**
      * add amount of days and reset local time (if daylight saving happened)
+     * 
      * @param i amount of days (may be negativ)
      * @return HODateTime
      */
@@ -276,10 +289,9 @@ public class HODateTime implements Comparable<HODateTime> {
 
         // day switch
         var diff = Duration.between(instant, ret.instant);
-        if (diff.compareTo( Duration.ofHours(i*24 + 2)) > 0 ) {
+        if (diff.compareTo(Duration.ofHours(i * 24 + 2)) > 0) {
             ret = ret.minus(1, ChronoUnit.DAYS);
-        }
-        else if (diff.compareTo( Duration.ofHours(i*24 - 2)) < 0 ) {
+        } else if (diff.compareTo(Duration.ofHours(i * 24 - 2)) < 0) {
             ret = ret.plus(1, ChronoUnit.DAYS);
         }
         return ret;
@@ -312,19 +324,18 @@ public class HODateTime implements Comparable<HODateTime> {
             if (nr.length == 2) {
                 return new HTWeek(
                         Integer.parseInt(nr[0]),
-                        Integer.parseInt(nr[1])
-                );
+                        Integer.parseInt(nr[1]));
             } else {
                 return new HTWeek(0, 0);
             }
         }
 
         public long sinceOrigin() {
-            return (season-1) * 16L + week -1L;
+            return (season - 1) * 16L + week - 1L;
         }
 
         @Override
-        public String toString(){
+        public String toString() {
             return season + " (" + week + ")";
         }
     }
@@ -338,19 +349,19 @@ public class HODateTime implements Comparable<HODateTime> {
         return calcHTWeek(instant);
     }
 
-    private static HTWeek calcHTWeek(Instant instant){
+    private static HTWeek calcHTWeek(Instant instant) {
         var dayDiff = ChronoUnit.DAYS.between(HT_START.instant, instant);
         return new HTWeek(
                 (int) (dayDiff / (16 * 7) + 1),
-                (int) ((dayDiff % (16 * 7)) / 7) + 1
-        );
+                (int) ((dayDiff % (16 * 7)) / 7) + 1);
     }
 
-    private static Duration durationBetweenWeekStartAndTrainingDate =null;
+    private static Duration durationBetweenWeekStartAndTrainingDate = null;
 
     /**
      * Convert to locale training season and week
      * training date differs from start of weeks
+     * 
      * @return local training season/week
      */
     public HTWeek toTrainingWeek() {
@@ -373,9 +384,9 @@ public class HODateTime implements Comparable<HODateTime> {
                     daylightSavingCorrection = -1;
                 }
                 var startOfWeek = HODateTime.fromHTWeek(nextTrainingDate.toHTWeek());
-                durationBetweenWeekStartAndTrainingDate = HODateTime.between(startOfWeek, nextTrainingDate).minus(daylightSavingCorrection, ChronoUnit.HOURS);
-            }
-            else {
+                durationBetweenWeekStartAndTrainingDate = HODateTime.between(startOfWeek, nextTrainingDate)
+                        .minus(daylightSavingCorrection, ChronoUnit.HOURS);
+            } else {
                 durationBetweenWeekStartAndTrainingDate = Duration.ofSeconds(0);
             }
         }
@@ -415,7 +426,7 @@ public class HODateTime implements Comparable<HODateTime> {
         return new HODateTime(newInstant);
     }
 
-    public static class HODuration implements Comparable<HODuration>{
+    public static class HODuration implements Comparable<HODuration> {
         public int seasons;
         public int days;
 
@@ -433,7 +444,8 @@ public class HODateTime implements Comparable<HODateTime> {
         }
 
         public static HODuration between(HODateTime from, HODateTime to) {
-            return new HODuration(0, (int) Duration.between(from.instant, to.instant).plus(12, ChronoUnit.HOURS).toDays());
+            return new HODuration(0,
+                    (int) Duration.between(from.instant, to.instant).plus(12, ChronoUnit.HOURS).toDays());
         }
 
         public HODuration plus(HODuration diff) {
@@ -444,21 +456,24 @@ public class HODateTime implements Comparable<HODateTime> {
             return new HODuration(this.seasons - diff.seasons, this.days - diff.days);
         }
 
-        public String toString(){
+        public String toString() {
             return seasons + " (" + days + ")";
         }
-        public double toDouble() { return seasons + days/112.; }
+
+        public double toDouble() {
+            return seasons + days / 112.;
+        }
 
         @Override
         public int compareTo(@NotNull HODateTime.HODuration o) {
             int ret = Integer.compare(this.seasons, o.seasons);
-            if (ret==0) ret = Integer.compare(this.days, o.days);
+            if (ret == 0)
+                ret = Integer.compare(this.days, o.days);
             return ret;
         }
     }
 
-    public String toString(){
+    public String toString() {
         return this.instant.toString();
     }
 }
-

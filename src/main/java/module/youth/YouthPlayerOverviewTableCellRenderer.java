@@ -7,10 +7,10 @@ import javax.swing.*;
 public class YouthPlayerOverviewTableCellRenderer extends HODefaultTableCellRenderer {
 
     public java.awt.Component getTableCellRendererComponent(JTable table, Object value,
-                                                            boolean isSelected,
-                                                            boolean hasFocus, int row,
-                                                            int column) {
-        if (value instanceof YouthSkillInfoColumn) {
+            boolean isSelected,
+            boolean hasFocus, int row,
+            int column) {
+        if (value instanceof YouthSkillInfoColumn column1) {
             return super.getTableCellRendererComponent(table, value, false, hasFocus, row, column);
         }
         return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);

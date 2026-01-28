@@ -46,7 +46,8 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	private final JCheckBox m_jchMatchArchive = new JCheckBox(TranslationFacility.tr("download.oldmatches"), false);
 	private final SpinnerDateModel m_clSpinnerModel = new SpinnerDateModel();
 	private final JSpinner m_jsSpinner = new JSpinner(m_clSpinnerModel);
-	private final JCheckBox m_jchShowSaveDialog = new JCheckBox(TranslationFacility.tr("Show_SaveHRF_Dialog"), core.model.UserParameter.instance().showHRFSaveDialog);
+	private final JCheckBox m_jchShowSaveDialog = new JCheckBox(TranslationFacility.tr("Show_SaveHRF_Dialog"),
+			core.model.UserParameter.instance().showHRFSaveDialog);
 	private final boolean isNtTeam;
 
 	/**
@@ -77,10 +78,9 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	@Override
 	public final void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(m_jbDownload)) {
-			if ( isNtTeam){
+			if (isNtTeam) {
 				startNtDownload();
-			}
-			else {
+			} else {
 				startDownload();
 			}
 			RefreshManager.instance().doReInit();
@@ -95,7 +95,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		}
 	}
 
-	private void close(){
+	private void close() {
 		setVisible(false);
 		dispose();
 	}
@@ -110,13 +110,14 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	 * Initialize the GUI components.
 	 */
 	private void initComponents() {
-		//setResizable(false);
+		// setResizable(false);
 		setContentPane(new ImagePanel(new GridBagLayout()));
 		var c = new GridBagConstraints();
 
 		if (!isNtTeam) {
 			final JPanel normalDownloadPanel = new ImagePanel(new BorderLayout());
-			normalDownloadPanel.setBorder(BorderFactory.createTitledBorder(TranslationFacility.tr("ls.button.download")));
+			normalDownloadPanel
+					.setBorder(BorderFactory.createTitledBorder(TranslationFacility.tr("ls.button.download")));
 
 			// Download Filter
 			final DefaultTreeModel newModel = new DefaultTreeModel(filterRoot);
@@ -125,15 +126,19 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 			// Current Matches
 			// - Official Matches
-			//    currentMatchlist selects now the node OfficialMatches.
-			//    It is the first subitem of current Matches in the Filter tree
-			downloadFilter.checkNode(filterRoot.getOfficialMatches(), UserParameter.instance().downloadCurrentMatchlist);
+			// currentMatchlist selects now the node OfficialMatches.
+			// It is the first subitem of current Matches in the Filter tree
+			downloadFilter.checkNode(filterRoot.getOfficialMatches(),
+					UserParameter.instance().downloadCurrentMatchlist);
 			// - Integrated matches
 			downloadFilter.checkNode(filterRoot.getSingleMatches(), UserParameter.instance().downloadSingleMatches);
 			downloadFilter.checkNode(filterRoot.getLadderMatches(), UserParameter.instance().downloadLadderMatches);
-			downloadFilter.checkNode(filterRoot.getTournamentGroupMatches(), UserParameter.instance().downloadTournamentGroupMatches);
-			downloadFilter.checkNode(filterRoot.getTournamentPlayoffMatches(), UserParameter.instance().downloadTournamentPlayoffMatches);
-			downloadFilter.checkNode(filterRoot.getDivisionBattleMatches(), UserParameter.instance().downloadDivisionBattleMatches);
+			downloadFilter.checkNode(filterRoot.getTournamentGroupMatches(),
+					UserParameter.instance().downloadTournamentGroupMatches);
+			downloadFilter.checkNode(filterRoot.getTournamentPlayoffMatches(),
+					UserParameter.instance().downloadTournamentPlayoffMatches);
+			downloadFilter.checkNode(filterRoot.getDivisionBattleMatches(),
+					UserParameter.instance().downloadDivisionBattleMatches);
 
 			// Team Data
 			downloadFilter.checkNode(filterRoot.getTeamData(), UserParameter.instance().xmlDownload);
@@ -144,7 +149,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			var filterPanel = new JPanel(new BorderLayout());
 			filterPanel.add(downloadFilter);
 			var scrollPanel = new JScrollPane(filterPanel);
-			scrollPanel.setPreferredSize(new Dimension(240,280));
+			scrollPanel.setPreferredSize(new Dimension(240, 280));
 			normalDownloadPanel.add(scrollPanel, BorderLayout.CENTER);
 			c.gridx = 0;
 			c.gridy = 0;
@@ -190,7 +195,8 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		} else {
 			// isNtTeam
 			final JPanel normalDownloadPanel = new ImagePanel(new GridLayout(3, 1, 4, 4));
-			normalDownloadPanel.setBorder(BorderFactory.createTitledBorder(TranslationFacility.tr("ls.button.download")));
+			normalDownloadPanel
+					.setBorder(BorderFactory.createTitledBorder(TranslationFacility.tr("ls.button.download")));
 			JTextArea ta = new JTextArea();
 			ta.append(TranslationFacility.tr("nthrf.hint1") + "\n");
 			ta.append(TranslationFacility.tr("nthrf.hint2") + "\n");
@@ -236,7 +242,8 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		final Dimension size = getToolkit().getScreenSize();
 		if (size.width > this.getSize().width) {
 			// Center
-			this.setLocation((size.width / 2) - (this.getSize().width / 2), (size.height / 2) - (this.getSize().height / 2));
+			this.setLocation((size.width / 2) - (this.getSize().width / 2),
+					(size.height / 2) - (this.getSize().height / 2));
 		}
 
 		addWindowListener(new WindowAdapter() {
@@ -257,13 +264,18 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		boolean bOK = true;
 
 		// Save Dialog's settings
-		// the chpp-api only allows to download all current matches, the dialog settings only filters the match
-		// types which of them should be stored in HO database. The settings are interpreted elsewhere.
+		// the chpp-api only allows to download all current matches, the dialog settings
+		// only filters the match
+		// types which of them should be stored in HO database. The settings are
+		// interpreted elsewhere.
 		// Dialogs node "Current Matches" is checked, if any of the following is checked
 		UserParameter.instance().downloadCurrentMatchlist = downloadFilter.isChecked(filterRoot.getOfficialMatches());
-		UserParameter.instance().downloadDivisionBattleMatches = downloadFilter.isChecked(filterRoot.getDivisionBattleMatches());
-		UserParameter.instance().downloadTournamentPlayoffMatches = downloadFilter.isChecked(filterRoot.getTournamentPlayoffMatches());
-		UserParameter.instance().downloadTournamentGroupMatches = downloadFilter.isChecked(filterRoot.getTournamentGroupMatches());
+		UserParameter.instance().downloadDivisionBattleMatches = downloadFilter
+				.isChecked(filterRoot.getDivisionBattleMatches());
+		UserParameter.instance().downloadTournamentPlayoffMatches = downloadFilter
+				.isChecked(filterRoot.getTournamentPlayoffMatches());
+		UserParameter.instance().downloadTournamentGroupMatches = downloadFilter
+				.isChecked(filterRoot.getTournamentGroupMatches());
 		UserParameter.instance().downloadLadderMatches = downloadFilter.isChecked(filterRoot.getLadderMatches());
 		UserParameter.instance().downloadSingleMatches = downloadFilter.isChecked(filterRoot.getSingleMatches());
 
@@ -288,7 +300,8 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		if (teamId > 0) {
 			if (this.downloadFilter.isChecked(filterRoot.getCurrentMatches())) {
 				// Only get lineups for own fixtures
-				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_info"), progressIncrement);
+				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_info"),
+						progressIncrement);
 				bOK = (OnlineWorker.getMatches(teamId, false, true, true) != null);
 				if (bOK) {
 					OnlineWorker.getAllLineups(10);
@@ -298,12 +311,14 @@ public class DownloadDialog extends JDialog implements ActionListener {
 					var dateSinceTimestamp = DBManager.instance().getMinScoutingDate();
 					var dateSince = HODateTime.fromDbTimestamp(dateSinceTimestamp);
 					OnlineWorker.downloadMissingYouthMatchData(model, dateSince);
-					// delete old youth match lineups, no longer needed (no current youth player has trained then)
+					// delete old youth match lineups, no longer needed (no current youth player has
+					// trained then)
 					DBManager.instance().deleteYouthMatchDataBefore(dateSinceTimestamp);
 				}
 			}
 			if (bOK && m_jchMatchArchive.isSelected()) {
-				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_info"), progressIncrement);
+				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_info"),
+						progressIncrement);
 				var date = new HODateTime(m_clSpinnerModel.getDate().toInstant());
 				List<MatchKurzInfo> allmatches = OnlineWorker.getMatchArchive(teamId, date, false);
 				if (allmatches != null) {
@@ -315,17 +330,20 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			}
 
 			if (bOK && UserParameter.instance().fixtures) {
-				// in the last week of a season the LeagueLevelUnitID switches to the next season's value (no fixtures are available then)
+				// in the last week of a season the LeagueLevelUnitID switches to the next
+				// season's value (no fixtures are available then)
 				if (model.getBasics().getSpieltag() < 16) {
-					HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.fixtures"), progressIncrement);
+					HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.fixtures"),
+							progressIncrement);
 					var leagueId = model.getXtraDaten().getLeagueLevelUnitID();
 					var fixtures = OnlineWorker.downloadLeagueFixtures(-1, leagueId);
 					if (fixtures != null) {
-						if ( fixtures.getMatches().isEmpty()){
+						if (fixtures.getMatches().isEmpty()) {
 							// Matches are not available from hattrick. Initialize them
 							var teamStats = OnlineWorker.getSeriesDetails(leagueId);
 							var newFixtures = MatchFixtures.createFixtures(model.getXtraDaten().getSeriesMatchDate(),
-									teamStats.values().stream().sorted(Comparator.comparing(TeamStats::getPosition)).toList());
+									teamStats.values().stream().sorted(Comparator.comparing(TeamStats::getPosition))
+											.toList());
 							fixtures.addFixtures(newFixtures);
 						}
 						final MatchFixtures modelFixtures = hov.getModel().getFixtures();
@@ -334,20 +352,24 @@ public class DownloadDialog extends JDialog implements ActionListener {
 							var oldDownloadedFixtures = modelFixtures.getMatches();
 							// extract played matches of foreign teams
 							var newPlayedMatchesOfOtherTeams = fixtures.getMatches().stream()
-									.filter(i -> i.getToreHeim() >= 0 && i.getHeimId() != teamId && i.getGastId() != teamId)
+									.filter(i -> i.getToreHeim() >= 0 && i.getHeimId() != teamId
+											&& i.getGastId() != teamId)
 									.toList();
 							if (oldDownloadedFixtures != null) {
 								// matches that were not played on previous download
 								var notPlayedYet = oldDownloadedFixtures.stream()
 										.filter(i -> i.getToreHeim() < 0)
 										.toList();
-								// intersection of both lists gives the list of played matches since previous download
+								// intersection of both lists gives the list of played matches since previous
+								// download
 								var latestPlayedMatches = newPlayedMatchesOfOtherTeams.stream()
-										.filter(i -> notPlayedYet.stream().anyMatch(j -> j.getMatchId() == i.getMatchId()))
+										.filter(i -> notPlayedYet.stream()
+												.anyMatch(j -> j.getMatchId() == i.getMatchId()))
 										.toList();
 								for (var m : latestPlayedMatches) {
 									if (!OnlineWorker.downloadMatchData(m.getMatchId(), MatchType.LEAGUE, true)) {
-										HOLogger.instance().error(OnlineWorker.class, "Error fetching Match: " + m.getMatchId());
+										HOLogger.instance().error(OnlineWorker.class,
+												"Error fetching Match: " + m.getMatchId());
 										break;
 									}
 								}
@@ -370,12 +392,14 @@ public class DownloadDialog extends JDialog implements ActionListener {
 						selection.add(child.getUserObject());
 					}
 				}
-				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.fixtures"), progressIncrement);
+				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.fixtures"),
+						progressIncrement);
 				downloadOldFixtures(teamId, selection);
 			}
 
 			if (WorldDetailLeague.checkWorldDetailsDownload()) {
-				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.world_details"), progressIncrement);
+				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.world_details"),
+						progressIncrement);
 				var allLeagues = OnlineWorker.downloadWorldDetails();
 				DBManager.instance().storeWorldDetailLeagues(allLeagues);
 				WorldDetailsManager.instance().refresh();
@@ -383,7 +407,8 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			}
 		}
 
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.calc_subskills"), progressIncrement);
+		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.calc_subskills"),
+				progressIncrement);
 		model.calcSubskills();
 
 		HOMainFrame.instance().setInformationCompleted();
@@ -395,8 +420,9 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		boolean useOwnLeague = true;
 		var leagueId = HOVerwaltung.instance().getModel().getXtraDaten().getLeagueLevelUnitID();
 		for (Object s : selection) {
-			if (s instanceof Map.Entry) {
-				var e = (Map.Entry<String, Integer>)s;
+			if (s instanceof Map.Entry<?, ?> mapEntry) {
+				@SuppressWarnings("unchecked")
+				var e = (Map.Entry<String, Integer>) mapEntry;
 				final int seasonId = e.getValue();
 
 				if (useOwnLeague || !leagueSelectionDialog.getReuseSelection()) {
@@ -405,7 +431,9 @@ public class DownloadDialog extends JDialog implements ActionListener {
 					if (matches != null) {
 						DBManager.instance().storeMatchKurzInfos(matches);
 						var leagueMatch = matches.stream()
-								.filter(i -> i.getMatchType() == MatchType.LEAGUE && i.getMatchStatus() == MatchKurzInfo.FINISHED).findFirst();
+								.filter(i -> i.getMatchType() == MatchType.LEAGUE
+										&& i.getMatchStatus() == MatchKurzInfo.FINISHED)
+								.findFirst();
 						if (leagueMatch.isPresent()) {
 							leagueId = leagueMatch.get().getMatchContextId();
 						}
@@ -415,7 +443,8 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				// confirm selection
 				if (leagueSelectionDialog == null || !leagueSelectionDialog.getReuseSelection()) {
 					leagueSelectionDialog = new LigaAuswahlDialog(this, seasonId, leagueId, selection.size() > 1);
-					if ( leagueSelectionDialog.isAborted()) break;
+					if (leagueSelectionDialog.isAborted())
+						break;
 					leagueId = leagueSelectionDialog.getLigaID();
 					useOwnLeague = leagueSelectionDialog.isOwnLeagueSelected();
 				}
@@ -448,7 +477,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				teamId = Long.parseLong(teams.get(0)[0]);
 			}
 			var hrf = NthrfUtil.createNthrf(teamId);
-			if ( !hrf.isEmpty()) {
+			if (!hrf.isEmpty()) {
 				HOModel homodel = HRFStringParser.parse(hrf);
 				if (homodel != null) {
 					var ntTeams = DBManager.instance().loadAllNtTeamDetails();
@@ -459,17 +488,15 @@ public class DownloadDialog extends JDialog implements ActionListener {
 						hov.setModel(homodel);
 					}
 
-					var matches = OnlineWorker.getMatches((int)teamId, false, true, true);
-					if (matches!= null) {
+					var matches = OnlineWorker.getMatches((int) teamId, false, true, true);
+					if (matches != null) {
 						OnlineWorker.getAllLineups(null);
 						OnlineWorker.downloadNtTeams(ntTeams, matches);
 					}
-				}
-				else {
+				} else {
 					HOLogger.instance().error(getClass(), "Download error: " + hrf);
 				}
-			}
-			else {
+			} else {
 				// No players in team or training area closed
 				// TODO message box
 			}

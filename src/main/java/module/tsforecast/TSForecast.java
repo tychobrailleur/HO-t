@@ -111,7 +111,8 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 	private boolean isInCup() {
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		var matches = dbManager.getMatchesKurzInfo(
-				" WHERE ( GastID = ? OR HeimID = ? ) AND MatchTyp = ? AND Status <> ? LIMIT 1", teamId, teamId,MatchType.CUP.getId(),MatchKurzInfo.FINISHED);
+				" WHERE ( GastID = ? OR HeimID = ? ) AND MatchTyp = ? AND Status <> ? LIMIT 1", teamId, teamId,
+				MatchType.CUP.getId(), MatchKurzInfo.FINISHED);
 		return !matches.isEmpty();
 	}
 
@@ -121,7 +122,8 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 	private boolean hasQualificationMatch() {
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		var matches = dbManager.getMatchesKurzInfo(
-				" WHERE ( GastID = ? OR HeimID = ?) AND MatchTyp = ? AND Status <> ? LIMIT 1", teamId, teamId, MatchType.QUALIFICATION.getId(), MatchKurzInfo.FINISHED);
+				" WHERE ( GastID = ? OR HeimID = ?) AND MatchTyp = ? AND Status <> ? LIMIT 1", teamId, teamId,
+				MatchType.QUALIFICATION.getId(), MatchKurzInfo.FINISHED);
 		return !matches.isEmpty();
 	}
 
@@ -150,17 +152,17 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 				int iButton = Integer.parseInt(actionevent.getActionCommand().substring(1));
 
 				switch (actionevent.getActionCommand().charAt(0)) {
-				case 80: // 'P'
-					m_LoepiForecast.setAttitude(iButton, IMatchDetails.EINSTELLUNG_PIC);
-					break;
-				case 77: // 'M'
-					m_LoepiForecast.setAttitude(iButton, IMatchDetails.EINSTELLUNG_MOTS);
-					break;
-				case 78: // 'N'
-				case 79: // 'O'
-				default:
-					m_LoepiForecast.setAttitude(iButton, IMatchDetails.EINSTELLUNG_NORMAL);
-					break;
+					case 80: // 'P'
+						m_LoepiForecast.setAttitude(iButton, IMatchDetails.EINSTELLUNG_PIC);
+						break;
+					case 77: // 'M'
+						m_LoepiForecast.setAttitude(iButton, IMatchDetails.EINSTELLUNG_MOTS);
+						break;
+					case 78: // 'N'
+					case 79: // 'O'
+					default:
+						m_LoepiForecast.setAttitude(iButton, IMatchDetails.EINSTELLUNG_NORMAL);
+						break;
 				}
 				m_jpGraphics.repaint();
 			}
@@ -297,7 +299,8 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 						|| (m_LoepiForecast.getMatchType() == MatchType.CUP && bshowCupMatches)
 						|| (m_LoepiForecast.getMatchType() == MatchType.QUALIFICATION && bshowQualMatches)) {
 
-					TeamAttitudeEditor teamAttitudeEditor = new TeamAttitudeEditor(m_LoepiForecast.getDate().toLocaleDate(),
+					TeamAttitudeEditor teamAttitudeEditor = new TeamAttitudeEditor(
+							m_LoepiForecast.getDate().toLocaleDate(),
 							m_LoepiForecast.getTooltip(), iCmdID, m_LoepiForecast.getAttitude(),
 							m_LoepiForecast.getMatchType());
 					teamAttitudeEditor.addActionListener(this);
@@ -312,17 +315,16 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 									+ TranslationFacility.tr("EndOFSeason")),
 							gridbagconstraints);
 				}
-			}
-			else if ( m_LoepiForecast.isTrainingUpdate()){
+			} else if (m_LoepiForecast.isTrainingUpdate()) {
 				var trainingIntensityEditor = new TrainingIntensityEditor(m_LoepiForecast);
 				trainingIntensityEditor.addChangeListener(e -> {
-                    if ( e.getSource() instanceof JSlider slider) {
-						if ( slider.getParent() instanceof TrainingIntensityEditor editor ) {
+					if (e.getSource() instanceof JSlider slider) {
+						if (slider.getParent() instanceof TrainingIntensityEditor editor) {
 							editor.updatePoint();
 							m_jpGraphics.repaint();
 						}
 					}
-                });
+				});
 				gridbagconstraints.gridy++;
 				m_jpGamesPanel.add(trainingIntensityEditor, gridbagconstraints);
 			}
