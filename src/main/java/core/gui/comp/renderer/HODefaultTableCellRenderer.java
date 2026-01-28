@@ -11,25 +11,25 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 
-
 /**
  * Renderer for tables with JLabels as table objects
  */
 public class HODefaultTableCellRenderer implements javax.swing.table.TableCellRenderer {
-    //~ Static fields/initializers -----------------------------------------------------------------
+    // ~ Static fields/initializers
+    // -----------------------------------------------------------------
 
     public static Color SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG);
     public static Color SELECTION_FG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_FG);
-    //~ Methods ------------------------------------------------------------------------------------
+    // ~ Methods
+    // ------------------------------------------------------------------------------------
 
     public java.awt.Component getTableCellRendererComponent(JTable table, Object value,
-                                                            boolean isSelected,
-                                                            boolean hasFocus,
-                                                            int row,
-                                                            int column)
-    {
-        if (value instanceof IHOTableEntry) {
-            final JComponent component = ((IHOTableEntry) value).getComponent(isSelected);
+            boolean isSelected,
+            boolean hasFocus,
+            int row,
+            int column) {
+        if (value instanceof IHOTableEntry entry) {
+            final JComponent component = entry.getComponent(isSelected);
             if (isSelected) {
                 component.setOpaque(true);
             }

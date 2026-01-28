@@ -8,13 +8,15 @@ import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 
 /**
- * TableCellRenderer for the update plugins panel and user columns settings panel. 
+ * TableCellRenderer for the update plugins panel and user columns settings
+ * panel.
  *
  * @author tdietz
  */
 public final class UpdaterCellRenderer implements TableCellRenderer {
 
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+			int row, int column) {
 
 		double site = 0;
 		double ho = 0;
@@ -22,8 +24,8 @@ public final class UpdaterCellRenderer implements TableCellRenderer {
 			return new JLabel();
 		}
 
-		if (value instanceof JCheckBox) {
-			return (JCheckBox) value;
+		if (value instanceof JCheckBox checkbox) {
+			return checkbox;
 		}
 
 		try {
@@ -37,8 +39,8 @@ public final class UpdaterCellRenderer implements TableCellRenderer {
 
 		boolean color = (ho > 0) && (ho < site);
 
-        if (value instanceof JButton b) {
-            b.setBorderPainted(false);
+		if (value instanceof JButton b) {
+			b.setBorderPainted(false);
 			if (color) {
 				b.setForeground(ThemeManager.getColor(HOColorName.LABEL_ERROR_FG));
 			}
@@ -51,11 +53,11 @@ public final class UpdaterCellRenderer implements TableCellRenderer {
 		}
 
 		JLabel label;
-		if (value instanceof JLabel) {
-			label = (JLabel) value;
-		} else if (value instanceof Color) {
+		if (value instanceof JLabel jLabel) {
+			label = jLabel;
+		} else if (value instanceof Color colorValue) {
 			label = new JLabel();
-			label.setBackground((Color) value);
+			label.setBackground(colorValue);
 		} else {
 			label = new JLabel(value.toString());
 		}

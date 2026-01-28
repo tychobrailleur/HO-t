@@ -24,8 +24,6 @@ import javax.swing.JTextField;
 import javax.swing.event.CellEditorListener;
 import javax.swing.table.TableCellEditor;
 
-
-
 /**
  * TableEditor for UpdateDialogs
  *
@@ -34,31 +32,34 @@ import javax.swing.table.TableCellEditor;
  * @since 1.35
  */
 public final class TableEditor extends AbstractCellEditor implements TableCellEditor {
-    //~ Instance fields ----------------------------------------------------------------------------
+    // ~ Instance fields
+    // ----------------------------------------------------------------------------
 
-    protected HashMap<Integer,TableCellEditor> editors;
+    protected HashMap<Integer, TableCellEditor> editors;
 
     protected TableCellEditor defaultEditor;
 
     protected TableCellEditor editor;
     private JTextField textField;
 
-    //~ Constructors -------------------------------------------------------------------------------
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
 
     /**
      * Creates a new TableEditor object.
      */
-	public TableEditor() {
-		editors = new HashMap<>();
+    public TableEditor() {
+        editors = new HashMap<>();
 
-		textField = new JTextField();
-		textField.setBorder(null);
-		textField.setFocusCycleRoot(true);
+        textField = new JTextField();
+        textField.setBorder(null);
+        textField.setFocusCycleRoot(true);
 
-		defaultEditor = new DefaultCellEditor(textField);
-	}
+        defaultEditor = new DefaultCellEditor(textField);
+    }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    // ~ Methods
+    // ------------------------------------------------------------------------------------
 
     public boolean isCellEditable() {
         return true;
@@ -69,7 +70,7 @@ public final class TableEditor extends AbstractCellEditor implements TableCellEd
     }
 
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected,
-                                                 int row, int column) {
+            int row, int column) {
         editor = editors.get(row);
 
         if (editor == null) {
@@ -78,29 +79,31 @@ public final class TableEditor extends AbstractCellEditor implements TableCellEd
 
         if (value != null) {
             try {
-            	if(value instanceof JComponent){
-            		((JComponent)value).setBackground(isSelected?HODefaultTableCellRenderer.SELECTION_BG:ColorLabelEntry.BG_STANDARD);
-            		((JComponent)value).setForeground(isSelected?HODefaultTableCellRenderer.SELECTION_FG:ColorLabelEntry.FG_STANDARD);
-            	}
-            		
-                if (value instanceof JTextField) {
-                    ((JTextField) value).setFocusCycleRoot(true);
-                    return (JTextField) value;
+                if (value instanceof JComponent component) {
+                    component.setBackground(
+                            isSelected ? HODefaultTableCellRenderer.SELECTION_BG : ColorLabelEntry.BG_STANDARD);
+                    component.setForeground(
+                            isSelected ? HODefaultTableCellRenderer.SELECTION_FG : ColorLabelEntry.FG_STANDARD);
                 }
 
-                if (value instanceof JComboBox) {
-                    return (JComboBox) value;
-                }
-                
-                if (value instanceof JButton) {
-                    return (JButton) value;
+                if (value instanceof JTextField textField) {
+                    textField.setFocusCycleRoot(true);
+                    return textField;
                 }
 
-                if (value instanceof JCheckBox) {
-                    return (JCheckBox) value;
+                if (value instanceof JComboBox<?> comboBox) {
+                    return comboBox;
+                }
+
+                if (value instanceof JButton button) {
+                    return button;
+                }
+
+                if (value instanceof JCheckBox checkBox) {
+                    return checkBox;
                 }
             } catch (IllegalArgumentException e) {
-                HOLogger.instance().log(getClass(),e);
+                HOLogger.instance().log(getClass(), e);
             }
         }
 
@@ -112,27 +115,27 @@ public final class TableEditor extends AbstractCellEditor implements TableCellEd
     }
 
     @Override
-	public void addCellEditorListener(CellEditorListener l) {
+    public void addCellEditorListener(CellEditorListener l) {
         editor.addCellEditorListener(l);
     }
 
     @Override
-	public void cancelCellEditing() {
+    public void cancelCellEditing() {
         super.cancelCellEditing();
     }
 
     @Override
-	public void removeCellEditorListener(CellEditorListener l) {
+    public void removeCellEditorListener(CellEditorListener l) {
         editor.removeCellEditorListener(l);
     }
 
     @Override
-	public boolean shouldSelectCell(EventObject anEvent) {
+    public boolean shouldSelectCell(EventObject anEvent) {
         return super.shouldSelectCell(anEvent);
     }
 
     @Override
-	public boolean stopCellEditing() {
+    public boolean stopCellEditing() {
         return super.stopCellEditing();
     }
 }

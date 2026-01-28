@@ -253,8 +253,7 @@ public abstract class HOTableModel extends AbstractTableModel {
     }
 
     private void moveColumn(JTable table, UserColumn userColumn) {
-        if (table instanceof FixedColumnsTable) {
-            FixedColumnsTable fixedTable = (FixedColumnsTable) table;
+        if (table instanceof FixedColumnsTable fixedTable) {
             int targetIndex = userColumn.getIndex() - fixedTable.getFixedColumnsCount();
             if (targetIndex >= 0) {
                 try {
@@ -368,8 +367,8 @@ public abstract class HOTableModel extends AbstractTableModel {
     }
 
     private TableColumn getTableColumn(JTable table, int i) {
-        if (table instanceof FixedColumnsTable) {
-            return ((FixedColumnsTable) table).getTableColumn(i);
+        if (table instanceof FixedColumnsTable fixedTable) {
+            return fixedTable.getTableColumn(i);
         }
         return table.getColumnModel().getColumn(i);
     }
