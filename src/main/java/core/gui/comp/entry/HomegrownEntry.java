@@ -6,16 +6,15 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.JComponent;
 import javax.swing.SwingConstants;
 
-
-
-public class HomegrownEntry extends AbstractHOTableEntry{
+public class HomegrownEntry extends AbstractHOTableEntry {
 
 	private ColorLabelEntry icon = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
 			ColorLabelEntry.BG_STANDARD,
 			SwingConstants.CENTER);
 	private Player player;
 
-	//~ Constructors -------------------------------------------------------------------------------
+	// ~ Constructors
+	// -------------------------------------------------------------------------------
 
 	/**
 	 * Creates a new Homegrown Entry.
@@ -33,11 +32,9 @@ public class HomegrownEntry extends AbstractHOTableEntry{
 		return player;
 	}
 
-
 	@Override
 	public int compareTo(@NotNull IHOTableEntry obj) {
-		if (obj instanceof HomegrownEntry) {
-			final HomegrownEntry entry = (HomegrownEntry) obj;
+		if (obj instanceof HomegrownEntry entry) {
 
 			if ((entry.getPlayer() != null) && (getPlayer() != null)) {
 
@@ -53,7 +50,6 @@ public class HomegrownEntry extends AbstractHOTableEntry{
 		return 0;
 	}
 
-	
 	@Override
 	public final void updateComponent() {
 		if (player != null) {
@@ -68,20 +64,17 @@ public class HomegrownEntry extends AbstractHOTableEntry{
 		}
 	}
 
-
 	@Override
 	public JComponent getComponent(boolean isSelected) {
 		return icon.getComponent(isSelected);
 	}
 
-
 	@Override
 	public void clear() {
 		player = null;
 		updateComponent();
-		
-	}
 
+	}
 
 	@Override
 	public void createComponent() {
@@ -90,4 +83,3 @@ public class HomegrownEntry extends AbstractHOTableEntry{
 				SwingConstants.CENTER);
 	}
 }
-

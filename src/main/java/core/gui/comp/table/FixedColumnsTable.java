@@ -70,8 +70,8 @@ public class FixedColumnsTable extends JTable {
             HOTableModel model = (HOTableModel) table.getModel();
             // Set header tool tip
             String tooltipString = model.getDisplayedColumns()[tableColumn.getModelIndex()].getTooltip();
-            if (component instanceof JComponent) {
-                ((JComponent) component).setToolTipText(tooltipString);
+            if (component instanceof JComponent jComponent) {
+                jComponent.setToolTipText(tooltipString);
             }
             return component;
         });

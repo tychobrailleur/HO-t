@@ -7,14 +7,12 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-
 public class TorLabelEntry extends AbstractHOTableEntry {
 
     private static Icon BALLIMAGEICON;
 
     private JComponent m_clComponent = new JPanel();
     private int m_iTore;
-
 
     public TorLabelEntry() {
         this(0);
@@ -29,8 +27,8 @@ public class TorLabelEntry extends AbstractHOTableEntry {
         createComponent();
     }
 
-	public final javax.swing.JComponent getComponent(boolean isSelected) {
-    	m_clComponent.setBackground(isSelected?HODefaultTableCellRenderer.SELECTION_BG:ColorLabelEntry.BG_STANDARD);
+    public final javax.swing.JComponent getComponent(boolean isSelected) {
+        m_clComponent.setBackground(isSelected ? HODefaultTableCellRenderer.SELECTION_BG : ColorLabelEntry.BG_STANDARD);
         return m_clComponent;
     }
 
@@ -45,15 +43,12 @@ public class TorLabelEntry extends AbstractHOTableEntry {
         return m_iTore;
     }
 
-
-	public final void clear() {
+    public final void clear() {
         m_clComponent.removeAll();
     }
 
-
-	public final int compareTo(@NotNull IHOTableEntry obj) {
-        if (obj instanceof TorLabelEntry) {
-            final TorLabelEntry entry = (TorLabelEntry) obj;
+    public final int compareTo(@NotNull IHOTableEntry obj) {
+        if (obj instanceof TorLabelEntry entry) {
 
             if (getTore() < entry.getTore()) {
                 return -1;
@@ -67,7 +62,7 @@ public class TorLabelEntry extends AbstractHOTableEntry {
         return 0;
     }
 
-	public final void createComponent() {
+    public final void createComponent() {
         JPanel renderer = new JPanel();
         renderer.setLayout(new BoxLayout(renderer, 0));
         renderer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -85,7 +80,7 @@ public class TorLabelEntry extends AbstractHOTableEntry {
         setTore(getTore() + 1);
     }
 
-	public final void updateComponent() {
+    public final void updateComponent() {
         m_clComponent.removeAll();
 
         for (float f = m_iTore; f > 0; f--) {

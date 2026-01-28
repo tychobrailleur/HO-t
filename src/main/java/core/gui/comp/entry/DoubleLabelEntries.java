@@ -9,15 +9,18 @@ import java.awt.*;
 
 import javax.swing.*;
 
-
 /**
- * A panel with two labels to display two values in the same column, e.g. (value, diff).
+ * A panel with two labels to display two values in the same column, e.g.
+ * (value, diff).
  *
- * <p>The two labels within the resulting components will have equal width, unless the layout
+ * <p>
+ * The two labels within the resulting components will have equal width, unless
+ * the layout
  * manager has been set.
  */
 public class DoubleLabelEntries extends AbstractHOTableEntry {
-    //~ Instance fields ----------------------------------------------------------------------------
+    // ~ Instance fields
+    // ----------------------------------------------------------------------------
 
     private DoubleLabel m_clComponent = new DoubleLabel();
     private IHOTableEntry m_clLinks;
@@ -27,7 +30,8 @@ public class DoubleLabelEntries extends AbstractHOTableEntry {
 
     private static final Color DIFF_COLOR = ThemeManager.getColor(HOColorName.FG_INJURED);
 
-    //~ Constructors -------------------------------------------------------------------------------
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
 
     /**
      * Creates a new DoubleLabelEntries object.
@@ -42,9 +46,9 @@ public class DoubleLabelEntries extends AbstractHOTableEntry {
     public DoubleLabelEntries(Color color) {
         super();
         m_clLinks = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, color,
-                                        SwingConstants.RIGHT);
+                SwingConstants.RIGHT);
         m_clRechts = new ColorLabelEntry("", DIFF_COLOR, color,
-                                         SwingConstants.CENTER);
+                SwingConstants.CENTER);
 
         createComponent();
     }
@@ -64,7 +68,7 @@ public class DoubleLabelEntries extends AbstractHOTableEntry {
         createComponent();
     }
 
-	public final JComponent getComponent(boolean isSelected) {
+    public final JComponent getComponent(boolean isSelected) {
         m_clComponent.removeAll();
         m_clComponent.setOpaque(false);
 
@@ -77,7 +81,7 @@ public class DoubleLabelEntries extends AbstractHOTableEntry {
 
         // If the layout is a GridBagLayout, force the components to take
         // the full space of their respective cell.
-        if (layout instanceof GridBagLayout) {
+        if (layout instanceof GridBagLayout gridBagLayout) {
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.fill = GridBagConstraints.BOTH;
             gbc.weightx = 1.0;
@@ -121,25 +125,24 @@ public class DoubleLabelEntries extends AbstractHOTableEntry {
         return m_clRechts;
     }
 
-	public final void clear() {
+    public final void clear() {
         m_clLinks.clear();
         m_clRechts.clear();
     }
 
-	public int compareTo(@NotNull IHOTableEntry obj) {
-        if (obj instanceof DoubleLabelEntries) {
-            final DoubleLabelEntries entry = (DoubleLabelEntries) obj;
+    public int compareTo(@NotNull IHOTableEntry obj) {
+        if (obj instanceof DoubleLabelEntries entry) {
             return getTableEntryLeft().compareTo(entry.getTableEntryLeft());
         }
 
         return 0;
     }
 
-	public final void createComponent() {
+    public final void createComponent() {
         m_clComponent = new DoubleLabel();
     }
 
-	public void updateComponent() {
+    public void updateComponent() {
         m_clLinks.updateComponent();
         m_clRechts.updateComponent();
     }

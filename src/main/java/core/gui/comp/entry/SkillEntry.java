@@ -22,15 +22,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-
-
 /**
  * Skillanzeige eines Spielers (Nachkommastellen in Grau)
  *
  * @author Pirania
  */
 public class SkillEntry extends AbstractHOTableEntry {
-    //~ Instance fields ----------------------------------------------------------------------------
+    // ~ Instance fields
+    // ----------------------------------------------------------------------------
 
     private Color m_clBGColor = ColorLabelEntry.BG_STANDARD;
     private Color m_clFGColor = ColorLabelEntry.FG_STANDARD;
@@ -41,10 +40,11 @@ public class SkillEntry extends AbstractHOTableEntry {
     private String m_sNachkomma = "";
     private String m_sText = "";
 
-    //Für Compareto
+    // Für Compareto
     private double m_dZahl = Double.NEGATIVE_INFINITY;
 
-    //~ Constructors -------------------------------------------------------------------------------
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
 
     /**
      * Creates a new SkillEntry object.
@@ -73,7 +73,8 @@ public class SkillEntry extends AbstractHOTableEntry {
         createComponent();
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    // ~ Methods
+    // ------------------------------------------------------------------------------------
 
     public final void setBGColor(Color bgcolor) {
         m_clBGColor = bgcolor;
@@ -83,10 +84,10 @@ public class SkillEntry extends AbstractHOTableEntry {
     /**
      * Gibt eine passende Komponente zurück
      */
-	public final JComponent getComponent(boolean isSelected) {
-        m_clComponent.setBackground(isSelected?HODefaultTableCellRenderer.SELECTION_BG:m_clBGColor);
-        m_jlLabel1.setForeground(isSelected?HODefaultTableCellRenderer.SELECTION_FG:m_clFGColor);
-        m_jlLabel2.setForeground(isSelected?HODefaultTableCellRenderer.SELECTION_FG:m_clFGColor);
+    public final JComponent getComponent(boolean isSelected) {
+        m_clComponent.setBackground(isSelected ? HODefaultTableCellRenderer.SELECTION_BG : m_clBGColor);
+        m_jlLabel1.setForeground(isSelected ? HODefaultTableCellRenderer.SELECTION_FG : m_clFGColor);
+        m_jlLabel2.setForeground(isSelected ? HODefaultTableCellRenderer.SELECTION_FG : m_clFGColor);
         return m_clComponent;
     }
 
@@ -107,7 +108,7 @@ public class SkillEntry extends AbstractHOTableEntry {
         return m_dZahl;
     }
 
-	public final void clear() {
+    public final void clear() {
         m_dZahl = 0d;
         updateComponent();
     }
@@ -115,11 +116,10 @@ public class SkillEntry extends AbstractHOTableEntry {
     /**
      * Vergleich zum Sortieren
      */
-	public final int compareTo(@NotNull IHOTableEntry obj) {
-        if (obj instanceof SkillEntry) {
-            final SkillEntry entry = (SkillEntry) obj;
+    public final int compareTo(@NotNull IHOTableEntry obj) {
+        if (obj instanceof SkillEntry entry) {
 
-            //Zahl?
+            // Zahl?
             final double zahl1 = m_dZahl;
             final double zahl2 = entry.getZahl();
 
@@ -138,7 +138,7 @@ public class SkillEntry extends AbstractHOTableEntry {
     /**
      * Erstellt eine passende Komponente
      */
-	public final void createComponent() {
+    public final void createComponent() {
         final GridBagLayout layout = new GridBagLayout();
         final GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -190,7 +190,7 @@ public class SkillEntry extends AbstractHOTableEntry {
         }
     }
 
-	public final void updateComponent() {
+    public final void updateComponent() {
         m_jlLabel1.setText(m_sText);
         m_jlLabel2.setText(m_sNachkomma);
         m_jlLabel1.setBackground(m_clBGColor);

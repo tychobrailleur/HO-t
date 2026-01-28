@@ -9,13 +9,12 @@ import java.text.NumberFormat;
 
 import javax.swing.JProgressBar;
 
-
-
 /**
  * Progress bar as table cell.
  */
 public class ProgressbarTableEntry extends AbstractHOTableEntry {
-    //~ Instance fields ----------------------------------------------------------------------------
+    // ~ Instance fields
+    // ----------------------------------------------------------------------------
 
     private Color m_clBGColor = Color.WHITE;
     private Color m_clFGColor = Color.BLUE;
@@ -27,23 +26,24 @@ public class ProgressbarTableEntry extends AbstractHOTableEntry {
     private int m_iMinWert;
     private NumberFormat nf;
 
-    //~ Constructors -------------------------------------------------------------------------------
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
 
     /**
      * Creates a new ProgressbarTableEntry object.
      *
-     * @param aktuellerwert current value
-     * @param minwert minimum value
-     * @param maxwert maximum value
+     * @param aktuellerwert  current value
+     * @param minwert        minimum value
+     * @param maxwert        maximum value
      * @param fractionDigits fraction digits
-     * @param faktor4Label factor
-     * @param bgcolor background color
-     * @param fgcolor foreground color
-     * @param addText additional label text
+     * @param faktor4Label   factor
+     * @param bgcolor        background color
+     * @param fgcolor        foreground color
+     * @param addText        additional label text
      */
     public ProgressbarTableEntry(int aktuellerwert, int minwert, int maxwert, int fractionDigits,
-                                 double faktor4Label, Color bgcolor,
-                                 Color fgcolor, String addText) {
+            double faktor4Label, Color bgcolor,
+            Color fgcolor, String addText) {
         m_iAktuellerWert = aktuellerwert;
         m_iMaxWert = maxwert;
         m_iMinWert = minwert;
@@ -57,7 +57,8 @@ public class ProgressbarTableEntry extends AbstractHOTableEntry {
         createComponent();
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    // ~ Methods
+    // ------------------------------------------------------------------------------------
 
     /**
      * Setter for property m_clFGColor.
@@ -119,7 +120,7 @@ public class ProgressbarTableEntry extends AbstractHOTableEntry {
     /**
      * Implement getComponent().
      */
-	public final javax.swing.JComponent getComponent(boolean isSelected) {
+    public final javax.swing.JComponent getComponent(boolean isSelected) {
         if (isSelected) {
             m_clProgressbar.setOpaque(true);
             m_clProgressbar.setBackground(HODefaultTableCellRenderer.SELECTION_BG);
@@ -214,14 +215,14 @@ public class ProgressbarTableEntry extends AbstractHOTableEntry {
      */
     public final void setNachkommastellen(int fractionDigits) {
         nf.setMinimumFractionDigits(fractionDigits);
-    	nf.setMaximumFractionDigits(fractionDigits);
+        nf.setMaximumFractionDigits(fractionDigits);
         updateComponent();
     }
 
     /**
      * Clear value.
      */
-	public final void clear() {
+    public final void clear() {
         m_clProgressbar.setString("");
         m_clProgressbar.setValue(0);
     }
@@ -229,9 +230,8 @@ public class ProgressbarTableEntry extends AbstractHOTableEntry {
     /**
      * Implement compareTo() for sorting.
      */
-	public final int compareTo(@NotNull IHOTableEntry o) {
-        if (o instanceof ProgressbarTableEntry) {
-            final ProgressbarTableEntry entry = (ProgressbarTableEntry) o;
+    public final int compareTo(@NotNull IHOTableEntry o) {
+        if (o instanceof ProgressbarTableEntry entry) {
 
             if (getAktuellerWert() < entry.getAktuellerWert()) {
                 return -1;
@@ -248,7 +248,7 @@ public class ProgressbarTableEntry extends AbstractHOTableEntry {
     /**
      * Create the component and set the text.
      */
-	public final void createComponent() {
+    public final void createComponent() {
         m_clProgressbar = new JProgressBar();
         m_clProgressbar.setStringPainted(true);
         updateComponent();
@@ -257,7 +257,7 @@ public class ProgressbarTableEntry extends AbstractHOTableEntry {
     /**
      * Update label text.
      */
-	public final void updateComponent() {
+    public final void updateComponent() {
         m_clProgressbar.setMinimum(m_iMinWert);
         m_clProgressbar.setMaximum(m_iMaxWert);
         m_clProgressbar.setValue(m_iAktuellerWert);

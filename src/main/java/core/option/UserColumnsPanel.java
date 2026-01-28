@@ -19,7 +19,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serial;
 
-
 /**
  * Panel to select preferred columns to display in the various HO tables.
  *
@@ -33,7 +32,7 @@ public class UserColumnsPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private JComboBox m_jcbColumnModel = null;
 	private JTable table = null;
-	private final String[] columnNames = new String[]{" ", TranslationFacility.tr("column")};
+	private final String[] columnNames = new String[] { " ", TranslationFacility.tr("column") };
 	private final Icon lockedImage = ThemeManager.getIcon(HOIconName.LOCKED);
 
 	protected UserColumnsPanel() {
@@ -130,9 +129,9 @@ public class UserColumnsPanel extends JPanel implements ActionListener {
 			tableColumnModel.getColumn(0).setPreferredWidth(50);
 		}
 
-		if (arg0.getSource() instanceof JCheckBox) {
+		if (arg0.getSource() instanceof JCheckBox checkBox) {
 			var col = (UserColumn) table.getValueAt(table.getSelectedRow(), 1);
-			var doDisplay = ((JCheckBox) arg0.getSource()).isSelected();
+			var doDisplay = checkBox.isSelected();
 			col.setDisplay(doDisplay);
 			if (doDisplay && col.getPreferredWidth() < 25) {
 				col.setPreferredWidth(25);

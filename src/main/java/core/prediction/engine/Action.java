@@ -3,15 +3,17 @@ package core.prediction.engine;
 import core.model.TranslationFacility;
 import core.model.match.IMatchDetails;
 
-public class Action implements  Comparable<Object> {
-    //~ Instance fields ----------------------------------------------------------------------------
+public class Action implements Comparable<Object> {
+    // ~ Instance fields
+    // ----------------------------------------------------------------------------
     private boolean homeTeam;
     private boolean score;
     private int area;
     private int minute;
     private int type;
 
-    //~ Methods ------------------------------------------------------------------------------------
+    // ~ Methods
+    // ------------------------------------------------------------------------------------
     public final void setArea(int i) {
         area = i;
     }
@@ -82,8 +84,7 @@ public class Action implements  Comparable<Object> {
     }
 
     public final int compareTo(Object o) {
-        if (o instanceof Action) {
-            final Action action = (Action) o;
+        if (o instanceof Action action) {
 
             if (action.getMinute() < this.getMinute()) {
                 return -1;
@@ -103,7 +104,7 @@ public class Action implements  Comparable<Object> {
      * @return the String representation
      */
     @Override
-	public final String toString() {
+    public final String toString() {
         final StringBuilder buffer = new StringBuilder();
 
         if (homeTeam) {

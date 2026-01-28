@@ -204,8 +204,8 @@ public class ProxyDialog extends JDialog {
 			@Override
 			public final void focusGained(FocusEvent focusEvent) {
 				// Selektiert den Inhalt des Textfeldes beim eintreffen
-				if (focusEvent.getSource() instanceof JTextField) {
-					((JTextField) focusEvent.getSource()).selectAll();
+				if (focusEvent.getSource() instanceof JTextField textField) {
+					textField.selectAll();
 				}
 			}
 		};

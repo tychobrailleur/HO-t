@@ -28,15 +28,17 @@ public class ImageUtilities {
 		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
 	}
 
-    /** Hashtable mit Veränderungspfeilgrafiken nach Integer als Key */
-    private static final Hashtable<Integer,ImageIcon> m_clPfeilCache = new Hashtable<>();
-    private static final Hashtable<Integer,ImageIcon> m_clPfeilWideCache = new Hashtable<>();
-    private static final Hashtable<Integer,ImageIcon> m_clPfeilLightCache = new Hashtable<>();
-//    private static final Hashtable<Integer,ImageIcon> m_clPfeilWideLightCache = new Hashtable<>();
+	/** Hashtable mit Veränderungspfeilgrafiken nach Integer als Key */
+	private static final Hashtable<Integer, ImageIcon> m_clPfeilCache = new Hashtable<>();
+	private static final Hashtable<Integer, ImageIcon> m_clPfeilWideCache = new Hashtable<>();
+	private static final Hashtable<Integer, ImageIcon> m_clPfeilLightCache = new Hashtable<>();
+	// private static final Hashtable<Integer,ImageIcon> m_clPfeilWideLightCache =
+	// new Hashtable<>();
 	public static ImageIcon MINILEER = new ImageIcon(new BufferedImage(8, 8, BufferedImage.TYPE_INT_ARGB));
 
 	public static ImageIcon getImageIcon4Change(int wert, boolean aktuell) {
-		if (wert == 0) return null;
+		if (wert == 0)
+			return null;
 		ImageIcon icon;
 		final Integer keywert = wert;
 		int xPosText = 3;
@@ -46,16 +48,17 @@ public class ImageUtilities {
 				|| (!m_clPfeilLightCache.containsKey(keywert) && !aktuell)) {
 			final BufferedImage image = new BufferedImage(14, 14, BufferedImage.TYPE_INT_ARGB);
 
-			//Pfeil zeichnen
+			// Pfeil zeichnen
 			final java.awt.Graphics2D g2d = (java.awt.Graphics2D) image.getGraphics();
 
-			//g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+			// g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING,
+			// java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
 
 			if (wert > 0) {
-				final int[] xpoints = {0, 6, 7, 13, 10, 10, 3, 3, 0};
-				final int[] ypoints = {6, 0, 0, 6, 6, 13, 13, 6, 6};
+				final int[] xpoints = { 0, 6, 7, 13, 10, 10, 3, 3, 0 };
+				final int[] ypoints = { 6, 0, 0, 6, 6, 13, 13, 6, 6 };
 
-				//Polygon füllen
+				// Polygon füllen
 				if (!aktuell) {
 					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
 				}
@@ -64,28 +67,28 @@ public class ImageUtilities {
 				g2d.setColor(new Color(0, farbwert, 0));
 				g2d.fillPolygon(xpoints, ypoints, xpoints.length);
 
-				//Polygonrahmen
+				// Polygonrahmen
 				farbwert = Math.min(255, 105 + (50 * wert));
 				g2d.setColor(new Color(40, farbwert, 40));
 				g2d.drawPolygon(xpoints, ypoints, xpoints.length);
 
-				//Wert eintragen
+				// Wert eintragen
 				if (!aktuell) {
 					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 				}
 
 				g2d.setFont(new java.awt.Font("sansserif", java.awt.Font.PLAIN, 10));
 
-				//Für 1 und 2 Weisse Schrift oben
+				// Für 1 und 2 Weisse Schrift oben
 				if (wert < 3) {
 					g2d.setColor(Color.black);
 					g2d.drawString(wert + "", xPosText, 11);
 					g2d.setColor(Color.white);
 					g2d.drawString(wert + "", xPosText + 1, 11);
 				}
-				//Sonst Schwarze Schrift oben (nur bei Positiven Veränderungen)
+				// Sonst Schwarze Schrift oben (nur bei Positiven Veränderungen)
 				else {
-					//Position bei grossen Zahlen weiter nach vorne
+					// Position bei grossen Zahlen weiter nach vorne
 					if (wert > 9) {
 						xPosText = 0;
 					}
@@ -96,10 +99,10 @@ public class ImageUtilities {
 					g2d.drawString(wert + "", xPosText + 1, 11);
 				}
 			} else {
-				final int[] xpoints = {0, 6, 7, 13, 10, 10, 3, 3, 0};
-				final int[] ypoints = {7, 13, 13, 7, 7, 0, 0, 7, 7};
+				final int[] xpoints = { 0, 6, 7, 13, 10, 10, 3, 3, 0 };
+				final int[] ypoints = { 7, 13, 13, 7, 7, 0, 0, 7, 7 };
 
-				//Polygon füllen
+				// Polygon füllen
 				if (!aktuell) {
 					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
 				}
@@ -108,19 +111,19 @@ public class ImageUtilities {
 				g2d.setColor(new Color(farbwert, 0, 0));
 				g2d.fillPolygon(xpoints, ypoints, xpoints.length);
 
-				//Polygonrahmen
+				// Polygonrahmen
 				farbwert = Math.min(255, 105 - (50 * wert));
 				g2d.setColor(new Color(farbwert, 40, 40));
 				g2d.drawPolygon(xpoints, ypoints, xpoints.length);
 
-				//Wert eintragen
+				// Wert eintragen
 				if (!aktuell) {
 					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 				}
 
 				g2d.setFont(new Font("sansserif", Font.PLAIN, 10));
 
-				//Position bei grossen Zahlen weiter nach vorne
+				// Position bei grossen Zahlen weiter nach vorne
 				if (wert < -9) {
 					xPosText = 0;
 				}
@@ -131,7 +134,7 @@ public class ImageUtilities {
 				g2d.drawString(Math.abs(wert) + "", xPosText + 1, 11);
 			}
 
-			//Icon erstellen und in den Cache packen
+			// Icon erstellen und in den Cache packen
 			icon = new ImageIcon(image);
 
 			if (aktuell) {
@@ -140,9 +143,9 @@ public class ImageUtilities {
 				m_clPfeilLightCache.put(keywert, icon);
 			}
 
-			//HOLogger.instance().log(Helper.class, "Create Pfeil: " + wert );
+			// HOLogger.instance().log(Helper.class, "Create Pfeil: " + wert );
 		}
-		//Im Cache
+		// Im Cache
 		else {
 			if (aktuell) {
 				icon = m_clPfeilCache.get(keywert);
@@ -150,7 +153,7 @@ public class ImageUtilities {
 				icon = m_clPfeilLightCache.get(keywert);
 			}
 
-			//HOLogger.instance().log(Helper.class, "Use Pfeilcache: " + wert );
+			// HOLogger.instance().log(Helper.class, "Use Pfeilcache: " + wert );
 		}
 
 		return icon;
@@ -158,86 +161,86 @@ public class ImageUtilities {
 
 	/**
 	 * Creates a wide image for use where value can be greater than 99
+	 * 
 	 * @param value the Value
 	 * @return an icon representation of the value
 	 */
 	public static ImageIcon getWideImageIcon4Change(int value) {
-        ImageIcon icon;
-        final Integer keywert = value;
-        int xPosText = 8;
+		ImageIcon icon;
+		final Integer keywert = value;
+		int xPosText = 8;
 
-        // Not in cache
-        if (!m_clPfeilWideCache.containsKey(keywert)) {
-            final BufferedImage image = new BufferedImage(24, 14, BufferedImage.TYPE_INT_ARGB);
-            final java.awt.Graphics2D g2d = (java.awt.Graphics2D) image.getGraphics();
-            if (value != 0)
-            {
-               if (value > 0) {
-	                final int[] xpoints = {5, 11, 12, 18, 15, 15, 8, 8, 5};
-	                final int[] ypoints = {6, 0, 0, 6, 6, 13, 13, 6, 6};
-	                //Fill polygon
-	                int farbwert = Math.min(240, 90 + (50 * value));
-	                g2d.setColor(new Color(0, farbwert, 0));
-	                g2d.fillPolygon(xpoints, ypoints, xpoints.length);
-	
-	                //Polygon Frame
-	                farbwert = Math.min(255, 105 + (50 * value));
-	                g2d.setColor(new Color(40, farbwert, 40));
-	                g2d.drawPolygon(xpoints, ypoints, xpoints.length);
-	
-	                g2d.setFont(new java.awt.Font("sansserif", java.awt.Font.PLAIN, 10));
-	
-	                //For 1 and 2, use white at top
-	                if (value < 3) {
-	                    g2d.setColor(Color.black);
-	                    g2d.drawString(value + "", xPosText, 11);
-	                    g2d.setColor(Color.white);
-	                    g2d.drawString(value + "", xPosText + 1, 11);
-	                }
-	                // Black writing (only for positive)
-	                else {
-	                    // Reposition by value length
-	                	if (value > 9)
-	                		xPosText -= ((Integer.toString(value).length() - 1) * 3);
-	                	
-	                    g2d.setColor(Color.white);
-	                    g2d.drawString(value + "", xPosText, 11);
-	                    g2d.setColor(Color.black);
-	                    g2d.drawString(value + "", xPosText + 1, 11);
-	                }
-	            } else {
-	                final int[] xpoints = {5, 11, 12, 18, 15, 15, 8, 8, 5};
-	                final int[] ypoints = {7, 13, 13, 7, 7, 0, 0, 7, 7};
-	                int farbwert = Math.min(240, 90 - (50 * value));
-	                g2d.setColor(new Color(farbwert, 0, 0));
-	                g2d.fillPolygon(xpoints, ypoints, xpoints.length);
-	
-	                //Polygon Frame
-	                farbwert = Math.min(255, 105 - (50 * value));
-	                g2d.setColor(new Color(farbwert, 40, 40));
-	                g2d.drawPolygon(xpoints, ypoints, xpoints.length);
+		// Not in cache
+		if (!m_clPfeilWideCache.containsKey(keywert)) {
+			final BufferedImage image = new BufferedImage(24, 14, BufferedImage.TYPE_INT_ARGB);
+			final java.awt.Graphics2D g2d = (java.awt.Graphics2D) image.getGraphics();
+			if (value != 0) {
+				if (value > 0) {
+					final int[] xpoints = { 5, 11, 12, 18, 15, 15, 8, 8, 5 };
+					final int[] ypoints = { 6, 0, 0, 6, 6, 13, 13, 6, 6 };
+					// Fill polygon
+					int farbwert = Math.min(240, 90 + (50 * value));
+					g2d.setColor(new Color(0, farbwert, 0));
+					g2d.fillPolygon(xpoints, ypoints, xpoints.length);
 
-	                g2d.setFont(new java.awt.Font("sansserif", java.awt.Font.PLAIN, 10));
-	                // No need to worry about space for - as absolute value is used.
-	                if (Math.abs(value) > 9)
-	            		xPosText -= ((Integer.toString(Math.abs(value)).length() - 1) * 3);
-	                g2d.setColor(Color.black);
-	                g2d.drawString(Math.abs(value) + "", xPosText, 11);
-	                g2d.setColor(Color.white);
-	                g2d.drawString(Math.abs(value) + "", xPosText + 1, 11);
-	            }
-            }
-            //Make the Icon and cache it
-            icon = new ImageIcon(image);
-           	m_clPfeilWideCache.put(keywert, icon);
-        }
-        //In Cache
-        else {
- 			icon = m_clPfeilWideCache.get(keywert);
-        }
-        return icon;
-    }
-	
+					// Polygon Frame
+					farbwert = Math.min(255, 105 + (50 * value));
+					g2d.setColor(new Color(40, farbwert, 40));
+					g2d.drawPolygon(xpoints, ypoints, xpoints.length);
+
+					g2d.setFont(new java.awt.Font("sansserif", java.awt.Font.PLAIN, 10));
+
+					// For 1 and 2, use white at top
+					if (value < 3) {
+						g2d.setColor(Color.black);
+						g2d.drawString(value + "", xPosText, 11);
+						g2d.setColor(Color.white);
+						g2d.drawString(value + "", xPosText + 1, 11);
+					}
+					// Black writing (only for positive)
+					else {
+						// Reposition by value length
+						if (value > 9)
+							xPosText -= ((Integer.toString(value).length() - 1) * 3);
+
+						g2d.setColor(Color.white);
+						g2d.drawString(value + "", xPosText, 11);
+						g2d.setColor(Color.black);
+						g2d.drawString(value + "", xPosText + 1, 11);
+					}
+				} else {
+					final int[] xpoints = { 5, 11, 12, 18, 15, 15, 8, 8, 5 };
+					final int[] ypoints = { 7, 13, 13, 7, 7, 0, 0, 7, 7 };
+					int farbwert = Math.min(240, 90 - (50 * value));
+					g2d.setColor(new Color(farbwert, 0, 0));
+					g2d.fillPolygon(xpoints, ypoints, xpoints.length);
+
+					// Polygon Frame
+					farbwert = Math.min(255, 105 - (50 * value));
+					g2d.setColor(new Color(farbwert, 40, 40));
+					g2d.drawPolygon(xpoints, ypoints, xpoints.length);
+
+					g2d.setFont(new java.awt.Font("sansserif", java.awt.Font.PLAIN, 10));
+					// No need to worry about space for - as absolute value is used.
+					if (Math.abs(value) > 9)
+						xPosText -= ((Integer.toString(Math.abs(value)).length() - 1) * 3);
+					g2d.setColor(Color.black);
+					g2d.drawString(Math.abs(value) + "", xPosText, 11);
+					g2d.setColor(Color.white);
+					g2d.drawString(Math.abs(value) + "", xPosText + 1, 11);
+				}
+			}
+			// Make the Icon and cache it
+			icon = new ImageIcon(image);
+			m_clPfeilWideCache.put(keywert, icon);
+		}
+		// In Cache
+		else {
+			icon = m_clPfeilWideCache.get(keywert);
+		}
+		return icon;
+	}
+
 	public static ImageIcon NOIMAGEICON = new ImageIcon(new BufferedImage(14, 14, BufferedImage.TYPE_INT_ARGB));
 
 	/**
@@ -245,11 +248,11 @@ public class ImageUtilities {
 	 *
 	 */
 	public static Icon getImage4Position(MatchRoleID position, int trickotnummer) {
-	    if (position == null) {
-	        return ImageUtilities.getImage4Position(0, (byte) 0, trickotnummer);
-	    }
-	
-	    return ImageUtilities.getImage4Position(position.getId(), position.getTactic(), trickotnummer);
+		if (position == null) {
+			return ImageUtilities.getImage4Position(0, (byte) 0, trickotnummer);
+		}
+
+		return ImageUtilities.getImage4Position(position.getId(), position.getTactic(), trickotnummer);
 	}
 
 	/**
@@ -257,13 +260,13 @@ public class ImageUtilities {
 	 *
 	 */
 	public static Icon getImage4Position(int posid, byte taktik, int trickotnummer) {
-        Icon komplettIcon;
+		Icon komplettIcon;
 		StringBuilder key = new StringBuilder(20);
 		// Im Cache nachsehen
 		key.append("trickot_").append(posid).append("_").append(taktik).append("_").append(trickotnummer);
 		komplettIcon = ThemeManager.getIcon(key.toString());
 		if (komplettIcon == null) {
-			komplettIcon = ImageUtilities.getJerseyIcon(posid, taktik,  trickotnummer);
+			komplettIcon = ImageUtilities.getJerseyIcon(posid, taktik, trickotnummer);
 			// In den Cache hinzufügen
 			ThemeManager.instance().put(key.toString(), komplettIcon);
 		} // komplettIcon == null
@@ -273,13 +276,14 @@ public class ImageUtilities {
 	public static ImageIcon getCountryFlagIcon(int iCountryID) {
 		if (iCountryID > 0) {
 			WorldDetailLeague leagueDetail = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(iCountryID);
-			if (leagueDetail != null) return getLeagueFlagIcon(leagueDetail.getLeagueId());
+			if (leagueDetail != null)
+				return getLeagueFlagIcon(leagueDetail.getLeagueId());
 		}
-	    return  null;
+		return null;
 	}
 
 	public static ImageIcon getLeagueFlagIcon(int iLeague) {
-		return ThemeManager.instance().classicSchema.loadImageIcon("flags/"+ iLeague + "flag.png");
+		return ThemeManager.instance().classicSchema.loadImageIcon("flags/" + iLeague + "flag.png");
 	}
 
 	public static BufferedImage toBufferedImage(Icon icon) {
@@ -287,74 +291,74 @@ public class ImageUtilities {
 	}
 
 	public static BufferedImage toBufferedImage(Image image) {
-	    if (image instanceof BufferedImage) {
-	        return (BufferedImage)image;
-	    }
+		if (image instanceof BufferedImage bufferedImage) {
+			return bufferedImage;
+		}
 
-	    // This code ensures that all the pixels in the image are loaded
-	    image = new ImageIcon(image).getImage();
+		// This code ensures that all the pixels in the image are loaded
+		image = new ImageIcon(image).getImage();
 
-	    // Determine if the image has transparent pixels; for this method's
-	    // implementation, see Determining If an Image Has Transparent Pixels
-	    boolean hasAlpha = hasAlpha(image);
+		// Determine if the image has transparent pixels; for this method's
+		// implementation, see Determining If an Image Has Transparent Pixels
+		boolean hasAlpha = hasAlpha(image);
 
-	    // Create a buffered image with a format that's compatible with the screen
-	    BufferedImage bimage = null;
-	    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-	    try {
-	        // Determine the type of transparency of the new buffered image
-	        int transparency = Transparency.OPAQUE;
-	        if (hasAlpha) {
-	            transparency = Transparency.BITMASK;
-	        }
+		// Create a buffered image with a format that's compatible with the screen
+		BufferedImage bimage = null;
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		try {
+			// Determine the type of transparency of the new buffered image
+			int transparency = Transparency.OPAQUE;
+			if (hasAlpha) {
+				transparency = Transparency.BITMASK;
+			}
 
-	        // Create the buffered image
-	        GraphicsDevice gs = ge.getDefaultScreenDevice();
-	        GraphicsConfiguration gc = gs.getDefaultConfiguration();
-	        bimage = gc.createCompatibleImage(
-	            image.getWidth(null), image.getHeight(null), transparency);
-	    } catch (HeadlessException e) {
-	        // The system does not have a screen
-	    }
+			// Create the buffered image
+			GraphicsDevice gs = ge.getDefaultScreenDevice();
+			GraphicsConfiguration gc = gs.getDefaultConfiguration();
+			bimage = gc.createCompatibleImage(
+					image.getWidth(null), image.getHeight(null), transparency);
+		} catch (HeadlessException e) {
+			// The system does not have a screen
+		}
 
-	    if (bimage == null) {
-	        // Create a buffered image using the default color model
-	        int type = BufferedImage.TYPE_INT_RGB;
-	        if (hasAlpha) {
-	            type = BufferedImage.TYPE_INT_ARGB;
-	        }
-	        bimage = new BufferedImage(image.getWidth(null), image.getHeight(null), type);
-	    }
+		if (bimage == null) {
+			// Create a buffered image using the default color model
+			int type = BufferedImage.TYPE_INT_RGB;
+			if (hasAlpha) {
+				type = BufferedImage.TYPE_INT_ARGB;
+			}
+			bimage = new BufferedImage(image.getWidth(null), image.getHeight(null), type);
+		}
 
-	    // Copy image to buffered image
-	    Graphics g = bimage.createGraphics();
+		// Copy image to buffered image
+		Graphics g = bimage.createGraphics();
 
-	    // Paint the image onto the buffered image
-	    g.drawImage(image, 0, 0, null);
-	    g.dispose();
+		// Paint the image onto the buffered image
+		g.drawImage(image, 0, 0, null);
+		g.dispose();
 
-	    return bimage;
+		return bimage;
 	}
 
-//  This method returns true if the specified image has transparent pixels  
-    private static boolean hasAlpha(Image image) {  
-        // If buffered image, the color model is readily available  
-        if (image instanceof BufferedImage bimage) {
+	// This method returns true if the specified image has transparent pixels
+	private static boolean hasAlpha(Image image) {
+		// If buffered image, the color model is readily available
+		if (image instanceof BufferedImage bimage) {
 			return bimage.getColorModel().hasAlpha();
-        }  
-      
-        // Use a pixel grabber to retrieve the image's color model;  
-        // grabbing a single pixel is usually sufficient  
-         PixelGrabber pg = new PixelGrabber(image, 0, 0, 1, 1, false);  
-        try {  
-            pg.grabPixels();  
-        } catch (InterruptedException ignored) {
-        }  
-      
-        // Get the image's color model  
-        ColorModel cm = pg.getColorModel();  
-        return cm.hasAlpha();  
-    }
+		}
+
+		// Use a pixel grabber to retrieve the image's color model;
+		// grabbing a single pixel is usually sufficient
+		PixelGrabber pg = new PixelGrabber(image, 0, 0, 1, 1, false);
+		try {
+			pg.grabPixels();
+		} catch (InterruptedException ignored) {
+		}
+
+		// Get the image's color model
+		ColorModel cm = pg.getColorModel();
+		return cm.hasAlpha();
+	}
 
 	public static Icon getJerseyIcon(@Nullable MatchRoleID position, int trickotnummer) {
 		if (position == null) {
@@ -364,40 +368,40 @@ public class ImageUtilities {
 		return ImageUtilities.getJerseyIcon(position.getId(), position.getTactic(), trickotnummer);
 	}
 
-    public static Icon getJerseyIcon(int posid, byte taktik, int trickotnummer) {
-        return getJerseyIcon(posid, taktik, trickotnummer, 2 * UserParameter.instance().fontSize);
-    }
+	public static Icon getJerseyIcon(int posid, byte taktik, int trickotnummer) {
+		return getJerseyIcon(posid, taktik, trickotnummer, 2 * UserParameter.instance().fontSize);
+	}
 
-    public static Icon getJerseyIcon(int posid, byte taktik, int trickotnummer, int size) {
-        String key = "trickot_" + posid + "_" + taktik + "_" + trickotnummer + "_" + size;
-        Icon komplettIcon = ThemeManager.getIcon(key);
-        if (komplettIcon == null) {
-            Color jerseyColor = getJerseyColorByPosition(posid);
+	public static Icon getJerseyIcon(int posid, byte taktik, int trickotnummer, int size) {
+		String key = "trickot_" + posid + "_" + taktik + "_" + trickotnummer + "_" + size;
+		Icon komplettIcon = ThemeManager.getIcon(key);
+		if (komplettIcon == null) {
+			Color jerseyColor = getJerseyColorByPosition(posid);
 
-            double brightness = ImageUtilities.getBrightness(jerseyColor);
-            Color textColor = brightness < 130 ? Color.WHITE : Color.BLACK;
+			double brightness = ImageUtilities.getBrightness(jerseyColor);
+			Color textColor = brightness < 130 ? Color.WHITE : Color.BLACK;
 
-            Map<Object, Object> colorMap = Map.of("jerseyColor", jerseyColor,
-                                                  "collarColor", jerseyColor,
-                                                  "outlineColor", textColor);
+			Map<Object, Object> colorMap = Map.of("jerseyColor", jerseyColor,
+					"collarColor", jerseyColor,
+					"outlineColor", textColor);
 			int height = Math.round(size * 16f / 20f);
-            Icon jerseyIcon = IconLoader.get().loadSVGIcon("gui/bilder/jerseys.svg",
+			Icon jerseyIcon = IconLoader.get().loadSVGIcon("gui/bilder/jerseys.svg",
 					size, height, true, colorMap);
 
-            Icon numberIcon = EmptyIcon.create(0);
-            if (trickotnummer > 0 && trickotnummer < 100) {
-                int baseline = Math.round(height * 13f / 16f);
-                int fontSize = Math.round(height * 8f / 16f);
-                numberIcon = new TextIcon(String.valueOf(trickotnummer),
-                                          textColor,
-                                          new Font(Font.SANS_SERIF, Font.BOLD, fontSize),
+			Icon numberIcon = EmptyIcon.create(0);
+			if (trickotnummer > 0 && trickotnummer < 100) {
+				int baseline = Math.round(height * 13f / 16f);
+				int fontSize = Math.round(height * 8f / 16f);
+				numberIcon = new TextIcon(String.valueOf(trickotnummer),
+						textColor,
+						new Font(Font.SANS_SERIF, Font.BOLD, fontSize),
 						size, height, baseline);
-            }
-            komplettIcon = new OverlayIcon(jerseyIcon, numberIcon, size, size);
-            ThemeManager.instance().put(key, komplettIcon);
-        }
-        return komplettIcon;
-    }
+			}
+			komplettIcon = new OverlayIcon(jerseyIcon, numberIcon, size, size);
+			ThemeManager.instance().put(key, komplettIcon);
+		}
+		return komplettIcon;
+	}
 
 	public static Icon getSmileyIcon(String smileyName) {
 		if (Arrays.asList(HOIconName.SMILEYS).contains(smileyName)) {
@@ -405,7 +409,8 @@ public class ImageUtilities {
 			Icon smileyIcon = ThemeManager.getIcon(key);
 			if (smileyIcon == null) {
 				int size = 15;
-				if (smileyName.equals("smiley-coach") || smileyName.equals("smiley-sale")) size = 17;
+				if (smileyName.equals("smiley-coach") || smileyName.equals("smiley-sale"))
+					size = 17;
 				String iconURI = String.format("gui/bilder/smilies/%s.svg", smileyName);
 				Map<Object, Object> colorMap = Map.of("lineColor", ThemeManager.getColor(HOColorName.SMILEYS_COLOR));
 				smileyIcon = IconLoader.get().loadSVGIcon(iconURI, size, size, true, colorMap);
@@ -430,7 +435,8 @@ public class ImageUtilities {
 			Icon specialtyIcon = ThemeManager.getIcon(key);
 			if (specialtyIcon == null) {
 				String iconURI = String.format("gui/bilder/player overview/%s.svg", playerSpecialtyName);
-				Map<Object, Object> colorMap = Map.of("lineColor", ThemeManager.getColor(HOColorName.PLAYER_SPECIALTY_COLOR));
+				Map<Object, Object> colorMap = Map.of("lineColor",
+						ThemeManager.getColor(HOColorName.PLAYER_SPECIALTY_COLOR));
 				specialtyIcon = IconLoader.get().loadSVGIcon(iconURI, size, size, true, colorMap);
 				ThemeManager.instance().put(key, specialtyIcon);
 			}
@@ -444,7 +450,8 @@ public class ImageUtilities {
 	}
 
 	public static Icon getTransferInIcon(int size) {
-		return ImageUtilities.getSvgIcon(HOIconName.ARROW_LEFT_3, Map.of("colorBG", ThemeManager.getColor(HOColorName.TRANSFER_IN_COLOR)), size, size);
+		return ImageUtilities.getSvgIcon(HOIconName.ARROW_LEFT_3,
+				Map.of("colorBG", ThemeManager.getColor(HOColorName.TRANSFER_IN_COLOR)), size, size);
 	}
 
 	public static Icon getTransferInIcon() {
@@ -452,7 +459,8 @@ public class ImageUtilities {
 	}
 
 	public static Icon getTransferOutIcon(int size) {
-		return ImageUtilities.getSvgIcon(HOIconName.ARROW_RIGHT3, Map.of("colorBG", ThemeManager.getColor(HOColorName.TRANSFER_OUT_COLOR)), size, size);
+		return ImageUtilities.getSvgIcon(HOIconName.ARROW_RIGHT3,
+				Map.of("colorBG", ThemeManager.getColor(HOColorName.TRANSFER_OUT_COLOR)), size, size);
 	}
 
 	public static Icon getTransferOutIcon() {
@@ -463,11 +471,17 @@ public class ImageUtilities {
 		Color trickotfarbe;
 		switch (posid) {
 			case IMatchRoleID.keeper -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_KEEPER);
-			case IMatchRoleID.rightCentralDefender, IMatchRoleID.leftCentralDefender, IMatchRoleID.middleCentralDefender -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_CENTRALDEFENCE);
-			case IMatchRoleID.leftBack, IMatchRoleID.rightBack -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_WINGBACK);
-			case IMatchRoleID.rightInnerMidfield, IMatchRoleID.leftInnerMidfield, IMatchRoleID.centralInnerMidfield -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_MIDFIELD);
-			case IMatchRoleID.leftWinger, IMatchRoleID.rightWinger -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_WING);
-			case IMatchRoleID.rightForward, IMatchRoleID.leftForward, IMatchRoleID.centralForward -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_FORWARD);
+			case IMatchRoleID.rightCentralDefender, IMatchRoleID.leftCentralDefender,
+					IMatchRoleID.middleCentralDefender ->
+				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_CENTRALDEFENCE);
+			case IMatchRoleID.leftBack, IMatchRoleID.rightBack ->
+				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_WINGBACK);
+			case IMatchRoleID.rightInnerMidfield, IMatchRoleID.leftInnerMidfield, IMatchRoleID.centralInnerMidfield ->
+				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_MIDFIELD);
+			case IMatchRoleID.leftWinger, IMatchRoleID.rightWinger ->
+				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_WING);
+			case IMatchRoleID.rightForward, IMatchRoleID.leftForward, IMatchRoleID.centralForward ->
+				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_FORWARD);
 			case IMatchRoleID.substGK1 -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBKEEPER);
 			case IMatchRoleID.substCD1 -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBDEFENCE);
 			case IMatchRoleID.substIM1 -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBMIDFIELD);
@@ -478,16 +492,16 @@ public class ImageUtilities {
 		return trickotfarbe;
 	}
 
-    public static Icon getSvgIcon(String image) {
-        return getSvgIcon(image, 24, 24);
-    }
+	public static Icon getSvgIcon(String image) {
+		return getSvgIcon(image, 24, 24);
+	}
 
-    public static Icon getSvgIcon(String key, int width, int height) {
+	public static Icon getSvgIcon(String key, int width, int height) {
 		final String index = key + "_" + width + "_" + height;
 		Icon icon = ThemeManager.getIcon(index);
 		if (icon == null) {
 			Object imagePath = ThemeManager.getIconPath(key);
-			if ( imagePath == null){
+			if (imagePath == null) {
 				HOLogger.instance().error(ImageUtilities.class, "Icon path not found:  " + key);
 			}
 			icon = IconLoader.get().getIcon(Objects.requireNonNull(imagePath).toString(), width, height);
@@ -496,18 +510,17 @@ public class ImageUtilities {
 		return icon;
 	}
 
-    private static Map<Object, Object> normalizeColorMap(Map<Object, Object> inputColorMap){
-		Map<Object, Object> newColorMap= new HashMap<>(inputColorMap);
-		for(Map.Entry<Object, Object> entry : inputColorMap.entrySet()) {
-			if(entry.getValue() instanceof Color){
-				newColorMap.put(entry.getKey(), entry.getValue());
-			}
-			else if(entry.getValue() instanceof HOColorName){
-				newColorMap.put(entry.getKey(), ThemeManager.getColor((HOColorName) entry.getValue()));
-			}
-			else{
+	private static Map<Object, Object> normalizeColorMap(Map<Object, Object> inputColorMap) {
+		Map<Object, Object> newColorMap = new HashMap<>(inputColorMap);
+		for (Map.Entry<Object, Object> entry : inputColorMap.entrySet()) {
+			if (entry.getValue() instanceof Color color) {
+				newColorMap.put(entry.getKey(), color);
+			} else if (entry.getValue() instanceof HOColorName colorName) {
+				newColorMap.put(entry.getKey(), ThemeManager.getColor(colorName));
+			} else {
 				newColorMap.put(entry.getKey(), new Color(0, 0, 0));
-				HOLogger.instance().error(ImageUtilities.class, "Color map has not been recognized ! " + entry.getValue().toString());
+				HOLogger.instance().error(ImageUtilities.class,
+						"Color map has not been recognized ! " + entry.getValue().toString());
 			}
 
 		}
@@ -518,7 +531,6 @@ public class ImageUtilities {
 		return getSvgIcon(key, colorMap, 24, 24);
 	}
 
-
 	public static Icon getSvgIcon(String key, Map<Object, Object> colorMap, int width, int height) {
 		final String index = key + "_" + colorMap.toString() + "_" + width + "_" + height;
 		Icon icon = ThemeManager.getIcon(index);
@@ -526,7 +538,8 @@ public class ImageUtilities {
 		if (icon == null) {
 			Object imagePath = ThemeManager.getIconPath(key);
 
-			icon = IconLoader.get().loadSVGIcon(Objects.requireNonNull(imagePath).toString(), width, height, true, normalizeColorMap(colorMap));
+			icon = IconLoader.get().loadSVGIcon(Objects.requireNonNull(imagePath).toString(), width, height, true,
+					normalizeColorMap(colorMap));
 
 			ThemeManager.instance().put(index, icon);
 		}
@@ -536,19 +549,18 @@ public class ImageUtilities {
 
 	/**
 	 * Transforms an icon into an image.
-	 * Cf. 	<a href="https://stackoverflow.com/a/5831357">...</a>
+	 * Cf. <a href="https://stackoverflow.com/a/5831357">...</a>
+	 * 
 	 * @param icon Icon
 	 * @return Image
 	 */
 	public static Image iconToImage(Icon icon) {
-		if (icon instanceof ImageIcon) {
-			return ((ImageIcon)icon).getImage();
-		}
-		else {
+		if (icon instanceof ImageIcon imageIcon) {
+			return imageIcon.getImage();
+		} else {
 			int w = icon.getIconWidth();
 			int h = icon.getIconHeight();
-			GraphicsEnvironment ge =
-					GraphicsEnvironment.getLocalGraphicsEnvironment();
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			GraphicsDevice gd = ge.getDefaultScreenDevice();
 			GraphicsConfiguration gc = gd.getDefaultConfiguration();
 			BufferedImage image = gc.createCompatibleImage(w, h, Transparency.BITMASK);
@@ -560,9 +572,9 @@ public class ImageUtilities {
 	}
 
 	public static double getBrightness(Color colour) {
-		return Math.sqrt(0.241 * colour.getRed()*colour.getRed()
-				+ 0.691 * colour.getGreen()*colour.getGreen()
-				+ 0.068 * colour.getBlue()*colour.getBlue());
+		return Math.sqrt(0.241 * colour.getRed() * colour.getRed()
+				+ 0.691 * colour.getGreen() * colour.getGreen()
+				+ 0.068 * colour.getBlue() * colour.getBlue());
 	}
 
 	public static Color getColorForContrast(Color backgroundColor) {
@@ -574,7 +586,6 @@ public class ImageUtilities {
 		return getColorForContrast(ThemeManager.getColor(backgroundColor));
 	}
 
-
 	public static String getHexColor(Color colour) {
 		return "#" + String.format("%1$02X", colour.getRed()) +
 				String.format("%1$02X", colour.getGreen()) +
@@ -585,7 +596,6 @@ public class ImageUtilities {
 		return getHexColor(ThemeManager.getColor(colour));
 	}
 
-
 	public static Color getColorFromHex(String hexColour) {
 		return new Color(Integer.valueOf(hexColour.substring(1, 3), 16),
 				Integer.valueOf(hexColour.substring(3, 5), 16),
@@ -593,13 +603,12 @@ public class ImageUtilities {
 	}
 
 	public static Icon getScaledIcon(Icon icon, int width, int height) {
-		if (icon instanceof DerivableIcon) {
-			return ((DerivableIcon<Icon>) icon).derive(width, height);
+		if (icon instanceof DerivableIcon<?> derivableIcon) {
+			return derivableIcon.derive(width, height);
 		} else {
 			return new DerivableImageIcon(iconToImage(icon), width, height, Image.SCALE_SMOOTH);
 		}
 	}
-
 
 	public static Icon getTrainingBarIcon(String id) {
 		return getTrainingBarIcon(id, 6, 16);
@@ -617,58 +626,96 @@ public class ImageUtilities {
 
 			Color bg = getColor(HOColorName.TABLEENTRY_BG);
 
-			Color b1=bg, b2=bg, b3=bg, b4=bg;
+			Color b1 = bg, b2 = bg, b3 = bg, b4 = bg;
 
-			switch(id) {
+			switch (id) {
 				case "trainbar_empty" -> {
 				}
-				case "trainbar_ft" ->{
-					b1=getColor(HOColorName.FULL_TRAINING_DONE); b2=getColor(HOColorName.FULL_TRAINING_DONE);
-					b3=getColor(HOColorName.FULL_TRAINING_DONE); b4=getColor(HOColorName.FULL_TRAINING_DONE);}
+				case "trainbar_ft" -> {
+					b1 = getColor(HOColorName.FULL_TRAINING_DONE);
+					b2 = getColor(HOColorName.FULL_TRAINING_DONE);
+					b3 = getColor(HOColorName.FULL_TRAINING_DONE);
+					b4 = getColor(HOColorName.FULL_TRAINING_DONE);
+				}
 				case "trainbar_pt" -> {
-					b1=getColor(HOColorName.PARTIAL_TRAINING_DONE); b2=getColor(HOColorName.PARTIAL_TRAINING_DONE);
-					b3=getColor(HOColorName.PARTIAL_TRAINING_DONE); b4=getColor(HOColorName.PARTIAL_TRAINING_DONE);
+					b1 = getColor(HOColorName.PARTIAL_TRAINING_DONE);
+					b2 = getColor(HOColorName.PARTIAL_TRAINING_DONE);
+					b3 = getColor(HOColorName.PARTIAL_TRAINING_DONE);
+					b4 = getColor(HOColorName.PARTIAL_TRAINING_DONE);
 				}
 				case "staminabar_ft" -> {
-					b1=getColor(HOColorName.FULL_STAMINA_DONE); b2=getColor(HOColorName.FULL_STAMINA_DONE);
-					b3=getColor(HOColorName.FULL_STAMINA_DONE); b4=getColor(HOColorName.FULL_STAMINA_DONE);
+					b1 = getColor(HOColorName.FULL_STAMINA_DONE);
+					b2 = getColor(HOColorName.FULL_STAMINA_DONE);
+					b3 = getColor(HOColorName.FULL_STAMINA_DONE);
+					b4 = getColor(HOColorName.FULL_STAMINA_DONE);
 				}
-				case "staminabar_ft_e" ->{
-					b1=getColor(HOColorName.FULL_STAMINA_DONE); b2=getColor(HOColorName.FULL_STAMINA_DONE);}
-				case "staminabar_fft" ->{
-					b1=getColor(HOColorName.STAMINA_PLANNED); b2=getColor(HOColorName.STAMINA_PLANNED);
-					b3=getColor(HOColorName.STAMINA_PLANNED); b4=getColor(HOColorName.STAMINA_PLANNED);}
-				case "trainbar_ft_e" ->{
-					b1=getColor(HOColorName.FULL_TRAINING_DONE); b2=getColor(HOColorName.FULL_TRAINING_DONE);}
-				case "trainbar_fft" ->{
-					b1=getColor(HOColorName.FULL_TRAINING_PLANNED); b2=getColor(HOColorName.FULL_TRAINING_PLANNED);
-					b3=getColor(HOColorName.FULL_TRAINING_PLANNED); b4=getColor(HOColorName.FULL_TRAINING_PLANNED);}
-				case "trainbar_fpt" ->{
-					b1=getColor(HOColorName.PARTIAL_TRAINING_PLANNED); b2=getColor(HOColorName.PARTIAL_TRAINING_PLANNED);
-					b3=getColor(HOColorName.PARTIAL_TRAINING_PLANNED); b4=getColor(HOColorName.PARTIAL_TRAINING_PLANNED);}
-				case "trainbar_ft_fft" ->{
-					b1=getColor(HOColorName.FULL_TRAINING_DONE); b2=getColor(HOColorName.FULL_TRAINING_DONE);
-					b3=getColor(HOColorName.FULL_TRAINING_PLANNED); b4=getColor(HOColorName.FULL_TRAINING_PLANNED);}
-				case "trainbar_ft_fpt" ->{
-					b1=getColor(HOColorName.FULL_TRAINING_DONE); b2=getColor(HOColorName.FULL_TRAINING_DONE);
-					b3=getColor(HOColorName.PARTIAL_TRAINING_PLANNED); b4=getColor(HOColorName.PARTIAL_TRAINING_PLANNED);}
-				case "trainbar_ft_pt" ->{
-					b1=getColor(HOColorName.FULL_TRAINING_DONE); b2=getColor(HOColorName.FULL_TRAINING_DONE);
-					b3=getColor(HOColorName.PARTIAL_TRAINING_DONE); b4=getColor(HOColorName.PARTIAL_TRAINING_DONE);}
-				case "trainbar_ft_pt_e" ->{
-					b1=getColor(HOColorName.FULL_TRAINING_DONE); b2=getColor(HOColorName.PARTIAL_TRAINING_DONE);}
-				case "trainbar_pt_e" ->{
-					b1=getColor(HOColorName.PARTIAL_TRAINING_DONE); b2=getColor(HOColorName.PARTIAL_TRAINING_DONE);}
-				case "trainbar_pt_fpt" ->{
-					b1=getColor(HOColorName.PARTIAL_TRAINING_DONE); b2=getColor(HOColorName.PARTIAL_TRAINING_DONE);
-					b3=getColor(HOColorName.PARTIAL_TRAINING_PLANNED); b4=getColor(HOColorName.PARTIAL_TRAINING_PLANNED);}
-				default -> HOLogger.instance().error(ImageUtilities.class, "requested training preview color has not been recognized: "+id);
+				case "staminabar_ft_e" -> {
+					b1 = getColor(HOColorName.FULL_STAMINA_DONE);
+					b2 = getColor(HOColorName.FULL_STAMINA_DONE);
+				}
+				case "staminabar_fft" -> {
+					b1 = getColor(HOColorName.STAMINA_PLANNED);
+					b2 = getColor(HOColorName.STAMINA_PLANNED);
+					b3 = getColor(HOColorName.STAMINA_PLANNED);
+					b4 = getColor(HOColorName.STAMINA_PLANNED);
+				}
+				case "trainbar_ft_e" -> {
+					b1 = getColor(HOColorName.FULL_TRAINING_DONE);
+					b2 = getColor(HOColorName.FULL_TRAINING_DONE);
+				}
+				case "trainbar_fft" -> {
+					b1 = getColor(HOColorName.FULL_TRAINING_PLANNED);
+					b2 = getColor(HOColorName.FULL_TRAINING_PLANNED);
+					b3 = getColor(HOColorName.FULL_TRAINING_PLANNED);
+					b4 = getColor(HOColorName.FULL_TRAINING_PLANNED);
+				}
+				case "trainbar_fpt" -> {
+					b1 = getColor(HOColorName.PARTIAL_TRAINING_PLANNED);
+					b2 = getColor(HOColorName.PARTIAL_TRAINING_PLANNED);
+					b3 = getColor(HOColorName.PARTIAL_TRAINING_PLANNED);
+					b4 = getColor(HOColorName.PARTIAL_TRAINING_PLANNED);
+				}
+				case "trainbar_ft_fft" -> {
+					b1 = getColor(HOColorName.FULL_TRAINING_DONE);
+					b2 = getColor(HOColorName.FULL_TRAINING_DONE);
+					b3 = getColor(HOColorName.FULL_TRAINING_PLANNED);
+					b4 = getColor(HOColorName.FULL_TRAINING_PLANNED);
+				}
+				case "trainbar_ft_fpt" -> {
+					b1 = getColor(HOColorName.FULL_TRAINING_DONE);
+					b2 = getColor(HOColorName.FULL_TRAINING_DONE);
+					b3 = getColor(HOColorName.PARTIAL_TRAINING_PLANNED);
+					b4 = getColor(HOColorName.PARTIAL_TRAINING_PLANNED);
+				}
+				case "trainbar_ft_pt" -> {
+					b1 = getColor(HOColorName.FULL_TRAINING_DONE);
+					b2 = getColor(HOColorName.FULL_TRAINING_DONE);
+					b3 = getColor(HOColorName.PARTIAL_TRAINING_DONE);
+					b4 = getColor(HOColorName.PARTIAL_TRAINING_DONE);
+				}
+				case "trainbar_ft_pt_e" -> {
+					b1 = getColor(HOColorName.FULL_TRAINING_DONE);
+					b2 = getColor(HOColorName.PARTIAL_TRAINING_DONE);
+				}
+				case "trainbar_pt_e" -> {
+					b1 = getColor(HOColorName.PARTIAL_TRAINING_DONE);
+					b2 = getColor(HOColorName.PARTIAL_TRAINING_DONE);
+				}
+				case "trainbar_pt_fpt" -> {
+					b1 = getColor(HOColorName.PARTIAL_TRAINING_DONE);
+					b2 = getColor(HOColorName.PARTIAL_TRAINING_DONE);
+					b3 = getColor(HOColorName.PARTIAL_TRAINING_PLANNED);
+					b4 = getColor(HOColorName.PARTIAL_TRAINING_PLANNED);
+				}
+				default -> HOLogger.instance().error(ImageUtilities.class,
+						"requested training preview color has not been recognized: " + id);
 			}
 
 			Map<Object, Object> colorMap = Map.of("b1FillColor", b1, "b2FillColor", b2,
-					"b3FillColor", b3,"b4FillColor",b4);
+					"b3FillColor", b3, "b4FillColor", b4);
 
-			trainingBarIcon = IconLoader.get().loadSVGIcon("gui/bilder/training_bar.svg", 	width, height, true, colorMap);
+			trainingBarIcon = IconLoader.get().loadSVGIcon("gui/bilder/training_bar.svg", width, height, true,
+					colorMap);
 
 			ThemeManager.instance().put(key, trainingBarIcon);
 		}
@@ -725,7 +772,6 @@ public class ImageUtilities {
 
 		return starIcon;
 	}
-
 
 	public static Icon getRightArrowIcon(Color color) {
 		return getRightArrowIcon(color, 16, 16);
@@ -799,14 +845,14 @@ public class ImageUtilities {
 
 			Map<Object, Object> colorMap = Map.of("foregroundColor", ThemeManager.getColor(HOColorName.PLASTER));
 
-			_icon = IconLoader.get().loadSVGIcon("gui/bilder/player overview/plaster.svg", width, height, true, colorMap);
+			_icon = IconLoader.get().loadSVGIcon("gui/bilder/player overview/plaster.svg", width, height, true,
+					colorMap);
 
 			ThemeManager.instance().put(key, _icon);
 		}
 
 		return _icon;
 	}
-
 
 	public static Icon getSmallInjuryIcon() {
 		return getInjuryIcon(14, 14);
@@ -822,7 +868,8 @@ public class ImageUtilities {
 
 			Map<Object, Object> colorMap = Map.of("foregroundColor", ThemeManager.getColor(HOColorName.INJURY));
 
-			_icon = IconLoader.get().loadSVGIcon("gui/bilder/player overview/injured.svg", width, height, true, colorMap);
+			_icon = IconLoader.get().loadSVGIcon("gui/bilder/player overview/injured.svg", width, height, true,
+					colorMap);
 
 			ThemeManager.instance().put(key, _icon);
 		}
@@ -830,16 +877,15 @@ public class ImageUtilities {
 		return _icon;
 	}
 
-	private static Color getColor (HOColorName name){
+	private static Color getColor(HOColorName name) {
 		return ThemeManager.getColor(name);
 	}
 
-
 	public static Icon getCopyIcon(int width, Color strokeColor) {
 
-		int height = Math.round(width * 507.89999f/410.70117f);
+		int height = Math.round(width * 507.89999f / 410.70117f);
 
-		String key = "copyIcon_" + strokeColor + "_"  + width + "x" + height;
+		String key = "copyIcon_" + strokeColor + "_" + width + "x" + height;
 
 		Icon _icon = ThemeManager.getIcon(key);
 
@@ -860,12 +906,11 @@ public class ImageUtilities {
 		return getClearLineupIcon(height, ThemeManager.getColor(cLineup), ThemeManager.getColor(cSymbol));
 	}
 
-
 	public static Icon getClearLineupIcon(int height, Color cLineup, Color cSymbol) {
 
-		int width = Math.round(height * 173.02873f/59.49342f);
+		int width = Math.round(height * 173.02873f / 59.49342f);
 
-		String key = "clearLineupIcon" + cLineup + "_"  + cSymbol + "_"+ width + "x" + height;
+		String key = "clearLineupIcon" + cLineup + "_" + cSymbol + "_" + width + "x" + height;
 
 		Icon _icon = ThemeManager.getIcon(key);
 
@@ -873,7 +918,8 @@ public class ImageUtilities {
 
 			Map<Object, Object> colorMap = Map.of("colorIcon", cSymbol, "colorLineup", cLineup);
 
-			_icon = IconLoader.get().loadSVGIcon("gui/bilder/clear_lineup.svg", width, height, true, normalizeColorMap(colorMap));
+			_icon = IconLoader.get().loadSVGIcon("gui/bilder/clear_lineup.svg", width, height, true,
+					normalizeColorMap(colorMap));
 
 			ThemeManager.instance().put(key, _icon);
 		}
@@ -886,12 +932,11 @@ public class ImageUtilities {
 		return getStartAssistantIcon(height, ThemeManager.getColor(cLineup), ThemeManager.getColor(cSymbol));
 	}
 
-
 	public static Icon getStartAssistantIcon(int height, Color cLineup, Color cSymbol) {
 
-		int width = Math.round(height * 173.02873f/59.49342f);
+		int width = Math.round(height * 173.02873f / 59.49342f);
 
-		String key = "clearLineupIcon" + cLineup + "_"  + cSymbol + "_"+ width + "x" + height;
+		String key = "clearLineupIcon" + cLineup + "_" + cSymbol + "_" + width + "x" + height;
 
 		Icon _icon = ThemeManager.getIcon(key);
 
@@ -899,13 +944,13 @@ public class ImageUtilities {
 
 			Map<Object, Object> colorMap = Map.of("colorIcon", cSymbol, "colorLineup", cLineup);
 
-			_icon = IconLoader.get().loadSVGIcon("gui/bilder/start_assistant.svg", width, height, true, normalizeColorMap(colorMap));
+			_icon = IconLoader.get().loadSVGIcon("gui/bilder/start_assistant.svg", width, height, true,
+					normalizeColorMap(colorMap));
 
 			ThemeManager.instance().put(key, _icon);
 		}
 
 		return _icon;
 	}
-
 
 }
