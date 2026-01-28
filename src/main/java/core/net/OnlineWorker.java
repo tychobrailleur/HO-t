@@ -24,7 +24,6 @@ import module.lineup.Lineup;
 import module.nthrf.NtTeamDetails;
 import module.series.MatchFixtures;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -457,7 +456,7 @@ public class OnlineWorker {
 	 * @return a new MatchKurzInfo object with the current data from HT or null
 	 *         if match could not be downloaded.
 	 */
-	public static @Nullable MatchKurzInfo updateMatch(int teamId, MatchKurzInfo match) {
+	public static  MatchKurzInfo updateMatch(int teamId, MatchKurzInfo match) {
 		var matchDate = match.getMatchSchedule();
 		// At the moment, HT does not support getting a single match.
 		List<MatchKurzInfo> matches = getMatches(teamId, matchDate.plus(1, ChronoUnit.MINUTES));
@@ -881,7 +880,7 @@ public class OnlineWorker {
 	/**
 	 * Get all lineups for MatchKurzInfos, if they're not there already
 	 */
-	public static void getAllLineups(@Nullable Integer nbGames) {
+	public static void getAllLineups( Integer nbGames) {
 
 		final List<MatchKurzInfo> infos;
 

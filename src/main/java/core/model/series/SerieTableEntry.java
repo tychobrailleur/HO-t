@@ -1,6 +1,5 @@
 package core.model.series;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -419,7 +418,7 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
     /**
      * Compare series table entries
      */
-    public final int compareTo(@NotNull SerieTableEntry obj) {
+    public final int compareTo( SerieTableEntry obj) {
 
         if (m_iPunkte > obj.getPoints()) {
             return -1;

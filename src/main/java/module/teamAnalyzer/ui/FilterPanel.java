@@ -9,7 +9,6 @@ import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ht.HattrickManager;
 import module.teamAnalyzer.manager.TeamManager;
 import module.teamAnalyzer.vo.Team;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -207,7 +206,7 @@ public class FilterPanel extends JPanel {
 		add(main, BorderLayout.CENTER);
 	}
 
-	@NotNull
+	
 	private static Map<String, String> retrieveTeamDetails(Team selectedTeam) {
 		Map<String, String> teamDetails = HattrickManager.getTeamDetails(selectedTeam.getTeamId());
 		TeamStats teamStats = HattrickManager.getTeamStatistics(Integer.parseInt(teamDetails.get("LeagueLevelUnitID")), selectedTeam.getTeamId());

@@ -1,7 +1,6 @@
 package core.util.chart;
 
 
-import org.jetbrains.annotations.Nullable;
 import org.knowm.xchart.style.lines.SeriesLines;
 import org.knowm.xchart.style.markers.Marker;
 import org.knowm.xchart.style.markers.SeriesMarkers;
@@ -26,7 +25,7 @@ public class PieChartDataModel {
 //    }
 //
 //    public PieChartDataModel(double[] values, String name, boolean show, Color color,
-//                             java.text.@Nullable NumberFormat format) {
+//                             java.text. NumberFormat format) {
 //        this(values, name, show, color, format, 1);
 //    }
 //

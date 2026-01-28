@@ -5,7 +5,6 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.UserColumn;
 import core.model.player.Player;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Column shows skill of a player
@@ -58,7 +57,7 @@ public class PlayerColumn extends UserColumn {
 	 * @param comparePlayer Player status to compare with
 	 * @return IHOTableEntry
 	 */
-	public IHOTableEntry getTableEntry(Player player, @Nullable Player comparePlayer){
+	public IHOTableEntry getTableEntry(Player player,  Player comparePlayer){
 		return new ColorLabelEntry(getValue(player),
 	            ColorLabelEntry.BG_STANDARD, false, 0);
 	}

@@ -8,7 +8,6 @@ import core.gui.theme.ThemeManager;
 import core.model.match.IMatchType;
 import core.util.HODateTime;
 import core.util.HOLogger;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -92,7 +91,7 @@ public class MatchDateTableEntry extends AbstractHOTableEntry {
     }
 
     @Override
-    public int compareTo(@NotNull IHOTableEntry obj) {
+    public int compareTo( IHOTableEntry obj) {
         if (matchDate == null) {
             return -1;
         }

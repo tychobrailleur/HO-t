@@ -5,7 +5,6 @@ package core.util;
 import core.HO;
 import core.gui.HOMainFrame;
 import core.model.UserParameter;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -57,7 +56,7 @@ public class Updater {
     private static final String BETA_UPDATE_XML_URL = "https://github.com/ho-dev/HattrickOrganizer/releases/download/beta/updates.xml";
     private static final String STABLE_UPDATE_XML_URL = "https://github.com/ho-dev/HattrickOrganizer/releases/download/tag_stable/updates.xml";
     public static final String UPDATER_APPLICATION_ID = "814";
-    private @Nullable String mediaID = null;
+    private  String mediaID = null;
     private static Updater clUpdater;
 
 

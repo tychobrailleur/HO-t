@@ -9,7 +9,6 @@ import core.model.match.MatchKurzInfo;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import module.lineup.Lineup;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ import java.util.List;
 
 public class LineupCheck {
 
-	public static boolean doUpload(@Nullable MatchOrdersCBItem match, Lineup lineup) {
+	public static boolean doUpload( MatchOrdersCBItem match, Lineup lineup) {
 		List<JLabel> problems = new ArrayList<>();
 		if (hasFreePosition(lineup)) {
 			problems.add(getErrorLabel("lineup.upload.check.lineupIncomplete"));

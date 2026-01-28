@@ -3,7 +3,6 @@ package core.gui.comp.entry;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
@@ -47,7 +46,7 @@ public class TorLabelEntry extends AbstractHOTableEntry {
         m_clComponent.removeAll();
     }
 
-    public final int compareTo(@NotNull IHOTableEntry obj) {
+    public final int compareTo( IHOTableEntry obj) {
         if (obj instanceof TorLabelEntry entry) {
 
             if (getTore() < entry.getTore()) {

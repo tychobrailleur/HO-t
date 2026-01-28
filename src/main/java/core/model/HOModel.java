@@ -25,8 +25,6 @@ import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ht.HattrickManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
 import module.youth.YouthTraining;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 
 import java.sql.Timestamp;
@@ -197,7 +195,7 @@ public class HOModel {
     /**
      * Set a new lineup
      */
-    public final void setLineup(@Nullable MatchLineupTeam lineup) {
+    public final void setLineup( MatchLineupTeam lineup) {
         if (lineup != null) {
             if (lineup.getTeamID() < 0) lineup.setTeamID(getBasics().getTeamId());
             if (lineup.getTeamName().isEmpty()) lineup.setTeamName(getBasics().getTeamName());
@@ -222,7 +220,7 @@ public class HOModel {
     /**
      * returns the lineup (setRatings is NOT called)
      */
-    public final @NotNull MatchLineupTeam getCurrentLineupTeam() {
+    public final  MatchLineupTeam getCurrentLineupTeam() {
         if (aufstellung == null) {
             aufstellung = getPersistenceManager().loadNextMatchLineup(HOVerwaltung.instance().getModel().getBasics().getTeamId());
             if (aufstellung != null) {
@@ -240,12 +238,12 @@ public class HOModel {
     /**
      * returns the lineup
      */
-    public final @NotNull Lineup getCurrentLineup() {
+    public final  Lineup getCurrentLineup() {
         var team = getCurrentLineupTeam();
         return team.getLineup();
     }
 
-    public final @NotNull RatingPredictionModel getRatingPredictionModel(){
+    public final  RatingPredictionModel getRatingPredictionModel(){
         var ret = getRatingPredictionManager().getRatingPredictionModel();
         if ( ret == null){
             ret = getRatingPredictionManager().getRatingPredictionModel("default", getTeam());

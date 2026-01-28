@@ -13,7 +13,6 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Specialty;
 import core.util.HOLogger;
-import org.jetbrains.annotations.Nullable;
 import java.awt.*;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
@@ -360,7 +359,7 @@ public class ImageUtilities {
 		return cm.hasAlpha();
 	}
 
-	public static Icon getJerseyIcon(@Nullable MatchRoleID position, int trickotnummer) {
+	public static Icon getJerseyIcon( MatchRoleID position, int trickotnummer) {
 		if (position == null) {
 			return ImageUtilities.getJerseyIcon(0, (byte) 0, trickotnummer);
 		}
@@ -421,15 +420,15 @@ public class ImageUtilities {
 		return null;
 	}
 
-	public static @Nullable Icon getSmallPlayerSpecialtyIcon(String playerSpecialtyName) {
+	public static  Icon getSmallPlayerSpecialtyIcon(String playerSpecialtyName) {
 		return getPlayerSpecialtyIcon(playerSpecialtyName, 15);
 	}
 
-	public static @Nullable Icon getLargePlayerSpecialtyIcon(String playerSpecialtyName) {
+	public static  Icon getLargePlayerSpecialtyIcon(String playerSpecialtyName) {
 		return getPlayerSpecialtyIcon(playerSpecialtyName, 18);
 	}
 
-	public static @Nullable Icon getPlayerSpecialtyIcon(String playerSpecialtyName, int size) {
+	public static  Icon getPlayerSpecialtyIcon(String playerSpecialtyName, int size) {
 		if (Arrays.stream(HOIconName.SPECIALTIES).skip(1).anyMatch(playerSpecialtyName::equals)) {
 			String key = playerSpecialtyName + "_" + size;
 			Icon specialtyIcon = ThemeManager.getIcon(key);

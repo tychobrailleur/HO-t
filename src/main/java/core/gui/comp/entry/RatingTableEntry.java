@@ -4,7 +4,6 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import javax.swing.*;
@@ -105,7 +104,7 @@ public class RatingTableEntry extends AbstractHOTableEntry {
         m_clComponent.add(jlabel);
     }
 
-	public final int compareTo(@NotNull IHOTableEntry obj) {
+	public final int compareTo( IHOTableEntry obj) {
         if (obj instanceof RatingTableEntry entry) {
             return Float.compare(getRating(), entry.getRating());
         }

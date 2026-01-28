@@ -10,8 +10,6 @@ import core.model.enums.MatchTypeExtended;
 import core.net.OnlineWorker;
 import core.util.HODateTime;
 import core.util.HOLogger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -385,7 +383,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 
 	// --------------------------------------------------------------
 	@Override
-	public final int compareTo(@NotNull Object obj) {
+	public final int compareTo( Object obj) {
 		if (obj instanceof final MatchKurzInfo info) {
 			return this.getMatchSchedule().compareTo(info.getMatchSchedule());
 		}
@@ -540,7 +538,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 	 * @param isPlayOff boolean, true if play off tournament match
 	 * @return factor of league match experience increases (3.5)
 	 */
-	private double getTournamentExperienceFactor(@Nullable TournamentType tournamentType, boolean isPlayOff) {
+	private double getTournamentExperienceFactor( TournamentType tournamentType, boolean isPlayOff) {
 		if ( tournamentType == null) return 0d;
 		if ( tournamentType.isWorldCup()){
 			// World Cup match	28

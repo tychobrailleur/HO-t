@@ -2,7 +2,6 @@ package core.model.series;
 
 import core.db.AbstractTable;
 import core.util.HODateTime;
-import org.jetbrains.annotations.NotNull;
 
 public class Paarung extends AbstractTable.Storable implements Comparable<Paarung>{
     //~ Instance fields ----------------------------------------------------------------------------
@@ -229,7 +228,7 @@ public class Paarung extends AbstractTable.Storable implements Comparable<Paarun
     /**
      * vergleicht anhand des SPieltages um eine nach Spieltagen sortierte Liste zu bekommen
      */
-    public final int compareTo(@NotNull Paarung obj) {
+    public final int compareTo( Paarung obj) {
 
         if (m_iSpieltag > obj.getSpieltag()) {
             return 1;

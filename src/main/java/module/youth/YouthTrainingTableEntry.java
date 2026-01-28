@@ -2,7 +2,6 @@ package module.youth;
 
 import core.gui.comp.entry.IHOTableEntry;
 import core.model.HOVerwaltung;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ListDataListener;
@@ -70,7 +69,7 @@ public class YouthTrainingTableEntry implements IHOTableEntry {
     }
 
     @Override
-    public int compareTo(@NotNull IHOTableEntry obj) {
+    public int compareTo( IHOTableEntry obj) {
         return 0;
     }
 

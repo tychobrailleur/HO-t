@@ -2,7 +2,6 @@ package core.db.user;
 
 import core.HO;
 import core.util.OSUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,7 +39,7 @@ public class UserManager {
         return m_clInstance;
     }
 
-    public @NotNull ArrayList<User> getAllUser() {
+    public  ArrayList<User> getAllUser() {
         return users;
     }
 

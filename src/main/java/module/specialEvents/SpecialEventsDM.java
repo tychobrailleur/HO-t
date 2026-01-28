@@ -11,7 +11,6 @@ import core.model.match.Weather;
 import core.model.player.Player;
 import core.util.HOLogger;
 import module.specialEvents.filter.Filter;
-import org.jetbrains.annotations.Nullable;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -147,7 +146,7 @@ public class SpecialEventsDM {
 		return filteredHighlights;
 	}
 
-	@Nullable
+	
 	public static EventType getEventType(MatchEvent highlight) {
 		if (highlight.isSpecialtyWeatherSE()) {return EventType.SPECIALTY_WEATHER_SE;}
 		else if(highlight.isSpecialtyNonWeatherSE()) {return EventType.SPECIALTY_NON_WEATHER_SE;}

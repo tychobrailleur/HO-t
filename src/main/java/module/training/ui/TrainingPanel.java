@@ -16,7 +16,6 @@ import module.training.ui.model.FutureTrainingsTableModel;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.PastTrainingsTableModel;
 import module.training.ui.model.TrainingModel;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -244,7 +243,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 				return c;
 			}
 
-			public String getToolTipText(@NotNull MouseEvent e) {
+			public String getToolTipText( MouseEvent e) {
 				String tip = null;
 				java.awt.Point p = e.getPoint();
 				int rowIndex = rowAtPoint(p);

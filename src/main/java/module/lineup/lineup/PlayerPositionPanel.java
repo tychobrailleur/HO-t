@@ -21,7 +21,6 @@ import core.training.TrainingPreviewPlayers;
 import core.util.Helper;
 import module.lineup.Lineup;
 import module.lineup.LineupAssistantSelectorOverlay;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,7 +49,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     private final JLabel m_jlPosition = new JLabel();
     private final PlayerCBItem m_clSelectedPlayer = new PlayerCBItem("", 0f, null, false, true);
     private final Updatable m_clUpdater;
-    private PlayerCBItem @Nullable [] m_clCBItems = new PlayerCBItem[0];
+    private PlayerCBItem  [] m_clCBItems = new PlayerCBItem[0];
     private final int m_iPositionID;
     private int iSelectedPlayerId = -1;
     private final GridBagLayout layout = new GridBagLayout();
@@ -61,7 +60,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     private Integer matchMinute;
 
     // constructor
-    protected PlayerPositionPanel(Updatable updater, int positionsID, @Nullable Weather weather,
+    protected PlayerPositionPanel(Updatable updater, int positionsID,  Weather weather,
             boolean useWeatherImpact, Integer matchMinute) {
         super(false);
 
@@ -91,7 +90,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         return (cbTactic != null) ? (byte) cbTactic.getId() : IMatchRoleID.NORMAL;
     }
 
-    public @Nullable Player getSelectedPlayer() {
+    public  Player getSelectedPlayer() {
         final Object obj = m_jcbPlayer.getSelectedItem();
 
         if (obj instanceof PlayerCBItem item) {
@@ -210,7 +209,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         }
     }
 
-    private void setPlayerTooltip(@Nullable Player player) {
+    private void setPlayerTooltip( Player player) {
         if (player != null) {
             String tooltipMessage = "<html>";
             tooltipMessage += "<b>" + player.getFullName() + "</b>";
@@ -346,7 +345,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         repaint();
     }
 
-    protected void setPlayersList(List<Player> oCandidates, @Nullable Player oSelectedPlayer) {
+    protected void setPlayersList(List<Player> oCandidates,  Player oSelectedPlayer) {
 
         m_jcbPlayer.removeItemListener(this);
 
@@ -428,7 +427,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         setPlayerTooltip(m_clSelectedPlayer.getPlayer());
     }
 
-    protected void setPlayersList2(List<Player> allPlayers, @Nullable Player selectedPlayer,
+    protected void setPlayersList2(List<Player> allPlayers,  Player selectedPlayer,
             int playerIDcorrespondingSub) {
 
         m_jcbPlayer.removeItemListener(this);
@@ -505,7 +504,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         setTactic(getTactic(), selectedPlayer);
     }
 
-    private void setTactic(byte tactic, @Nullable Player currentPlayer) {
+    private void setTactic(byte tactic,  Player currentPlayer) {
         // remove listener
         m_jcbTactic.removeItemListener(this);
 
@@ -580,7 +579,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         return MatchRoleID.getNameForPosition(position);
     }
 
-    private void initTaktik(@Nullable Player aktuellerPlayer) {
+    private void initTaktik( Player aktuellerPlayer) {
         m_jcbTactic.removeAllItems();
 
         switch (m_iPositionID) {
@@ -627,7 +626,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         }
     }
 
-    private void addTactic(@Nullable Player currentPlayer, String text, byte playerPosition) {
+    private void addTactic( Player currentPlayer, String text, byte playerPosition) {
         if (currentPlayer != null) {
             var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
             double rating;
@@ -644,7 +643,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     }
     // -------------private-------------------------------------------------
 
-    private PlayerCBItem createPlayerCBItem(PlayerCBItem item, @Nullable Player player) {
+    private PlayerCBItem createPlayerCBItem(PlayerCBItem item,  Player player) {
         if (player != null) {
             String playerName = player.getShortName();
 

@@ -17,7 +17,6 @@ import core.net.OnlineWorker;
 import core.util.*;
 import module.lineup.Lineup;
 import module.lineup.LineupPanel;
-import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 
 import javax.swing.*;
@@ -47,7 +46,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     private JComboBox<CBItem> m_jcbTactic;
     private JComboBox<CBItem> m_jcbStyleOfPlay;
 
-    private @Nullable MatchOrdersCBItem m_clSelectedMatch;
+    private  MatchOrdersCBItem m_clSelectedMatch;
 
     final String offensive_sop = TranslationFacility.tr("ls.team.styleofplay.offensive");
     final String defensive_sop = TranslationFacility.tr("ls.team.styleofplay.defensive");

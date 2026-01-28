@@ -3,7 +3,6 @@ package module.youth;
 import core.gui.comp.entry.IHOTableEntry;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -86,7 +85,7 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
     }
 
     @Override
-    public int compareTo(@NotNull IHOTableEntry obj) {
+    public int compareTo( IHOTableEntry obj) {
         if (obj instanceof YouthSkillInfoColumn entry) {
             return Double.compare(this.skillInfo.getCurrentValue(), entry.skillInfo.getCurrentValue());
         }

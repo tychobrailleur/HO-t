@@ -9,7 +9,6 @@ import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.util.HOLogger;
 import module.lineup.Lineup;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -559,7 +558,7 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
     }
 
 	@Override
-	public final int compareTo(@NotNull IMatchRoleID obj) {
+	public final int compareTo( IMatchRoleID obj) {
 		if (obj instanceof final MatchRoleID position) {
 
 			// Beide aufgestellt ?

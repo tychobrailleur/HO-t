@@ -10,7 +10,6 @@ import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HODateTime;
 import module.lineup.Lineup;
-import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +61,7 @@ public class TrainingPreviewPlayers implements Refreshable {
      * @param player Player
      * @return TrainingPreviewPlayer
      */
-    public TrainingPreviewPlayer getTrainPreviewPlayer(@Nullable Player player) {
+    public TrainingPreviewPlayer getTrainPreviewPlayer( Player player) {
         if ( player != null) {
             if (players.get(player) == null) {
                 calculateWeeklyTrainingForPlayer(player);

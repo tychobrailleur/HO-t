@@ -9,7 +9,6 @@ import core.net.MyConnector;
 import core.util.BrowserLauncher;
 import core.util.HOLogger;
 import core.util.Updater;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -37,7 +36,7 @@ public final class UpdateController {
         }
     }
 
-    @Nullable
+    
     private static VersionInfo getUpdateVersion() {
         VersionInfo updateVersion = null;
 

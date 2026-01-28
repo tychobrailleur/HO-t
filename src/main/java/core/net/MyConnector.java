@@ -20,7 +20,6 @@ import core.net.login.OAuthDialog;
 import core.net.login.ProxyDialog;
 import core.net.login.ProxySettings;
 import core.util.*;
-import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import tool.updater.VersionInfo;
 
@@ -680,7 +679,7 @@ public class MyConnector {
 	/**
 	 * Get input stream from web url (file download)
 	 */
-	public  @Nullable InputStream getWebFile(String url, boolean showErrorMessage) {
+	public   InputStream getWebFile(String url, boolean showErrorMessage) {
 		try {
 			return new URL(url).openStream();
 		}
@@ -694,7 +693,7 @@ public class MyConnector {
 		return null;
 	}
 
-	private @Nullable InputStream getNonCHPPWebFile(String surl, boolean showErrorMessage) {
+	private  InputStream getNonCHPPWebFile(String surl, boolean showErrorMessage) {
 		InputStream returnStream = null;
 		try {
 			Response response;

@@ -15,7 +15,6 @@ import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.net.HattrickLink;
 import module.playerOverview.PlayerTable;
-import org.jetbrains.annotations.Nullable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -43,7 +42,7 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 	}
 
 	@Override
-	public @Nullable Player getPlayer(int row) {
+	public  Player getPlayer(int row) {
 		return tableModel.getPlayerAtRow(row);
 	}
 

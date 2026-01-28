@@ -1,7 +1,6 @@
 package core.db.user;
 
 import core.HO;
-import org.jetbrains.annotations.NotNull;
 import java.nio.file.Paths;
 
 
@@ -37,7 +36,7 @@ public class User{
 		return "sa";
 	}
 
-	public final @NotNull String getDbURL() {return dbURL;}
+	public final  String getDbURL() {return dbURL;}
 
 	public User(BaseUser bu){
 		baseUser = bu;

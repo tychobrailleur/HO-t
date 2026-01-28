@@ -3,7 +3,6 @@ package core.gui.comp.table;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.model.player.Player;
-import org.jetbrains.annotations.Nullable;
 
 public class BooleanColumn extends UserColumn {
 

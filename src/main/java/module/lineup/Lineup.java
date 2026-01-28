@@ -21,7 +21,6 @@ import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -346,7 +345,7 @@ public class Lineup{
 	/**
 	 * Auto-select the set best captain.
 	 */
-	public final void setAutoKapitaen(@Nullable List<Player> players) {
+	public final void setAutoKapitaen( List<Player> players) {
 		float maxValue = -1;
 
 		if (players == null) {
@@ -371,7 +370,7 @@ public class Lineup{
 	/**
 	 * Auto-select the set best pieces taker.
 	 */
-	public final void setAutoKicker(@Nullable List<Player> players) {
+	public final void setAutoKicker( List<Player> players) {
 		double maxStandard = -1;
 		int form = -1;
 
@@ -717,7 +716,7 @@ public class Lineup{
 	/**
 	 * Get the position object by position id.
 	 */
-	public final @Nullable MatchLineupPosition getPositionById(int iPositionID) {
+	public final  MatchLineupPosition getPositionById(int iPositionID) {
 		for (var position : m_vFieldPositions) {
 			if (position.getId() == iPositionID) {
 				return position;

@@ -13,7 +13,6 @@ import core.model.player.Player;
 import core.model.player.Specialty;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.Substitution;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -159,7 +158,7 @@ public class RatingPredictionModel {
      * @param minutes match duration to calculate average for [90|120]
      * @return TreeSet of integer
      */
-    public static @NotNull TreeSet<Integer> getRatingChangeMinutes(Lineup lineup, int minutes) {
+    public static  TreeSet<Integer> getRatingChangeMinutes(Lineup lineup, int minutes) {
         var staminaChanges = new TreeSet<Integer>();
         for (int i = 0; i < minutes; i += 5) {
             staminaChanges.add(i);
@@ -264,7 +263,7 @@ public class RatingPredictionModel {
      * @param s      Rating sector
      * @return Sector factor
      */
-    protected double calcSector(Lineup lineup, @NotNull RatingSector s) {
+    protected double calcSector(Lineup lineup,  RatingSector s) {
         var r = 1.;
         switch (s) {
             case MIDFIELD -> {
@@ -419,7 +418,7 @@ public class RatingPredictionModel {
         return contribution;
     }
 
-    private double getPositionContribution(@NotNull MatchLineupPosition p, RatingSector s, int minute, double overcrowdingPenalty) {
+    private double getPositionContribution( MatchLineupPosition p, RatingSector s, int minute, double overcrowdingPenalty) {
         return getPositionContribution(getPlayer(p, minute), p.getRoleId(), p.getBehaviour(), s, minute, p.getStartMinute(), overcrowdingPenalty);
     }
 
@@ -841,7 +840,7 @@ public class RatingPredictionModel {
      * @param skillValue   Experience skill value
      * @return Experience rating contribution to the rating sector
      */
-    protected double calcExperience(@NotNull RatingSector ratingSector, double skillValue) {
+    protected double calcExperience( RatingSector ratingSector, double skillValue) {
         var exp = calcSkillRating(skillValue);
         var k = -0.00000725 * pow(exp, 4) + 0.0005 * pow(exp, 3) - .01336 * pow(exp, 2) + 0.176 * exp;
 
@@ -940,7 +939,7 @@ public class RatingPredictionModel {
         return roleId;
     }
 
-    RatingPredictionModel.RatingSector toggleRatingSectorSide(@NotNull RatingPredictionModel.RatingSector s) {
+    RatingPredictionModel.RatingSector toggleRatingSectorSide( RatingPredictionModel.RatingSector s) {
         switch (s) {
             case DEFENCE_LEFT -> {
                 return RatingPredictionModel.RatingSector.DEFENCE_RIGHT;
@@ -969,7 +968,7 @@ public class RatingPredictionModel {
      * @param weather   weather
      * @return Player rating value
      */
-    public double getPlayerRating(@NotNull Player p, int roleId, byte behaviour, int minute, Weather weather) {
+    public double getPlayerRating( Player p, int roleId, byte behaviour, int minute, Weather weather) {
         return weatherCache.get(Specialty.getSpecialty(p.getSpecialty()), weather)
                 * getPlayerRating(p, roleId, behaviour, minute);
     }
@@ -1233,7 +1232,7 @@ public class RatingPredictionModel {
      * @param player, Player
      * @return Double
      */
-    protected Double calcPlayerPenaltyStrength(@NotNull Player player) {
+    protected Double calcPlayerPenaltyStrength( Player player) {
         var ret = calcSkillRating(player.getSkill(EXPERIENCE)) * 1.5;
         ret += calcStrength(player, SETPIECES) * 0.7;
         ret += calcStrength(player, SCORING) * 0.3;
@@ -1251,7 +1250,7 @@ public class RatingPredictionModel {
      * @param coachModifier Integer value representing the style of play the team will use in the match. The value ranges from -10 (100% defensive) to 10 (100% offensive).
      * @return Double
      */
-    protected double calcTrainer(@NotNull RatingSector s, int coachModifier) {
+    protected double calcTrainer( RatingSector s, int coachModifier) {
         switch (s) {
             case DEFENCE_LEFT, DEFENCE_RIGHT, DEFENCE_CENTRAL -> {
                 if (coachModifier <= 0) {
@@ -1306,7 +1305,7 @@ public class RatingPredictionModel {
      * @param playerSkill, Skill
      * @return Double
      */
-    protected double calcStrength(@NotNull Player player, PlayerSkill playerSkill) {
+    protected double calcStrength( Player player, PlayerSkill playerSkill) {
         var skillRating = calcSkillRating(player.getSkill(playerSkill));
         var loyalty = calcLoyalty(player);
         var form = calcForm(player);
@@ -1318,7 +1317,7 @@ public class RatingPredictionModel {
      * @param player, Player
      * @return Double
      */
-    protected double calcForm(@NotNull Player player) {
+    protected double calcForm( Player player) {
         var form = min(7., calcSkillRating(player.getSkill(PlayerSkill.FORM)));
         return 0.378 * sqrt(form);  // form 0.5 .. 7.0
     }
@@ -1328,7 +1327,7 @@ public class RatingPredictionModel {
      * @param player, Player
      * @return Double
      */
-    protected double calcLoyalty(@NotNull Player player) {
+    protected double calcLoyalty( Player player) {
         if (player.isHomeGrown()) return 1.5;
         var loyaltyRating = calcSkillRating(player.getSkill(PlayerSkill.LOYALTY));
         return loyaltyRating / 19.;
@@ -1351,7 +1350,7 @@ public class RatingPredictionModel {
      * @param sideRestriction Side restriction
      * @return boolean, true, if position doesn't contribute to given side
      */
-    protected boolean isRoleSideRestricted(int roleID, Side side, @NotNull SideRestriction sideRestriction) {
+    protected boolean isRoleSideRestricted(int roleID, Side side,  SideRestriction sideRestriction) {
         switch (sideRestriction) {
             case MIDDLE_ONLY -> {
                 return roleID != middleCentralDefender && roleID != centralInnerMidfield && roleID != centralForward;
@@ -1401,7 +1400,7 @@ public class RatingPredictionModel {
      * @param minute, match minute
      * @return Double
      */
-    public double getPlayerTacticStrength(@NotNull MatchLineupPosition p, PlayerSkill playerSkill, Weather weather, int tacticType, int minute) {
+    public double getPlayerTacticStrength( MatchLineupPosition p, PlayerSkill playerSkill, Weather weather, int tacticType, int minute) {
         var player = p.getPlayer();
         if (player != null) {
             var ret = playerTacticStrengthCache.get(player, playerSkill);
@@ -1496,7 +1495,7 @@ public class RatingPredictionModel {
      * @param minute match minute
      * @return Double
      */
-    protected double calcLoddarStats(@NotNull Lineup lineup, int minute) {
+    protected double calcLoddarStats( Lineup lineup, int minute) {
         final double MIDFIELD_SHIFT = 0.0;
         final double COUNTERATTACK_WEIGHT = 0.25;
         final double DEFENSE_WEIGHT = 0.47;
@@ -1618,7 +1617,7 @@ public class RatingPredictionModel {
      * @param minute Match minute
      * @return Double
      */
-    protected double calcTacticsRating(@NotNull Lineup lineup, int minute) {
+    protected double calcTacticsRating( Lineup lineup, int minute) {
         var tacticType = lineup.getTacticType();
         switch (tacticType) {
             case TAKTIK_KONTER -> {
@@ -1646,7 +1645,7 @@ public class RatingPredictionModel {
      * @param minute Match minute
      * @return Double
      */
-    protected double calcCreative(@NotNull Lineup lineup, int minute) {
+    protected double calcCreative( Lineup lineup, int minute) {
         var sum = 0.;
         for (var p : lineup.getFieldPlayers(minute)) {
             if (p.getRoleId() == KEEPER) continue;
@@ -1670,7 +1669,7 @@ public class RatingPredictionModel {
      * @param minute Match minute
      * @return Double
      */
-    protected double calcPressing(@NotNull Lineup lineup, int minute) {
+    protected double calcPressing( Lineup lineup, int minute) {
         double ret = 0;
         for (var p : lineup.getFieldPlayers(minute)) {
             var defending = getPlayerTacticStrength(p, DEFENDING, lineup.getWeather(), lineup.getTacticType(), minute);
@@ -1691,7 +1690,7 @@ public class RatingPredictionModel {
      * @param minute Match minute
      * @return Double
      */
-    protected double calcPassing(@NotNull Lineup lineup, int minute) {
+    protected double calcPassing( Lineup lineup, int minute) {
         var sumPassing = 0.;
         for (var p : lineup.getFieldPositions()) {
             var player = p.getPlayer();
@@ -1709,7 +1708,7 @@ public class RatingPredictionModel {
      * @param minute Match minute
      * @return Double
      */
-    protected double calcLongshots(@NotNull Lineup lineup, int minute) {
+    protected double calcLongshots( Lineup lineup, int minute) {
         var sumScoring = 0.;
         var sumSetPieces = 0.;
         var n = 0;
@@ -1737,7 +1736,7 @@ public class RatingPredictionModel {
      * @param minute int match minute
      * @return double The rating value
      */
-    protected double calcCounterAttack(@NotNull Lineup lineup, int minute) {
+    protected double calcCounterAttack( Lineup lineup, int minute) {
         var defence = lineup.getFieldPositions().stream().filter(i -> i.getRoleId() >= rightBack && i.getRoleId() <= leftBack && i.getPlayerId() > 0).toList();
         var a = 0.;
         var f = 0.;

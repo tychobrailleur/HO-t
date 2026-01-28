@@ -1,6 +1,5 @@
 package core.gui.comp.entry;
 
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Classes implementing this interface create a {@link javax.swing.JComponent} that will
@@ -30,7 +29,7 @@ public interface IHOTableEntry extends Comparable<IHOTableEntry> {
      * Useful to sort the table
      */
     @Override
-	int compareTo(@NotNull IHOTableEntry obj);
+	int compareTo( IHOTableEntry obj);
 
     /**
      * Third sort the table

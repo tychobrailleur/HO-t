@@ -3,7 +3,6 @@ package module.opponentspy;
 import core.model.player.IMatchRoleID;
 import core.util.AmountOfMoney;
 import module.opponentspy.CalcVariables.Skill;
-import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -73,7 +72,7 @@ class SkillAdjuster {
 	private boolean areWeSatisfied(CalcVariables calcPlayer) {
 		
 		double tsiError = (0.0 + calcPlayer.tsi - calcPlayer.calculatedTSI)/calcPlayer.tsi;
-		@NotNull BigDecimal wageError = calcPlayer.wage.minus(calcPlayer.calculatedWage).divide(calcPlayer.wage);
+		 BigDecimal wageError = calcPlayer.wage.minus(calcPlayer.calculatedWage).divide(calcPlayer.wage);
 		
 		return (Math.abs(tsiError) < TSI_ERROR_LIMIT && Math.abs(wageError.doubleValue()) < WAGE_ERROR_LIMIT);
 	}
@@ -81,7 +80,7 @@ class SkillAdjuster {
 	private boolean needMoreMainSkill(CalcVariables calcPlayer) {
 	
 		double tsiError = (0.0 + calcPlayer.tsi - calcPlayer.calculatedTSI)/calcPlayer.tsi;
-		@NotNull BigDecimal wageError = calcPlayer.wage.minus( calcPlayer.calculatedWage).divide(calcPlayer.wage);
+		 BigDecimal wageError = calcPlayer.wage.minus( calcPlayer.calculatedWage).divide(calcPlayer.wage);
 
 		// Only if we need more wage and Tsi is at the limit
 		return (wageError.doubleValue() > WAGE_ERROR_LIMIT && Math.abs(tsiError) < TSI_ERROR_LIMIT);
@@ -89,7 +88,7 @@ class SkillAdjuster {
 	
 	private boolean needMoreSecondarySkills(CalcVariables calcPlayer) {
 		double tsiError = (0.0 + calcPlayer.tsi - calcPlayer.calculatedTSI)/calcPlayer.tsi;
-		@NotNull BigDecimal wageError = calcPlayer.wage.minus( calcPlayer.calculatedWage).divide(calcPlayer.wage);
+		 BigDecimal wageError = calcPlayer.wage.minus( calcPlayer.calculatedWage).divide(calcPlayer.wage);
 
 		// Only if we need more TSI and Wage is at the limit
 		return (tsiError > TSI_ERROR_LIMIT && Math.abs(wageError.doubleValue()) < WAGE_ERROR_LIMIT);

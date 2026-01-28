@@ -1,6 +1,7 @@
 package module.specialEvents;
 
 import core.datatype.CBItem;
+import core.datatype.ComboItem;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
@@ -437,7 +438,7 @@ public class FilterPanel extends JPanel {
 			}
 		};
 
-		List<CBItem> playerItems = new ArrayList<>();
+		List<ComboItem> playerItems = new ArrayList<>();
 		List<Player> players = new ArrayList<>(HOVerwaltung.instance().getModel()
 				.getCurrentPlayers());
 		Collections.sort(players, comparator);
@@ -470,10 +471,10 @@ public class FilterPanel extends JPanel {
 
 	private void restoreComboBoxSelection(int id, JComboBox comboBox) {
 		ComboBoxModel model = comboBox.getModel();
-		CBItem item = null;
+		ComboItem item = null;
 		for (int i = 0; i < model.getSize(); i++) {
-			if (model.getElementAt(i) != null && ((CBItem) model.getElementAt(i)).getId() == id) {
-				item = (CBItem) model.getElementAt(i);
+			if (model.getElementAt(i) != null && ((ComboItem) model.getElementAt(i)).getId() == id) {
+				item = (ComboItem) model.getElementAt(i);
 				break;
 			}
 		}
@@ -522,17 +523,24 @@ public class FilterPanel extends JPanel {
 		}
 	}
 
-	private static class PlayerCBItem extends CBItem {
+	private record PlayerCBItem(String text, int id, int speciality) implements ComboItem {
 
-		private int speciality = -1;
-
-		public PlayerCBItem(String text, int id, int speciality) {
-			super(text, id);
-			this.speciality = speciality;
-		}
-
-		public int getSpeciality() {
-			return speciality;
-		}
+	@Override
+	public int getId() {
+		return id;
 	}
-}
+
+	@Override
+	public String getText() {
+		return text;
+	}
+
+	@Override
+	public String toString() {
+		return text;
+	}
+
+	public int getSpeciality() {
+		return speciality;
+	}
+}}

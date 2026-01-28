@@ -4,7 +4,6 @@ import core.model.match.MatchEvent;
 import core.model.enums.MatchType;
 import core.model.match.Weather;
 import core.util.HODateTime;
-import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
 import java.util.Date;
@@ -89,7 +88,7 @@ public class Match {
 		return isWinningTeam(iTeamID);
 	}
 
-	public @Nullable Integer getWinningTeamID() {
+	public  Integer getWinningTeamID() {
 		String[] aResult = matchResult.split("-");
 		int homeScore = Integer.parseInt(aResult[0].trim());
 		int visitorScore = Integer.parseInt(aResult[1].trim());
@@ -98,7 +97,7 @@ public class Match {
 		return null;
 	}
 
-	public @Nullable String getWinningTeamName() {
+	public  String getWinningTeamName() {
 		Integer iWinningTeamID = getWinningTeamID();
 		if (iWinningTeamID == null) return null;
 		else if (iWinningTeamID == hostingTeamId) return hostingTeam;
@@ -121,7 +120,7 @@ public class Match {
 		return weather;
 	}
 
-	public void setWeather(@Nullable Weather weather) {
+	public void setWeather( Weather weather) {
 		this.weather = weather;
 	}
 

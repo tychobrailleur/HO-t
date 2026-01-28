@@ -9,7 +9,6 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.MatchLineupPosition;
 import core.model.player.Player;
-import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -18,7 +17,7 @@ public class PlayerCBItem implements Comparable<PlayerCBItem>, ComboItem {
     protected static int PLAYER_COMBO_HEIGHT = UserParameter.instance().fontSize * 3;
     public static javax.swing.JLabel m_jlLeer = new javax.swing.JLabel(" ");
     public PlayerLabelEntry m_clEntry;
-    private @Nullable Player m_clPlayer;
+    private  Player m_clPlayer;
     private String m_sText;
     private float m_fPositionsBewertung;
     private boolean m_bSetInBestPosition;
@@ -28,7 +27,7 @@ public class PlayerCBItem implements Comparable<PlayerCBItem>, ComboItem {
         return m_bSetInBestPosition;
     }
 
-    public PlayerCBItem(String text, float positionRating, @Nullable Player player) {
+    public PlayerCBItem(String text, float positionRating,  Player player) {
         m_sText = text;
         m_clPlayer = player;
         m_fPositionsBewertung = positionRating;
@@ -36,7 +35,7 @@ public class PlayerCBItem implements Comparable<PlayerCBItem>, ComboItem {
         m_clEntry = new PlayerLabelEntry(null, null, 0f, false, true);
     }
 
-    public PlayerCBItem(String text, float positionRating, @Nullable Player player, boolean useCustomText, boolean multiLine) {
+    public PlayerCBItem(String text, float positionRating,  Player player, boolean useCustomText, boolean multiLine) {
         m_sText = text;
         m_clPlayer = player;
         m_fPositionsBewertung = positionRating;
@@ -79,7 +78,7 @@ public class PlayerCBItem implements Comparable<PlayerCBItem>, ComboItem {
         m_clPlayer = player;
     }
 
-    public final @Nullable Player getPlayer() {
+    public final  Player getPlayer() {
         return m_clPlayer;
     }
 

@@ -1,7 +1,6 @@
 package core.util;
 
 import core.model.HOVerwaltung;
-import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -44,11 +43,11 @@ public class HODateTime implements Comparable<HODateTime> {
      *
      * @param in Instant
      */
-    public HODateTime(@NotNull Instant in) {
+    public HODateTime( Instant in) {
         this.instant = in;
     }
 
-    public HODateTime(@NotNull HODateTime in) {
+    public HODateTime( HODateTime in) {
         this.instant = in.instant;
     }
 
@@ -226,7 +225,7 @@ public class HODateTime implements Comparable<HODateTime> {
      * @return the comparator value, negative if less, positive if greater
      */
     @Override
-    public int compareTo(@NotNull HODateTime o) {
+    public int compareTo( HODateTime o) {
         return instant.compareTo(o.instant);
     }
 
@@ -465,7 +464,7 @@ public class HODateTime implements Comparable<HODateTime> {
         }
 
         @Override
-        public int compareTo(@NotNull HODateTime.HODuration o) {
+        public int compareTo( HODateTime.HODuration o) {
             int ret = Integer.compare(this.seasons, o.seasons);
             if (ret == 0)
                 ret = Integer.compare(this.days, o.days);

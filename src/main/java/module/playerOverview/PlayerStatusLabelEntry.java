@@ -6,7 +6,6 @@ import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.icon.StatusIcon;
 import core.gui.theme.ImageUtilities;
 import core.model.player.Player;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,7 +55,7 @@ public class PlayerStatusLabelEntry extends DoubleLabelEntries {
     }
 
     @Override
-    public final int compareTo(@NotNull IHOTableEntry obj) {
+    public final int compareTo( IHOTableEntry obj) {
         if (obj instanceof PlayerStatusLabelEntry entry) {
 
             if ((entry.getPlayer() != null) && (getPlayer() != null)) {

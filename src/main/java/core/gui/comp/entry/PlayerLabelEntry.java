@@ -7,8 +7,6 @@ import core.gui.theme.*;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.TrainingPreviewPlayers;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import java.awt.*;
 import javax.swing.*;
 import java.util.List;
@@ -19,7 +17,7 @@ import static core.gui.theme.HOIconName.*;
 
 public final class PlayerLabelEntry implements IHOTableEntry {
 
-    private @Nullable Player m_clPlayer;
+    private  Player m_clPlayer;
     private JComponent m_clComponent;
     private final JLabel m_jlTeam = new JLabel();
     private final JLabel m_jlName = new JLabel();
@@ -29,7 +27,7 @@ public final class PlayerLabelEntry implements IHOTableEntry {
     private final JLabel m_jlWeatherEffect = new JLabel();
     private final JLabel m_jlTrainUp = new JLabel();
 
-    private @Nullable MatchRoleID m_clPlayerMatchRoleID;
+    private  MatchRoleID m_clPlayerMatchRoleID;
     private final boolean m_bshowJersey;
     private final boolean m_bShowWeatherEffect;
     private boolean m_bCustomName = false;
@@ -48,7 +46,7 @@ public final class PlayerLabelEntry implements IHOTableEntry {
     private JLabel oneYellowCardLabel;
 
     // Label for the player name (depending on status)
-    public PlayerLabelEntry(@Nullable Player player, @Nullable MatchRoleID playerMatchRoleID,
+    public PlayerLabelEntry( Player player,  MatchRoleID playerMatchRoleID,
                             float rating, boolean showJersey, boolean showWeatherEffect) {
         m_clPlayer = player;
         m_clPlayerMatchRoleID = playerMatchRoleID;
@@ -60,7 +58,7 @@ public final class PlayerLabelEntry implements IHOTableEntry {
     }
 
     // Label for the player name (depending on status)
-    public PlayerLabelEntry(@Nullable Player player, @Nullable MatchRoleID playerMatchRoleID,
+    public PlayerLabelEntry( Player player,  MatchRoleID playerMatchRoleID,
                             float rating, boolean showJersey, boolean showWeatherEffect, boolean customName, String customNameText, boolean multiLine) {
         m_clPlayer = player;
         m_clPlayerMatchRoleID = playerMatchRoleID;
@@ -113,7 +111,7 @@ public final class PlayerLabelEntry implements IHOTableEntry {
     }
 
 
-    public @Nullable Player getSpieler() {
+    public  Player getSpieler() {
         return m_clPlayer;
     }
 
@@ -125,7 +123,7 @@ public final class PlayerLabelEntry implements IHOTableEntry {
         updateComponent();
     }
 
-    public int compareTo(@NotNull IHOTableEntry obj) {
+    public int compareTo( IHOTableEntry obj) {
         if (obj instanceof PlayerLabelEntry entry) {
             return Objects.requireNonNull(m_clPlayer).getFullName().compareTo(Objects.requireNonNull(entry.getSpieler()).getFullName());
         }

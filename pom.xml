@@ -100,11 +100,6 @@
       <version>1.14.0</version>
     </dependency>
     <dependency>
-      <groupId>org.jetbrains</groupId>
-      <artifactId>annotations</artifactId>
-      <version>26.0.2-1</version>
-    </dependency>
-    <dependency>
       <groupId>org.knowm.xchart</groupId>
       <artifactId>xchart</artifactId>
       <version>3.8.8</version>
@@ -114,7 +109,6 @@
       <artifactId>jsoup</artifactId>
       <version>1.21.2</version>
     </dependency>
-
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>clojure</artifactId>

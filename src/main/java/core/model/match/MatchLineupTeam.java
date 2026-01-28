@@ -11,7 +11,6 @@ import core.util.HOLogger;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.Substitution;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -103,7 +102,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 	 * 
 	 * @return Value of property m_vAufstellung.
 	 */
-	public final @NotNull Lineup getLineup() {
+	public final  Lineup getLineup() {
 		if ( lineup == null){
 			loadLineup();
 			if ( lineup == null){

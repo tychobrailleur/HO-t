@@ -5,7 +5,6 @@ import core.gui.comp.NumericDocument;
 import core.model.TranslationFacility;
 import core.util.GUIUtils;
 import core.util.StringUtils;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -49,7 +48,7 @@ public class UserEditDialog extends JDialog {
 		checkCanSave();
 	}
 
-	public UserEditDialog(Window parent, @Nullable User user) {
+	public UserEditDialog(Window parent,  User user) {
 		this(parent, user, false);
 	}
 

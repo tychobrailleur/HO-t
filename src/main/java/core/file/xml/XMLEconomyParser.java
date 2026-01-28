@@ -5,7 +5,6 @@ import core.util.HODateTime;
 import core.util.HOLogger;
 import java.util.Map;
 
-import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -54,7 +53,7 @@ public class XMLEconomyParser {
 		return Integer.parseInt(mapEconomy.get(totalIncomeSources)) - calculatedTotalIncome;
 	}
 
-	private static Map<String, String> parseDetails(@Nullable Document doc) {
+	private static Map<String, String> parseDetails( Document doc) {
 		Map<String, String> map = new SafeInsertMap();
 
 		if (doc == null) {

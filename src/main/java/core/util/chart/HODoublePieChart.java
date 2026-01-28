@@ -2,7 +2,6 @@ package core.util.chart;
 
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import org.jetbrains.annotations.Nullable;
 import org.knowm.xchart.PieSeries;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.PieChart;
@@ -16,8 +15,8 @@ import java.util.Map;
 // Class that produce a panel containing 2 pie charts side by side
 public class HODoublePieChart implements IChart {
 
-    private PieChartDataModel @Nullable [] m_modelsL;
-    private PieChartDataModel @Nullable [] m_modelsR;
+    private PieChartDataModel  [] m_modelsL;
+    private PieChartDataModel  [] m_modelsR;
     private PieChart m_chartL;
     private PieChart m_chartR;
     private PieStyler m_stylerL;
@@ -151,7 +150,7 @@ public class HODoublePieChart implements IChart {
     public final void setHelpLines(boolean hasHelpLines) {
     }
 
-    public final void setAllValues(PieChartDataModel @Nullable [] modelsL, PieChartDataModel @Nullable [] modelsR){
+    public final void setAllValues(PieChartDataModel  [] modelsL, PieChartDataModel  [] modelsR){
         this.m_modelsL = modelsL;
         this.m_modelsR = modelsR;
 

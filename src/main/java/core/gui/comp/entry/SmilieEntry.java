@@ -7,7 +7,6 @@ import core.model.HOVerwaltung;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.StringUtils;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.SwingConstants;
 
@@ -46,7 +45,7 @@ public class SmilieEntry extends DoubleLabelEntries {
     }
 
     @Override
-	public final int compareTo(@NotNull IHOTableEntry obj) {
+	public final int compareTo( IHOTableEntry obj) {
         if (obj instanceof SmilieEntry entry) {
 
             if ((entry.getPlayer() != null) && (getPlayer() != null)) {

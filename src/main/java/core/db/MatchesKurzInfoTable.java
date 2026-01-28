@@ -12,7 +12,6 @@ import core.util.HOLogger;
 import module.matches.MatchLocation;
 import module.matches.MatchesPanel;
 import module.matches.statistics.MatchesOverviewCommonPanel;
-import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -197,7 +196,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	/**
 	 * Return the list of n latest played matches (own team)
 	 */
-	List<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialOnly, boolean ownTeam) {
+	List<MatchKurzInfo> getPlayedMatchInfo( Integer iNbGames, boolean bOfficialOnly, boolean ownTeam) {
 		final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
 		var params = new ArrayList<>();

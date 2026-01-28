@@ -5,36 +5,33 @@ package core.datatype;
  *
  * @author thomas.werth
  */
-public class CBItem implements ComboItem {
+public record CBItem(String text, int id) implements ComboItem {
 
-	private final String m_sText;
-	private final int m_iId;
+    @Override
+    public int getId() {
+        return id;
+    }
 
-	public CBItem(String text, int id) {
-		m_sText = text;
-		m_iId = id;
-	}
+    @Override
+    public String getText() {
+        return text;
+    }
 
-	@Override
-	public final int getId() {
-		return m_iId;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof CBItem temp) {
+            return this.id == temp.id;
+        }
+        return false;
+    }
 
-	@Override
-	public final String getText() {
-		return m_sText;
-	}
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id);
+    }
 
-	@Override
-	public final boolean equals(Object obj) {
-		if (obj instanceof CBItem temp) {
-			return this.getId() == temp.getId();
-		}
-		return false;
-	}
-
-	@Override
-	public final String toString() {
-		return m_sText;
-	}
+    @Override
+    public String toString() {
+        return text;
+    }
 }

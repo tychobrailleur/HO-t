@@ -15,7 +15,6 @@ import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -96,7 +95,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
         constraints.gridwidth = gridWithValue;
     }
 
-    private void setMatchButton(JButton button, @Nullable Paarung paarung) {
+    private void setMatchButton(JButton button,  Paarung paarung) {
         HODateTime gameFinishTime;
         HODateTime nowTime = HODateTime.now();
 

@@ -6,7 +6,6 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.util.AmountOfMoney;
 import core.util.Helper;
-import org.jetbrains.annotations.NotNull;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.*;
@@ -361,7 +360,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
      * Compare two ColorLabelEntry objects based on non negative number or text.
      */
     @Override
-    public final int compareTo(@NotNull IHOTableEntry obj) {
+    public final int compareTo( IHOTableEntry obj) {
         if (obj instanceof ColorLabelEntry entry) {
 
             if (number != Float.NEGATIVE_INFINITY) {

@@ -32,7 +32,6 @@ import module.lineup.Lineup;
 import module.matches.statistics.MatchesHighlightsTable;
 import module.matches.statistics.MatchesOverviewTable;
 import module.teamAnalyzer.ui.RatingUtil;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -479,7 +478,7 @@ public final class MatchesPanel extends LazyImagePanel {
 		return panel;
 	}
 
-	@NotNull
+	
 	private JPanel getMatchesLocationButtonsPanel() {
 
 		JRadioButton all = new JRadioButton(MatchLocation.getText(MatchLocation.ALL) + "  ", MatchLocation.ALL == UserParameter.instance().matchLocation);

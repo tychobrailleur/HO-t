@@ -24,7 +24,6 @@ import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.Helper;
 import module.transfer.PlayerTransfer;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.time.temporal.ChronoUnit;
@@ -50,7 +49,7 @@ public class ConvertXml2Hrf {
     /**
      * Create the HRF data and return it in one string.
      */
-    public static @Nullable String createHrf() throws IOException {
+    public static String createHrf() throws IOException {
         int progressIncrement = 3;
         HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.connection"), progressIncrement);
         final MyConnector mc = MyConnector.instance();

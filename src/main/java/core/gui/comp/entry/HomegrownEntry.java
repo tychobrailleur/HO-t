@@ -1,7 +1,6 @@
 package core.gui.comp.entry;
 
 import core.model.player.Player;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.JComponent;
 import javax.swing.SwingConstants;
@@ -33,7 +32,7 @@ public class HomegrownEntry extends AbstractHOTableEntry {
 	}
 
 	@Override
-	public int compareTo(@NotNull IHOTableEntry obj) {
+	public int compareTo( IHOTableEntry obj) {
 		if (obj instanceof HomegrownEntry entry) {
 
 			if ((entry.getPlayer() != null) && (getPlayer() != null)) {

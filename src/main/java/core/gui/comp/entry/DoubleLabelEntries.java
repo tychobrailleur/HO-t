@@ -3,7 +3,6 @@ package core.gui.comp.entry;
 
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -130,7 +129,7 @@ public class DoubleLabelEntries extends AbstractHOTableEntry {
         m_clRechts.clear();
     }
 
-    public int compareTo(@NotNull IHOTableEntry obj) {
+    public int compareTo( IHOTableEntry obj) {
         if (obj instanceof DoubleLabelEntries entry) {
             return getTableEntryLeft().compareTo(entry.getTableEntryLeft());
         }

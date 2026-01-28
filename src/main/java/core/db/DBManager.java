@@ -43,7 +43,6 @@ import module.transfer.PlayerTransfer;
 import module.transfer.scout.ScoutEintrag;
 import module.youth.YouthTraining;
 import org.hsqldb.error.ErrorCode;
-import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 import java.io.File;
 import java.sql.ResultSet;
@@ -71,13 +70,13 @@ public class DBManager implements PersistenceManager {
 	public static Timestamp TSIDATE = new Timestamp(1087203600000L);
 
 	/** singleton */
-	private static @Nullable DBManager m_clInstance;
+	private static  DBManager m_clInstance;
 
 	// ~ Instance fields
 	// ----------------------------------------------------------------------------
 
 	/** Connection Manager */
-	private @Nullable ConnectionManager connectionManager;
+	private  ConnectionManager connectionManager;
 
 	/** all Tables */
 	private final Map<String, AbstractTable> tables = new Hashtable<>();
@@ -1062,7 +1061,7 @@ public class DBManager implements PersistenceManager {
 	 * @param bOfficialGamesOnly the b official games only
 	 * @return the array list
 	 */
-	public List<MatchKurzInfo> getOwnPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly) {
+	public List<MatchKurzInfo> getOwnPlayedMatchInfo( Integer iNbGames, boolean bOfficialGamesOnly) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames,
 				bOfficialGamesOnly, true);
 	}
@@ -1074,7 +1073,7 @@ public class DBManager implements PersistenceManager {
 	 * @param bOfficialGamesOnly the b official games only
 	 * @return the array list
 	 */
-	public List<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly,
+	public List<MatchKurzInfo> getPlayedMatchInfo( Integer iNbGames, boolean bOfficialGamesOnly,
 			boolean ownTeam) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames,
 				bOfficialGamesOnly, ownTeam);
