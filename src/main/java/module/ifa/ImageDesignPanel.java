@@ -59,27 +59,27 @@ public class ImageDesignPanel extends JPanel {
 			headerText = ModuleConfig.instance().getString(Config.VISITED_HEADER_TEXT.toString(),
 					TranslationFacility.tr("ifa.visitedHeader.defaultText"));
 			brightness = ModuleConfig.instance()
-                    .getInteger(Config.VISITED_BRIGHTNESS.toString(), 50);
+					.getInteger(Config.VISITED_BRIGHTNESS.toString(), 50);
 			grey = ModuleConfig.instance()
-                    .getBoolean(Config.VISITED_GREY.toString(), Boolean.FALSE);
+					.getBoolean(Config.VISITED_GREY.toString(), Boolean.FALSE);
 			roundly = ModuleConfig.instance()
-                    .getBoolean(Config.VISITED_ROUNDLY.toString(), Boolean.FALSE);
+					.getBoolean(Config.VISITED_ROUNDLY.toString(), Boolean.FALSE);
 			showHeader = ModuleConfig.instance()
-                    .getBoolean(Config.SHOW_VISITED_HEADER.toString(), Boolean.TRUE);
+					.getBoolean(Config.SHOW_VISITED_HEADER.toString(), Boolean.TRUE);
 		} else {
 			flagWidth = ModuleConfig.instance().getInteger(Config.HOSTED_FLAG_WIDTH.toString(),
-                    8);
+					8);
 			emblemPath = ModuleConfig.instance()
 					.getString(Config.HOSTED_EMBLEM_PATH.toString(), "");
 			headerText = ModuleConfig.instance().getString(Config.HOSTED_HEADER_TEXT.toString(),
 					TranslationFacility.tr("ifa.hostedHeader.defaultText"));
 			brightness = ModuleConfig.instance()
-                    .getInteger(Config.HOSTED_BRIGHTNESS.toString(), 50);
+					.getInteger(Config.HOSTED_BRIGHTNESS.toString(), 50);
 			grey = ModuleConfig.instance().getBoolean(Config.HOSTED_GREY.toString(), Boolean.FALSE);
 			roundly = ModuleConfig.instance()
-                    .getBoolean(Config.HOSTED_ROUNDLY.toString(), Boolean.FALSE);
+					.getBoolean(Config.HOSTED_ROUNDLY.toString(), Boolean.FALSE);
 			showHeader = ModuleConfig.instance()
-                    .getBoolean(Config.SHOW_HOSTED_HEADER.toString(), Boolean.TRUE);
+					.getBoolean(Config.SHOW_HOSTED_HEADER.toString(), Boolean.TRUE);
 		}
 		flagDisplayModel.setRoundFlag(roundly);
 		flagDisplayModel.setGrey(grey);
@@ -165,7 +165,7 @@ public class ImageDesignPanel extends JPanel {
 		settingsPanel.add(sizeLabel, gbc);
 
 		int flagWidth = ModuleConfig.instance().getInteger(Config.VISITED_FLAG_WIDTH.toString(),
-                8);
+				8);
 		this.sizeSpinner = new JSpinner(new SpinnerNumberModel(flagWidth, MIN_FLAG_WIDTH,
 				MAX_FLAG_WIDTH, 1));
 		this.sizeSpinner.setName("size");
@@ -232,93 +232,69 @@ public class ImageDesignPanel extends JPanel {
 	}
 
 	private void addListeners() {
-		this.headerYesNoCheckBox.addItemListener(new ItemListener() {
+		this.headerYesNoCheckBox.addItemListener(e -> {
+			boolean selected = e.getStateChange() == ItemEvent.SELECTED;
+			headerTextField.setEnabled(selected);
+			if (away) {
+				ModuleConfig.instance().setBoolean(Config.SHOW_VISITED_HEADER.toString(),
+						selected);
+			} else {
+				ModuleConfig.instance().setBoolean(Config.SHOW_HOSTED_HEADER.toString(),
+						selected);
+			}
+			emblemPanel.setHeaderVisible(selected);
+		});
 
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				boolean selected = e.getStateChange() == ItemEvent.SELECTED;
-				headerTextField.setEnabled(selected);
+		this.roundlyCheckBox.addItemListener(e -> {
+			boolean selected = e.getStateChange() == ItemEvent.SELECTED;
+			if (away) {
+				ModuleConfig.instance().setBoolean(Config.VISITED_ROUNDLY.toString(), selected);
+			} else {
+				ModuleConfig.instance().setBoolean(Config.HOSTED_ROUNDLY.toString(), selected);
+			}
+			emblemPanel.getFlagDisplayModel().setRoundFlag(selected);
+		});
+
+		this.greyColoredCheckBox.addItemListener(e -> {
+			boolean selected = e.getStateChange() == ItemEvent.SELECTED;
+			if (away) {
+				ModuleConfig.instance().setBoolean(Config.VISITED_GREY.toString(), selected);
+			} else {
+				ModuleConfig.instance().setBoolean(Config.HOSTED_GREY.toString(), selected);
+			}
+			emblemPanel.getFlagDisplayModel().setGrey(selected);
+		});
+
+		this.animGifCheckBox.addItemListener(e -> {
+			boolean selected = e.getStateChange() == ItemEvent.SELECTED;
+			delaySpinner.setEnabled(selected);
+			delayLabel.setEnabled(selected);
+		});
+
+		this.brightnessSlider.addChangeListener(e -> {
+			if (!brightnessSlider.getValueIsAdjusting()) {
+				int value = brightnessSlider.getValue();
 				if (away) {
-					ModuleConfig.instance().setBoolean(Config.SHOW_VISITED_HEADER.toString(),
-							selected);
+					ModuleConfig.instance().setInteger(Config.VISITED_BRIGHTNESS.toString(),
+							value);
 				} else {
-					ModuleConfig.instance().setBoolean(Config.SHOW_HOSTED_HEADER.toString(),
-							selected);
+					ModuleConfig.instance().setInteger(Config.HOSTED_BRIGHTNESS.toString(),
+							value);
 				}
-				emblemPanel.setHeaderVisible(selected);
+				emblemPanel.getFlagDisplayModel().setBrightness(value);
 			}
 		});
 
-		this.roundlyCheckBox.addItemListener(new ItemListener() {
-
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				boolean selected = e.getStateChange() == ItemEvent.SELECTED;
-				if (away) {
-					ModuleConfig.instance().setBoolean(Config.VISITED_ROUNDLY.toString(), selected);
-				} else {
-					ModuleConfig.instance().setBoolean(Config.HOSTED_ROUNDLY.toString(), selected);
-				}
-				emblemPanel.getFlagDisplayModel().setRoundFlag(selected);
+		this.sizeSpinner.addChangeListener(e -> {
+			int rowSize = (Integer) ImageDesignPanel.this.sizeSpinner.getValue();
+			if (away) {
+				ModuleConfig.instance().setInteger(Config.VISITED_FLAG_WIDTH.toString(),
+						rowSize);
+			} else {
+				ModuleConfig.instance()
+						.setInteger(Config.HOSTED_FLAG_WIDTH.toString(), rowSize);
 			}
-		});
-
-		this.greyColoredCheckBox.addItemListener(new ItemListener() {
-
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				boolean selected = e.getStateChange() == ItemEvent.SELECTED;
-				if (away) {
-					ModuleConfig.instance().setBoolean(Config.VISITED_GREY.toString(), selected);
-				} else {
-					ModuleConfig.instance().setBoolean(Config.HOSTED_GREY.toString(), selected);
-				}
-				emblemPanel.getFlagDisplayModel().setGrey(selected);
-			}
-		});
-
-		this.animGifCheckBox.addItemListener(new ItemListener() {
-
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				boolean selected = e.getStateChange() == ItemEvent.SELECTED;
-				delaySpinner.setEnabled(selected);
-				delayLabel.setEnabled(selected);
-			}
-		});
-
-		this.brightnessSlider.addChangeListener(new ChangeListener() {
-
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				if (!brightnessSlider.getValueIsAdjusting()) {
-					int value = brightnessSlider.getValue();
-					if (away) {
-						ModuleConfig.instance().setInteger(Config.VISITED_BRIGHTNESS.toString(),
-								value);
-					} else {
-						ModuleConfig.instance().setInteger(Config.HOSTED_BRIGHTNESS.toString(),
-								value);
-					}
-					emblemPanel.getFlagDisplayModel().setBrightness(value);
-				}
-			}
-		});
-
-		this.sizeSpinner.addChangeListener(new ChangeListener() {
-
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				int rowSize = (Integer) ImageDesignPanel.this.sizeSpinner.getValue();
-				if (away) {
-					ModuleConfig.instance().setInteger(Config.VISITED_FLAG_WIDTH.toString(),
-							rowSize);
-				} else {
-					ModuleConfig.instance()
-							.setInteger(Config.HOSTED_FLAG_WIDTH.toString(), rowSize);
-				}
-				emblemPanel.getFlagDisplayModel().setFlagWidth(rowSize);
-			}
+			emblemPanel.getFlagDisplayModel().setFlagWidth(rowSize);
 		});
 
 		this.headerTextField.addKeyListener(new KeyAdapter() {

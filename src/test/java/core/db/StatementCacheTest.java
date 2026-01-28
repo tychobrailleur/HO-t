@@ -31,7 +31,7 @@ class StatementCacheTest {
     void testGetPreparedStatementRetrievesStatementFromCacheWhenEnabled() throws Exception {
         statementCache.setCachedEnabled(true);
         PreparedStatement stmt = statementCache.getPreparedStatement("INSERT INTO TEST (ID, CONTENT) VALUES (?, ?)");
-        Map<String, StatementCache.CachedStatementStats> stats = statementCache.getStatementStats();
+        Map<String, CachedStatementStats> stats = statementCache.getStatementStats();
         Assertions.assertEquals(1, stats.size());
 
         PreparedStatement otherStmt = statementCache
@@ -44,7 +44,7 @@ class StatementCacheTest {
     void testGetPreparedStatementCreatesNewStatementWhenCacheNotEnabled() throws Exception {
         statementCache.setCachedEnabled(false);
         PreparedStatement stmt = statementCache.getPreparedStatement("INSERT INTO TEST (ID, CONTENT) VALUES (?, ?)");
-        Map<String, StatementCache.CachedStatementStats> stats = statementCache.getStatementStats();
+        Map<String, CachedStatementStats> stats = statementCache.getStatementStats();
         Assertions.assertEquals(0, stats.size());
 
         PreparedStatement otherStmt = statementCache
@@ -57,7 +57,7 @@ class StatementCacheTest {
     void testCacheGetsClearedWhenDisablingIt() throws Exception {
         statementCache.setCachedEnabled(true);
         statementCache.getPreparedStatement("INSERT INTO TEST (ID, CONTENT) VALUES (?, ?)");
-        Map<String, StatementCache.CachedStatementStats> stats = statementCache.getStatementStats();
+        Map<String, CachedStatementStats> stats = statementCache.getStatementStats();
         Assertions.assertEquals(1, stats.size());
 
         statementCache.setCachedEnabled(false);
@@ -69,10 +69,10 @@ class StatementCacheTest {
         String stmtSql = "INSERT INTO TEST (ID, CONTENT) VALUES (?, ?)";
         statementCache.setCachedEnabled(true);
         statementCache.getPreparedStatement(stmtSql);
-        Map<String, StatementCache.CachedStatementStats> stats = statementCache.getStatementStats();
+        Map<String, CachedStatementStats> stats = statementCache.getStatementStats();
         Assertions.assertEquals(1, stats.size());
 
-        StatementCache.CachedStatementStats rec = stats.get(stmtSql);
+        CachedStatementStats rec = stats.get(stmtSql);
         Assertions.assertNotNull(rec);
         Assertions.assertTrue(Duration.between(rec.created(), Instant.now()).getSeconds() < 1);
         Assertions.assertTrue(Duration.between(rec.lastAccessed(), Instant.now()).getSeconds() < 1);

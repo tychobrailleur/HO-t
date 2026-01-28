@@ -19,45 +19,45 @@ import java.util.Locale;
  */
 public final class ReleaseChannelPanel extends ImagePanel {
 
-	//~ Static fields/initializers -----------------------------------------------------------------
+	// ~ Static fields/initializers
+	// -----------------------------------------------------------------
 	private final JRadioButton m_jrb_Stable = new JRadioButton(Updater.ReleaseChannel.STABLE.label, false);
 	private final JRadioButton m_jrb_Beta = new JRadioButton(Updater.ReleaseChannel.BETA.label, false);
 	private final JRadioButton m_jrb_Dev = new JRadioButton(Updater.ReleaseChannel.DEV.label, false);
 	private final ButtonGroup m_bg_ButtonGroup = new ButtonGroup();
-	private final JLabel m_jl_PleaseSelect = new JLabel(TranslationFacility.tr("options.release_channels_pleaseSelect"));
+	private final JLabel m_jl_PleaseSelect = new JLabel(
+			TranslationFacility.tr("options.release_channels_pleaseSelect"));
 	private final JTextArea m_jta_Description = new JTextArea("", 8, 1);
 	private Updater.ReleaseChannel rc;
-    private JCheckBox m_jchUpdateCheck;
+	private JCheckBox m_jchUpdateCheck;
 
 	public Updater.ReleaseChannel getRc() {
 		return rc;
 	}
 
-	//Constructors
+	// Constructors
 	public ReleaseChannelPanel() {
 		initComponents();
 	}
 
-	//~ Methods ------------------------------------------------------------------------------------
+	// ~ Methods
+	// ------------------------------------------------------------------------------------
 
-	ItemListener releaseChannelListener = new ItemListener() {
-		@Override
-		public void itemStateChanged(ItemEvent itemEvent) {
-			JRadioButton source = (JRadioButton)itemEvent.getItem();
-			String ReleaseChannelLabel;
-			if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
-				ReleaseChannelLabel = source.getText();
-				core.model.UserParameter.temp().ReleaseChannel = ReleaseChannelLabel;
-				m_jta_Description.setText(
-						TranslationFacility.tr("options.release_channels_" +
-								source.getText().toUpperCase(Locale.ENGLISH) + "_desc")
-				);
-				rc = Updater.ReleaseChannel.byLabel(ReleaseChannelLabel);
-			}
+	ItemListener releaseChannelListener = itemEvent -> {
+		JRadioButton source = (JRadioButton) itemEvent.getItem();
+		String ReleaseChannelLabel;
+		if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
+			ReleaseChannelLabel = source.getText();
+			core.model.UserParameter.temp().ReleaseChannel = ReleaseChannelLabel;
+			m_jta_Description.setText(
+					TranslationFacility.tr("options.release_channels_" +
+							source.getText().toUpperCase(Locale.ENGLISH) + "_desc"));
+			rc = Updater.ReleaseChannel.byLabel(ReleaseChannelLabel);
 		}
 	};
 
-	public void stateChanged(ChangeEvent arg0) {}
+	public void stateChanged(ChangeEvent arg0) {
+	}
 
 	private void initComponents() {
 		setLayout(new GridBagLayout());
@@ -112,11 +112,12 @@ public final class ReleaseChannelPanel extends ImagePanel {
 		add(m_jta_Description, placement);
 
 		m_jchUpdateCheck = new JCheckBox(TranslationFacility.tr("UpdateCheck"));
-        m_jchUpdateCheck.setToolTipText(TranslationFacility.tr("tt_Optionen_UpdateCheck"));
-        m_jchUpdateCheck.setSelected(UserParameter.instance().updateCheck);
-        m_jchUpdateCheck.setOpaque(false);
-        m_jchUpdateCheck.setEnabled(true);
-        m_jchUpdateCheck.addItemListener(itemEvent -> UserParameter.temp().updateCheck = (itemEvent.getStateChange() == ItemEvent.SELECTED));
+		m_jchUpdateCheck.setToolTipText(TranslationFacility.tr("tt_Optionen_UpdateCheck"));
+		m_jchUpdateCheck.setSelected(UserParameter.instance().updateCheck);
+		m_jchUpdateCheck.setOpaque(false);
+		m_jchUpdateCheck.setEnabled(true);
+		m_jchUpdateCheck.addItemListener(
+				itemEvent -> UserParameter.temp().updateCheck = (itemEvent.getStateChange() == ItemEvent.SELECTED));
 		placement = new GridBagConstraints();
 		placement.insets = new Insets(25, 0, 25, 0);
 		placement.anchor = GridBagConstraints.NORTH;
@@ -125,7 +126,7 @@ public final class ReleaseChannelPanel extends ImagePanel {
 		placement.weighty = 1;
 		placement.gridx = 0;
 		placement.gridy = 3;
-        add(m_jchUpdateCheck, placement);
+		add(m_jchUpdateCheck, placement);
 
 		m_bg_ButtonGroup.add(m_jrb_Stable);
 		m_bg_ButtonGroup.add(m_jrb_Beta);

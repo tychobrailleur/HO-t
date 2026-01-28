@@ -6,7 +6,8 @@ package tool.injury;
  * @author draghetto
  */
 public final class InjuryCalculator {
-    //~ Constructors -------------------------------------------------------------------------------
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
 
     /**
      * Creates a new InjuryCalculator object.
@@ -14,14 +15,15 @@ public final class InjuryCalculator {
     private InjuryCalculator() {
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    // ~ Methods
+    // ------------------------------------------------------------------------------------
 
     /**
      * Returns the estimated doctor number
      *
-     * @param age player's age
-     * @param injury actual injury level
-     * @param target desired injury level
+     * @param age     player's age
+     * @param injury  actual injury level
+     * @param target  desired injury level
      * @param updates number of updates
      *
      * @return The number of doctor for the player to fullfil the passed parameters
@@ -54,9 +56,9 @@ public final class InjuryCalculator {
     /**
      * Returns the estimated update number
      *
-     * @param age player's age
-     * @param injury actual injury level
-     * @param target desired injury level
+     * @param age     player's age
+     * @param injury  actual injury level
+     * @param target  desired injury level
      * @param doctors number of doctors
      *
      * @return The number of update for the player to fullfil the passed parameters
@@ -79,10 +81,10 @@ public final class InjuryCalculator {
     /**
      * Returns the exact update number
      *
-     * @param tsiPre TSI Before injury
+     * @param tsiPre  TSI Before injury
      * @param tsiPost TSI After injury, but before a training
-     * @param target desired injury level
-     * @param tsi TSI gained last update
+     * @param target  desired injury level
+     * @param tsi     TSI gained last update
      *
      * @return The number of update for the player to fullfil the passed parameters
      */
@@ -118,84 +120,33 @@ public final class InjuryCalculator {
      * @return the healing rate for the player
      */
     private static double getCoeff(int age) {
-        switch (age) {
-            case 17:
-                return 1.825;
-
-            case 18:
-                return 1.741;
-
-            case 19:
-                return 1.657;
-
-            case 20:
-                return 1.573;
-
-            case 21:
-                return 1.489;
-
-            case 22:
-                return 1.405;
-
-            case 23:
-                return 1.321;
-
-            case 24:
-                return 1.237;
-
-            case 25:
-                return 1.153;
-
-            case 26:
-                return 1.069;
-
-            case 27:
-                return 0.985;
-
-            case 28:
-                return 0.901;
-
-            case 29:
-                return 0.817;
-
-            case 30:
-                return 0.802769867;
-
-            case 31:
-                return 0.72385681;
-
-            case 32:
-                return 0.647619991;
-
-            case 33:
-                return 0.584762756;
-
-            case 34:
-                return 0.494985902;
-
-            case 35:
-                return 0.423019866;
-
-            case 36:
-                return 0.357160486;
-
-            case 37:
-                return 0.281613792;
-
-            case 38:
-                return 0.205675176;
-
-            case 39:
-                return 0.138711165;
-
-            case 40:
-                return 0.079527735;
-
-            case 41:
-                return 0.018074485;
-
-            default:
-                return 0.018074485;
-        }
+        return switch (age) {
+            case 17 -> 1.825;
+            case 18 -> 1.741;
+            case 19 -> 1.657;
+            case 20 -> 1.573;
+            case 21 -> 1.489;
+            case 22 -> 1.405;
+            case 23 -> 1.321;
+            case 24 -> 1.237;
+            case 25 -> 1.153;
+            case 26 -> 1.069;
+            case 27 -> 0.985;
+            case 28 -> 0.901;
+            case 29 -> 0.817;
+            case 30 -> 0.802769867;
+            case 31 -> 0.72385681;
+            case 32 -> 0.647619991;
+            case 33 -> 0.584762756;
+            case 34 -> 0.494985902;
+            case 35 -> 0.423019866;
+            case 36 -> 0.357160486;
+            case 37 -> 0.281613792;
+            case 38 -> 0.205675176;
+            case 39 -> 0.138711165;
+            case 40 -> 0.079527735;
+            // 41 and default
+            default -> 0.018074485;
+        };
     }
 }

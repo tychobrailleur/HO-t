@@ -8,28 +8,28 @@ import java.awt.event.KeyEvent;
 
 public final class LineupModule extends DefaultModule {
 
-	public LineupModule() {
-		super(true);
-	}
+    public LineupModule() {
+        super(true);
+    }
 
-	@Override
-	public int getModuleId() {
-		return LINEUP;
-	}
+    @Override
+    public int getModuleId() {
+        return LINEUP;
+    }
 
-	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Aufstellung");
-	}
+    @Override
+    public String getDescription() {
+        return TranslationFacility.tr("Aufstellung");
+    }
 
-	@Override
-	public JPanel createTabPanel() {
-		return new LineupMasterView();
-	}
+    @Override
+    public JPanel createTabPanel() {
+        return new LineupMasterView();
+    }
 
-	@Override
-	public KeyStroke getKeyStroke() {
-		return KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0);
-	}
+    @Override
+    public KeyStroke getKeyStroke() {
+        return KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0);
+    }
 
 }

@@ -10,22 +10,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
-
 /**
  * A panel that allows the user to remove a favourite team
  *
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public class DeletePanel extends JPanel {
-    //~ Instance fields ----------------------------------------------------------------------------
+    // ~ Instance fields
+    // ----------------------------------------------------------------------------
 
     /**
-	 *
-	 */
-	private static final long serialVersionUID = 3360500719618041012L;
+     *
+     */
+    private static final long serialVersionUID = 3360500719618041012L;
 
-	/** The Favourite Menu itself */
+    /** The Favourite Menu itself */
     FavouriteMenu menu;
 
     /** The add button */
@@ -40,7 +39,8 @@ public class DeletePanel extends JPanel {
     /** A status label */
     JLabel status = new JLabel();
 
-    //~ Constructors -------------------------------------------------------------------------------
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
 
     /**
      * Constructs a new instance.
@@ -52,10 +52,11 @@ public class DeletePanel extends JPanel {
         jbInit();
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    // ~ Methods
+    // ------------------------------------------------------------------------------------
 
     /**
-     * Methods that fill the combo with  the favourite teams
+     * Methods that fill the combo with the favourite teams
      */
     private void fillCombo() {
         teams.removeAllItems();
@@ -84,31 +85,29 @@ public class DeletePanel extends JPanel {
 
         fillCombo();
 
-        deletebutton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    Team team = (Team) teams.getSelectedItem();
+        deletebutton.addActionListener(e -> {
+            Team team = (Team) teams.getSelectedItem();
 
-                    if (team == null) {
-                        status.setText(TranslationFacility.tr("Favourite.SelectTeam"));
+            if (team == null) {
+                status.setText(TranslationFacility.tr("Favourite.SelectTeam"));
 
-                        return;
-                    }
+                return;
+            }
 
-                    int pos = menu.teams.indexOf(team);
+            int pos = menu.teams.indexOf(team);
 
-                    menu.teams.remove(pos);
+            menu.teams.remove(pos);
 
-                    JMenuItem item = menu.items.get(pos);
+            JMenuItem item = menu.items.get(pos);
 
-                    menu.remove(item);
-                    menu.items.remove(pos);
-                    DBManager.instance().removeTAFavoriteTeam(team.getTeamId());
-                    fillCombo();
+            menu.remove(item);
+            menu.items.remove(pos);
+            DBManager.instance().removeTAFavoriteTeam(team.getTeamId());
+            fillCombo();
 
-                    if (menu.teams.isEmpty()) {
-                        menu.itemDelete.setVisible(false);
-                    }
-                }
-            });
+            if (menu.teams.isEmpty()) {
+                menu.itemDelete.setVisible(false);
+            }
+        });
     }
 }

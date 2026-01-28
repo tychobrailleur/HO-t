@@ -43,7 +43,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 	private JButton m_jbEditAllFutureTrainings;
 	private JButton m_jbEditSelectedFutureTrainings;
 
-    private ListSelectionModel m_lsm;
+	private ListSelectionModel m_lsm;
 
 	private final TrainingModel model;
 
@@ -76,7 +76,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 				"trainingColor1", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_1),
 				"trainingColor2", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_2));
 
-		Object[] options = {Helper.getTranslation("ls.button.close")};
+		Object[] options = { Helper.getTranslation("ls.button.close") };
 
 		m_jbEditSelectedFutureTrainings.addActionListener(arg0 -> {
 
@@ -85,15 +85,13 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 				editor.stopCellEditing();
 			}
 
-
 			JOptionPane.showOptionDialog(getTopLevelAncestor(),
 					new FutureTrainingsEditionPanel(model, futureTrainingsTableModel, m_lsm),
 					Helper.getTranslation("ls.module.training.edit_selected_future_trainings.tt"),
 					JOptionPane.YES_NO_CANCEL_OPTION,
-					JOptionPane.PLAIN_MESSAGE, ImageUtilities.getSvgIcon(TRAINING_ICON, colorMap, 25,25),
+					JOptionPane.PLAIN_MESSAGE, ImageUtilities.getSvgIcon(TRAINING_ICON, colorMap, 25, 25),
 					options, options[0]);
 		});
-
 
 		m_jbEditAllFutureTrainings.addActionListener(arg0 -> {
 			TableCellEditor editor = futureTrainingsTable.getCellEditor();
@@ -106,7 +104,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 					new FutureTrainingsEditionPanel(model, futureTrainingsTableModel),
 					Helper.getTranslation("ls.module.training.edit_all_future_trainings.tt"),
 					JOptionPane.YES_NO_CANCEL_OPTION,
-					JOptionPane.PLAIN_MESSAGE, ImageUtilities.getSvgIcon(TRAINING_ICON, colorMap, 25,25),
+					JOptionPane.PLAIN_MESSAGE, ImageUtilities.getSvgIcon(TRAINING_ICON, colorMap, 25, 25),
 					options, options[0]);
 		});
 
@@ -121,7 +119,8 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 	 * Initialize the object layout
 	 */
 	private void initComponents() {
-		JPanel pastTrainingsPanel = new JPanel(new GridBagLayout()){};
+		JPanel pastTrainingsPanel = new JPanel(new GridBagLayout()) {
+		};
 		GridBagConstraints uGbc = new GridBagConstraints();
 		uGbc.anchor = GridBagConstraints.WEST;
 		uGbc.insets = new Insets(3, 3, 3, 3);
@@ -144,11 +143,11 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 				var histoTraining = TrainingManager.instance().getHistoricalTrainings();
 				TrainingPerWeek tpw = histoTraining.get(modelRow);
 				var source = tpw.getSource();
-				switch (source) {
-					case MANUAL -> c.setForeground(ThemeManager.getColor(HOColorName.BLUE));
-					case GUESS -> c.setForeground(ThemeManager.getColor(HOColorName.RED));
-					default -> c.setForeground(ThemeManager.getColor(HOColorName.TABLEENTRY_FG));
-				}
+				c.setForeground(switch (source) {
+					case MANUAL -> ThemeManager.getColor(HOColorName.BLUE);
+					case GUESS -> ThemeManager.getColor(HOColorName.RED);
+					default -> ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
+				});
 				if (super.isRowSelected(modelRow)) {
 					c.setBackground(SELECTION_BG);
 				} else {
@@ -174,14 +173,13 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 					};
 
 				} catch (RuntimeException e1) {
-					//catch null pointer exception if mouse is over an empty line
+					// catch null pointer exception if mouse is over an empty line
 				}
 
 				return tip;
 			}
 
 		};
-
 
 		JScrollPane upperScrollPane = new JScrollPane(pastTrainingsTable);
 		upperScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -205,7 +203,8 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 		futureTrainingsPanel.add(futureTrainingLabel, lGbc);
 
 		m_jbEditSelectedFutureTrainings = new JButton(Helper.getTranslation("ls.button.edit_selected"));
-		m_jbEditSelectedFutureTrainings.setToolTipText(Helper.getTranslation("ls.module.training.edit_selected_future_trainings.tt"));
+		m_jbEditSelectedFutureTrainings
+				.setToolTipText(Helper.getTranslation("ls.module.training.edit_selected_future_trainings.tt"));
 		m_jbEditSelectedFutureTrainings.setEnabled(false);
 		lGbc.gridx = 1;
 		lGbc.anchor = GridBagConstraints.EAST;
@@ -213,15 +212,15 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 		futureTrainingsPanel.add(this.m_jbEditSelectedFutureTrainings, lGbc);
 
 		m_jbEditAllFutureTrainings = new JButton(Helper.getTranslation("ls.button.edit_all"));
-		m_jbEditAllFutureTrainings.setToolTipText(Helper.getTranslation("ls.module.training.edit_all_future_trainings.tt"));
+		m_jbEditAllFutureTrainings
+				.setToolTipText(Helper.getTranslation("ls.module.training.edit_all_future_trainings.tt"));
 		lGbc.gridx = 2;
 		lGbc.weightx = 0;
 		futureTrainingsPanel.add(this.m_jbEditAllFutureTrainings, lGbc);
 
-
 		futureTrainingsTableModel = new FutureTrainingsTableModel(this.model);
 
-		futureTrainingsTable = new TrainingTable(futureTrainingsTableModel){
+		futureTrainingsTable = new TrainingTable(futureTrainingsTableModel) {
 
 			public Component prepareRenderer(
 					TableCellRenderer renderer, int row, int column) {
@@ -229,21 +228,20 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 				int modelRow = convertRowIndexToModel(row);
 				TrainingPerWeek tpw = model.getFutureTrainings().get(modelRow);
 				var source = tpw.getSource();
-				switch (source) {
-					case MANUAL -> c.setForeground(ThemeManager.getColor(HOColorName.BLUE));
-					case GUESS -> c.setForeground(ThemeManager.getColor(HOColorName.RED));
-					default -> c.setForeground(ThemeManager.getColor(HOColorName.TABLEENTRY_FG));
-				}
+				c.setForeground(switch (source) {
+					case MANUAL -> ThemeManager.getColor(HOColorName.BLUE);
+					case GUESS -> ThemeManager.getColor(HOColorName.RED);
+					default -> ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
+				});
 				if (super.isRowSelected(modelRow)) {
 					c.setBackground(SELECTION_BG);
-				}
-				else {
+				} else {
 					c.setBackground(TABLE_BG);
 				}
 				return c;
 			}
 
-			public String getToolTipText( MouseEvent e) {
+			public String getToolTipText(MouseEvent e) {
 				String tip = null;
 				java.awt.Point p = e.getPoint();
 				int rowIndex = rowAtPoint(p);
@@ -259,7 +257,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 					};
 
 				} catch (RuntimeException e1) {
-					//catch null pointer exception if mouse is over an empty line
+					// catch null pointer exception if mouse is over an empty line
 				}
 
 				return tip;
@@ -269,10 +267,9 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 
 		ListSelectionModel listSelectionModel = futureTrainingsTable.getSelectionModel();
 		listSelectionModel.addListSelectionListener(e -> {
-			m_lsm= (ListSelectionModel)e.getSource();
+			m_lsm = (ListSelectionModel) e.getSource();
 			m_jbEditSelectedFutureTrainings.setEnabled(!m_lsm.isSelectionEmpty());
 		});
-
 
 		JScrollPane lowerScrollPane = new JScrollPane(this.futureTrainingsTable);
 		lowerScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -283,7 +280,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 		lGbc.fill = GridBagConstraints.BOTH;
 		futureTrainingsPanel.add(lowerScrollPane, lGbc);
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, pastTrainingsPanel, futureTrainingsPanel);
+		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, pastTrainingsPanel, futureTrainingsPanel);
 		UserParameter.instance().training_pastFutureTrainingsSplitPane.init(splitPane);
 		setLayout(new BorderLayout());
 		add(splitPane, BorderLayout.CENTER);
@@ -322,17 +319,19 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 			staminaColumn.setPreferredWidth(50);
 
 			// Sets the combo box for selecting the coach skill
-			JComboBox jcbCoachSkillEditor = new trainingParametersEditor(TrainingConstants.MIN_COACH_SKILL, TrainingConstants.MAX_COACH_SKILL);
+			JComboBox jcbCoachSkillEditor = new trainingParametersEditor(TrainingConstants.MIN_COACH_SKILL,
+					TrainingConstants.MAX_COACH_SKILL);
 			TableColumn coachSkillColumn = getColumnModel().getColumn(6);
 			coachSkillColumn.setCellEditor(new DefaultCellEditor(jcbCoachSkillEditor));
 			coachSkillColumn.setPreferredWidth(50);
 
 			// Sets the combo box for selecting the Assistant Coach Total Level
-			JComboBox jcbAssitantsTotalLevelEditor = new trainingParametersEditor(TrainingConstants.MIN_ASSISTANTS_COACH_LEVEL, TrainingConstants.MAX_ASSISTANTS_COACH_LEVEL);
+			JComboBox jcbAssitantsTotalLevelEditor = new trainingParametersEditor(
+					TrainingConstants.MIN_ASSISTANTS_COACH_LEVEL, TrainingConstants.MAX_ASSISTANTS_COACH_LEVEL);
 			TableColumn assitantsLevelColumn = getColumnModel().getColumn(7);
 			assitantsLevelColumn.setCellEditor(new DefaultCellEditor(jcbAssitantsTotalLevelEditor));
 			assitantsLevelColumn.setPreferredWidth(50);
-			
+
 		}
 	}
 }

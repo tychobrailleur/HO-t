@@ -117,6 +117,4 @@ public class StatementCache {
         }
     }
 
-    public record CachedStatementStats(Instant created, Instant lastAccessed, int count) {
-    }
 }

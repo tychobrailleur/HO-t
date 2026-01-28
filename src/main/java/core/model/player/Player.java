@@ -33,7 +33,8 @@ public class Player extends AbstractTable.Storable {
 
     private byte calculatedBestPosition = IMatchRoleID.UNKNOWN;
 
-    private static final PlayerSkill[] trainingSkills = {STAMINA, KEEPER, SETPIECES, DEFENDING, SCORING, WINGER, PASSING, PLAYMAKING};
+    private static final PlayerSkill[] trainingSkills = { STAMINA, KEEPER, SETPIECES, DEFENDING, SCORING, WINGER,
+            PASSING, PLAYMAKING };
     private static final String BREAK = "[br]";
     private static final String O_BRACKET = "[";
     private static final String C_BRACKET = "]";
@@ -65,7 +66,6 @@ public class Player extends AbstractTable.Storable {
     public void setContractDate(String contractDate) {
         this.contractDate = contractDate;
     }
-
 
     /**
      * Download date
@@ -102,7 +102,7 @@ public class Player extends AbstractTable.Storable {
      */
     private double subScoringSkill;
 
-    //Subskills
+    // Subskills
     private double subGoalkeeperSkill;
 
     /**
@@ -208,7 +208,6 @@ public class Player extends AbstractTable.Storable {
      * SpezialitätID
      */
     private int specialty;
-
 
     private int wingerSkill = 1;
     private int passingSkill = 1;
@@ -333,9 +332,8 @@ public class Player extends AbstractTable.Storable {
 
     private List<SkillChange> skillChanges;
 
-
-    //~ Constructors -------------------------------------------------------------------------------
-
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
 
     /**
      * Creates a new instance of Player
@@ -378,7 +376,8 @@ public class Player extends AbstractTable.Storable {
         nationalityId = properties.getInt("countryid", 0);
         tsi = properties.getInt("mkt", 0);
 
-        // also read subskills when importing hrf from hattrickportal.pro/ useful for U20/NT
+        // also read subskills when importing hrf from hattrickportal.pro/ useful for
+        // U20/NT
         subWingerSkill = properties.getDouble("yttsub", 0.);
         subPassingSkill = properties.getDouble("frasub", 0);
         subPlaymakingSkill = properties.getDouble("spesub", 0);
@@ -388,7 +387,7 @@ public class Player extends AbstractTable.Storable {
         subDefendingSkill = properties.getDouble("bacsub", 0);
         subExperience = properties.getDouble("experiencesub", 0);
 
-        //TSI, alles vorher durch 1000 teilen
+        // TSI, alles vorher durch 1000 teilen
         this.hrfDate = hrfDate;
 
         if (hrfDate.isBefore(HODateTime.fromDbTimestamp(DBManager.TSIDATE))) {
@@ -410,7 +409,7 @@ public class Player extends AbstractTable.Storable {
         this.trainerType = TrainerType.fromInt(properties.getInt("trainertype", -1));
         this.coachSkill = properties.getInt("trainerskilllevel", 0);
         if (this.coachSkill > 0) {
-            this.coachSkill += 3;    // trainer level 5 is an excellent (8) trainer
+            this.coachSkill += 3; // trainer level 5 is an excellent (8) trainer
             wage = new AmountOfMoney(properties.getInt("cost", 0));
             contractDate = properties.getProperty("contractdate");
         }
@@ -445,8 +444,8 @@ public class Player extends AbstractTable.Storable {
         playerStatement = properties.getProperty("statement", "");
         ownerNotes = properties.getProperty("ownernotes", "");
 
-        //Subskills calculation
-        //Called when saving the HRF because the necessary data is not available here
+        // Subskills calculation
+        // Called when saving the HRF because the necessary data is not available here
         final HOModel oldmodel = HOVerwaltung.instance().getModel();
         final Player oldPlayer = oldmodel.getCurrentPlayer(spielerId);
         if (oldPlayer != null) {
@@ -466,9 +465,10 @@ public class Player extends AbstractTable.Storable {
         downloadMotherClubInfoIfMissing();
         return this.motherClubId;
     }
+
     private void downloadMotherClubInfoIfMissing() {
         var isCurrentPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(this.getPlayerId()) != null;
-        if (isCurrentPlayer && motherClubId == null ) {
+        if (isCurrentPlayer && motherClubId == null) {
             var connection = MyConnector.instance();
             var isSilentDownload = connection.isSilentDownload();
             try {
@@ -526,7 +526,7 @@ public class Player extends AbstractTable.Storable {
      * Calculates full age with days and offset
      *
      * @return Double value of age & agedays & offset combined,
-     * i.e. age + (agedays+offset)/112
+     *         i.e. age + (agedays+offset)/112
      */
     public double getAlterWithAgeDays() {
         var now = HODateTime.now();
@@ -537,10 +537,11 @@ public class Player extends AbstractTable.Storable {
      * Calculates full age with days and offset for a given timestamp
      * used to sort columns
      * pay attention that it takes the hour and minute of the matchtime into account
-     * if you only want the days between two days use method calendarDaysBetween(Calendar start, Calendar end)
+     * if you only want the days between two days use method
+     * calendarDaysBetween(Calendar start, Calendar end)
      *
      * @return Double value of age & agedays & offset combined,
-     * i.e. age + (agedays+offset)/112
+     *         i.e. age + (agedays+offset)/112
      */
     public double getDoubleAgeFromDate(HODateTime t) {
         var hrfTime = HOVerwaltung.instance().getModel().getBasics().getDatum();
@@ -551,7 +552,8 @@ public class Player extends AbstractTable.Storable {
     }
 
     /**
-     * Calculates String for full age and days correcting for the difference between (now and last HRF file)
+     * Calculates String for full age and days correcting for the difference between
+     * (now and last HRF file)
      *
      * @return String of age & age days format is "YY (DDD)"
      */
@@ -560,7 +562,8 @@ public class Player extends AbstractTable.Storable {
     }
 
     public String getAgeWithDaysAsString(HODateTime t) {
-        if (this.hrfDate != null) return getAgeWithDaysAsString(this.getAge(), this.getAgeDays(), t, this.hrfDate);
+        if (this.hrfDate != null)
+            return getAgeWithDaysAsString(this.getAge(), this.getAgeDays(), t, this.hrfDate);
         return "";
     }
 
@@ -573,7 +576,8 @@ public class Player extends AbstractTable.Storable {
      * @return String
      */
     public static String getAgeWithDaysAsString(int ageYears, int ageDays, HODateTime time) {
-        return getAgeWithDaysAsString(ageYears, ageDays, time, HOVerwaltung.instance().getModel().getBasics().getDatum());
+        return getAgeWithDaysAsString(ageYears, ageDays, time,
+                HOVerwaltung.instance().getModel().getBasics().getDatum());
     }
 
     /**
@@ -592,7 +596,8 @@ public class Player extends AbstractTable.Storable {
 
     public HODateTime.HODuration getAgeAtDate(HODateTime date) {
         if (this.hrfDate != null)
-            return new HODateTime.HODuration(this.getAge(), this.getAgeDays()).plus(HODateTime.HODuration.between(this.hrfDate, date));
+            return new HODateTime.HODuration(this.getAge(), this.getAgeDays())
+                    .plus(HODateTime.HODuration.between(this.hrfDate, date));
         return null;
     }
 
@@ -607,7 +612,7 @@ public class Player extends AbstractTable.Storable {
         var oldAge = new HODateTime.HODuration(this.getAge(), this.getAgeDays());
         var age = oldAge.plus(HODateTime.HODuration.between(hrfTime, HODateTime.now()));
         var birthday = oldAge.seasons != age.seasons;
-        StringBuilder ret = new StringBuilder();
+        var ret = new StringBuilder();
         ret.append(age.seasons);
         ret.append(" ");
         ret.append(TranslationFacility.tr("ls.player.age.years"));
@@ -678,7 +683,6 @@ public class Player extends AbstractTable.Storable {
         this.arrivalDate = m_arrivalDate;
     }
 
-
     public void setExperience(int m_iErfahrung) {
         this.experience = m_iErfahrung;
     }
@@ -686,7 +690,6 @@ public class Player extends AbstractTable.Storable {
     public int getExperience() {
         return experience;
     }
-
 
     public void setWingerSkill(int m_iFluegelspiel) {
         schumRank = null;
@@ -736,16 +739,13 @@ public class Player extends AbstractTable.Storable {
         return (totalCards > 2);
     }
 
-
     public void setHatTricks(int m_iHattrick) {
         this.hatTricks = m_iHattrick;
     }
 
-
     public int getHatTricks() {
         return hatTricks;
     }
-
 
     public int getCurrentTeamGoals() {
         return currentTeamGoals;
@@ -762,7 +762,6 @@ public class Player extends AbstractTable.Storable {
     public boolean isHomeGrown() {
         return homeGrown;
     }
-
 
     public HODateTime getHrfDate() {
         if (hrfDate == null) {
@@ -845,7 +844,7 @@ public class Player extends AbstractTable.Storable {
     }
 
     public byte getIdealPosition() {
-        //in case player best position is forced by user
+        // in case player best position is forced by user
         final int flag = getUserPosFlag();
         if (flag == IMatchRoleID.UNKNOWN) {
             return getCalculatedBestPosition();
@@ -862,7 +861,7 @@ public class Player extends AbstractTable.Storable {
     }
 
     public double getPositionRating(byte position) {
-        if ( aPositionBehaviours.contains((int)position)) {
+        if (aPositionBehaviours.contains((int) position)) {
             var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
             return ratingPredictionModel.getPlayerMatchAverageRating(this, position);
         }
@@ -880,12 +879,13 @@ public class Player extends AbstractTable.Storable {
 
     public AmountOfMoney getSumOfWage(HODateTime from, HODateTime to) {
         var economyDate = HOVerwaltung.instance().getModel().getXtraDaten().getEconomyDate();
-        while (!economyDate.isBefore(to)) economyDate = economyDate.plusDaysAtSameLocalTime(-7);
+        while (!economyDate.isBefore(to))
+            economyDate = economyDate.plusDaysAtSameLocalTime(-7);
         var sum = new AmountOfMoney(0);
         while (economyDate.isAfter(from)) {
             var wageAtDate = getWageAtAge(this.getAgeAtDate(economyDate).seasons);
             if (wageAtDate != null) {
-                sum.add( wageAtDate);
+                sum.add(wageAtDate);
             }
             economyDate = economyDate.plusDaysAtSameLocalTime(-7);
         }
@@ -962,13 +962,15 @@ public class Player extends AbstractTable.Storable {
     }
 
     /**
-     * Calculate player alternative best positions (weather impact not relevant here)
+     * Calculate player alternative best positions (weather impact not relevant
+     * here)
      */
     public List<Byte> getAlternativeBestPositions() {
         Double threshold = null;
         float tolerance = 1f - UserParameter.instance().alternativePositionsTolerance;
         var ret = new ArrayList<Byte>();
-        var allPositionRatings = getAllPositionRatings().stream().sorted(Comparator.comparing(PlayerPositionRating::getRating, Comparator.reverseOrder())).toList();
+        var allPositionRatings = getAllPositionRatings().stream()
+                .sorted(Comparator.comparing(PlayerPositionRating::getRating, Comparator.reverseOrder())).toList();
         for (var p : allPositionRatings) {
             if (threshold == null) {
                 threshold = p.getRating() * tolerance;
@@ -1054,8 +1056,10 @@ public class Player extends AbstractTable.Storable {
     }
 
     public void setFirstName(String m_sName) {
-        if (m_sName != null) this.firstName = m_sName;
-        else firstName = "";
+        if (m_sName != null)
+            this.firstName = m_sName;
+        else
+            firstName = "";
     }
 
     public String getFirstName() {
@@ -1063,8 +1067,10 @@ public class Player extends AbstractTable.Storable {
     }
 
     public void setNickName(String m_sName) {
-        if (m_sName != null) this.nickName = m_sName;
-        else nickName = "";
+        if (m_sName != null)
+            this.nickName = m_sName;
+        else
+            nickName = "";
     }
 
     public String getNickName() {
@@ -1072,14 +1078,15 @@ public class Player extends AbstractTable.Storable {
     }
 
     public void setLastName(String m_sName) {
-        if (m_sName != null) this.lastName = m_sName;
-        else this.lastName = "";
+        if (m_sName != null)
+            this.lastName = m_sName;
+        else
+            this.lastName = "";
     }
 
     public String getLastName() {
         return lastName;
     }
-
 
     /**
      * Getter for shortName
@@ -1112,7 +1119,6 @@ public class Player extends AbstractTable.Storable {
     public int getNationalityId() {
         return nationalityId;
     }
-
 
     public String getNationality() {
         if (nationality != null) {
@@ -1149,14 +1155,13 @@ public class Player extends AbstractTable.Storable {
      */
     public int getMarktwert() {
         if (hrfDate == null || hrfDate.isBefore(HODateTime.fromDbTimestamp(DBManager.TSIDATE))) {
-            //Echter Marktwert
+            // Echter Marktwert
             return tsi * 1000;
         }
 
-        //TSI
+        // TSI
         return tsi;
     }
-
 
     String latestTSIInjured;
     String latestTSINotInjured;
@@ -1232,7 +1237,8 @@ public class Player extends AbstractTable.Storable {
      * set whether that player can be selected by the assistant
      */
     public void setCanBeSelectedByAssistant(boolean flag) {
-        if (this.isExternallyRecruitedCoach()) flag = false;
+        if (this.isExternallyRecruitedCoach())
+            flag = false;
         getNotes().setEligibleToPlay(flag);
         DBManager.instance().storePlayerNotes(notes);
     }
@@ -1274,12 +1280,13 @@ public class Player extends AbstractTable.Storable {
     /**
      * Get the effective skill value from the displayed skill value
      * Displayed value has to be reduced by 1, if not already zero
+     * 
      * @param iSkill Skill id
      * @return double Effective skill value
      */
     public double getEffectiveSkill(PlayerSkill iSkill) {
         double ret = getValue4Skill(iSkill);
-        if ( ret > 0 ){
+        if (ret > 0) {
             ret += getSub4Skill(iSkill) - 1.;
         }
         return ret;
@@ -1714,7 +1721,6 @@ public class Player extends AbstractTable.Storable {
         }
     }
 
-
     /**
      * Setter for property m_iVerletzt.
      *
@@ -1765,24 +1771,28 @@ public class Player extends AbstractTable.Storable {
                 for (var match : matches) {
                     var details = match.getMatchdetails();
                     if (details != null) {
-                        //Get the MatchLineup by id
+                        // Get the MatchLineup by id
                         MatchLineupTeam mlt = details.getOwnTeamLineup();
                         if (mlt != null) {
                             MatchType type = mlt.getMatchType();
                             boolean walkoverWin = details.isWalkoverMatchWin(myID);
                             if (type != MatchType.MASTERS) { // MASTERS counts only for experience
-                                trainingWeekPlayer.addFullTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, weeklyTrainingType.getFullTrainingSectors(), walkoverWin));
-                                trainingWeekPlayer.addBonusTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, weeklyTrainingType.getBonusTrainingSectors(), walkoverWin));
-                                trainingWeekPlayer.addPartlyTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, weeklyTrainingType.getPartlyTrainingSectors(), walkoverWin));
-                                trainingWeekPlayer.addOsmosisTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, weeklyTrainingType.getOsmosisTrainingSectors(), walkoverWin));
+                                trainingWeekPlayer.addFullTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(
+                                        playerID, weeklyTrainingType.getFullTrainingSectors(), walkoverWin));
+                                trainingWeekPlayer.addBonusTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(
+                                        playerID, weeklyTrainingType.getBonusTrainingSectors(), walkoverWin));
+                                trainingWeekPlayer.addPartlyTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(
+                                        playerID, weeklyTrainingType.getPartlyTrainingSectors(), walkoverWin));
+                                trainingWeekPlayer.addOsmosisTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(
+                                        playerID, weeklyTrainingType.getOsmosisTrainingSectors(), walkoverWin));
                             }
                             var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, walkoverWin);
                             trainingWeekPlayer.addPlayedMinutes(minutes);
                             trainingPerPlayer.addExperience(match.getExperienceIncrease(min(90, minutes)));
                         } else {
-                            HOLogger.instance().error(getClass(), "no lineup found in match " + match.getMatchSchedule().toLocaleDateTime() +
-                                    " " + match.getHomeTeamName() + " - " + match.getGuestTeamName()
-                            );
+                            HOLogger.instance().error(getClass(),
+                                    "no lineup found in match " + match.getMatchSchedule().toLocaleDateTime() +
+                                            " " + match.getHomeTeamName() + " - " + match.getGuestTeamName());
                         }
                     }
                 }
@@ -1794,7 +1804,8 @@ public class Player extends AbstractTable.Storable {
                     // TODO check if national matches are stored in database
                     var nationalMatches = train.getNTmatches();
                     for (var match : nationalMatches) {
-                        MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), this.getNationalTeamId());
+                        MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(),
+                                match.getMatchID(), this.getNationalTeamId());
                         var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
                         if (minutes > 0) {
                             trainingPerPlayer.addExperience(match.getExperienceIncrease(min(90, minutes)));
@@ -1823,7 +1834,7 @@ public class Player extends AbstractTable.Storable {
     }
 
     //////////////////////////////////////////////////////////////////////////////////
-    //equals
+    // equals
     /////////////////////////////////////////////////////////////////////////////////
     @Override
     public boolean equals(Object other) {
@@ -1867,8 +1878,10 @@ public class Player extends AbstractTable.Storable {
     }
 
     public void setSubExperience(Double experience) {
-        if (experience != null) this.subExperience = experience;
-        else this.subExperience = 0;
+        if (experience != null)
+            this.subExperience = experience;
+        else
+            this.subExperience = 0;
     }
 
     public List<FuturePlayerTraining> getFuturePlayerTrainings() {
@@ -1889,14 +1902,18 @@ public class Player extends AbstractTable.Storable {
     }
 
     /**
-     * Get the training priority of a hattrick week. If user training plan is given for the week this user selection is
-     * returned. If no user plan is available, the training priority is determined by the player's best position.
+     * Get the training priority of a hattrick week. If user training plan is given
+     * for the week this user selection is
+     * returned. If no user plan is available, the training priority is determined
+     * by the player's best position.
      *
-     * @param wt           used to get priority depending from the player's best position.
+     * @param wt           used to get priority depending from the player's best
+     *                     position.
      * @param trainingDate the training week
      * @return the training priority
      */
-    public FuturePlayerTraining.Priority getFuturePlayerTrainingPriority(WeeklyTrainingType wt, HODateTime trainingDate) {
+    public FuturePlayerTraining.Priority getFuturePlayerTrainingPriority(WeeklyTrainingType wt,
+            HODateTime trainingDate) {
         for (var t : getFuturePlayerTrainings()) {
             if (t.contains(trainingDate)) {
                 return t.getPriority();
@@ -1914,7 +1931,8 @@ public class Player extends AbstractTable.Storable {
         int position = HelperWrapper.instance().getPosition(this.getIdealPosition());
 
         for (var p : wt.getTrainingSkillBonusPositions()) {
-            if (p == position) return FuturePlayerTraining.Priority.FULL_TRAINING;
+            if (p == position)
+                return FuturePlayerTraining.Priority.FULL_TRAINING;
         }
         for (var p : wt.getTrainingSkillPositions()) {
             if (p == position) {
@@ -1924,10 +1942,12 @@ public class Player extends AbstractTable.Storable {
             }
         }
         for (var p : wt.getTrainingSkillPartlyTrainingPositions()) {
-            if (p == position) return FuturePlayerTraining.Priority.PARTIAL_TRAINING;
+            if (p == position)
+                return FuturePlayerTraining.Priority.PARTIAL_TRAINING;
         }
         for (var p : wt.getTrainingSkillOsmosisTrainingPositions()) {
-            if (p == position) return FuturePlayerTraining.Priority.OSMOSIS_TRAINING;
+            if (p == position)
+                return FuturePlayerTraining.Priority.OSMOSIS_TRAINING;
         }
 
         return null; // No training
@@ -1947,7 +1967,8 @@ public class Player extends AbstractTable.Storable {
             var tmpList = t.cut(from, to);
             for (var ft : tmpList) {
                 // cut the past
-                newFuturePlayerTrainings.addAll(ft.cut(HODateTime.HT_START, HOVerwaltung.instance().getModel().getBasics().getHattrickWeek()));
+                newFuturePlayerTrainings.addAll(
+                        ft.cut(HODateTime.HT_START, HOVerwaltung.instance().getModel().getBasics().getHattrickWeek()));
             }
         }
         if (prio != null) {
@@ -1979,7 +2000,8 @@ public class Player extends AbstractTable.Storable {
         return futurePlayerSkillTrainings;
     }
 
-    public boolean setFutureSkillTrainingPriority(int playerId, PlayerSkill skillIndex, FuturePlayerTraining.Priority prio) {
+    public boolean setFutureSkillTrainingPriority(int playerId, PlayerSkill skillIndex,
+            FuturePlayerTraining.Priority prio) {
         var futureSkillTraining = getFuturePlayerSkillTraining(skillIndex);
         if (futureSkillTraining == null) {
             if (prio != null) {
@@ -2004,14 +2026,16 @@ public class Player extends AbstractTable.Storable {
         return skillTrainingPlans.stream().filter(e -> e.getSkillId() == skillIndex).findAny().orElse(null);
     }
 
-
     /**
      * training priority information of the training panel
      *
      * @param nextWeek training priorities after this week will be considered
-     * @return if there is one user selected priority, the name of the priority is returned
-     * if there are more than one selected priorities, "individual priorities" is returned
-     * if is no user selected priority, the best position information is returned
+     * @return if there is one user selected priority, the name of the priority is
+     *         returned
+     *         if there are more than one selected priorities, "individual
+     *         priorities" is returned
+     *         if is no user selected priority, the best position information is
+     *         returned
      */
     public String getTrainingPriorityInformation(HODateTime nextWeek) {
         String ret = null;
@@ -2025,7 +2049,8 @@ public class Player extends AbstractTable.Storable {
                 ret = t.getPriority().toString();
             }
         }
-        if (ret != null) return ret;
+        if (ret != null)
+            return ret;
         return getBestPositionInfo();
 
     }
@@ -2033,7 +2058,8 @@ public class Player extends AbstractTable.Storable {
     /**
      * Calculates skill status of the player
      *
-     * @param previousID    Id of the previous download. Previous player status is loaded by this id.
+     * @param previousID    Id of the previous download. Previous player status is
+     *                      loaded by this id.
      * @param trainingWeeks List of training week information
      */
     public void calcSubSkills(int previousID, List<TrainingPerWeek> trainingWeeks) {
@@ -2043,9 +2069,11 @@ public class Player extends AbstractTable.Storable {
         if (playerBefore == null) {
             playerBefore = this.copyPlayer();
         }
-        // since we don't want to work with temp player objects we calculate skill by skill
+        // since we don't want to work with temp player objects we calculate skill by
+        // skill
         // whereas experience is calculated within the first skill
-        boolean experienceSubDone = this.getExperience() > playerBefore.getExperience(); // Do not calculate sub on experience skill up
+        boolean experienceSubDone = this.getExperience() > playerBefore.getExperience(); // Do not calculate sub on
+                                                                                         // experience skill up
         var experienceSub = experienceSubDone ? 0 : playerBefore.getSubExperience(); // set sub to 0 on skill up
         for (var skill : trainingSkills) {
             var sub = playerBefore.getSub4Skill(skill);
@@ -2057,8 +2085,10 @@ public class Player extends AbstractTable.Storable {
 
                     var trainingPerPlayer = calculateWeeklyTraining(training);
                     if (trainingPerPlayer != null) {
-                        if (!this.hasTrainingBlock()) {// player training is not blocked (blocking is no longer possible)
-                            sub += trainingPerPlayer.calcSubskillIncrement(skill, valueBeforeTraining + sub, training.getTrainingDate());
+                        if (!this.hasTrainingBlock()) {// player training is not blocked (blocking is no longer
+                                                       // possible)
+                            sub += trainingPerPlayer.calcSubskillIncrement(skill, valueBeforeTraining + sub,
+                                    training.getTrainingDate());
                             if (valueAfterTraining > valueBeforeTraining) {
                                 if (sub > 1) {
                                     sub -= 1.;
@@ -2084,7 +2114,8 @@ public class Player extends AbstractTable.Storable {
                         if (!experienceSubDone) {
                             var inc = trainingPerPlayer.getExperienceSub();
                             experienceSub += inc;
-                            if (experienceSub > 0.99) experienceSub = 0.99;
+                            if (experienceSub > 0.99)
+                                experienceSub = 0.99;
                             var tp = trainingPerPlayer.getTrainingPair();
                             if (tp == null) {
                                 HOLogger.instance().warning(getClass(), "no training info found");
@@ -2109,19 +2140,23 @@ public class Player extends AbstractTable.Storable {
     }
 
     /**
-     * Schum rank is a player training assessment, created by the hattrick team manager Schum, Russia
-     * The following coefficients defines a polynomial fit of the table Schum provided in <a href="https://www88.hattrick.org/Forum/Read.aspx?t=17404127&n=73&v=0&mr=0">...</a>
-     * SchumRank(skill) = C0 + C1*skill + C2*skill^2 + C3*skill^3 + C4*skill^4 + C5*skill^5 + C6*skill^6
+     * Schum rank is a player training assessment, created by the hattrick team
+     * manager Schum, Russia
+     * The following coefficients defines a polynomial fit of the table Schum
+     * provided in <a href=
+     * "https://www88.hattrick.org/Forum/Read.aspx?t=17404127&n=73&v=0&mr=0">...</a>
+     * SchumRank(skill) = C0 + C1*skill + C2*skill^2 + C3*skill^3 + C4*skill^4 +
+     * C5*skill^5 + C6*skill^6
      */
     Map<PlayerSkill, Double[]> schumRankFitCoefficients = Map.of(
-            KEEPER, new Double[]{-2.90430547, 2.20134952, -0.17288917, 0.01490328, 0., 0., 0.},
-            DEFENDING, new Double[]{8.78549747, -13.89441249, 7.20818523, -1.42920262, 0.14104285, -0.00660499, 0.00011864},
-            WINGER, new Double[]{0.68441693, -0.63873590, 0.42587817, -0.02909820, 0.00108502, 0., 0.},
-            PLAYMAKING, new Double[]{-5.70730805, 6.57044707, -1.78506428, 0.27138439, -0.01625170, 0.00036649, 0.},
-            SCORING, new Double[]{-6.61486533, 7.65566042, -2.14396084, 0.32264321, -0.01935220, 0.00043442, 0.},
-            PASSING, new Double[]{2.61223942, -2.42601757, 0.95573380, -0.07250134, 0.00239775, 0., 0.},
-            SETPIECES, new Double[]{-1.54485655, 1.45506372, -0.09224842, 0.00525752, 0., 0., 0.}
-    );
+            KEEPER, new Double[] { -2.90430547, 2.20134952, -0.17288917, 0.01490328, 0., 0., 0. },
+            DEFENDING,
+            new Double[] { 8.78549747, -13.89441249, 7.20818523, -1.42920262, 0.14104285, -0.00660499, 0.00011864 },
+            WINGER, new Double[] { 0.68441693, -0.63873590, 0.42587817, -0.02909820, 0.00108502, 0., 0. },
+            PLAYMAKING, new Double[] { -5.70730805, 6.57044707, -1.78506428, 0.27138439, -0.01625170, 0.00036649, 0. },
+            SCORING, new Double[] { -6.61486533, 7.65566042, -2.14396084, 0.32264321, -0.01935220, 0.00043442, 0. },
+            PASSING, new Double[] { 2.61223942, -2.42601757, 0.95573380, -0.07250134, 0.00239775, 0., 0. },
+            SETPIECES, new Double[] { -1.54485655, 1.45506372, -0.09224842, 0.00525752, 0., 0., 0. });
 
     /**
      * Calculated Schum rank.
@@ -2155,7 +2190,8 @@ public class Player extends AbstractTable.Storable {
     }
 
     /**
-     * Schum suggests highlighting values in the range 220 up to 240 (or 195 up to 215 in case of keepers)
+     * Schum suggests highlighting values in the range 220 up to 240 (or 195 up to
+     * 215 in case of keepers)
      *
      * @return true, if schum rank is in this optimal range
      */
@@ -2183,12 +2219,14 @@ public class Player extends AbstractTable.Storable {
     }
 
     public double getSchumRank() {
-        if (schumRank == null) schumRank = calcSchumRank();
+        if (schumRank == null)
+            schumRank = calcSchumRank();
         return schumRank;
     }
 
     public double getSchumRankBenchmark() {
-        if (schumRankBenchmark == null) schumRankBenchmark = calcSchumRankBenchmark();
+        if (schumRankBenchmark == null)
+            schumRankBenchmark = calcSchumRankBenchmark();
         return schumRankBenchmark;
     }
 
@@ -2281,7 +2319,8 @@ public class Player extends AbstractTable.Storable {
 
     /**
      * Create a clone of the player with modified skill values.
-     * Values of Defending, Winger, Playmaking, Scoring and Passing are reduced depending on the distance
+     * Values of Defending, Winger, Playmaking, Scoring and Passing are reduced
+     * depending on the distance
      * between man marker and opponent man marked player
      *
      * @param manMarkingPosition null - no man marking changes
@@ -2289,11 +2328,13 @@ public class Player extends AbstractTable.Storable {
      *                           NotOpposite - reduce skills by 65%
      *                           NotInLineup - reduce skills by 10%
      * @return this player, if no man marking changes are selected
-     * New modified player, if man marking changes are selected
+     *         New modified player, if man marking changes are selected
      */
     public Player getPlayerAsManMarker(ManMarkingPosition manMarkingPosition) {
-        if (manMarkingPosition == null) return this;
-        else if (manMarkingPosition == this.manMarkingPosition) return playerAsManMarker;
+        if (manMarkingPosition == null)
+            return this;
+        else if (manMarkingPosition == this.manMarkingPosition)
+            return playerAsManMarker;
         this.manMarkingPosition = manMarkingPosition;
         var playerAsManMarker = new Player();
         var skillFactor = (float) (1 - manMarkingPosition.value / 100.);
@@ -2397,17 +2438,17 @@ public class Player extends AbstractTable.Storable {
      * Adjustment of the form sub
      * is done by approximating the calculated tsi value to the given one.
      */
-    private void adjustFormSub(){
-        if ( this.injuryWeeks > -1) return;
+    private void adjustFormSub() {
+        if (this.injuryWeeks > -1)
+            return;
         var max = .99;
         var min = 0.;
-        while (max-min > 0.01){
+        while (max - min > 0.01) {
             var calculateTSI = this.calculateTSI();
             var currentSub = this.getSub4Skill(FORM);
-            if (calculateTSI < this.getTsi()){
+            if (calculateTSI < this.getTsi()) {
                 min = currentSub;
-            }
-            else {
+            } else {
                 max = currentSub;
             }
             var newSub = (max + min) / 2;
@@ -2417,19 +2458,24 @@ public class Player extends AbstractTable.Storable {
 
     /**
      * Calculate the TSI value from player's skills
-     * The formula from Schum is used: <a href="https://www87.hattrick.org/Forum/Read.aspx?t=17404127&n=5&v=0&mr=0">...</a>
-     * which is similar but with more precise coefficients than the formula given by the unwritten manual.
-     * The age coefficients are from the unwritten manual. In case of the goalkeeper tsi the factor is guessed.
+     * The formula from Schum is used: <a href=
+     * "https://www87.hattrick.org/Forum/Read.aspx?t=17404127&n=5&v=0&mr=0">...</a>
+     * which is similar but with more precise coefficients than the formula given by
+     * the unwritten manual.
+     * The age coefficients are from the unwritten manual. In case of the goalkeeper
+     * tsi the factor is guessed.
+     * 
      * @return long TSI
      */
     public long calculateTSI() {
 
         // Formula from unwritten manual:
-        // TSI = (1.03Def^3 + 1.03PM^3 + 1.03Sc^3 + 1.0Ps^3 + 0.84*Wg^3)^2 * St^0.5 * Fm^0.5 / 1000
+        // TSI = (1.03Def^3 + 1.03PM^3 + 1.03Sc^3 + 1.0Ps^3 + 0.84*Wg^3)^2 * St^0.5 *
+        // Fm^0.5 / 1000
         //
-        //TSIgk = 3 * Gk^3.359 * Fm^0.5
+        // TSIgk = 3 * Gk^3.359 * Fm^0.5
 
-        double def =getEffectiveSkill(DEFENDING);
+        double def = getEffectiveSkill(DEFENDING);
         double pm = getEffectiveSkill(PLAYMAKING);
         double sc = getEffectiveSkill(SCORING);
         double ps = getEffectiveSkill(PASSING);
@@ -2460,10 +2506,10 @@ public class Player extends AbstractTable.Storable {
         }
         tsi *= sqrt(fm);
 
-        var ageFactor =  Math.min(1, max(1./8., 1. - (this.getAge()-startTsiDrop)/8.));
+        var ageFactor = Math.min(1, max(1. / 8., 1. - (this.getAge() - startTsiDrop) / 8.));
         tsi *= ageFactor;
 
-        return round(tsi/10) * 10;
+        return round(tsi / 10) * 10;
     }
 
     /**
@@ -2471,23 +2517,26 @@ public class Player extends AbstractTable.Storable {
      * <p>
      * Price(sk) = 47.500.000 * a / (ExpLevel - 1)
      * <p>
-     * Where a = 7.11 for excellent, 1.00 for solid, 0.296 for passable and 0.037 for inadequate coach
+     * Where a = 7.11 for excellent, 1.00 for solid, 0.296 for passable and 0.037
+     * for inadequate coach
      * ExpLevel = experience level of the player, considering the sublevel, if known
      * <p>
      * Notes:
      * <p>
      * 1 - For ExpLevel, disastrous is 1.0-2.0, wretched 2.0-3.0, etc...
-     * 2 - For those who have foxtrick, an estimation of the experience sublevel can be found in the players page in the link "Performance history".
-     * 3 - Example: a player with experience level titanic (15.3) would cost 47 500 000 * 7.11 / (15.3 - 1) = € 2.36kk to convert to an excellent coach.
+     * 2 - For those who have foxtrick, an estimation of the experience sublevel can
+     * be found in the players page in the link "Performance history".
+     * 3 - Example: a player with experience level titanic (15.3) would cost 47 500
+     * 000 * 7.11 / (15.3 - 1) = € 2.36kk to convert to an excellent coach.
      * 4 - The cost to convert a player to weak coach is always € 10k.
      *
      * @param trainerSkill 4..8
      * @return HOCurrency
      */
-    public AmountOfMoney calculateCoachConversionCosts(int trainerSkill){
+    public AmountOfMoney calculateCoachConversionCosts(int trainerSkill) {
         var experience = this.getSkill(EXPERIENCE);
-        if ( experience >= trainerSkill && trainerSkill >= 4 && trainerSkill < 9){
-            if ( trainerSkill >= 5){
+        if (experience >= trainerSkill && trainerSkill >= 4 && trainerSkill < 9) {
+            if (trainerSkill >= 5) {
                 var a = switch (trainerSkill) {
                     case 5 -> 0.037;
                     case 6 -> 0.296;
@@ -2495,9 +2544,8 @@ public class Player extends AbstractTable.Storable {
                     case 8 -> 7.11;
                     default -> throw new IllegalStateException("Unexpected value: " + trainerSkill);
                 };
-                return new AmountOfMoney((int)(47_500_000 * a / (experience-1)));
-            }
-            else {
+                return new AmountOfMoney((int) (47_500_000 * a / (experience - 1)));
+            } else {
                 return new AmountOfMoney(100_000);
             }
         }

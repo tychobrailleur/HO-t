@@ -15,19 +15,21 @@ import java.text.DecimalFormat;
  * @author draghetto
  */
 public abstract class AbstractInjuryPanel extends JPanel {
-	
-	private static final long serialVersionUID = 4820048885216403402L;
-	
-    //~ Instance fields ----------------------------------------------------------------------------
 
-	private DecimalFormat df = new DecimalFormat("00.00");
+    private static final long serialVersionUID = 4820048885216403402L;
+
+    // ~ Instance fields
+    // ----------------------------------------------------------------------------
+
+    private DecimalFormat df = new DecimalFormat("00.00");
     private InjuryDialog parent;
     private JLabel header = new JLabel();
     private JLabel inputMsg = new JLabel();
     private JLabel outputMsg = new JLabel();
     private JTextField input = new JTextField(8);
 
-    //~ Constructors -------------------------------------------------------------------------------
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
 
     /**
      * Creates a new AbstractInjuryPanel object.
@@ -39,7 +41,8 @@ public abstract class AbstractInjuryPanel extends JPanel {
         init();
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    // ~ Methods
+    // ------------------------------------------------------------------------------------
 
     /**
      * Action to be executed when the button is pressed, must be implemented
@@ -135,10 +138,6 @@ public abstract class AbstractInjuryPanel extends JPanel {
         pan.add(button);
         add(pan, BorderLayout.SOUTH);
 
-        button.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent arg0) {
-                    doAction();
-                }
-            });
+        button.addActionListener(arg0 -> doAction());
     }
 }

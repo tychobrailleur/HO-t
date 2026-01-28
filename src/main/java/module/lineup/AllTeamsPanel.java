@@ -19,18 +19,13 @@ import java.util.Map;
 import java.util.Objects;
 import javax.swing.*;
 
-
 /**
  * Assign players to a given group or clear group in a single click
  */
 public final class AllTeamsPanel extends JPanel implements ActionListener {
 
-	@Serial
-    private static final long serialVersionUID = 955755336335567688L;
-
     //~ Instance fields ----------------------------------------------------------------------------
-
-	private final JButton aGroup = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMS_GROUPS[1]));
+    private final JButton aGroup = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMS_GROUPS[1]));
     private final JButton bGroup = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMS_GROUPS[2]));
     private final JButton cGroup = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMS_GROUPS[3]));
     private final JButton dGroup = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMS_GROUPS[4]));
@@ -48,7 +43,7 @@ public final class AllTeamsPanel extends JPanel implements ActionListener {
     }
 
     @Override
-	public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(aGroup)) {
             setGroup(GroupTeamFactory.TEAMS_GROUPS[1]);
         } else if (e.getSource().equals(bGroup)) {
@@ -61,8 +56,7 @@ public final class AllTeamsPanel extends JPanel implements ActionListener {
             setGroup(GroupTeamFactory.TEAMS_GROUPS[5]);
         } else if (e.getSource().equals(fGroup)) {
             setGroup(GroupTeamFactory.TEAMS_GROUPS[6]);
-        }
-        else if (e.getSource().equals(m_jbClean)) {
+        } else if (e.getSource().equals(m_jbClean)) {
             setGroup("");
         }
     }
@@ -77,8 +71,7 @@ public final class AllTeamsPanel extends JPanel implements ActionListener {
             // players in starting lineup are put in selected group
             if (lineup.isPlayerInStartingEleven(player.getPlayerId())) {
                 player.setTeamInfoSmilie(sGroup);
-            }
-            // all other players are not part of that group
+            } // all other players are not part of that group
             else if (player.getTeamGroup().equals(sGroup)) {
                 player.setTeamInfoSmilie("");
             }

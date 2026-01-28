@@ -15,7 +15,7 @@ import javax.swing.SwingUtilities;
  */
 public class StatistikMainPanel extends LazyImagePanel {
 
-    private ClubStatisticsPanel clubStatisticsPanel;
+	private ClubStatisticsPanel clubStatisticsPanel;
 	private TeamStatisticsPanel teamStatisticsPanel;
 	private ArenaStatistikPanel arenaStatistikPanel;
 	private FinancesStatisticsPanel financesStatisticsPanel;
@@ -72,12 +72,6 @@ public class StatistikMainPanel extends LazyImagePanel {
 
 	public final void setShowSpieler(final int spielerid) {
 		tabbedPane.setSelectedIndex(0);
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				playerStatisticsPanel.setPlayer(spielerid);
-			}
-		});
+		SwingUtilities.invokeLater(() -> playerStatisticsPanel.setPlayer(spielerid));
 	}
 }

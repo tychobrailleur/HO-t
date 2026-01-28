@@ -9,7 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Displays the form streak by drawing circles.  Only a max of 9 circles is drawn.
+ * Displays the form streak by drawing circles. Only a max of 9 circles is
+ * drawn.
  */
 public class FormLabel extends JLabel implements IHOTableEntry {
 
@@ -44,7 +45,7 @@ public class FormLabel extends JLabel implements IHOTableEntry {
     }
 
     @Override
-    public int compareTo( IHOTableEntry obj) {
+    public int compareTo(IHOTableEntry obj) {
         return 0;
     }
 
@@ -67,7 +68,7 @@ public class FormLabel extends JLabel implements IHOTableEntry {
 
     @Override
     protected void paintComponent(Graphics g) {
-        Graphics2D g2 = (Graphics2D)g;
+        Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         g.setColor(bgColor);
@@ -76,7 +77,7 @@ public class FormLabel extends JLabel implements IHOTableEntry {
 
         for (int i = 0; i < formDisplayed.length; i++) {
             selectResultColour(g2, formDisplayed[i]);
-            g2.fillOval(10+12*i, 10, 10, 10);
+            g2.fillOval(10 + 12 * i, 10, 10, 10);
         }
     }
 
@@ -94,24 +95,25 @@ public class FormLabel extends JLabel implements IHOTableEntry {
                 int lengthStreak = Math.min(index + 1, MAX_NUM_FORM_STREAK_ENTRIES);
                 formDisplayed = new byte[lengthStreak];
                 for (int i = 0; i < lengthStreak; i++) {
-                    formDisplayed[i] = form[index - i];       // reverse order (same as in hattrick)
+                    formDisplayed[i] = form[index - i]; // reverse order (same as in hattrick)
                 }
             } else {
                 formDisplayed = new byte[0];
             }
         } else {
-            // This should never get here—form always contains all 14 matches, incl. the ones yet to play.
+            // This should never get here—form always contains all 14 matches, incl. the
+            // ones yet to play.
             formDisplayed = form;
         }
         return formDisplayed;
     }
 
     private void selectResultColour(Graphics2D g2, byte cur) {
-        switch (cur) {
-            case SerieTableEntry.H_SIEG, SerieTableEntry.A_SIEG -> g2.setColor(WIN_COLOR);
-            case SerieTableEntry.H_UN, SerieTableEntry.A_UN -> g2.setColor(DRAW_COLOR);
-            case SerieTableEntry.H_NIED, SerieTableEntry.A_NIED -> g2.setColor(DEFEAT_COLOR);
-            default -> g2.setColor(UNKNOWN_COLOR);
-        }
+        g2.setColor(switch (cur) {
+            case SerieTableEntry.H_SIEG, SerieTableEntry.A_SIEG -> WIN_COLOR;
+            case SerieTableEntry.H_UN, SerieTableEntry.A_UN -> DRAW_COLOR;
+            case SerieTableEntry.H_NIED, SerieTableEntry.A_NIED -> DEFEAT_COLOR;
+            default -> UNKNOWN_COLOR;
+        });
     }
 }

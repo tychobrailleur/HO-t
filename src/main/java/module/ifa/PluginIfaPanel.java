@@ -39,21 +39,17 @@ public class PluginIfaPanel extends LazyPanel {
 	@Override
 	public void update() {
 		model.reload();
-		
+
 	}
 
 	private void addListeners() {
-		this.splitPane.addPropertyChangeListener("dividerLocation", new PropertyChangeListener() {
-
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				if (splitPane.getSize().height > 0 && splitPane.getDividerLocation() > 0) {
-					double proportionalDividerLocation = 1.0 / ((double) splitPane.getSize().height / (double) splitPane
-							.getDividerLocation());
-					ModuleConfig.instance().setBigDecimal(
-							Config.STATS_TABLES_DIVIDER_LOCATION.toString(),
-							BigDecimal.valueOf(proportionalDividerLocation));
-				}
+		this.splitPane.addPropertyChangeListener("dividerLocation", evt -> {
+			if (splitPane.getSize().height > 0 && splitPane.getDividerLocation() > 0) {
+				double proportionalDividerLocation = 1.0 / ((double) splitPane.getSize().height / (double) splitPane
+						.getDividerLocation());
+				ModuleConfig.instance().setBigDecimal(
+						Config.STATS_TABLES_DIVIDER_LOCATION.toString(),
+						BigDecimal.valueOf(proportionalDividerLocation));
 			}
 		});
 	}
@@ -90,16 +86,10 @@ public class PluginIfaPanel extends LazyPanel {
 		final double dividerLocation = ModuleConfig
 				.instance()
 				.getBigDecimal(Config.STATS_TABLES_DIVIDER_LOCATION.toString(),
-						BigDecimal.valueOf(0.5)).doubleValue();
+						BigDecimal.valueOf(0.5))
+				.doubleValue();
 
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				splitPane.setDividerLocation(dividerLocation);
-
-			}
-		});
+		SwingUtilities.invokeLater(() -> splitPane.setDividerLocation(dividerLocation));
 	}
 
 	private JPanel createTablePanel(boolean away) {
@@ -135,14 +125,7 @@ public class PluginIfaPanel extends LazyPanel {
 
 		TableRowSorter<TableModel> sorter = new SummaryTableSorter<>(table.getModel());
 		table.setRowSorter(sorter);
-		sorter.setComparator(0, new Comparator<Country>() {
-
-			@Override
-			public int compare(Country o1, Country o2) {
-				return o1.getName().compareTo(o2.getName());
-			}
-
-		});
+		sorter.setComparator(0, Comparator.comparing(Country::getName));
 		List<SortKey> list = new ArrayList<>();
 		list.add(new SortKey(5, SortOrder.DESCENDING));
 		sorter.setSortKeys(list);

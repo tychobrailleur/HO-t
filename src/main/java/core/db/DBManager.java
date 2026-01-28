@@ -70,13 +70,13 @@ public class DBManager implements PersistenceManager {
 	public static Timestamp TSIDATE = new Timestamp(1087203600000L);
 
 	/** singleton */
-	private static  DBManager m_clInstance;
+	private static DBManager m_clInstance;
 
 	// ~ Instance fields
 	// ----------------------------------------------------------------------------
 
 	/** Connection Manager */
-	private  ConnectionManager connectionManager;
+	private ConnectionManager connectionManager;
 
 	/** all Tables */
 	private final Map<String, AbstractTable> tables = new Hashtable<>();
@@ -119,13 +119,13 @@ public class DBManager implements PersistenceManager {
 
 			String errorMsg = null;
 			try {
-				User current_user = UserManager.instance().getCurrentUser();
-				String dbFolder = current_user.getDbFolder();
+				var current_user = UserManager.instance().getCurrentUser();
+				var dbFolder = current_user.getDbFolder();
 
-				File dbfolder = new File(dbFolder);
+				var dbfolder = new File(dbFolder);
 
 				if (!dbfolder.exists()) {
-					File parentFolder = new File(UserManager.instance().getDbParentFolder());
+					var parentFolder = new File(UserManager.instance().getDbParentFolder());
 
 					boolean dbDirectoryCreated = false;
 					if (!parentFolder.exists() || parentFolder.canWrite()) {
@@ -155,7 +155,7 @@ public class DBManager implements PersistenceManager {
 
 			// Create new instance
 			m_clInstance = new DBManager();
-			DBUpdater dbUpdater = new DBUpdater();
+			var dbUpdater = new DBUpdater();
 			m_clInstance.initAllTables();
 			// Try connecting to the DB
 			try {
@@ -188,7 +188,7 @@ public class DBManager implements PersistenceManager {
 								javax.swing.JOptionPane.ERROR_MESSAGE);
 
 				if (recover) {
-					BackupDialog dialog = new BackupDialog();
+					var dialog = new BackupDialog();
 					dialog.setVisible(true);
 					while (dialog.isVisible()) {
 						// wait
@@ -213,7 +213,7 @@ public class DBManager implements PersistenceManager {
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				}
-				UserConfigurationTable configTable = (UserConfigurationTable) m_clInstance
+				var configTable = (UserConfigurationTable) m_clInstance
 						.getTable(UserConfigurationTable.TABLENAME);
 				configTable.storeConfigurations(UserParameter.instance());
 				configTable.storeConfigurations(HOParameter.instance());
@@ -1061,7 +1061,7 @@ public class DBManager implements PersistenceManager {
 	 * @param bOfficialGamesOnly the b official games only
 	 * @return the array list
 	 */
-	public List<MatchKurzInfo> getOwnPlayedMatchInfo( Integer iNbGames, boolean bOfficialGamesOnly) {
+	public List<MatchKurzInfo> getOwnPlayedMatchInfo(Integer iNbGames, boolean bOfficialGamesOnly) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames,
 				bOfficialGamesOnly, true);
 	}
@@ -1073,7 +1073,7 @@ public class DBManager implements PersistenceManager {
 	 * @param bOfficialGamesOnly the b official games only
 	 * @return the array list
 	 */
-	public List<MatchKurzInfo> getPlayedMatchInfo( Integer iNbGames, boolean bOfficialGamesOnly,
+	public List<MatchKurzInfo> getPlayedMatchInfo(Integer iNbGames, boolean bOfficialGamesOnly,
 			boolean ownTeam) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames,
 				bOfficialGamesOnly, ownTeam);

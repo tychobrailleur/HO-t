@@ -69,7 +69,7 @@ class MatchesOverviewQuery {
 				FROM (SELECT (MATCHHIGHLIGHTS.HEIMTORE - MATCHHIGHLIGHTS.GASTTORE) as DIFFH, (MATCHESKURZINFO.HEIMTORE - MATCHESKURZINFO.GASTTORE) as DIFF, HEIMID, GASTID, MATCHID, TYP, MINUTE,\s
 				MATCHHIGHLIGHTS.TEAMID as MH_TEAMID, MATCHESKURZINFO.HEIMID as MK_HEIMID, MATCHESKURZINFO.GASTID as MK_GASTID, MATCHESKURZINFO.MATCHTYP as MK_MatchTyp\s
 				FROM
-				MATCHHIGHLIGHTS JOIN MATCHESKURZINFO ON MATCHHIGHLIGHTS.MATCHID = MATCHESKURZINFO.MATCHID) WHERE TYP = 0 AND MINUTE = 45 AND MH_TEAMID = 0 ");
+				MATCHHIGHLIGHTS JOIN MATCHESKURZINFO ON MATCHHIGHLIGHTS.MATCHID = MATCHESKURZINFO.MATCHID) WHERE TYP = 0 AND MINUTE = 45 AND MH_TEAMID = 0
 				""");
 		switch (statistic) {
 			case MatchesOverviewCommonPanel.LeadingHTLosingFT ->
@@ -187,7 +187,7 @@ class MatchesOverviewQuery {
 	}
 
 	static MatchesOverviewRow[] getMatchesOverviewValues(int matchtype, MatchLocation matchLocation) {
-		ArrayList<MatchesOverviewRow> rows = new ArrayList<>(20);
+		var rows = new ArrayList<MatchesOverviewRow>(20);
 		rows.add(new MatchesOverviewRow(TranslationFacility.tr("AlleSpiele"), MatchesOverviewRow.TYPE_ALL));
 		rows.add(new MatchesOverviewRow(TranslationFacility.tr("ls.team.formation"), MatchesOverviewRow.TYPE_TITLE));
 		rows.add(new MatchesOverviewRow("5-5-0", MatchesOverviewRow.TYPE_SYSTEM));
@@ -271,20 +271,21 @@ class MatchesOverviewQuery {
 
 	private static void setFormationRows(ArrayList<MatchesOverviewRow> rows, StringBuilder whereClause, boolean home) {
 
-		String sql = "select MATCHID,HEIMTORE,GASTTORE, " +
-				"LOCATE('5-5-0',MATCHREPORT) AS F550," +
-				"LOCATE('5-4-1',MATCHREPORT) AS F541," +
-				"LOCATE('5-3-2',MATCHREPORT) AS F532," +
-				"LOCATE('5-2-3',MATCHREPORT) AS F523," +
-				"LOCATE('4-5-1',MATCHREPORT) AS F451," +
-				"LOCATE('4-4-2',MATCHREPORT) AS F442," +
-				"LOCATE('4-3-3',MATCHREPORT) AS F433," +
-				"LOCATE('3-5-2',MATCHREPORT) AS F352," +
-				"LOCATE('3-4-3',MATCHREPORT) AS F343," +
-				"LOCATE('2-5-3',MATCHREPORT) AS F253" +
-				" FROM MATCHDETAILS inner join MATCHESKURZINFO ON MATCHDETAILS.MATCHID = MATCHESKURZINFO.MATCHID " +
-				" where 1=1 " +
-				whereClause;
+		String sql = """
+				SELECT MATCHID,HEIMTORE,GASTTORE,
+				LOCATE('5-5-0',MATCHREPORT) AS F550,
+				LOCATE('5-4-1',MATCHREPORT) AS F541,
+				LOCATE('5-3-2',MATCHREPORT) AS F532,
+				LOCATE('5-2-3',MATCHREPORT) AS F523,
+				LOCATE('4-5-1',MATCHREPORT) AS F451,
+				LOCATE('4-4-2',MATCHREPORT) AS F442,
+				LOCATE('4-3-3',MATCHREPORT) AS F433,
+				LOCATE('3-5-2',MATCHREPORT) AS F352,
+				LOCATE('3-4-3',MATCHREPORT) AS F343,
+				LOCATE('2-5-3',MATCHREPORT) AS F253
+				FROM MATCHDETAILS inner join MATCHESKURZINFO ON MATCHDETAILS.MATCHID = MATCHESKURZINFO.MATCHID
+				WHERE 1=1
+				""" + whereClause;
 		try (ResultSet rs = Objects.requireNonNull(DBManager.instance().getConnectionManager())
 				.executePreparedQuery(sql)) {
 
@@ -339,24 +340,15 @@ class MatchesOverviewQuery {
 	}
 
 	private static void setMatchesOverviewRow(MatchesOverviewRow row, String whereClause, boolean home) {
-		StringBuilder sql = new StringBuilder(500);
+
 		String from = " FROM MATCHDETAILS inner join MATCHESKURZINFO ON MATCHDETAILS.MATCHID = MATCHESKURZINFO.MATCHID ";
-		sql.append(
-				"SELECT SUM(ANZAHL) AS A1,SUM(G1) AS G,SUM(U1) AS U,SUM(V1) AS V, SUM(HTORE1) AS HEIMTORE, SUM(GTORE1) AS GASTTORE FROM (");
-		sql.append(
-				"select  COUNT(*) AS ANZAHL, 0 AS G1,0 AS U1, 0 AS V1, SUM(HEIMTORE) AS HTORE1, SUM(GASTTORE) AS GTORE1 ")
-				.append(from).append(" where 1 = 1 ");
-		sql.append(whereClause).append(" UNION ");
-		sql.append("SELECT 0 AS ANZAHL,  COUNT(*) AS G1,0 AS U1, 0 AS V1, 0 AS HTORE1, 0 AS GTORE1 ").append(from)
-				.append(" where HEIMTORE ").append(home ? ">" : "<").append(" GASTTORE ");
-		sql.append(whereClause).append(" UNION ");
-		sql.append("SELECT  0 AS ANZAHL,  0 AS G1,COUNT(*) AS U1, 0 AS V1, 0 AS HTORE1, 0 AS GTORE1 ").append(from)
-				.append(" where HEIMTORE = GASTTORE ");
-		sql.append(whereClause).append(" UNION ");
-		sql.append("select  0 AS ANZAHL,  0 AS G1, 0 AS U1, COUNT(*) AS V1, 0 AS HTORE1, 0 AS GTORE1 ").append(from)
-				.append(" where HEIMTORE ").append(home ? "<" : ">").append(" GASTTORE ");
-		sql.append(whereClause);
-		sql.append(")");
+		String sql = """
+				SELECT SUM(ANZAHL) AS A1,SUM(G1) AS G,SUM(U1) AS U,SUM(V1) AS V, SUM(HTORE1) AS HEIMTORE, SUM(GTORE1) AS GASTTORE FROM (
+				select  COUNT(*) AS ANZAHL, 0 AS G1,0 AS U1, 0 AS V1, SUM(HEIMTORE) AS HTORE1, SUM(GASTTORE) AS GTORE1 %1$s where 1 = 1 %2$s UNION
+				SELECT 0 AS ANZAHL,  COUNT(*) AS G1,0 AS U1, 0 AS V1, 0 AS HTORE1, 0 AS GTORE1 %1$s where HEIMTORE %3$s GASTTORE %2$s UNION
+				SELECT  0 AS ANZAHL,  0 AS G1,COUNT(*) AS U1, 0 AS V1, 0 AS HTORE1, 0 AS GTORE1 %1$s where HEIMTORE = GASTTORE %2$s UNION
+				select  0 AS ANZAHL,  0 AS G1, 0 AS U1, COUNT(*) AS V1, 0 AS HTORE1, 0 AS GTORE1 %1$s where HEIMTORE %4$s GASTTORE %2$s)"""
+				.formatted(from, whereClause, home ? ">" : "<", home ? "<" : ">");
 		try (ResultSet rs = Objects.requireNonNull(DBManager.instance().getConnectionManager())
 				.executePreparedQuery(sql.toString())) {
 			if (rs == null) {

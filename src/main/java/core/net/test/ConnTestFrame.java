@@ -56,64 +56,63 @@ public class ConnTestFrame extends JFrame {
 		Image image = null;
 		try {
 			if (HO.isDevelopment()) {
-				image = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/gui/bilder/Logo-16px_dev.png"));
-			}
-			else if (HO.isBeta()) {
-				image = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/gui/bilder/Logo-16px_beta.png"));
-			}
-			else {
-				image = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/gui/bilder/Logo-16px_stable.png"));
+				image = Toolkit.getDefaultToolkit()
+						.getImage(this.getClass().getResource("/gui/bilder/Logo-16px_dev.png"));
+			} else if (HO.isBeta()) {
+				image = Toolkit.getDefaultToolkit()
+						.getImage(this.getClass().getResource("/gui/bilder/Logo-16px_beta.png"));
+			} else {
+				image = Toolkit.getDefaultToolkit()
+						.getImage(this.getClass().getResource("/gui/bilder/Logo-16px_stable.png"));
 			}
 
 		} catch (Exception e) {
 			System.out.println("Error loading icon: " + e.getMessage());
 		}
-		if (image != null) setIconImage(image);
+		if (image != null)
+			setIconImage(image);
 	}
 
 	/**
 	 * Create the center panel.
+	 * 
 	 * @return the created panel
 	 */
 	private JComponent createMainPanel() {
-		//JPanel tmpPanel = new JPanel();
+		// JPanel tmpPanel = new JPanel();
 		JScrollPane scrollPane = new JScrollPane();
 		log = new JTextArea("");
-		float newSize = log.getFont().getSize2D()-1f;
+		float newSize = log.getFont().getSize2D() - 1f;
 		log.setFont(log.getFont().deriveFont(newSize));
 		scrollPane.getViewport().add(log);
-		//return tmpPanel;
+		// return tmpPanel;
 		return scrollPane;
 	}
 
 	private JPanel createTopPanel() {
 		JPanel tmpPanel = new JPanel();
 		JLabel label = new JLabel("HO! Connection Test (version " + ConnTest.VERSION + ")");
-		label.setFont(label.getFont().deriveFont(label.getFont().getSize2D()+3f));
+		label.setFont(label.getFont().deriveFont(label.getFont().getSize2D() + 3f));
 		tmpPanel.add(label);
-        return tmpPanel;
+		return tmpPanel;
 	}
-
 
 	/**
 	 * Build the control pane in the bottom
+	 * 
 	 * @param contentPane the new panel is added to this pane
 	 */
 	private JPanel createControlPane() {
 		JPanel ret = new JPanel();
 		JButton startBtn = new JButton("Start");
-		startBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("START");
-				conntest.start(log);
-			}
+		startBtn.addActionListener(e -> {
+			System.out.println("START");
+			conntest.start(log);
 		});
 		JButton exitBtn = new JButton("Exit");
-		exitBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("EXIT");
-				System.exit(0);
-			}
+		exitBtn.addActionListener(e -> {
+			System.out.println("EXIT");
+			System.exit(0);
 		});
 		ret.add(startBtn);
 		ret.add(exitBtn);

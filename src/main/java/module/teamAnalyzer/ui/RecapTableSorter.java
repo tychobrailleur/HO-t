@@ -12,31 +12,15 @@ import java.util.List;
 
 import javax.swing.table.TableModel;
 
-
-
 public class RecapTableSorter extends AbstractTableSorter {
-    //~ Instance fields ----------------------------------------------------------------------------
+    // ~ Instance fields
+    // ----------------------------------------------------------------------------
 
-    protected static final class NaturalNumericComparator implements
-			Comparator<String> {
-		@Override
-		public int compare(String o1, String o2) {
-			return parseToInt(o1) - parseToInt(o2);
-		}
+    private static final long serialVersionUID = -3606200720032237171L;
+    private List<String> skills;
 
-		private int parseToInt(String o1) {
-			try {
-				return Integer.parseInt(o1);
-			} catch (NumberFormatException e) {
-				return Integer.MAX_VALUE;
-			}
-		}
-	}
-
-	private static final long serialVersionUID = -3606200720032237171L;
-	private List<String> skills;
-
-    //~ Constructors -------------------------------------------------------------------------------
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
 
     /**
      * Creates a new RecapTableSorter object.
@@ -51,144 +35,71 @@ public class RecapTableSorter extends AbstractTableSorter {
     }
 
     @Override
-	public Comparator<String> getCustomComparator(int column) {
-    	if (column == 3) {
-    		return new NaturalNumericComparator();
-    	}
+    public Comparator<String> getCustomComparator(int column) {
+        if (column == 3) {
+            return Comparator.comparingInt(this::parseToInt);
+        }
         if ((column > 4) && (column < 12)) {
-            return new Comparator<>() {
-                @Override
-                public boolean equals(Object arg0) {
-                    return false;
-                }
-
-                @Override
-                public int compare(String arg0, String arg1) {
-                    try {
-                        double d1 = RatingUtil.getRating(arg0 + "",
-                                SystemManager.isNumericRating.isSet(),
-                                SystemManager.isDescriptionRating.isSet(),
-                                skills);
-                        double d2 = RatingUtil.getRating(arg1 + "",
-                                SystemManager.isNumericRating.isSet(),
-                                SystemManager.isDescriptionRating.isSet(),
-                                skills);
-
-                        if (d1 > d2) {
-                            return 1;
-                        }
-
-                        if (d1 < d2) {
-                            return -1;
-                        }
-                    } catch (Exception ignored) {
-                    }
-
-                    return 0;
-                }
-            };
+            return Comparator.comparingDouble(this::getRating5_11);
         }
 
         if ((column > 11) && (column < 16)) {
-            return new Comparator<>() {
-                private DecimalFormat df = new DecimalFormat("###.#");
-
-                @Override
-                public boolean equals(Object arg0) {
-                    return false;
-                }
-
-                @Override
-                public int compare(String arg0, String arg1) {
-                    try {
-                        double d1 = df.parse(arg0 + "").doubleValue();
-                        double d2 = df.parse(arg1 + "").doubleValue();
-
-                        if (d1 > d2) {
-                            return 1;
-                        }
-
-                        if (d1 < d2) {
-                            return -1;
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    return 0;
-                }
-            };
+            DecimalFormat df = new DecimalFormat("###.#");
+            return Comparator.comparingDouble(s -> parseDouble(s, df));
         }
 
         if (column == 16) {
-            return new Comparator<>() {
-                private DecimalFormat df = new DecimalFormat("###.##");
-
-                @Override
-                public boolean equals(Object arg0) {
-                    return false;
-                }
-
-                @Override
-                public int compare(String arg0, String arg1) {
-                    try {
-                        double d1 = df.parse(arg0 + "").doubleValue();
-                        double d2 = df.parse(arg1 + "").doubleValue();
-
-                        if (d1 > d2) {
-                            return 1;
-                        }
-
-                        if (d1 < d2) {
-                            return -1;
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    return 0;
-                }
-            };
+            DecimalFormat df = new DecimalFormat("###.##");
+            return Comparator.comparingDouble(s -> parseDouble(s, df));
         }
 
         if (column == 18) {
-            return new Comparator<>() {
-                @Override
-                public boolean equals(Object arg0) {
-                    return false;
-                }
-
-                @Override
-                public int compare(String arg0, String arg1) {
-                    try {
-                        double d1 = RatingUtil.getRating(arg0 + "", false, true, skills);
-                        double d2 = RatingUtil.getRating(arg1 + "", false, true, skills);
-
-                        if (d1 > d2) {
-                            return 1;
-                        }
-
-                        if (d1 < d2) {
-                            return -1;
-                        }
-                    } catch (Exception ignored) {
-                    }
-
-                    return 0;
-                }
-            };
+            return Comparator.comparingDouble(this::getRating18);
         }
 
         return null;
     }
 
+    private int parseToInt(String s) {
+        try {
+            return Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return Integer.MAX_VALUE;
+        }
+    }
+
+    private double getRating5_11(String s) {
+        try {
+            return RatingUtil.getRating(s, SystemManager.isNumericRating.isSet(),
+                    SystemManager.isDescriptionRating.isSet(), skills);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    private double getRating18(String s) {
+        try {
+            return RatingUtil.getRating(s, false, true, skills);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    private double parseDouble(String s, DecimalFormat df) {
+        try {
+            return df.parse(s).doubleValue();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
     @Override
-	public boolean hasHeaderLine() {
+    public boolean hasHeaderLine() {
         return true;
     }
 
     @Override
-	public int minSortableColumn() {
+    public int minSortableColumn() {
         return 3;
     }
 }

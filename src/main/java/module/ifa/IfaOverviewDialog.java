@@ -62,14 +62,7 @@ public class IfaOverviewDialog extends JDialog {
 				.setCellRenderer(new DoubleTableCellRenderer(0));
 
 		TableRowSorter<MyTableModel> sorter = new TableRowSorter<>(tblModel);
-		sorter.setComparator(MyTableModel.COL_COUNTRY, new Comparator<Country>() {
-
-			@Override
-			public int compare(Country o1, Country o2) {
-				return o1.getName().compareTo(o2.getName());
-			}
-
-		});
+		sorter.setComparator(MyTableModel.COL_COUNTRY, Comparator.comparing(Country::getName));
 		List<SortKey> sortKeys = new ArrayList<>();
 		sortKeys.add(new SortKey(MyTableModel.COL_COUNTRY, SortOrder.ASCENDING));
 		sorter.setSortKeys(sortKeys);
@@ -77,13 +70,7 @@ public class IfaOverviewDialog extends JDialog {
 
 		JButton closeButton = new JButton();
 		closeButton.setText(TranslationFacility.tr("ls.button.close"));
-		closeButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		});
+		closeButton.addActionListener(e -> dispose());
 
 		getContentPane().setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -115,7 +102,7 @@ public class IfaOverviewDialog extends JDialog {
 		MyTableModel() {
 			this.list = new ArrayList<>();
 			WorldDetailsManager.instance().getLeagues().stream()
-					.filter(l->l.getLeagueId()!=APACHE_LEAGUE_ID).forEach(l->addEntry(l));
+					.filter(l -> l.getLeagueId() != APACHE_LEAGUE_ID).forEach(l -> addEntry(l));
 		}
 
 		private void addEntry(WorldDetailLeague league) {
@@ -129,18 +116,18 @@ public class IfaOverviewDialog extends JDialog {
 		@Override
 		public String getColumnName(int columnIndex) {
 			switch (columnIndex) {
-			case COL_COUNTRY:
-				return TranslationFacility.tr("ifa.statisticsTable.col.country");
-			case COL_ACTIVE_USERS:
-				return TranslationFacility.tr("ifa.infoDialog.col.activeUsers");
-			case COL_COOLNESS:
-				return TranslationFacility.tr("ifa.statisticsTable.col.coolness");
-			case COL_VISITED:
-				return TranslationFacility.tr("ifa.infoDialog.col.visited");
-			case COL_HOSTED:
-				return TranslationFacility.tr("ifa.infoDialog.col.hosted");
-			default:
-				return super.getColumnName(columnIndex);
+				case COL_COUNTRY:
+					return TranslationFacility.tr("ifa.statisticsTable.col.country");
+				case COL_ACTIVE_USERS:
+					return TranslationFacility.tr("ifa.infoDialog.col.activeUsers");
+				case COL_COOLNESS:
+					return TranslationFacility.tr("ifa.statisticsTable.col.coolness");
+				case COL_VISITED:
+					return TranslationFacility.tr("ifa.infoDialog.col.visited");
+				case COL_HOSTED:
+					return TranslationFacility.tr("ifa.infoDialog.col.hosted");
+				default:
+					return super.getColumnName(columnIndex);
 			}
 		}
 
@@ -157,17 +144,17 @@ public class IfaOverviewDialog extends JDialog {
 		@Override
 		public Class<?> getColumnClass(int columnIndex) {
 			switch (columnIndex) {
-			case COL_COUNTRY:
-				return Country.class;
-			case COL_ACTIVE_USERS:
-				return Integer.class;
-			case COL_COOLNESS:
-				return Double.class;
-			case COL_VISITED:
-			case COL_HOSTED:
-				return Boolean.class;
-			default:
-				return super.getColumnClass(columnIndex);
+				case COL_COUNTRY:
+					return Country.class;
+				case COL_ACTIVE_USERS:
+					return Integer.class;
+				case COL_COOLNESS:
+					return Double.class;
+				case COL_VISITED:
+				case COL_HOSTED:
+					return Boolean.class;
+				default:
+					return super.getColumnClass(columnIndex);
 			}
 		}
 
@@ -175,18 +162,18 @@ public class IfaOverviewDialog extends JDialog {
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			Entry entry = this.list.get(rowIndex);
 			switch (columnIndex) {
-			case COL_COUNTRY:
-				return entry.country;
-			case COL_ACTIVE_USERS:
-				return entry.league.getActiveUsers();
-			case COL_COOLNESS:
-				return entry.coolness;
-			case COL_VISITED:
-				return IfaOverviewDialog.this.model.isVisited(entry.country.getCountryId());
-			case COL_HOSTED:
-				return IfaOverviewDialog.this.model.isHosted(entry.country.getCountryId());
-			default:
-				return null;
+				case COL_COUNTRY:
+					return entry.country;
+				case COL_ACTIVE_USERS:
+					return entry.league.getActiveUsers();
+				case COL_COOLNESS:
+					return entry.coolness;
+				case COL_VISITED:
+					return IfaOverviewDialog.this.model.isVisited(entry.country.getCountryId());
+				case COL_HOSTED:
+					return IfaOverviewDialog.this.model.isHosted(entry.country.getCountryId());
+				default:
+					return null;
 			}
 		}
 	}

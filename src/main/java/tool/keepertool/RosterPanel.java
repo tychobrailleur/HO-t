@@ -1,6 +1,5 @@
 package tool.keepertool;
 
-
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
@@ -16,22 +15,23 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-
 /**
  * Panel for selection of roster keepers
  *
  * @author draghetto
  */
 class RosterPanel extends JPanel {
-	
-	private static final long serialVersionUID = 4174378650521941024L;
-	
-    //~ Instance fields ----------------------------------------------------------------------------
 
-	private JComboBox players = new JComboBox();
+    private static final long serialVersionUID = 4174378650521941024L;
+
+    // ~ Instance fields
+    // ----------------------------------------------------------------------------
+
+    private JComboBox players = new JComboBox();
     private ResultPanel target;
 
-    //~ Constructors -------------------------------------------------------------------------------
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
 
     /**
      * Creates a new RosterPanel object.
@@ -43,7 +43,8 @@ class RosterPanel extends JPanel {
         init();
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    // ~ Methods
+    // ------------------------------------------------------------------------------------
 
     /**
      * Reload the data and update the panel
@@ -66,16 +67,14 @@ class RosterPanel extends JPanel {
 
         reset();
 
-        players.addItemListener(new ItemListener() {
-                public void itemStateChanged(ItemEvent e) {
-                    final PlayerItem selected = (PlayerItem) players.getSelectedItem();
+        players.addItemListener(e -> {
+            final PlayerItem selected = (PlayerItem) players.getSelectedItem();
 
-                    if (selected != null) {
-                        target.setPlayer(selected.getForm(), selected.getTsi(), selected.getId(),
-                                         selected.toString());
-                    }
-                }
-            });
+            if (selected != null) {
+                target.setPlayer(selected.getForm(), selected.getTsi(), selected.getId(),
+                        selected.toString());
+            }
+        });
     }
 
     /**

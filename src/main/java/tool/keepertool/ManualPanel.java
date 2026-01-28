@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-
 /**
  * Panel for manual editing of keeper data
  *
@@ -19,16 +18,18 @@ import java.awt.event.ItemListener;
  */
 class ManualPanel extends JPanel {
 
-	private static final long serialVersionUID = -4449286683961509922L;
+    private static final long serialVersionUID = -4449286683961509922L;
 
-    //~ Instance fields ----------------------------------------------------------------------------
+    // ~ Instance fields
+    // ----------------------------------------------------------------------------
 
-	private JComboBox form = new JComboBox();
+    private JComboBox form = new JComboBox();
     private JTextField tsi = new JTextField(10);
     private ResultPanel target;
     private int formValue;
 
-    //~ Constructors -------------------------------------------------------------------------------
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
 
     /**
      * Creates a new ManualPanel object.
@@ -40,7 +41,8 @@ class ManualPanel extends JPanel {
         init();
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    // ~ Methods
+    // ------------------------------------------------------------------------------------
 
     /**
      * Reset the panel to default data
@@ -77,19 +79,13 @@ class ManualPanel extends JPanel {
             form.addItem(PlayerAbility.getNameForSkill(i, false));
         }
 
-        form.addItemListener(new ItemListener() {
-                public void itemStateChanged(ItemEvent e) {
-                    formValue = form.getSelectedIndex() + 1;
-                }
-            });
+        form.addItemListener(e -> formValue = form.getSelectedIndex() + 1);
 
         final JButton b = new JButton(TranslationFacility.tr("Calculate"));
-        b.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent arg0) {
-                    final int tsiValue = Integer.parseInt(tsi.getText());
-                    target.setPlayer(formValue, tsiValue, 0, "");
-                }
-            });
+        b.addActionListener(arg0 -> {
+            final int tsiValue = Integer.parseInt(tsi.getText());
+            target.setPlayer(formValue, tsiValue, 0, "");
+        });
         buttonPanel.add(b);
         add(buttonPanel, BorderLayout.CENTER);
     }

@@ -17,13 +17,7 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 			if (EventQueue.isDispatchThread()) {
 				showErrorDialog(throwable);
 			} else {
-				EventQueue.invokeLater(new Runnable() {
-
-					@Override
-					public void run() {
-						showErrorDialog(throwable);
-					}
-				});
+				EventQueue.invokeLater(() -> showErrorDialog(throwable));
 			}
 		} catch (Exception ex) {
 			logException(ex);
@@ -43,11 +37,13 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 	/**
 	 * To be called from the EventDispatcherThread if an exception occurs while
 	 * a modal dialog is shown. To let this work, the ExceptionHandler has to be
-	 * set as the via 
+	 * set as the via
 	 * <blockquote>
+	 * 
 	 * <pre>
 	 * System.setProperty(&quot;sun.awt.exception.handler&quot;, ExceptionHandler.class.getName());
 	 * </pre>
+	 * 
 	 * </blockquote>
 	 * <p/>
 	 * Otherwise an error dialog would not be shown, the EventDispatcherThread

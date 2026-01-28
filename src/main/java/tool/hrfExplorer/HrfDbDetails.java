@@ -22,14 +22,17 @@ class HrfDbDetails extends HrfDetails {
 	HrfDbDetails(DBManager dbManager, int id) {
 		super(dbManager);
 
-		String sqlStatement = "SELECT DATUM,LIGANAME,PUNKTE,TOREFUER,TOREGEGEN,PLATZ,TEAMID,TEAMNAME,SPIELTAG,SAISON,TRAININGSINTENSITAET,TRAININGSART,ISTIMMUNG,ISELBSTVERTRAUEN,COTRAINER,FANS,HRF_ID,(SELECT COUNT(*) FROM SPIELER WHERE HRF_ID = '"
-				+ id + "') AS \"ANZAHL\" FROM HRF a, LIGA b, BASICS c, TEAM d, VEREIN e WHERE a.HRF_ID = '"
-				+ id + "' AND b.HRF_ID=a.HRF_ID AND c.HRF_ID=a.HRF_ID AND d.HRF_ID=a.HRF_ID AND e.HRF_ID=a.HRF_ID";
+		String sqlStatement = """
+				SELECT DATUM,LIGANAME,PUNKTE,TOREFUER,TOREGEGEN,PLATZ,TEAMID,TEAMNAME,SPIELTAG,SAISON,TRAININGSINTENSITAET,TRAININGSART,ISTIMMUNG,ISELBSTVERTRAUEN,COTRAINER,FANS,HRF_ID,(SELECT COUNT(*) FROM SPIELER WHERE HRF_ID = '%1$s') AS "ANZAHL"
+				FROM HRF a, LIGA b, BASICS c, TEAM d, VEREIN e
+				WHERE a.HRF_ID = '%1$s' AND b.HRF_ID=a.HRF_ID AND c.HRF_ID=a.HRF_ID AND d.HRF_ID=a.HRF_ID AND e.HRF_ID=a.HRF_ID
+				"""
+				.formatted(id);
 
 		try (ResultSet m_result = Objects.requireNonNull(dbManager.getConnectionManager()).executeQuery(sqlStatement)) {
-			while(m_result != null && m_result.next())	{
+			while (m_result != null && m_result.next()) {
 				m_result.getObject(1);
-				if( !m_result.wasNull())	{
+				if (!m_result.wasNull()) {
 					HrfExplorer.appendText("Query war nicht NULL");
 					setName();
 					setDatum(HODateTime.fromDbTimestamp(m_result.getTimestamp("DATUM")));
@@ -54,19 +57,16 @@ class HrfDbDetails extends HrfDetails {
 					setAnzSpieler(m_result.getInt("ANZAHL"));
 				}
 			}
-		}
-		catch(SQLException ignored)
-		{
-			
+		} catch (SQLException ignored) {
+
 		}
 		calcDatum();
 	}
-	
+
 	/**
 	 * @return Returns all needed Values as Vector
 	 */
-	Vector<Object> getDatenVector()
-	{
+	Vector<Object> getDatenVector() {
 		Vector<Object> daten = new Vector<>();
 		daten.add(Boolean.FALSE);
 		daten.add(getName());
@@ -79,27 +79,31 @@ class HrfDbDetails extends HrfDetails {
 		daten.add(getTrInt());
 		daten.add(getBild());
 		daten.add(getHrf_ID());
-		
+
 		return daten;
 	}
+
 	/**
 	 * @return Returns the m_hrf_ID.
 	 */
 	int getHrf_ID() {
 		return m_hrf_ID;
 	}
+
 	/**
 	 * @return Returns the m_name.
 	 */
 	String getName() {
 		return m_name;
 	}
+
 	/**
 	 * @param m_hrf_id The m_hrf_ID to set.
 	 */
 	void setHrf_ID(int m_hrf_id) {
 		m_hrf_ID = m_hrf_id;
 	}
+
 	/**
 	 *
 	 */

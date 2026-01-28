@@ -17,7 +17,6 @@ import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
 
-
 public class WhenTextField extends JFormattedTextField {
 
 	private static final long serialVersionUID = 1207880109251770680L;
@@ -28,14 +27,19 @@ public class WhenTextField extends JFormattedTextField {
 	 * Creates a new WhenTextField.
 	 * 
 	 * @param noValueDisplayString
-	 *            the string to display if the textield is in "display mode"
-	 *            (does not contain the cursor, as opposed to "edit mode") and
-	 *            the field has no value.
+	 *                             the string to display if the textield is in
+	 *                             "display mode"
+	 *                             (does not contain the cursor, as opposed to "edit
+	 *                             mode") and
+	 *                             the field has no value.
 	 * @param valueDisplayString
-	 *            the string to display if the textield is in "display mode"
-	 *            (does not contain the cursor, as opposed to "edit mode") and
-	 *            the field has a value. The string has to contain
-	 *            <code>{0}</code> which will be replaced by the value.
+	 *                             the string to display if the textield is in
+	 *                             "display mode"
+	 *                             (does not contain the cursor, as opposed to "edit
+	 *                             mode") and
+	 *                             the field has a value. The string has to contain
+	 *                             <code>{0}</code> which will be replaced by the
+	 *                             value.
 	 */
 	public WhenTextField(String noValueDisplayString, String valueDisplayString) {
 		this.noValueDisplayString = noValueDisplayString;
@@ -57,13 +61,7 @@ public class WhenTextField extends JFormattedTextField {
 		addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-
-					@Override
-					public void run() {
-						selectAll();
-					}
-				});
+				SwingUtilities.invokeLater(() -> selectAll());
 			}
 		});
 

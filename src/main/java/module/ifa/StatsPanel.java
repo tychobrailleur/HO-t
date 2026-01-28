@@ -173,19 +173,15 @@ public class StatsPanel extends JPanel {
 		gbc.gridy = 0;
 		gbc.weighty = 1.0;
 
-	    JButton infoButton = new JButton(ThemeManager.getIcon(HOIconName.INFORMATION));
-	    infoButton.setPreferredSize(new Dimension(28, 28));
-	    add(infoButton, gbc);
+		JButton infoButton = new JButton(ThemeManager.getIcon(HOIconName.INFORMATION));
+		infoButton.setPreferredSize(new Dimension(28, 28));
+		add(infoButton, gbc);
 
-		infoButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				IfaOverviewDialog dlg = new IfaOverviewDialog(model, HOMainFrame.instance());
-				GUIUtils.decorateWithDisposeOnESC(dlg);
-				GUIUtils.setLocationCenteredToComponent(dlg, HOMainFrame.instance());
-				dlg.setVisible(true);
-			}
+		infoButton.addActionListener(e -> {
+			IfaOverviewDialog dlg = new IfaOverviewDialog(model, HOMainFrame.instance());
+			GUIUtils.decorateWithDisposeOnESC(dlg);
+			GUIUtils.setLocationCenteredToComponent(dlg, HOMainFrame.instance());
+			dlg.setVisible(true);
 		});
 	}
 

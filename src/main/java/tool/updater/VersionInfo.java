@@ -5,7 +5,6 @@ import java.text.*;
 import java.util.Date;
 import java.util.Locale;
 
-
 /**
  * Simple data class to store version related information.
  */
@@ -19,7 +18,6 @@ public class VersionInfo {
 	private static final DecimalFormat DECF = new DecimalFormat("0.000##");
 	private static final DateFormat DATF = new SimpleDateFormat("dd.MM.yyyy");
 
-	
 	static {
 		DecimalFormatSymbols ds = new DecimalFormatSymbols();
 		ds.setDecimalSeparator('.');
@@ -46,12 +44,13 @@ public class VersionInfo {
 		return txt;
 	}
 
-
 	public double getVersion() {
 		return version;
 	}
 
-	public String getFullVersion() { return fullVersion;}
+	public String getFullVersion() {
+		return fullVersion;
+	}
 
 	public String getVersionType() {
 		return versionType;
@@ -63,34 +62,24 @@ public class VersionInfo {
 
 		this.version = Double.parseDouble(aVersion[0] + "." + aVersion[1]);
 		this.build = Integer.parseInt(aVersion[2]);
-		switch (aVersion[3]) {
-			case "0":
-				this.versionType = "DEV";
-				break;
-			case "1":
-				this.versionType = "BETA";
-				break;
-			default:
-				this.versionType = "RELEASE";
-				break;
-		}
+		this.versionType = switch (aVersion[3]) {
+			case "0" -> "DEV";
+			case "1" -> "BETA";
+			default -> "RELEASE";
+		};
 	}
-
 
 	public int getBuild() {
 		return build;
 	}
 
-
 	public String getReleaseDate() {
 		return released != null ? DATF.format(released) : "";
 	}
 
-	
 	public void setReleasedDate(Date released) {
 		this.released = released;
 	}
-
 
 	// generic setter, example:
 	// version=4.0.1356.1
@@ -99,8 +88,7 @@ public class VersionInfo {
 		try {
 			if ("version".equals(key)) {
 				setAllButReleaseDate(val);
-			}
-			else if ("released".equals(key)) {
+			} else if ("released".equals(key)) {
 				setReleasedDate(DATF.parse(val));
 			}
 		} catch (Exception e) {
@@ -114,6 +102,7 @@ public class VersionInfo {
 
 	@Override
 	public String toString() {
-		return "VersionInfo [version=" + version + ",  version type=" + versionType + ", build=" + build + ", released=" + released +"]";
+		return "VersionInfo [version=" + version + ",  version type=" + versionType + ", build=" + build + ", released="
+				+ released + "]";
 	}
 }

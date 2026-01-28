@@ -14,22 +14,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
-
 /**
  * A panel that allows the user to add a new favourite team
  *
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public class AddPanel extends JPanel {
-    //~ Instance fields ----------------------------------------------------------------------------
+    // ~ Instance fields
+    // ----------------------------------------------------------------------------
 
     /**
-	 *
-	 */
-	private static final long serialVersionUID = 7424042069787091891L;
+     *
+     */
+    private static final long serialVersionUID = 7424042069787091891L;
 
-	/** The Favourite Menu itself */
+    /** The Favourite Menu itself */
     FavouriteMenu menu;
 
     /** The add button */
@@ -44,7 +43,8 @@ public class AddPanel extends JPanel {
     /** The text field */
     NumberTextField teamId = new NumberTextField(8);
 
-    //~ Constructors -------------------------------------------------------------------------------
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
 
     /**
      * Creates a new AddPanel object.
@@ -62,7 +62,8 @@ public class AddPanel extends JPanel {
     public AddPanel() {
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    // ~ Methods
+    // ------------------------------------------------------------------------------------
 
     /**
      * Initializes the state of this instance.
@@ -70,56 +71,54 @@ public class AddPanel extends JPanel {
     private void jbInit() {
         setLayout(new BorderLayout());
 
-        //add(name, BorderLayout.CENTER);
+        // add(name, BorderLayout.CENTER);
         add(addButton, BorderLayout.EAST);
         add(idlabel, BorderLayout.WEST);
         add(teamId, BorderLayout.CENTER);
         add(status, BorderLayout.SOUTH);
 
-        addButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    Team team = new Team();
+        addButton.addActionListener(e -> {
+            Team team = new Team();
 
-                    team.setTeamId(teamId.getValue());
+            team.setTeamId(teamId.getValue());
 
-                    if (TeamManager.isTeamInList(teamId.getValue())) {
-                        status.setText(TranslationFacility.tr("Favourite.InList"));
-                        teamId.setText("");
+            if (TeamManager.isTeamInList(teamId.getValue())) {
+                status.setText(TranslationFacility.tr("Favourite.InList"));
+                teamId.setText("");
 
-                        return;
-                    }
+                return;
+            }
 
-                    if (DBManager.instance().isTAFavourite(teamId.getValue())) {
-                        status.setText(TranslationFacility.tr("Favourite.Already"));
-                        teamId.setText("");
+            if (DBManager.instance().isTAFavourite(teamId.getValue())) {
+                status.setText(TranslationFacility.tr("Favourite.Already"));
+                teamId.setText("");
 
-                        return;
-                    }
+                return;
+            }
 
-                    try {
-                        String teamName = HattrickManager.downloadTeamName(teamId.getValue());
+            try {
+                String teamName = HattrickManager.downloadTeamName(teamId.getValue());
 
-                        team.setName(teamName);
-                    } catch (Exception e1) {
-                        status.setText(TranslationFacility.tr("Favourite.Error"));
-                        teamId.setText("");
+                team.setName(teamName);
+            } catch (Exception e1) {
+                status.setText(TranslationFacility.tr("Favourite.Error"));
+                teamId.setText("");
 
-                        return;
-                    }
+                return;
+            }
 
-                    status.setText(team.getName() + " "
-                                   + TranslationFacility.tr("hinzugefuegt"));
-                    menu.teams.add(team);
+            status.setText(team.getName() + " "
+                    + TranslationFacility.tr("hinzugefuegt"));
+            menu.teams.add(team);
 
-                    JMenuItem item = new JMenuItem(team.getName());
+            JMenuItem item = new JMenuItem(team.getName());
 
-                    item.addActionListener(new FavoriteItemListener(team));
-                    menu.items.add(item);
-                    menu.add(item, 0);
-                    DBManager.instance().addTAFavoriteTeam(team);
-                    menu.itemDelete.setVisible(true);
-                    teamId.setText("");
-                }
-            });
+            item.addActionListener(new FavoriteItemListener(team));
+            menu.items.add(item);
+            menu.add(item, 0);
+            DBManager.instance().addTAFavoriteTeam(team);
+            menu.itemDelete.setVisible(true);
+            teamId.setText("");
+        });
     }
 }

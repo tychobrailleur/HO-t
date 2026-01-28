@@ -40,7 +40,8 @@ public class SubstitutionEditDialog extends JDialog {
 
 	public boolean isCanceled() {
 		// confirmed
-		if(!canceled) behaviourView.ratingRecalc();
+		if (!canceled)
+			behaviourView.ratingRecalc();
 		return this.canceled;
 	}
 
@@ -82,13 +83,9 @@ public class SubstitutionEditDialog extends JDialog {
 		getContentPane().add(this.behaviourView, BorderLayout.CENTER);
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
-		okButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				canceled = false;
-				dispose();
-			}
+		okButton.addActionListener(e -> {
+			canceled = false;
+			dispose();
 		});
 
 		Action cancelAction = new AbstractAction() {

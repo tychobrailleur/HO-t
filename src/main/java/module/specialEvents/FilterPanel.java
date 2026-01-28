@@ -111,77 +111,65 @@ public class FilterPanel extends JPanel {
 
 	private void addListeners() {
 
-		this.seasonComboBox.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				CBItem item = (CBItem) seasonComboBox.getSelectedItem();
-				if (item == null) {
-					filter.setSeasonFilterValue(null);
-				} else {
-					filter.setSeasonFilterValue(SeasonFilterValue.getById(item.getId()));
-				}
+		this.seasonComboBox.addActionListener(e -> {
+			CBItem item = (CBItem) seasonComboBox.getSelectedItem();
+			if (item == null) {
+				filter.setSeasonFilterValue(null);
+			} else {
+				filter.setSeasonFilterValue(SeasonFilterValue.getById(item.getId()));
 			}
 		});
 
-		this.tacticComboBox.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				CBItem item = (CBItem) tacticComboBox.getSelectedItem();
-				if (item == null) {
-					filter.setTactic(null);
-				} else {
-					filter.setTactic(item.getId());
-				}
+		this.tacticComboBox.addActionListener(e -> {
+			CBItem item = (CBItem) tacticComboBox.getSelectedItem();
+			if (item == null) {
+				filter.setTactic(null);
+			} else {
+				filter.setTactic(item.getId());
 			}
 		});
 
-		ActionListener checkBoxListener = new ActionListener() {
+		ActionListener checkBoxListener = e -> {
+			Object source = e.getSource();
+			boolean selected = ((JCheckBox) e.getSource()).isSelected();
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Object source = e.getSource();
-				boolean selected = ((JCheckBox) e.getSource()).isSelected();
-
-				if (source == onlySEMatchesCheckBox) {
-					filter.setShowMatchesWithSEOnly(selected);
-				} else if (source == friendliesCheckBox) {
-					filter.setShowFriendlies(selected);
-				} else if (source == leagueCheckBox) {
-					filter.setShowLeague(selected);
-				} else if (source == relegationCheckBox) {
-					filter.setShowRelegation(selected);
-				} else if (source == tournamentCheckBox) {
-					filter.setShowTournament(selected);
-				} else if (source == cupCheckBox) {
-					filter.setShowCup(selected);
-				} else if (source == mastersCheckBox) {
-					filter.setShowMasters(selected);
-				} else if (source == specialitySECheckBox) {
-					filter.setShowSpecialitySE(selected);
-				} else if (source == weatherSECheckBox) {
-					filter.setShowWeatherSE(selected);
-				} else if (source == counterAttackSECheckBox) {
-					filter.setShowCounterAttack(selected);
-				} else if (source == freeKickSECheckBox) {
-					filter.setShowFreeKick(selected);
-				} else if (source == manMarkingSECheckBox) {
-					filter.setShowManMarking(selected);
-				} else if (source == penaltySECheckBox) {
-					filter.setShowPenalty(selected);
-				} else if (source == longshotSECheckBox) {
-					filter.setShowLongShot(selected);
-				} else if (source == currentOwnPlayersCheckBox) {
-					if (selected) {
-						ownPlayersCheckBox.setSelected(true);
-					}
-					ownPlayersCheckBox.setEnabled(!selected);
-					filter.setShowCurrentOwnPlayersOnly(selected);
-					updatePlayerComboBoxData(selected);
-				} else if (source == ownPlayersCheckBox) {
-					filter.setShowOwnPlayersOnly(selected);
+			if (source == onlySEMatchesCheckBox) {
+				filter.setShowMatchesWithSEOnly(selected);
+			} else if (source == friendliesCheckBox) {
+				filter.setShowFriendlies(selected);
+			} else if (source == leagueCheckBox) {
+				filter.setShowLeague(selected);
+			} else if (source == relegationCheckBox) {
+				filter.setShowRelegation(selected);
+			} else if (source == tournamentCheckBox) {
+				filter.setShowTournament(selected);
+			} else if (source == cupCheckBox) {
+				filter.setShowCup(selected);
+			} else if (source == mastersCheckBox) {
+				filter.setShowMasters(selected);
+			} else if (source == specialitySECheckBox) {
+				filter.setShowSpecialitySE(selected);
+			} else if (source == weatherSECheckBox) {
+				filter.setShowWeatherSE(selected);
+			} else if (source == counterAttackSECheckBox) {
+				filter.setShowCounterAttack(selected);
+			} else if (source == freeKickSECheckBox) {
+				filter.setShowFreeKick(selected);
+			} else if (source == manMarkingSECheckBox) {
+				filter.setShowManMarking(selected);
+			} else if (source == penaltySECheckBox) {
+				filter.setShowPenalty(selected);
+			} else if (source == longshotSECheckBox) {
+				filter.setShowLongShot(selected);
+			} else if (source == currentOwnPlayersCheckBox) {
+				if (selected) {
+					ownPlayersCheckBox.setSelected(true);
 				}
+				ownPlayersCheckBox.setEnabled(!selected);
+				filter.setShowCurrentOwnPlayersOnly(selected);
+				updatePlayerComboBoxData(selected);
+			} else if (source == ownPlayersCheckBox) {
+				filter.setShowOwnPlayersOnly(selected);
 			}
 		};
 
@@ -202,16 +190,12 @@ public class FilterPanel extends JPanel {
 		this.currentOwnPlayersCheckBox.addActionListener(checkBoxListener);
 		this.ownPlayersCheckBox.addActionListener(checkBoxListener);
 
-		this.playerComboBox.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				CBItem item = (CBItem) playerComboBox.getSelectedItem();
-				if (item == null) {
-					filter.setPlayerId(null);
-				} else {
-					filter.setPlayerId(item.getId());
-				}
+		this.playerComboBox.addActionListener(e -> {
+			CBItem item = (CBItem) playerComboBox.getSelectedItem();
+			if (item == null) {
+				filter.setPlayerId(null);
+			} else {
+				filter.setPlayerId(item.getId());
 			}
 		});
 
@@ -328,13 +312,7 @@ public class FilterPanel extends JPanel {
 		list.add(new CBItem(getLangStr("ls.team.tactic_short.longshots"),
 				IMatchDetails.TAKTIK_LONGSHOTS));
 
-		Collections.sort(list, new Comparator<>() {
-
-			@Override
-			public int compare(CBItem o1, CBItem o2) {
-				return o1.getText().compareTo(o2.getText());
-			}
-		});
+		list.sort(Comparator.comparing(CBItem::getText));
 
 		list.add(0, new CBItem(getLangStr("ls.team.tactic_short.normal"), IMatchDetails.TAKTIK_NORMAL));
 		list.add(0, null);
@@ -430,13 +408,7 @@ public class FilterPanel extends JPanel {
 	private void updatePlayerComboBoxData(boolean currentPlayersOnly) {
 		CBItem oldItem = (CBItem) this.playerComboBox.getSelectedItem();
 
-		Comparator<Player> comparator = new Comparator<>() {
-
-			@Override
-			public int compare(Player o1, Player o2) {
-				return o1.getFullName().compareTo(o2.getFullName());
-			}
-		};
+		Comparator<Player> comparator = Comparator.comparing(Player::getFullName);
 
 		List<ComboItem> playerItems = new ArrayList<>();
 		List<Player> players = new ArrayList<>(HOVerwaltung.instance().getModel()

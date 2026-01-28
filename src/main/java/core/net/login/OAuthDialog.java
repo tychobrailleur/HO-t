@@ -52,7 +52,7 @@ public class OAuthDialog extends JDialog {
 		// Hard code set_matchorder due to authorization woes.
 		// scope manage_youthplayers is needed to use action type unlockskills
 		scopes = "&scope=" + "set_matchorder,manage_youthplayers";
-		
+
 		obtainUserURL();
 		initComponents();
 		addListeners();
@@ -106,22 +106,18 @@ public class OAuthDialog extends JDialog {
 	}
 
 	private void addListeners() {
-		ActionListener actionListener = new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				if (actionEvent.getSource().equals(m_jbOK)) {
-					doAuthorize();
-				} else if (actionEvent.getSource().equals(m_jbBrowse)) {
-					try {
-						BrowserLauncher.openURL(m_sUserURL);
-					} catch (Exception e) {
-						HOLogger.instance().log(getClass(), e);
-					}
-				} else if (actionEvent.getSource().equals(m_jbCancel)) {
-					m_bUserCancel = true;
-					dispose();
+		ActionListener actionListener = actionEvent -> {
+			if (actionEvent.getSource().equals(m_jbOK)) {
+				doAuthorize();
+			} else if (actionEvent.getSource().equals(m_jbBrowse)) {
+				try {
+					BrowserLauncher.openURL(m_sUserURL);
+				} catch (Exception e) {
+					HOLogger.instance().log(getClass(), e);
 				}
+			} else if (actionEvent.getSource().equals(m_jbCancel)) {
+				m_bUserCancel = true;
+				dispose();
 			}
 		};
 		m_jbBrowse.addActionListener(actionListener);
