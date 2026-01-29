@@ -12,10 +12,17 @@ public class ApplicationContext {
 
     private final DBManager dbManager;
     private final HOModelManager modelManager;
+    private final core.gui.RefreshManager refreshManager;
+    private final core.gui.theme.ThemeManager themeManager;
+    private final EventBus eventBus;
 
-    public ApplicationContext(DBManager dbManager, HOModelManager modelManager) {
+    public ApplicationContext(DBManager dbManager, HOModelManager modelManager,
+            core.gui.RefreshManager refreshManager, core.gui.theme.ThemeManager themeManager) {
         this.dbManager = dbManager;
         this.modelManager = modelManager;
+        this.refreshManager = refreshManager;
+        this.themeManager = themeManager;
+        this.eventBus = new EventBus();
     }
 
     public DBManager getDBManager() {
@@ -24,5 +31,17 @@ public class ApplicationContext {
 
     public HOModelManager getModelManager() {
         return modelManager;
+    }
+
+    public core.gui.RefreshManager getRefreshManager() {
+        return refreshManager;
+    }
+
+    public core.gui.theme.ThemeManager getThemeManager() {
+        return themeManager;
+    }
+
+    public EventBus getEventBus() {
+        return eventBus;
     }
 }

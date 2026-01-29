@@ -1,7 +1,7 @@
 package core.util;
 
 import core.model.HOModel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.UserParameter;
 import core.model.XtraData;
 import org.junit.jupiter.api.Assertions;
@@ -12,7 +12,7 @@ class HOCurrencyTests {
     //  @Test
     void test() {
         // Prepare model
-        HOVerwaltung hov = HOVerwaltung.instance();
+        HOModelManager hov = HOModelManager.instance();
         HOModel model = new HOModel(1);
         hov.setModel(model);
         model.setXtraDaten(new XtraData());

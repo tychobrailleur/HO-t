@@ -172,10 +172,12 @@ public class HrfExplorer extends ImagePanel
 	private Hashtable m_HashTable_EventGUI = new Hashtable(); // KEY: Der Tag des Events VALUE: Vector mit Zeit(sek) und
 																// Eventtyp
 
+	private final core.context.ApplicationContext context;
 	private final DBManager dbManager;
 
-	public HrfExplorer() {
-		dbManager = DBManager.instance();
+	public HrfExplorer(core.context.ApplicationContext context) {
+		this.context = context;
+		this.dbManager = context.getDBManager();
 		initialize();
 	}
 
@@ -185,7 +187,7 @@ public class HrfExplorer extends ImagePanel
 	@SuppressWarnings("unchecked")
 	private void initialize() {
 
-		HOModelManager hoV = HOModelManager.instance();
+		HOModelManager hoV = context.getModelManager();
 
 		// Aktuelles Datum ermitteln und in die Members schreiben
 		m_gc = new GregorianCalendar();

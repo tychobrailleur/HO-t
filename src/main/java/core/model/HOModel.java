@@ -32,7 +32,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * This class bundles all models that belong to an HRF file - the data can also come from the database
+ * This class bundles all models that belong to an HRF file - the data can also
+ * come from the database
  */
 public class HOModel {
     private HRF previousHrf;
@@ -54,12 +55,13 @@ public class HOModel {
     private List<MatchLineup> youthMatchLineups;
     private List<YouthTraining> youthTrainings;
     private RatingPredictionManager ratingPredictionManager;
+    private Player selectedPlayer;
 
     private PersistenceManager persistenceManager;
 
-
     /**
-     * Returns the current persistence manager.  If none is set, use the {@link DBManager}
+     * Returns the current persistence manager. If none is set, use the
+     * {@link DBManager}
      * current instance.
      *
      * @return PersistenceManager – persistence manager to use.
@@ -73,7 +75,8 @@ public class HOModel {
     }
 
     /**
-     * Sets the persistence manager.  This is intended for unit tests only at this point.
+     * Sets the persistence manager. This is intended for unit tests only at this
+     * point.
      *
      * @param persistenceManager Persistence manager to set.
      */
@@ -81,7 +84,8 @@ public class HOModel {
         this.persistenceManager = persistenceManager;
     }
 
-    //~ Constructors -------------------------------------------------------------------------------
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
     public HOModel(HODateTime fetchDate) {
         PersistenceManager dbManager = getPersistenceManager();
         try {
@@ -132,7 +136,8 @@ public class HOModel {
      * Only the HRFs needs to be initialized. Calculator inits what is necessary.
      *
      * @param hrf      current download information
-     * @param previous previous download information. If not given, the previous HRF is loaded from the database.
+     * @param previous previous download information. If not given, the previous HRF
+     *                 is loaded from the database.
      */
     public HOModel(HRF hrf, HRF previous) {
         this.hrf = hrf;
@@ -142,7 +147,8 @@ public class HOModel {
         }
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    // ~ Methods
+    // ------------------------------------------------------------------------------------
 
     /**
      * Sets the list of former players of the club
@@ -169,7 +175,15 @@ public class HOModel {
         return oldPlayers;
     }
 
-    //---------Player--------------------------------------
+    public Player getSelectedPlayer() {
+        return selectedPlayer;
+    }
+
+    public void setSelectedPlayer(Player selectedPlayer) {
+        this.selectedPlayer = selectedPlayer;
+    }
+
+    // ---------Player--------------------------------------
 
     /**
      * Returns all current players
@@ -195,10 +209,12 @@ public class HOModel {
     /**
      * Set a new lineup
      */
-    public final void setLineup( MatchLineupTeam lineup) {
+    public final void setLineup(MatchLineupTeam lineup) {
         if (lineup != null) {
-            if (lineup.getTeamID() < 0) lineup.setTeamID(getBasics().getTeamId());
-            if (lineup.getTeamName().isEmpty()) lineup.setTeamName(getBasics().getTeamName());
+            if (lineup.getTeamID() < 0)
+                lineup.setTeamID(getBasics().getTeamId());
+            if (lineup.getTeamName().isEmpty())
+                lineup.setTeamName(getBasics().getTeamName());
             calcStyleOfPlay();
         }
         aufstellung = lineup;
@@ -220,13 +236,13 @@ public class HOModel {
     /**
      * returns the lineup (setRatings is NOT called)
      */
-    public final  MatchLineupTeam getCurrentLineupTeam() {
+    public final MatchLineupTeam getCurrentLineupTeam() {
         if (aufstellung == null) {
-            aufstellung = getPersistenceManager().loadNextMatchLineup(HOModelManager.instance().getModel().getBasics().getTeamId());
+            aufstellung = getPersistenceManager()
+                    .loadNextMatchLineup(HOModelManager.instance().getModel().getBasics().getTeamId());
             if (aufstellung != null) {
                 calcStyleOfPlay();
-            }
-            else {
+            } else {
                 // create an empty lineup
                 aufstellung = new MatchLineupTeam();
                 aufstellung.setLineup(new Lineup());
@@ -238,14 +254,14 @@ public class HOModel {
     /**
      * returns the lineup
      */
-    public final  Lineup getCurrentLineup() {
+    public final Lineup getCurrentLineup() {
         var team = getCurrentLineupTeam();
         return team.getLineup();
     }
 
-    public final  RatingPredictionModel getRatingPredictionModel(){
+    public final RatingPredictionModel getRatingPredictionModel() {
         var ret = getRatingPredictionManager().getRatingPredictionModel();
-        if ( ret == null){
+        if (ret == null) {
             ret = getRatingPredictionManager().getRatingPredictionModel("default", getTeam());
         }
         return ret;
@@ -258,7 +274,7 @@ public class HOModel {
         this.basics = basics;
     }
 
-    //----------Basics----------------------------------------
+    // ----------Basics----------------------------------------
 
     /**
      * Returns Basics information
@@ -277,7 +293,7 @@ public class HOModel {
         this.economy = economy;
     }
 
-    //------- finance ---------------------------------------
+    // ------- finance ---------------------------------------
 
     /**
      * Returns economy information
@@ -289,7 +305,7 @@ public class HOModel {
         return economy;
     }
 
-    //------ID-------------------------
+    // ------ID-------------------------
 
     /**
      * Getter for property m_iID.
@@ -316,7 +332,8 @@ public class HOModel {
      */
     public final MatchLineupTeam getPreviousLineup() {
         if (lastAufstellung == null) {
-            lastAufstellung = getPersistenceManager().loadPreviousMatchLineup(HOModelManager.instance().getModel().getClub().getTeamID());
+            lastAufstellung = getPersistenceManager()
+                    .loadPreviousMatchLineup(HOModelManager.instance().getModel().getClub().getTeamID());
         }
         return lastAufstellung;
     }
@@ -328,7 +345,7 @@ public class HOModel {
         this.liga = liga;
     }
 
-    //----------Liga----------------------------------------
+    // ----------Liga----------------------------------------
 
     /**
      * Returns league information
@@ -360,7 +377,8 @@ public class HOModel {
 
     /**
      * Returns Player of opponent team (used for man marking)
-     * if there are lineups stored of the opponent team, these are used to get the information.
+     * if there are lineups stored of the opponent team, these are used to get the
+     * information.
      * Otherwise opponent teams players are downloaded.
      *
      * @param objectPlayerID the id of the opponent player
@@ -391,7 +409,7 @@ public class HOModel {
         this.spielplan = m_clSpielplan;
     }
 
-    //-----------------------Spielplan----------------------------------------//
+    // -----------------------Spielplan----------------------------------------//
 
     /**
      * Get the match schedule.
@@ -412,7 +430,7 @@ public class HOModel {
         this.stadium = stadium;
     }
 
-    //--------Stadium----------------------------------------
+    // --------Stadium----------------------------------------
 
     /**
      * Returns stadium information
@@ -450,7 +468,7 @@ public class HOModel {
         this.team = team;
     }
 
-    //----------Team----------------------------------------
+    // ----------Team----------------------------------------
 
     /**
      * Returns Team information
@@ -491,7 +509,7 @@ public class HOModel {
         this.verein = verein;
     }
 
-    //----------Verein----------------------------------------
+    // ----------Verein----------------------------------------
 
     /**
      * Returns club information
@@ -558,7 +576,8 @@ public class HOModel {
     /**
      * Determine the list of training weeks since previous download
      *
-     * @return list of training weeks between previous and current download (may be empty)
+     * @return list of training weeks between previous and current download (may be
+     *         empty)
      */
     private List<TrainingPerWeek> getTrainingWeeksSincePreviousDownload() {
         Timestamp from = null;
@@ -569,7 +588,8 @@ public class HOModel {
     }
 
     /**
-     * Calculates the subskills of each player based on trainings that took place during a given period
+     * Calculates the subskills of each player based on trainings that took place
+     * during a given period
      */
     public final void calcSubskills(HODateTime from, HODateTime to) {
         var trainingWeeks = TrainingManager.instance().getHistoricalTrainingsBetweenDates(from, to);
@@ -671,7 +691,7 @@ public class HOModel {
      * League id of user's premier team
      *
      * @return league id of premier team, if available
-     * otherwise of the current team
+     *         otherwise of the current team
      */
     public int getLeagueIdPremierTeam() {
         var xtra = getXtraDaten();
@@ -679,7 +699,8 @@ public class HOModel {
             var countryId = xtra.getCountryId();
             if (countryId != null) {
                 var ret = getLeagueId(countryId);
-                if (ret != null) return ret;
+                if (ret != null)
+                    return ret;
             }
         }
         return getBasics().getLiga(); // should no longer happen
@@ -690,11 +711,12 @@ public class HOModel {
      *
      * @param countryId country id
      * @return league id of the country
-     * or null if not found
+     *         or null if not found
      */
     private Integer getLeagueId(int countryId) {
         var league = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(countryId);
-        if (league != null) return league.getLeagueId();
+        if (league != null)
+            return league.getLeagueId();
         return null;
     }
 

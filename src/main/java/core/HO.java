@@ -3,6 +3,7 @@ package core;
 import clojure.java.api.Clojure;
 import clojure.lang.IFn;
 import clojure.lang.RT;
+import core.context.ApplicationContext;
 import core.db.DBManager;
 import core.db.backup.BackupHelper;
 import core.db.user.UserManager;
@@ -39,9 +40,9 @@ public class HO {
     private static String versionType;
     private static OSUtils.OS platform;
     private static boolean portable_version; // Used to determine the location of the DB
-    private static core.context.ApplicationContext context; // The Application Context
+    private static ApplicationContext context; // The Application Context
 
-    public static core.context.ApplicationContext getApplicationContext() {
+    public static ApplicationContext getApplicationContext() {
         return context;
     }
 
@@ -181,7 +182,6 @@ public class HO {
         interruptionWindow.setInfoText(2, "Initialize Database");
         DBManager.instance().loadUserParameter();
 
-        String[] finalArgs = args;
         new Thread(() -> {
             RT.var("user", "dbManager", DBManager.instance());
             RT.var("user", "admin", HOModelManager.instance());
@@ -253,11 +253,13 @@ public class HO {
         interruptionWindow.setInfoText(8, "Initialize Training");
 
         // Training estimation calculated on DB manual entries
-
         TrainingManager.instance();
 
         // Initialize Application Context
-        context = new core.context.ApplicationContext(DBManager.instance(), HOModelManager.instance());
+        context = new core.context.ApplicationContext(DBManager.instance(),
+                                                      HOModelManager.instance(),
+                                                      core.gui.RefreshManager.instance(),
+                                                      core.gui.theme.ThemeManager.instance());
 
         interruptionWindow.setInfoText(9, "Prepare to show");
         SwingUtilities.invokeLater(() -> {

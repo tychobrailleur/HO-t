@@ -63,6 +63,10 @@ public final class HOMainFrame extends JFrame implements Refreshable {
         // Re-apply title referencing the context now that it's available,
         // in case constructor ran with fallbacks.
         setFrameTitle();
+
+        if (this.context.getEventBus() != null) {
+            this.context.getEventBus().register(core.context.events.PlayerSelectionEvent.class, this::onPlayerSelected);
+        }
     }
 
     public core.context.ApplicationContext getApplicationContext() {
@@ -75,6 +79,14 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 
     private HOModelManager getModelManager() {
         return context != null ? context.getModelManager() : HOModelManager.instance();
+    }
+
+    private core.gui.RefreshManager getRefreshManager() {
+        return context != null ? context.getRefreshManager() : core.gui.RefreshManager.instance();
+    }
+
+    private core.gui.theme.ThemeManager getThemeManager() {
+        return context != null ? context.getThemeManager() : core.gui.theme.ThemeManager.instance();
     }
 
     // Components
@@ -92,10 +104,8 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 
     // TODO: Move this to a model backing the main window
     public Player getSelectedPlayer() {
-        return m_selectedPlayer;
+        return getModelManager().getModel().getSelectedPlayer();
     }
-
-    private Player m_selectedPlayer;
 
     // ~ Constructors
     // -------------------------------------------------------------------------------
@@ -127,7 +137,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
                 "Using java: " + System.getProperty("java.version") + " ("
                         + System.getProperty("java.vendor") + ")");
 
-        RefreshManager.instance().registerRefreshable(this);
+        getRefreshManager().registerRefreshable(this);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         SwingUtilities.updateComponentTreeUI(this);
 
@@ -164,7 +174,6 @@ public final class HOMainFrame extends JFrame implements Refreshable {
         }
 
         final Image iconImage = ImageUtilities.iconToImage(ThemeManager.getIcon(iconName));
-
         if (OSUtils.isMac()) {
             try {
                 final Taskbar taskbar = Taskbar.getTaskbar();
@@ -210,14 +219,38 @@ public final class HOMainFrame extends JFrame implements Refreshable {
     }
 
     public void selectPlayer(Player player) {
-        if (m_selectedPlayer != player) {
-            m_selectedPlayer = player;
+        Player current = getSelectedPlayer();
+        if (current != player) {
+            getModelManager().getModel().setSelectedPlayer(player);
+            if (context != null) {
+                context.getEventBus().post(new core.context.events.PlayerSelectionEvent(player));
+            } else {
+                // Fallback for initialization phase if needed, though unlikely to be used
+                // before context is set
+                // effectively we can't fire events without context.
+                // We could manually call onPlayerSelected here if strictly needed, but let's
+                // rely on context.
+                // For now, let's just do the update manually if context is missing (legacy
+                // behavior fallback)
+                updatePlayerSelectionUI(player);
+            }
+        }
+    }
+
+    private void onPlayerSelected(core.context.events.PlayerSelectionEvent event) {
+        updatePlayerSelectionUI(event.getPlayer());
+    }
+
+    private void updatePlayerSelectionUI(Player player) {
+        SwingUtilities.invokeLater(() -> {
             var lineupPanel = getLineupPanel();
-            if (lineupPanel != null) {
+            if (lineupPanel != null && player != null) {
                 lineupPanel.setPlayer(player.getPlayerId());
             }
-            getSpielerUebersichtPanel().setPlayer(player);
-        }
+            if (getSpielerUebersichtPanel() != null) {
+                getSpielerUebersichtPanel().setPlayer(player);
+            }
+        });
     }
 
     public LineupPanel getLineupPanel() {
@@ -417,7 +450,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
         // =========================================================================
         // add Top Level Menus
         menuBar.add(functionsMenu);
-        menuBar.add(new ToolManager().getToolMenu());
+        menuBar.add(new ToolManager(this).getToolMenu());
         menuBar.add(modulesMenu);
 
         menuBar.add(createHelpMenu());
@@ -442,7 +475,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
                     JMenuItem item = (JMenuItem) e.getSource();
                     IModule module = (IModule) item.getClientProperty("MODULE");
                     getTabbedPane().showTab(module.getModuleId());
-                    RefreshManager.instance().doRefresh();
+                    getRefreshManager().doRefresh();
                 });
 
                 functionsMenu.add(showTabMenuItem);

@@ -2,7 +2,7 @@ package core.constants.player;
 
 import core.HOModelBuilder;
 import core.model.HOModel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.Translator;
 import core.util.Helper;
@@ -15,7 +15,7 @@ class PlayerAbilityTest {
 
     @BeforeEach
     void setup() {
-        HOVerwaltung hoAdmin = HOVerwaltung.instance();
+        HOModelManager hoAdmin = HOModelManager.instance();
         HOModel hoModel = new HOModelBuilder()
                 .hrfId(42)
                 .build();
