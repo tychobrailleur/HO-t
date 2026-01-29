@@ -7,12 +7,18 @@ import core.model.player.Player;
  */
 public class PlayerSelectionEvent {
     private final Player player;
+    private final Object source;
 
-    public PlayerSelectionEvent(Player player) {
+    public PlayerSelectionEvent(Player player, Object source) {
         this.player = player;
+        this.source = source;
     }
 
     public Player getPlayer() {
         return player;
+    }
+
+    public Object getSource() {
+        return source;
     }
 }

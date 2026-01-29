@@ -5,6 +5,9 @@ import core.gui.comp.panel.ImagePanel;
 import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
+import core.HO;
+import core.context.events.PlayerSelectionEvent;
+
 import core.model.player.Player;
 
 import javax.swing.*;
@@ -29,16 +32,36 @@ public class PlayerOverviewPanel extends ImagePanel {
 	public PlayerOverviewPanel() {
 		initComponents();
 		addTableSelectionListeners();
+		if (HO.getApplicationContext() != null && HO.getApplicationContext().getEventBus() != null) {
+			HO.getApplicationContext().getEventBus().register(PlayerSelectionEvent.class, this::onPlayerSelected);
+		}
+		// Init with current selection
+		if (HOModelManager.instance().getModel().getSelectedPlayer() != null) {
+			setPlayer(HOModelManager.instance().getModel().getSelectedPlayer());
+		}
+	}
+
+	private void onPlayerSelected(PlayerSelectionEvent event) {
+		if (event.getPlayer() != null) {
+			setPlayer(event.getPlayer());
+		}
 	}
 
 	/**
 	 * Selects the player with the given id.
 	 * 
 	 * @param player
-	 *            the id of the player to select.
+	 *               the id of the player to select.
 	 */
 	public void setPlayer(Player player) {
-		playerOverviewTable.selectPlayer(player.getPlayerId());
+		if (!areSelecting) {
+			areSelecting = true;
+			try {
+				playerOverviewTable.selectPlayer(player.getPlayerId());
+			} finally {
+				areSelecting = false;
+			}
+		}
 		playerDetailsPanel.setPlayer(player);
 		spielerTrainingsSimulatorPanel.setSpieler(player);
 	}
@@ -71,7 +94,8 @@ public class PlayerOverviewPanel extends ImagePanel {
 	}
 
 	/**
-	 * Refreshes the table here and in the lineup panel when the groups / info has been changed
+	 * Refreshes the table here and in the lineup panel when the groups / info has
+	 * been changed
 	 */
 	public final void update() {
 		refresh();
@@ -163,8 +187,8 @@ public class PlayerOverviewPanel extends ImagePanel {
 		return overviewPanel;
 	}
 
-
 	private boolean areSelecting = false;
+
 	/**
 	 * Adds ListSelectionListener which keep the row selection of the table with
 	 * the players name and the table with the players details in sync.
@@ -177,7 +201,7 @@ public class PlayerOverviewPanel extends ImagePanel {
 						var player = playerOverviewTable.getSelectedPlayer();
 						if (player == null) {
 							player = HOMainFrame.instance().getSelectedPlayer();
-							if ( player != null) {
+							if (player != null) {
 								playerOverviewTable.selectPlayer(player.getPlayerId());
 							}
 						} else {
@@ -185,11 +209,10 @@ public class PlayerOverviewPanel extends ImagePanel {
 						}
 						areSelecting = false;
 					}
-				}
-		);
+				});
 	}
 
-    public void storeUserSettings() {
+	public void storeUserSettings() {
 		playerOverviewTable.getPlayerTableModel().storeUserSettings();
-    }
+	}
 }

@@ -1,6 +1,9 @@
 package core.gui;
 
 import core.HO;
+import core.context.ApplicationContext;
+import core.context.events.*;
+import core.gui.controller.HOMainFrameController;
 import core.db.DBManager;
 import core.file.hrf.HRFImport;
 import core.gui.comp.panel.ImagePanel;
@@ -54,26 +57,53 @@ public final class HOMainFrame extends JFrame implements Refreshable {
     private static HOMainFrame m_clHOMainFrame;
     private static boolean m_HOMainFrame_initialized = false;
     private InfoPanel m_jpInfoPanel;
-    private core.context.ApplicationContext context;
+    private HOMainFrameController controller;
+    private ApplicationContext context;
 
     public static final AtomicBoolean launching = new AtomicBoolean(false);
 
-    public void setApplicationContext(core.context.ApplicationContext context) {
+    public void setApplicationContext(ApplicationContext context) {
         this.context = context;
+        this.controller = new HOMainFrameController(context);
         // Re-apply title referencing the context now that it's available,
         // in case constructor ran with fallbacks.
         setFrameTitle();
 
         if (this.context.getEventBus() != null) {
-            this.context.getEventBus().register(core.context.events.PlayerSelectionEvent.class, this::onPlayerSelected);
+            this.context.getEventBus().register(PlayerSelectionEvent.class, this::onPlayerSelected);
         }
     }
 
-    public core.context.ApplicationContext getApplicationContext() {
+    // ...
+
+    public void selectPlayer(Player player) {
+        if (controller != null) {
+            controller.selectPlayer(player, this);
+        } else {
+            // Fallback for legacy / pre-init
+            getModelManager().getModel().setSelectedPlayer(player);
+            updatePlayerSelectionUI(player);
+        }
+    }
+
+    private void onPlayerSelected(PlayerSelectionEvent event) {
+        // UI updates are handled by plugins, HOMainFrame might update title or status
+        // bar if needed
+    }
+
+    // TODO: Move this to a model backing the main window
+    public Player getSelectedPlayer() {
+        if (controller != null) {
+            return controller.getSelectedPlayer();
+        }
+        return getModelManager().getModel().getSelectedPlayer();
+    }
+
+    public ApplicationContext getApplicationContext() {
         return context;
     }
 
-    private core.db.DBManager getDBManager() {
+    private DBManager getDBManager() {
         return context != null ? context.getDBManager() : DBManager.instance();
     }
 
@@ -81,12 +111,12 @@ public final class HOMainFrame extends JFrame implements Refreshable {
         return context != null ? context.getModelManager() : HOModelManager.instance();
     }
 
-    private core.gui.RefreshManager getRefreshManager() {
-        return context != null ? context.getRefreshManager() : core.gui.RefreshManager.instance();
+    private RefreshManager getRefreshManager() {
+        return context != null ? context.getRefreshManager() : RefreshManager.instance();
     }
 
-    private core.gui.theme.ThemeManager getThemeManager() {
-        return context != null ? context.getThemeManager() : core.gui.theme.ThemeManager.instance();
+    private ThemeManager getThemeManager() {
+        return context != null ? context.getThemeManager() : ThemeManager.instance();
     }
 
     // Components
@@ -101,11 +131,6 @@ public final class HOMainFrame extends JFrame implements Refreshable {
     // Menu color depending of version
     private final Color c_beta = new Color(162, 201, 255);
     private final Color c_dev = new Color(235, 170, 170);
-
-    // TODO: Move this to a model backing the main window
-    public Player getSelectedPlayer() {
-        return getModelManager().getModel().getSelectedPlayer();
-    }
 
     // ~ Constructors
     // -------------------------------------------------------------------------------
@@ -218,39 +243,9 @@ public final class HOMainFrame extends JFrame implements Refreshable {
         return m_HOMainFrame_initialized;
     }
 
-    public void selectPlayer(Player player) {
-        Player current = getSelectedPlayer();
-        if (current != player) {
-            getModelManager().getModel().setSelectedPlayer(player);
-            if (context != null) {
-                context.getEventBus().post(new core.context.events.PlayerSelectionEvent(player));
-            } else {
-                // Fallback for initialization phase if needed, though unlikely to be used
-                // before context is set
-                // effectively we can't fire events without context.
-                // We could manually call onPlayerSelected here if strictly needed, but let's
-                // rely on context.
-                // For now, let's just do the update manually if context is missing (legacy
-                // behavior fallback)
-                updatePlayerSelectionUI(player);
-            }
-        }
-    }
-
-    private void onPlayerSelected(core.context.events.PlayerSelectionEvent event) {
-        updatePlayerSelectionUI(event.getPlayer());
-    }
-
     private void updatePlayerSelectionUI(Player player) {
-        SwingUtilities.invokeLater(() -> {
-            var lineupPanel = getLineupPanel();
-            if (lineupPanel != null && player != null) {
-                lineupPanel.setPlayer(player.getPlayerId());
-            }
-            if (getSpielerUebersichtPanel() != null) {
-                getSpielerUebersichtPanel().setPlayer(player);
-            }
-        });
+        // UI updates are now handled by individual plugins subscribing to the EventBus.
+        // This method is kept empty or for future HOMainFrame specific updates.
     }
 
     public LineupPanel getLineupPanel() {
@@ -500,11 +495,8 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 
         final JMenuItem bugReportMenuItem = new JMenuItem(TranslationFacility.tr("ls.menu.help.reportabug"));
         bugReportMenuItem
-                .addActionListener(e -> openURL("https://github.com/ho-dev/HattrickOrganizer/issues/new/choose")); // Help
-        // |
-        // Report
-        // a
-        // bug
+                .addActionListener(e -> openURL("https://github.com/ho-dev/HattrickOrganizer/issues/new/choose"));
+
         helpMenu.add(bugReportMenuItem);
         helpMenu.addSeparator();
 

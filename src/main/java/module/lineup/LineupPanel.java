@@ -11,6 +11,11 @@ import module.lineup.lineup.LineupPositionsPanel;
 import module.lineup.lineup.MatchAndLineupSelectionPanel;
 import module.lineup.lineup.PlayerPositionPanel;
 import module.lineup.ratings.LineupRatingPanel;
+import core.gui.comp.panel.ImagePanel;
+import core.model.HOModelManager;
+import core.HO;
+import core.context.events.PlayerSelectionEvent;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -20,237 +25,254 @@ import java.util.Map;
 /**
  * Master panel of the Lineup module
  */
-public class LineupPanel extends core.gui.comp.panel.ImagePanel {
+public class LineupPanel extends ImagePanel {
 
-	public static final Color TITLE_FG = ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG);
-	private LineupPositionsPanel lineupPositionsPanel;
-	private LineupPlayersTable lineupPlayersTable;
-	private LineupRatingAssistantPanel lineupRatingAssistantPanel;
-	private JSplitPane horizontalSplitPane;
-	private JSplitPane verticalSplitPane;
-	private final List<Updatable> updatable = new ArrayList<>();
-	private boolean areSelecting = false;
+    public static final Color TITLE_FG = ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG);
+    private LineupPositionsPanel lineupPositionsPanel;
+    private LineupPlayersTable lineupPlayersTable;
+    private LineupRatingAssistantPanel lineupRatingAssistantPanel;
+    private JSplitPane horizontalSplitPane;
+    private JSplitPane verticalSplitPane;
+    private final List<Updatable> updatable = new ArrayList<>();
+    private boolean areSelecting = false;
 
-	public LineupPanel() {
-		initComponents();
-	}
+    public LineupPanel() {
+        initComponents();
+        if (HO.getApplicationContext() != null && HO.getApplicationContext().getEventBus() != null) {
+            HO.getApplicationContext().getEventBus().register(PlayerSelectionEvent.class, this::onPlayerSelected);
+        }
+        // Init with current selection
+        if (HOModelManager.instance().getModel().getSelectedPlayer() != null) {
+            setPlayer(HOModelManager.instance().getModel().getSelectedPlayer().getPlayerId());
+        }
+    }
 
-	public void storeUserSettings(){
-		this.lineupPlayersTable.getTableModel().storeUserSettings();
-	}
+    private void onPlayerSelected(PlayerSelectionEvent event) {
+        if (event.getPlayer() != null) {
+            setPlayer(event.getPlayer().getPlayerId());
+        }
+    }
 
-	public void setPlayer(int idPlayer) {
-		lineupPlayersTable.setPlayer(idPlayer);
-	}
+    public void storeUserSettings() {
+        this.lineupPlayersTable.getTableModel().storeUserSettings();
+    }
 
-	public void refresh() {
-		lineupPlayersTable.refresh();
-	}
+    public void setPlayer(int idPlayer) {
+        lineupPlayersTable.setPlayer(idPlayer);
+    }
 
-	private LineupAssistantPanel getLineupAssistantPanel() {return lineupRatingAssistantPanel.getLineupAssistantPanel(); }
+    public void refresh() {
+        lineupPlayersTable.refresh();
+    }
 
-	private LineupSettingsPanel getLineupSettingsPanel() {return lineupRatingAssistantPanel.getLineupSettingsPanel();}
+    private LineupAssistantPanel getLineupAssistantPanel() {
+        return lineupRatingAssistantPanel.getLineupAssistantPanel();
+    }
 
-	private LineupRatingPanel getLineupRatingPanel(){ return lineupRatingAssistantPanel.getLineupRatingPanel();}
+    private LineupSettingsPanel getLineupSettingsPanel() {
+        return lineupRatingAssistantPanel.getLineupSettingsPanel();
+    }
 
-	private MatchAndLineupSelectionPanel getMatchAndLineupSelectionPanel() {
-		return lineupRatingAssistantPanel.getMatchAndLineupSelectionPanel();
-	}
+    private LineupRatingPanel getLineupRatingPanel() {
+        return lineupRatingAssistantPanel.getLineupRatingPanel();
+    }
 
-	private LineupPositionsPanel getLineupPositionsPanel() {
-		if ( lineupPositionsPanel == null){
-			lineupPositionsPanel = new LineupPositionsPanel(
-					this,
-					getLineupRatingAssistantPanel().getLineupSettingsPanel().getWeather(), true,
-					getLineupRatingAssistantPanel().getLineupRatingPanel().getSelectedMatchMinute());
-		}
-		return lineupPositionsPanel;
-	}
+    private MatchAndLineupSelectionPanel getMatchAndLineupSelectionPanel() {
+        return lineupRatingAssistantPanel.getMatchAndLineupSelectionPanel();
+    }
 
+    private LineupPositionsPanel getLineupPositionsPanel() {
+        if (lineupPositionsPanel == null) {
+            lineupPositionsPanel = new LineupPositionsPanel(
+                    this,
+                    getLineupRatingAssistantPanel().getLineupSettingsPanel().getWeather(), true,
+                    getLineupRatingAssistantPanel().getLineupRatingPanel().getSelectedMatchMinute());
+        }
+        return lineupPositionsPanel;
+    }
 
-	/**
-	 * Get the divider location to restore user previous view organization
-	 */
-	public final int[] getDividerLocations() {
-		final int[] locations = new int[4];
+    /**
+     * Get the divider location to restore user previous view organization
+     */
+    public final int[] getDividerLocations() {
+        final int[] locations = new int[4];
 
-		locations[0] = verticalSplitPane.getDividerLocation();
-		locations[1] = horizontalSplitPane.getDividerLocation();
-		return locations;
-	}
+        locations[0] = verticalSplitPane.getDividerLocation();
+        locations[1] = horizontalSplitPane.getDividerLocation();
+        return locations;
+    }
 
-	public void saveColumnOrder() {
-		lineupPlayersTable.saveColumnOrder();
-	}
+    public void saveColumnOrder() {
+        lineupPlayersTable.saveColumnOrder();
+    }
 
-	/**
-	 * Refresh the players and tactics of each Lineup panels
-	 */
-	public final void update() {
-		lineupPositionsPanel.refresh();
-		lineupRatingAssistantPanel.refresh();
-		lineupPlayersTable.refresh();
-		// Refresh the table and details of the player overview
-		core.gui.HOMainFrame.instance().getSpielerUebersichtPanel().refresh();
+    /**
+     * Refresh the players and tactics of each Lineup panels
+     */
+    public final void update() {
+        lineupPositionsPanel.refresh();
+        lineupRatingAssistantPanel.refresh();
+        lineupPlayersTable.refresh();
+        // Refresh the table and details of the player overview
+        core.gui.HOMainFrame.instance().getSpielerUebersichtPanel().refresh();
 
-		fireUpdate();
-	}
+        fireUpdate();
+    }
 
-	public void addUpdateable(Updatable updatable) {
-		this.updatable.add(updatable);
-	}
+    public void addUpdateable(Updatable updatable) {
+        this.updatable.add(updatable);
+    }
 
-	private void fireUpdate() {
-		for (int i = this.updatable.size() - 1; i >= 0; i--) {
-			this.updatable.get(i).update();
-		}
-	}
+    private void fireUpdate() {
+        for (int i = this.updatable.size() - 1; i >= 0; i--) {
+            this.updatable.get(i).update();
+        }
+    }
 
-	private void initComponents() {
-		setLayout(new BorderLayout());
+    private void initComponents() {
+        setLayout(new BorderLayout());
 
-		var lineupRatingAssistantPanel = getLineupRatingAssistantPanel();
+        var lineupRatingAssistantPanel = getLineupRatingAssistantPanel();
 
-		verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
-		var lineupPositionsPanel = getLineupPositionsPanel();
-		verticalSplitPane.setTopComponent(new JScrollPane(lineupPositionsPanel));
-		verticalSplitPane.setBottomComponent(initSpielerTabelle());
+        verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
+        var lineupPositionsPanel = getLineupPositionsPanel();
+        verticalSplitPane.setTopComponent(new JScrollPane(lineupPositionsPanel));
+        verticalSplitPane.setBottomComponent(initSpielerTabelle());
 
-		horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false);
-		horizontalSplitPane.setLeftComponent(verticalSplitPane);
-		var lineupPositionJScrollPane = new JScrollPane();
-		lineupPositionJScrollPane.getViewport().add(lineupRatingAssistantPanel);
-		horizontalSplitPane.setRightComponent(lineupPositionJScrollPane);
+        horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false);
+        horizontalSplitPane.setLeftComponent(verticalSplitPane);
+        var lineupPositionJScrollPane = new JScrollPane();
+        lineupPositionJScrollPane.getViewport().add(lineupRatingAssistantPanel);
+        horizontalSplitPane.setRightComponent(lineupPositionJScrollPane);
 
-		UserParameter param = UserParameter.instance();
-		verticalSplitPane.setDividerLocation(param.lineupPanel_verticalSplitLocation);
-		horizontalSplitPane.setDividerLocation(param.lineupPanel_horizontalSplitLocation);
+        UserParameter param = UserParameter.instance();
+        verticalSplitPane.setDividerLocation(param.lineupPanel_verticalSplitLocation);
+        horizontalSplitPane.setDividerLocation(param.lineupPanel_horizontalSplitLocation);
 
-		add(horizontalSplitPane, BorderLayout.CENTER);
-	}
+        add(horizontalSplitPane, BorderLayout.CENTER);
+    }
 
-	private LineupRatingAssistantPanel getLineupRatingAssistantPanel() {
-		if ( this.lineupRatingAssistantPanel == null){
-			this.lineupRatingAssistantPanel = new LineupRatingAssistantPanel(this);
-		}
-		return this.lineupRatingAssistantPanel;
-	}
+    private LineupRatingAssistantPanel getLineupRatingAssistantPanel() {
+        if (this.lineupRatingAssistantPanel == null) {
+            this.lineupRatingAssistantPanel = new LineupRatingAssistantPanel(this);
+        }
+        return this.lineupRatingAssistantPanel;
+    }
 
-	private Component initSpielerTabelle() {
-		lineupPlayersTable = new LineupPlayersTable();
-		lineupPlayersTable.getSelectionModel().addListSelectionListener(
-				e -> {
-					if (!areSelecting) {
-						areSelecting = true;
-						var player = lineupPlayersTable.getPlayer(e.getFirstIndex());
-						if (player == null) {
-							player = HOMainFrame.instance().getSelectedPlayer();
-							if (player != null) {
-								lineupPlayersTable.setPlayer(player.getPlayerId());
-							}
-						} else {
-							HOMainFrame.instance().selectPlayer(player);
-						}
-						areSelecting = false;
-					}
-				}
-		);
-		return lineupPlayersTable.getContainerComponent();
-	}
+    private Component initSpielerTabelle() {
+        lineupPlayersTable = new LineupPlayersTable();
+        lineupPlayersTable.getSelectionModel().addListSelectionListener(
+                e -> {
+                    if (!areSelecting) {
+                        areSelecting = true;
+                        var player = lineupPlayersTable.getPlayer(e.getFirstIndex());
+                        if (player == null) {
+                            player = HOMainFrame.instance().getSelectedPlayer();
+                            if (player != null) {
+                                lineupPlayersTable.setPlayer(player.getPlayerId());
+                            }
+                        } else {
+                            HOMainFrame.instance().selectPlayer(player);
+                        }
+                        areSelecting = false;
+                    }
+                });
+        return lineupPlayersTable.getContainerComponent();
+    }
 
-	public Weather getWeather() {
-		return getLineupSettingsPanel().getWeather();
-	}
+    public Weather getWeather() {
+        return getLineupSettingsPanel().getWeather();
+    }
 
-	public boolean isAssistantGroupFilter() {
-		return this.getLineupAssistantPanel().isGroupFilter();
-	}
+    public boolean isAssistantGroupFilter() {
+        return this.getLineupAssistantPanel().isGroupFilter();
+    }
 
-	public String getAssistantGroup() {
-		return this.getLineupAssistantPanel().getGroup();
-	}
+    public String getAssistantGroup() {
+        return this.getLineupAssistantPanel().getGroup();
+    }
 
-	public boolean isAssistantSelectedGroupExcluded() {
-		return this.getLineupAssistantPanel().isSelectedGroupExcluded();
-	}
+    public boolean isAssistantSelectedGroupExcluded() {
+        return this.getLineupAssistantPanel().isSelectedGroupExcluded();
+    }
 
-	public boolean isAssistantExcludeLastMatch() {
-		return this.getLineupAssistantPanel().isExcludeLastMatch();
-	}
+    public boolean isAssistantExcludeLastMatch() {
+        return this.getLineupAssistantPanel().isExcludeLastMatch();
+    }
 
-	public void addToAssistant(PlayerPositionPanel positionPanel) {
-		this.getLineupAssistantPanel().addToAssistant(positionPanel);
-	}
+    public void addToAssistant(PlayerPositionPanel positionPanel) {
+        this.getLineupAssistantPanel().addToAssistant(positionPanel);
+    }
 
-	public void refreshLineupRatingPanel() {
-		this.getLineupRatingPanel().refresh();
-	}
+    public void refreshLineupRatingPanel() {
+        this.getLineupRatingPanel().refresh();
+    }
 
-	public void setAssistantGroupFilter(boolean b) {
-		this.getLineupAssistantPanel().setGroupFilter(b);
-	}
+    public void setAssistantGroupFilter(boolean b) {
+        this.getLineupAssistantPanel().setGroupFilter(b);
+    }
 
-	public void updateStyleOfPlayComboBox() {
-		this.getMatchAndLineupSelectionPanel().refresh();
-	}
+    public void updateStyleOfPlayComboBox() {
+        this.getMatchAndLineupSelectionPanel().refresh();
+    }
 
-	public void refreshLineupPositionsPanel() {
-		this.getLineupPositionsPanel().refresh();
-	}
+    public void refreshLineupPositionsPanel() {
+        this.getLineupPositionsPanel().refresh();
+    }
 
-	public void addPositionComponent(Component component, Object constraints, int i) {
-		this.getLineupPositionsPanel().getCenterPanel().add(component, constraints, i);
-	}
+    public void addPositionComponent(Component component, Object constraints, int i) {
+        this.getLineupPositionsPanel().getCenterPanel().add(component, constraints, i);
+    }
 
-	public void revalidatePositionComponents() {
-		this.getLineupPositionsPanel().getCenterPanel().revalidate();
-	}
+    public void revalidatePositionComponents() {
+        this.getLineupPositionsPanel().getCenterPanel().revalidate();
+    }
 
-	public void removePositionComponent(Component component) {
-		this.getLineupPositionsPanel().getCenterPanel().remove(component);
-	}
+    public void removePositionComponent(Component component) {
+        this.getLineupPositionsPanel().getCenterPanel().remove(component);
+    }
 
-	public int getAssistantOrder() {
-		return this.getLineupAssistantPanel().getOrder();
-	}
+    public int getAssistantOrder() {
+        return this.getLineupAssistantPanel().getOrder();
+    }
 
-	public boolean isAssistantBestPositionFirst() {
-		return this.getLineupAssistantPanel().isIdealPositionZuerst();
-	}
+    public boolean isAssistantBestPositionFirst() {
+        return this.getLineupAssistantPanel().isIdealPositionZuerst();
+    }
 
-	public boolean isAssistantConsiderForm() {
-		return this.getLineupAssistantPanel().isConsiderForm();
-	}
+    public boolean isAssistantConsiderForm() {
+        return this.getLineupAssistantPanel().isConsiderForm();
+    }
 
-	public boolean isUseAverageRating() {
-		return  this.getLineupAssistantPanel().isUseAverageRating();
-	}
+    public boolean isUseAverageRating() {
+        return this.getLineupAssistantPanel().isUseAverageRating();
+    }
 
-	public boolean isAssistantIgnoreInjured() {
-		return this.getLineupAssistantPanel().isIgnoreInjured();
-	}
+    public boolean isAssistantIgnoreInjured() {
+        return this.getLineupAssistantPanel().isIgnoreInjured();
+    }
 
-	public boolean isAssistantIgnoreSuspended() {
-		return this.getLineupAssistantPanel().isIgnoreSuspended();
-	}
+    public boolean isAssistantIgnoreSuspended() {
+        return this.getLineupAssistantPanel().isIgnoreSuspended();
+    }
 
-	public Map<Integer, Boolean> getAssistantPositionsStatus() {
-		return this.getLineupAssistantPanel().getPositionsStatus();
-	}
+    public Map<Integer, Boolean> getAssistantPositionsStatus() {
+        return this.getLineupAssistantPanel().getPositionsStatus();
+    }
 
-	public void backupRealGameSettings() {
-		this.getLineupSettingsPanel().backupRealGameSettings();
-	}
+    public void backupRealGameSettings() {
+        this.getLineupSettingsPanel().backupRealGameSettings();
+    }
 
-	public void setLineupSettingsLabels() {
-		this.getLineupSettingsPanel().setLabels();
-	}
+    public void setLineupSettingsLabels() {
+        this.getLineupSettingsPanel().setLabels();
+    }
 
-	public ArrayList<PlayerPositionPanel> getAllPositions() {
-		return this.getLineupPositionsPanel().getAllPositions();
-	}
+    public ArrayList<PlayerPositionPanel> getAllPositions() {
+        return this.getLineupPositionsPanel().getAllPositions();
+    }
 
-	public int getSelectedMatchMinute() {
-		return this.lineupRatingAssistantPanel.getLineupRatingPanel().getSelectedMatchMinute();
-	}
+    public int getSelectedMatchMinute() {
+        return this.lineupRatingAssistantPanel.getLineupRatingPanel().getSelectedMatchMinute();
+    }
 }
