@@ -10,7 +10,7 @@ import core.gui.model.PlayerCBItem;
 import core.gui.model.PlayerCBItemRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.UserParameter;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
@@ -96,7 +96,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 	}
 
 	private void fillSpielerCB() {
-		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
+		List<Player> players = HOModelManager.instance().getModel().getCurrentPlayers();
 		List<PlayerCBItem> playerCBItems = new ArrayList<>(players.size());
 
 		for (Player player : players) {
@@ -105,7 +105,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 		Collections.sort(playerCBItems);
 
 		// Alte Player
-		List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers();
+		List<Player> oldPlayers = HOModelManager.instance().getModel().getFormerPlayers();
 		List<PlayerCBItem> spielerOldCBItems = new ArrayList<>(oldPlayers.size());
 
 		for (Player player : oldPlayers) {

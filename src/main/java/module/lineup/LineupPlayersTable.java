@@ -9,7 +9,7 @@ import core.gui.comp.table.FixedColumnsTable;
 import core.gui.model.PlayerOverviewTableModel;
 import core.gui.model.UserColumnController;
 import core.gui.model.UserColumnFactory;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.match.MatchKurzInfo;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
@@ -29,7 +29,7 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 	LineupPlayersTable() {
 		super(UserColumnController.instance().getLineupModel());
 		tableModel = (PlayerOverviewTableModel) this.getModel();
-		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
+		tableModel.setValues(HOModelManager.instance().getModel().getCurrentPlayers());
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		setDefaultRenderer(Boolean.class, new BooleanTableCellRenderer());
 		RefreshManager.instance().registerRefreshable(this);
@@ -70,7 +70,7 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 	}
 
 	private void resetPlayers() {
-		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
+		tableModel.setValues(HOModelManager.instance().getModel().getCurrentPlayers());
 	}
 
 	private void initListeners() {

@@ -1,7 +1,7 @@
 package module.lineup.substitution;
 
 import core.datatype.CBItem;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.player.IMatchRoleID;
 import core.util.Helper;
@@ -138,12 +138,12 @@ public class SubstitutionEditView extends JPanel {
 	}
 
 	private Double hatstats() {
-		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+		var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
 		return ratingPredictionModel.getAverage90HatStats(lineup);
 		//return Double.valueOf(lineup.getRatings().getHatStats().get(-90d));	// 90 minutes average
 	}
 	private Double loddarstats() {
-		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+		var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
 		return ratingPredictionModel.getAverage90LoddarStats(lineup);
 //		return lineup.getRatings().getLoddarStat().get(-90d);	// 90 minutes average
 	}

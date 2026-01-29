@@ -192,7 +192,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 			name.setText(displayName);
 
 			int trickotnummer = 0;
-			final Player player = core.model.HOVerwaltung.instance().getModel().getCurrentPlayer(matchLineupPosition.getPlayerId());
+			final Player player = core.model.HOModelManager.instance().getModel().getCurrentPlayer(matchLineupPosition.getPlayerId());
 
 			if (player != null) {
 				trickotnummer = player.getShirtNumber();

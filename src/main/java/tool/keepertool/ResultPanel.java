@@ -3,7 +3,7 @@ package tool.keepertool;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.player.Player;
 
@@ -99,7 +99,7 @@ class ResultPanel extends JPanel {
         panel.add(set, BorderLayout.SOUTH);
 
         set.addActionListener(arg0 -> {
-            final Player sp = HOVerwaltung.instance().getModel().getCurrentPlayer(id);
+            final Player sp = HOModelManager.instance().getModel().getCurrentPlayer(id);
             if (sp != null) {
                 double decimals = average - sp.getGoalkeeperSkill()
                         - sp.getSub4Skill(PlayerSkill.KEEPER);
@@ -111,7 +111,7 @@ class ResultPanel extends JPanel {
                 }
 
                 sp.setSubskill4PlayerSkill(PlayerSkill.KEEPER, (float) decimals);
-                DBManager.instance().saveSpieler(HOVerwaltung.instance().getModel().getCurrentPlayers());
+                DBManager.instance().saveSpieler(HOModelManager.instance().getModel().getCurrentPlayers());
             }
             core.gui.RefreshManager.instance().doReInit();
             parent.setVisible(false);

@@ -4,7 +4,7 @@ import core.gui.comp.panel.LazyImagePanel;
 import core.gui.model.BaseTableModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.MatchRoleID;
@@ -51,12 +51,12 @@ public class TrainingRecapTable extends JScrollPane {
         columns.add("Speed");
         columns.add(TranslationFacility.tr("ls.player.id"));
 
-        var actualWeek = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek(); // .getSpieltag();
+        var actualWeek = HOModelManager.instance().getModel().getBasics().getHattrickWeek(); // .getSpieltag();
 
         // We are in the middle where season has not been updated!
         try {
-            if (HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate()
-                    .isAfter(HOVerwaltung.instance().getModel().getXtraDaten().getSeriesMatchDate())) {
+            if (HOModelManager.instance().getModel().getXtraDaten().getNextTrainingDate()
+                    .isAfter(HOModelManager.instance().getModel().getXtraDaten().getSeriesMatchDate())) {
                 actualWeek = actualWeek.plus(7, ChronoUnit.DAYS);
             }
         } catch (Exception e1) {
@@ -102,7 +102,7 @@ public class TrainingRecapTable extends JScrollPane {
     private List<Vector<String>> createRows() {
         Vector<String> columns = getColumns();
         List<Vector<String>> rows = new ArrayList<>();
-        List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
+        List<Player> players = HOModelManager.instance().getModel().getCurrentPlayers();
 
         for (Player player : players) {
             FutureTrainingManager ftm = new FutureTrainingManager(player,
@@ -167,7 +167,7 @@ public class TrainingRecapTable extends JScrollPane {
             if (column == 0) {
                 String tooltip;
                 int playerId = Integer.parseInt((String) table.getValueAt(row, table.getColumnCount() - 1));
-                Player player = HOVerwaltung.instance().getModel().getCurrentPlayer(playerId);
+                Player player = HOModelManager.instance().getModel().getCurrentPlayer(playerId);
 
                 if (player != null) {
                     this.setOpaque(true);

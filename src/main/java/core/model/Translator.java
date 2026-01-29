@@ -35,7 +35,7 @@ public class Translator {
         String[] files = null;
 
         try {
-            InputStream is = HOVerwaltung.class.getClassLoader().getResourceAsStream(LANGUAGE_RESOURCE_PATH + PATH_SEPARATOR + LANGUAGE_SUPPORTED_LANGUAGES_FILENAME);
+            InputStream is = HOModelManager.class.getClassLoader().getResourceAsStream(LANGUAGE_RESOURCE_PATH + PATH_SEPARATOR + LANGUAGE_SUPPORTED_LANGUAGES_FILENAME);
             assert is != null;
             Scanner s = new Scanner(is);
             ArrayList<String> list = new ArrayList<>();
@@ -47,7 +47,7 @@ public class Translator {
             files = list.toArray(new String[0]);
 
         } catch (Exception e) {
-            HOLogger.instance().log(HOVerwaltung.class, e);
+            HOLogger.instance().log(HOModelManager.class, e);
         }
 
         return files;

@@ -8,7 +8,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.enums.MatchType;
 import core.model.match.MatchKurzInfo;
@@ -185,7 +185,7 @@ public class HrfExplorer extends ImagePanel
 	@SuppressWarnings("unchecked")
 	private void initialize() {
 
-		HOVerwaltung hoV = HOVerwaltung.instance();
+		HOModelManager hoV = HOModelManager.instance();
 
 		// Aktuelles Datum ermitteln und in die Members schreiben
 		m_gc = new GregorianCalendar();

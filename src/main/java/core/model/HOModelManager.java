@@ -15,21 +15,20 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class HOVerwaltung {
-
+public class HOModelManager {
 
 	/** singleton */
-	protected static HOVerwaltung m_clInstance;
+	protected static HOModelManager m_clInstance;
 
 	/** das Model */
 	protected HOModel m_clHoModel;
 
-    public static boolean isNewModel(HOModel homodel) {
+	public static boolean isNewModel(HOModel homodel) {
 		return (homodel != null && ((instance().getModel() == null) ||
 				(homodel.getBasics().getDatum().isAfter(instance().getModel().getBasics().getDatum()))));
 	}
 
-    public int getId() {
+	public int getId() {
 		return id;
 	}
 
@@ -38,9 +37,9 @@ public class HOVerwaltung {
 	private final PropertyChangeSupport support;
 
 	/**
-	 * Creates a new HOVerwaltung object.
+	 * Creates a new HOModelManager object.
 	 */
-	private HOVerwaltung() {
+	private HOModelManager() {
 		support = new PropertyChangeSupport(this);
 	}
 
@@ -50,24 +49,25 @@ public class HOVerwaltung {
 		support.addPropertyChangeListener(pcl);
 	}
 
-
 	/**
 	 * Set the HOModel.
 	 */
 	public void setModel(HOModel model) {
 		HOModel oldModel = m_clHoModel;
-		if ( oldModel != null && model != null) {
+		if (oldModel != null && model != null) {
 			for (var player : model.getCurrentPlayers()) {
 				if (oldModel.getCurrentPlayers().stream().noneMatch(i -> i.getPlayerId() == player.getPlayerId())) {
 					// Check if new player was youth player in old model
 					// Todo: Check if player id can be used instead of name filtering
-					var youthPlayer = oldModel.getCurrentYouthPlayers().stream().filter(i -> i.getFullName().equals(player.getFullName())).findFirst();
+					var youthPlayer = oldModel.getCurrentYouthPlayers().stream()
+							.filter(i -> i.getFullName().equals(player.getFullName())).findFirst();
 					if (youthPlayer.isPresent()) {
 						for (var skill : youthPlayer.get().getCurrentSkills().values()) {
 							var currentLevel = player.getValue4Skill(skill.getSkillID());
 							if (currentLevel == (int) skill.getCurrentValue()) {
 								// Estimate in youth academy matches the current skill level
-								player.setSubskill4PlayerSkill(skill.getSkillID(), skill.getCurrentValue() - currentLevel);
+								player.setSubskill4PlayerSkill(skill.getSkillID(),
+										skill.getCurrentValue() - currentLevel);
 							}
 						}
 					}
@@ -83,21 +83,22 @@ public class HOVerwaltung {
 	}
 
 	/**
-	 * Get the HOVerwaltung singleton instance.
+	 * Get the HOModelManager singleton instance.
 	 */
-	public static HOVerwaltung instance() {
+	public static HOModelManager instance() {
 		if (m_clInstance == null) {
-			m_clInstance = new HOVerwaltung();
+			m_clInstance = new HOModelManager();
 
 			// TODO This seems to have side effects other than loading
-			//   parameters from DB, this probably should be wrapped properly.
+			// parameters from DB, this probably should be wrapped properly.
 			DBManager.instance().getFaktorenFromDB();
 		}
 		return m_clInstance;
 	}
 
 	/**
-	 * @deprecated Provided for compatibility. Please use {@link #setTranslator(String)} instead.
+	 * @deprecated Provided for compatibility. Please use
+	 *             {@link #setTranslator(String)} instead.
 	 */
 	@Deprecated(since = "9.0", forRemoval = true)
 	public void setResource(String pfad) {
@@ -105,7 +106,8 @@ public class HOVerwaltung {
 	}
 
 	/**
-	 * @deprecated Provided for compatibility. Please use {@link TranslationFacility#setLanguage(String)} instead.
+	 * @deprecated Provided for compatibility. Please use
+	 *             {@link TranslationFacility#setLanguage(String)} instead.
 	 */
 	@Deprecated(since = "9.0", forRemoval = true)
 	public void setTranslator(String language) {
@@ -129,7 +131,7 @@ public class HOVerwaltung {
 	 */
 	public void loadLatestHoModel() {
 		var latestHRF = DBManager.instance().getLatestHRF();
-		if ( latestHRF != null && latestHRF.getHrfId() > -1){
+		if (latestHRF != null && latestHRF.getHrfId() > -1) {
 			this.id = latestHRF.getHrfId();
 		}
 		setModel(loadModel(this.id));
@@ -147,7 +149,7 @@ public class HOVerwaltung {
 		}
 
 		// Make sure the training week list is up to date.
-		//TrainingManager.instance().refreshTrainingWeeks();
+		// TrainingManager.instance().refreshTrainingWeeks();
 		HOMainFrame.instance().resetInformation();
 
 		var hrfListe = DBManager.instance().getHRFsSince(hrfDate);
@@ -165,17 +167,18 @@ public class HOVerwaltung {
 				if (previousHRFId != -1) {
 					trainingDateOfPreviousHRF = DBManager.instance().getXtraDaten(previousHRFId).getNextTrainingDate();
 				} else {
-					trainingDateOfPreviousHRF = HOVerwaltung.instance().getModel().getBasics().getActivationDate();
+					trainingDateOfPreviousHRF = HOModelManager.instance().getModel().getBasics().getActivationDate();
 				}
 				var trainingDateHRF = DBManager.instance().getXtraDaten(hrf.getHrfId()).getNextTrainingDate();
 
 				lSum += (System.currentTimeMillis() - s1);
 				s2 = System.currentTimeMillis();
-				model.calcSubskills(trainingDateOfPreviousHRF.minus(1, ChronoUnit.HOURS), trainingDateHRF.minus(1, ChronoUnit.HOURS));
+				model.calcSubskills(trainingDateOfPreviousHRF.minus(1, ChronoUnit.HOURS),
+						trainingDateHRF.minus(1, ChronoUnit.HOURS));
 				previousHRF = hrf;
 				mSum += (System.currentTimeMillis() - s2);
 			} catch (Exception e) {
-				HOLogger.instance().log(getClass(), "recalcSubskills : "+ e);
+				HOLogger.instance().log(getClass(), "recalcSubskills : " + e);
 			}
 		}
 
@@ -211,12 +214,12 @@ public class HOVerwaltung {
 		return new HOModel(id);
 	}
 
-
 	/**
 	 * Returns the String connected to the active language file or connected to
 	 * the english language file. Returns !key! if the key can not be found.
 	 *
-	 * @deprecated Provided for compatibility. Please use {@link TranslationFacility#tr(String)} instead.
+	 * @deprecated Provided for compatibility. Please use
+	 *             {@link TranslationFacility#tr(String)} instead.
 	 *
 	 * @param key
 	 *            Key to be searched in language files
@@ -232,12 +235,13 @@ public class HOVerwaltung {
 	/**
 	 * Gets a parameterized message for the current language.
 	 *
-	 * @deprecated Provided for compatibility. Please use {@link TranslationFacility#tr(String, Object...)} instead.
+	 * @deprecated Provided for compatibility. Please use
+	 *             {@link TranslationFacility#tr(String, Object...)} instead.
 	 *
 	 * @param key
-	 *            the key for the message in the language file.
+	 *               the key for the message in the language file.
 	 * @param values
-	 *            the values for the message
+	 *               the values for the message
 	 * @return the message for the specified key where the placeholders are
 	 *         replaced by the given value(s).
 	 */
@@ -252,15 +256,15 @@ public class HOVerwaltung {
 	public static void checkLanguageFile(String languageFilename) {
 		try {
 			if (Translator.isAvailable(languageFilename)) {
-				HOLogger.instance().info(HOVerwaltung.class, "language used for interface is: " + languageFilename);
-			}
-			else{
-				HOLogger.instance().error(HOVerwaltung.class, "language set for interface (" + languageFilename + ") can't be loaded ... reverting to " + Translator.LANGUAGE_DEFAULT + " !");
+				HOLogger.instance().info(HOModelManager.class, "language used for interface is: " + languageFilename);
+			} else {
+				HOLogger.instance().error(HOModelManager.class, "language set for interface (" + languageFilename
+						+ ") can't be loaded ... reverting to " + Translator.LANGUAGE_DEFAULT + " !");
 				UserParameter.instance().sprachDatei = Translator.LANGUAGE_DEFAULT;
 			}
-		}
-		catch (Exception e) {
-			HOLogger.instance().error(HOVerwaltung.class, "language set for interface (" + languageFilename + ") can't be loaded ... reverting to " + Translator.LANGUAGE_DEFAULT + " !" + "   " + e);
+		} catch (Exception e) {
+			HOLogger.instance().error(HOModelManager.class, "language set for interface (" + languageFilename
+					+ ") can't be loaded ... reverting to " + Translator.LANGUAGE_DEFAULT + " !" + "   " + e);
 			UserParameter.instance().sprachDatei = Translator.LANGUAGE_DEFAULT;
 		}
 	}
@@ -269,7 +273,7 @@ public class HOVerwaltung {
 	 * @deprecated Provided for compatibility. Will be removed without substitution!
 	 */
 	@Deprecated(since = "9.0", forRemoval = true)
-    public void clearLanguageBundle() {
+	public void clearLanguageBundle() {
 		clearTranslator();
 	}
 

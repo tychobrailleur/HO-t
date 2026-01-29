@@ -2,7 +2,7 @@ package module.training;
 
 import core.db.DBManager;
 import core.db.ConnectionManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.player.Player;
 import core.model.player.SkillChange;
 import core.util.HODateTime;
@@ -60,9 +60,9 @@ public class EffectDAO {
 
             // Loop through all player (also old players) to get all trained skillups.
             // Group these skillups by season and week.
-            List<Player> players = new Vector<>(HOVerwaltung.instance().getModel().getCurrentPlayers());
+            List<Player> players = new Vector<>(HOModelManager.instance().getModel().getCurrentPlayers());
 
-            players.addAll(HOVerwaltung.instance().getModel().getFormerPlayers());
+            players.addAll(HOModelManager.instance().getModel().getFormerPlayers());
 
             for (Player player : players) {
                 PastTrainingManager otm = new PastTrainingManager(player);

@@ -1,6 +1,6 @@
 package core.db;
 
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.match.*;
 import core.util.HOLogger;
@@ -94,7 +94,7 @@ class MatchesOverviewQuery {
 	public static MatchesHighlightsStat[] getGoalsByActionType(boolean ownTeam, int iMatchType,
 			MatchLocation matchLocation) {
 
-		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		int teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
 
 		MatchesHighlightsStat[] rows = new MatchesHighlightsStat[9];
 		rows[0] = new MatchesHighlightsStat("highlight_penalty", MatchEvent.penaltyME);
@@ -242,7 +242,7 @@ class MatchesOverviewQuery {
 			return;
 		}
 
-		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		int teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
 		StringBuilder whereClause = new StringBuilder(100);
 		whereClause.append(getMatchLocationWhereClause(matchLocation, teamId, home));
 		whereClause.append(MatchesKurzInfoTable.getMatchTypWhereClause(matchtype));

@@ -9,7 +9,7 @@ import core.gui.Refreshable;
 import core.gui.comp.table.FixedColumnsTable;
 import core.gui.model.PlayerOverviewTableModel;
 import core.gui.model.UserColumnController;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.player.Player;
 import core.net.HattrickLink;
@@ -48,7 +48,7 @@ public class PlayerOverviewTable extends FixedColumnsTable implements Refreshabl
         super(UserColumnController.instance().getPlayerOverviewModel());
         this.playerTableModel = (PlayerOverviewTableModel) getModel();
 
-        playerTableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
+        playerTableModel.setValues(HOModelManager.instance().getModel().getCurrentPlayers());
         setOpaque(false);
         RefreshManager.instance().registerRefreshable(this);
 
@@ -124,7 +124,7 @@ public class PlayerOverviewTable extends FixedColumnsTable implements Refreshabl
     }
 
     private void resetPlayers() {
-        playerTableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
+        playerTableModel.setValues(HOModelManager.instance().getModel().getCurrentPlayers());
     }
 
     public PlayerOverviewTableModel getPlayerTableModel() {

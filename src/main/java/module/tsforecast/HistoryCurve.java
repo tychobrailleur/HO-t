@@ -1,7 +1,7 @@
 package module.tsforecast;
 
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.enums.MatchType;
 import core.model.misc.Basics;
 import core.model.series.Liga;
@@ -51,7 +51,7 @@ public class HistoryCurve extends Curve {
 	private static final String readSpiritHistorySql  = "select DATUM, ISTIMMUNG, TRAININGSINTENSITAET from HRF, TEAM where HRF.HRF_ID = TEAM.HRF_ID and DATUM <= ? and DATUM > ? order by DATUM";
 
 	private void readSpiritHistory() throws SQLException {
-		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
+		Basics ibasics = HOModelManager.instance().getModel().getBasics();
 		var start = ibasics.getDatum().minus(WEEKS_BACK * 7, ChronoUnit.DAYS).toDbTimestamp();
 		try (ResultSet rs = dbManager.getConnectionManager().executePreparedQuery(readSpiritHistorySql, ibasics.getDatum().toDbTimestamp(), start)) {
 			if (rs != null) {
@@ -68,8 +68,8 @@ public class HistoryCurve extends Curve {
 	}
 
 	private void readPastMatches() {
-		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
-		Liga iliga = HOVerwaltung.instance().getModel().getLeague();
+		Basics ibasics = HOModelManager.instance().getModel().getBasics();
+		Liga iliga = HOModelManager.instance().getModel().getLeague();
 
 		Curve.Point pLastLeagueMatch = null;
 		var start = ibasics.getDatum().minus(WEEKS_BACK*7, ChronoUnit.DAYS);

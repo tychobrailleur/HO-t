@@ -222,7 +222,7 @@ public class HOModel {
      */
     public final  MatchLineupTeam getCurrentLineupTeam() {
         if (aufstellung == null) {
-            aufstellung = getPersistenceManager().loadNextMatchLineup(HOVerwaltung.instance().getModel().getBasics().getTeamId());
+            aufstellung = getPersistenceManager().loadNextMatchLineup(HOModelManager.instance().getModel().getBasics().getTeamId());
             if (aufstellung != null) {
                 calcStyleOfPlay();
             }
@@ -316,7 +316,7 @@ public class HOModel {
      */
     public final MatchLineupTeam getPreviousLineup() {
         if (lastAufstellung == null) {
-            lastAufstellung = getPersistenceManager().loadPreviousMatchLineup(HOVerwaltung.instance().getModel().getClub().getTeamID());
+            lastAufstellung = getPersistenceManager().loadPreviousMatchLineup(HOModelManager.instance().getModel().getClub().getTeamID());
         }
         return lastAufstellung;
     }

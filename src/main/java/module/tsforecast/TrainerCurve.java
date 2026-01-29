@@ -2,7 +2,7 @@ package module.tsforecast;
 
 import core.db.ConnectionManager;
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.util.HODateTime;
 import core.util.HOLogger;
 
@@ -40,7 +40,7 @@ public class TrainerCurve extends Curve {
 	private static final String readTrainerBeforeStartSql = "select SPIELERID, FUEHRUNG, DATUM from SPIELER where TRAINERTYP <> -1 and DATUM <= ? order by DATUM desc";
 	private static final String readTrainerSql = "select SPIELERID, FUEHRUNG, DATUM from SPIELER where TRAINERTYP <> -1 and DATUM > ? and DATUM <= ? order by DATUM";
 	private void readTrainer() {
-		var start = HOVerwaltung.instance().getModel().getBasics().getDatum().minus(WEEKS_BACK*7, ChronoUnit.DAYS);
+		var start = HOModelManager.instance().getModel().getBasics().getDatum().minus(WEEKS_BACK*7, ChronoUnit.DAYS);
 
 		int iLeadership;
 		int iLastLeadership = -1;
@@ -60,7 +60,7 @@ public class TrainerCurve extends Curve {
 				gotInitial = true;
 			}
 
-			try (ResultSet rs = connectionManager.executePreparedQuery(readTrainerSql, start.toDbTimestamp(), HOVerwaltung.instance().getModel().getBasics().getDatum().toDbTimestamp())) {
+			try (ResultSet rs = connectionManager.executePreparedQuery(readTrainerSql, start.toDbTimestamp(), HOModelManager.instance().getModel().getBasics().getDatum().toDbTimestamp())) {
 				while (true) {
 					assert rs != null;
 					if (!rs.next()) break;

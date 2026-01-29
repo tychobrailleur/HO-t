@@ -7,7 +7,7 @@ import core.gui.theme.GroupTeamFactory;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.player.Player;
 
@@ -157,7 +157,7 @@ public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
      * Clear current group assignment.
      */
     private void groupsClear() {
-        final List<Player> allePlayer = HOVerwaltung.instance().getModel().getCurrentPlayers();
+        final List<Player> allePlayer = HOModelManager.instance().getModel().getCurrentPlayers();
         boolean update = false;
 
         for (Player player : allePlayer) {
@@ -176,7 +176,7 @@ public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
     private void gruppenMarkierung() {
         // Button selected in both groups
         if ((getSelectedButton(true) != null) && (getSelectedButton(false) != null)) {
-            final List<Player> allePlayer = HOVerwaltung.instance().getModel().getCurrentPlayers();
+            final List<Player> allePlayer = HOModelManager.instance().getModel().getCurrentPlayers();
             final String suchName = getName4Button(getSelectedButton(true));
             final String ersatzName = getName4Button(getSelectedButton(false));
 

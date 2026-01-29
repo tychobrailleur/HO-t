@@ -1,7 +1,7 @@
 package core.specialevents;
 
 import core.model.HOModel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -204,7 +204,7 @@ public class SpecialEventsPredictionManager {
     public void setLineup(Lineup m_cLineup) {
         this.lineup = m_cLineup;
         if ( this.lineup == null) return;
-        HOModel model = HOVerwaltung.instance().getModel();
+        HOModel model = HOModelManager.instance().getModel();
         for (MatchRoleID matchRoleID : this.lineup.getFieldPositions()) {
             if (matchRoleID.getPlayerId() == 0) continue;
             if (!this.playerInLineup.containsKey(matchRoleID.getPlayerId())) {

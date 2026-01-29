@@ -2,7 +2,7 @@ package tool.dbcleanup;
 
 import core.db.DBManager;
 import core.gui.RefreshManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.match.MatchKurzInfo;
 import core.file.hrf.HRF;
 import core.util.HODateTime;
@@ -124,7 +124,7 @@ public class DBCleanupTool {
         // signature.
         // Assuming getMatchesKurzInfo returns ListOrArray.
         List<MatchKurzInfo> kurzInfos = DBManager.instance().getMatchesKurzInfo(-1);
-        int myTeamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+        int myTeamId = HOModelManager.instance().getModel().getBasics().getTeamId();
 
         for (MatchKurzInfo curKurzInfo : kurzInfos) {
             int curMatchId = curKurzInfo.getMatchID();

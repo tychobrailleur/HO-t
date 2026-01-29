@@ -4,7 +4,7 @@
  */
 package module.training.ui;
 
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.util.StringUtils;
 import module.training.ui.model.TrainingModel;
 
@@ -38,7 +38,7 @@ public class PlayerSelectionListener implements ListSelectionListener {
 
 				String playerId = (String) table.getValueAt(index, playerIdColumn);
 				if (StringUtils.isNumeric(playerId)) {
-					model.setActivePlayer(HOVerwaltung.instance().getModel()
+					model.setActivePlayer(HOModelManager.instance().getModel()
 							.getCurrentPlayer(Integer.parseInt(playerId)));
 				} else {
 					model.setActivePlayer(null);

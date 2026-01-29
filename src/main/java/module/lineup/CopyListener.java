@@ -1,7 +1,7 @@
 package module.lineup;
 
 import core.gui.HOMainFrame;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
@@ -192,7 +192,7 @@ public class CopyListener implements ActionListener {
 				}
 			}
 		}
-		HOVerwaltung hov = HOVerwaltung.instance();
+		HOModelManager hov = HOModelManager.instance();
 		var lineupData = hov.getModel().getCurrentLineup();
 		byte system = lineupData.getCurrentTeamFormationCode();
 		String systemName = lineupData.getSystemName(system);
@@ -262,7 +262,7 @@ public class CopyListener implements ActionListener {
 				}
 			}
 		}
-		HOVerwaltung hov = HOVerwaltung.instance();
+		HOModelManager hov = HOModelManager.instance();
 		Lineup lineupData = hov.getModel().getCurrentLineup();
 		byte system = lineupData.getCurrentTeamFormationCode();
 		String systemName = lineupData.getSystemName(system);

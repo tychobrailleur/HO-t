@@ -1,7 +1,7 @@
 package module.training.ui.model;
 
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.UserParameter;
 import core.model.enums.DBDataSource;
 import core.model.player.Player;
@@ -26,7 +26,7 @@ public class TrainingModel implements PropertyChangeListener {
 	private final List<ModelChangeListener> listeners = new ArrayList<>();
 
 	public TrainingModel(){
-		HOVerwaltung.instance().addPropertyChangeListener(this);
+		HOModelManager.instance().addPropertyChangeListener(this);
 	}
 
 	public void propertyChange(PropertyChangeEvent evt) {

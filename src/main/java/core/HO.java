@@ -12,7 +12,7 @@ import core.gui.model.UserColumnController;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.jmx.StatementCacheMonitor;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.training.TrainingManager;
@@ -34,11 +34,16 @@ import static java.awt.event.KeyEvent.VK_1;
 
 public class HO {
 
-    public static double VERSION;  // Version is set in build.gradle and exposed to HO via the manifest
+    public static double VERSION; // Version is set in build.gradle and exposed to HO via the manifest
     public static int RevisionNumber;
     private static String versionType;
     private static OSUtils.OS platform;
     private static boolean portable_version; // Used to determine the location of the DB
+    private static core.context.ApplicationContext context; // The Application Context
+
+    public static core.context.ApplicationContext getApplicationContext() {
+        return context;
+    }
 
     public static String getVersionType() {
         return versionType;
@@ -132,7 +137,8 @@ public class HO {
                 case "1" -> versionType = "BETA";
                 default -> versionType = "RELEASE";
             }
-            HOLogger.instance().info(HO.class, "VERSION: " + VERSION + "   versionType:  " + versionType + "   RevisionNumber: " + RevisionNumber);
+            HOLogger.instance().info(HO.class,
+                    "VERSION: " + VERSION + "   versionType:  " + versionType + "   RevisionNumber: " + RevisionNumber);
         } else {
             HOLogger.instance().error(HO.class, "Launched from IDE otherwise there is a bug !");
             VERSION = 0d;
@@ -171,7 +177,6 @@ public class HO {
         interruptionWindow.setInfoText(1, "Backup Database");
         BackupHelper.backup(new File(UserManager.instance().getCurrentUser().getDbFolder()));
 
-
         // Load user parameters from the DB
         interruptionWindow.setInfoText(2, "Initialize Database");
         DBManager.instance().loadUserParameter();
@@ -179,7 +184,7 @@ public class HO {
         String[] finalArgs = args;
         new Thread(() -> {
             RT.var("user", "dbManager", DBManager.instance());
-            RT.var("user", "admin", HOVerwaltung.instance());
+            RT.var("user", "admin", HOModelManager.instance());
 
             IFn require = Clojure.var("clojure.core", "require");
             require.invoke(Clojure.read("nrepl.server"));
@@ -187,7 +192,6 @@ public class HO {
             // Can connect to HO using cider on localhost:5555
             startServer.invoke(Clojure.read("{:port 5555 :name \"HO\"}"));
         }).start();
-
 
         // init Theme
         try {
@@ -209,7 +213,7 @@ public class HO {
 
         // Check if language file available
         interruptionWindow.setInfoText(4, "Check Language files");
-        HOVerwaltung.checkLanguageFile(UserParameter.instance().sprachDatei);
+        HOModelManager.checkLanguageFile(UserParameter.instance().sprachDatei);
         TranslationFacility.setLanguage(UserParameter.instance().sprachDatei);
 
         if (DBManager.instance().isFirstStart()) {
@@ -221,19 +225,20 @@ public class HO {
         }
 
         interruptionWindow.setInfoText(5, "Load latest Data");
-        HOVerwaltung.instance().loadLatestHoModel();
+        HOModelManager.instance().loadLatestHoModel();
         interruptionWindow.setInfoText(6, "Load  XtraDaten");
 
         // Load table columns information
         UserColumnController.instance().load();
 
         // Set the currency from HRF
-        var model = HOVerwaltung.instance().getModel();
+        var model = HOModelManager.instance().getModel();
         if (model != null) {
-            var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
+            var xtra = HOModelManager.instance().getModel().getXtraDaten();
             if (xtra != null) {
                 float fxRate = (float) xtra.getCurrencyRate();
-                if (fxRate > -1) UserParameter.instance().currencyRate = fxRate;
+                if (fxRate > -1)
+                    UserParameter.instance().currencyRate = fxRate;
             }
         }
         // Upgrade database configuration
@@ -251,8 +256,12 @@ public class HO {
 
         TrainingManager.instance();
 
+        // Initialize Application Context
+        context = new core.context.ApplicationContext(DBManager.instance(), HOModelManager.instance());
+
         interruptionWindow.setInfoText(9, "Prepare to show");
         SwingUtilities.invokeLater(() -> {
+            HOMainFrame.instance().setApplicationContext(context);
             HOMainFrame.instance().setVisible(true);
 
             // stop display splash image
@@ -267,10 +276,9 @@ public class HO {
                 MBeanServer platformMBeanServer = ManagementFactory.getPlatformMBeanServer();
                 platformMBeanServer.registerMBean(
                         new StatementCacheMonitor(),
-                        new ObjectName("io.github.ho-dev:name=StatementCacheMonitor")
-                );
-            } catch (MalformedObjectNameException | NotCompliantMBeanException | InstanceAlreadyExistsException |
-                     MBeanRegistrationException e) {
+                        new ObjectName("io.github.ho-dev:name=StatementCacheMonitor"));
+            } catch (MalformedObjectNameException | NotCompliantMBeanException | InstanceAlreadyExistsException
+                    | MBeanRegistrationException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -286,7 +294,7 @@ public class HO {
     }
 
     static JButton createIconButton(String teamName, String iconPath, int keyEvent) {
-        //return getScaledIcon(HOIconName.NO_CLUB_LOGO, width, height);
+        // return getScaledIcon(HOIconName.NO_CLUB_LOGO, width, height);
         var width = 210;
         var height = (int) (width * 26. / 21.);
         Icon scaledIcon;

@@ -5,7 +5,7 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.UserColumnController;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.module.IModule;
 import core.util.HODateTime;
 
@@ -78,7 +78,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
 
     @Override
     protected void initData() {
-        youthTrainings = HOVerwaltung.instance().getModel().getYouthTrainings()
+        youthTrainings = HOModelManager.instance().getModel().getYouthTrainings()
                 .stream()
                 .sorted( (i1, i2) -> compare(i2.getMatchDate(), i1.getMatchDate()))
                 .collect(Collectors.toList());

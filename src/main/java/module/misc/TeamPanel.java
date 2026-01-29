@@ -4,7 +4,7 @@ package module.misc;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.misc.Basics;
 import core.model.series.Liga;
@@ -46,14 +46,14 @@ class TeamPanel extends JPanel {
 	}
 
 	void setLabels() {
-		final Basics basics = HOVerwaltung.instance().getModel().getBasics();
-		final Liga liga = HOVerwaltung.instance().getModel().getLeague();
-		final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		final Basics basics = HOModelManager.instance().getModel().getBasics();
+		final Liga liga = HOModelManager.instance().getModel().getLeague();
+		final int teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
 		if (teamId > 0) {
 			teamIdLabel.setText(basics.getTeamId() + "");
 			teamLabel.setText(basics.getTeamName());
 			managerLabel.setText(basics.getManager());
-			arenaLabel.setText(HOVerwaltung.instance().getModel().getStadium().getStadiumName());
+			arenaLabel.setText(HOModelManager.instance().getModel().getStadium().getStadiumName());
 			seasonLabel.setText(basics.getSeason() + "");
 			if (liga != null) {
 				matchRoundLabel.setText(liga.getSpieltag() + "");

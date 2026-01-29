@@ -5,7 +5,7 @@ import core.gui.comp.entry.DoubleLabelEntries;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.model.HOModel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.util.Helper;
 import tool.updater.TableModel;
@@ -35,7 +35,7 @@ final class ArenaPanel extends JPanel {
 	}
 
 	public void reInit() {
-		HOModel model = HOVerwaltung.instance().getModel();
+		HOModel model = HOModelManager.instance().getModel();
 		m_clStadium = model.getStadium();
 		m_clStadien = m_clArenaSizer.calcConstructionArenas(m_clStadium, model.getClub().getFans());
 		reinitTable();
@@ -95,7 +95,7 @@ final class ArenaPanel extends JPanel {
 	}
 
 	private void reinitTable() {
-		final Stadium stadium = HOVerwaltung.instance().getModel().getStadium();
+		final Stadium stadium = HOModelManager.instance().getModel().getStadium();
 		if (m_clStadium != null) {
 			((DoubleLabelEntries) values[0][1]).getLeft().setText(m_clStadium.getTerraces() + "");
 			((DoubleLabelEntries) values[0][1]).getRight().setSpecialNumber(m_clStadium.getTerraces() - stadium.getTerraces(), false);

@@ -5,7 +5,7 @@ import core.gui.comp.entry.PlayerLabelEntry;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.UserParameter;
 import core.model.match.MatchLineupPosition;
 import core.model.player.Player;
@@ -52,7 +52,7 @@ public class PlayerCBItem implements Comparable<PlayerCBItem>, ComboItem {
         final Player player = getPlayer();
 
         if (player != null) {
-            var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+            var lineup = HOModelManager.instance().getModel().getCurrentLineup();
             MatchLineupPosition matchLineupPosition;
             matchLineupPosition = lineup.getPositionByPlayerId(player.getPlayerId());
             m_clEntry.updateComponent(player, matchLineupPosition, getPositionsEvaluation(), m_bSetInBestPosition, m_sText);

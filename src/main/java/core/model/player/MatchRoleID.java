@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import core.constants.TrainingType;
 import core.datatype.CBItem;
 import core.db.AbstractTable;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.util.HOLogger;
 import module.lineup.Lineup;
@@ -464,7 +464,7 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 	 *            New value of property m_iSpielerId.
 	 */
 	public final boolean setPlayerIdIfValidForLineup(int spielerId) {
-		return setPlayerIdIfValidForLineup(spielerId, HOVerwaltung.instance().getModel().getCurrentLineup());
+		return setPlayerIdIfValidForLineup(spielerId, HOModelManager.instance().getModel().getCurrentLineup());
 	}
 
 	public final void setPlayerId(int id){

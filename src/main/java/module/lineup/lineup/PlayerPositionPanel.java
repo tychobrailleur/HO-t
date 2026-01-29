@@ -10,7 +10,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOModel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.match.Weather;
@@ -160,7 +160,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     @Override
     public void itemStateChanged(java.awt.event.ItemEvent itemEvent) {
         if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
-            final Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+            final Lineup lineup = HOModelManager.instance().getModel().getCurrentLineup();
 
             final Player player = getSelectedPlayer();
             setPlayerTooltip(player);
@@ -238,7 +238,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             Weather weather, Boolean useWeatherImpact, int matchMinute) {
         var plCandidates = new ArrayList<>(inCandidates);
         Player selectedPlayer = null;
-        HOModel model = HOVerwaltung.instance().getModel();
+        HOModel model = HOModelManager.instance().getModel();
         Lineup lineup = model.getCurrentLineup();
 
         m_weather = weather;
@@ -334,10 +334,10 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         m_useWeatherImpact = useWeatherImpact;
 
         // Get currently setup player in that position
-        var team = HOVerwaltung.instance().getModel().getCurrentLineup();
+        var team = HOModelManager.instance().getModel().getCurrentLineup();
         final MatchRoleID position = team.getPositionById(m_iPositionID);
         if (position != null) {
-            selectedPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(position.getPlayerId());
+            selectedPlayer = HOModelManager.instance().getModel().getCurrentPlayer(position.getPlayerId());
             setTactic(position.getTactic(), selectedPlayer);
         }
         setPlayersList2(lPlayers, selectedPlayer, playerIDcorrespondingSub);
@@ -395,7 +395,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             }
         }
 
-        Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+        Lineup lineup = HOModelManager.instance().getModel().getCurrentLineup();
         if (iSelectedPlayerId == -1) {
             switch (m_iPositionID) {
                 case IMatchRoleID.setPieces -> lineup.setKicker(0);
@@ -434,7 +434,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
 
         // list of all players currently set as subs
         List<Player> lSubs = new ArrayList<>();
-        Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+        Lineup lineup = HOModelManager.instance().getModel().getCurrentLineup();
         for (Player player : allPlayers) {
             if (lineup.isPlayerASub(player.getPlayerId())) {
                 lSubs.add(player);
@@ -519,7 +519,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     }
 
     private void initLabel() {
-        final Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+        final Lineup lineup = HOModelManager.instance().getModel().getCurrentLineup();
         final int nextWeekTrain = TrainingPreviewPlayers.instance().getNextWeekTraining();
 
         if (m_iPositionID == IMatchRoleID.setPieces) {
@@ -628,7 +628,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
 
     private void addTactic( Player currentPlayer, String text, byte playerPosition) {
         if (currentPlayer != null) {
-            var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+            var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
             double rating;
             if (matchMinute == null || matchMinute < 0 || matchMinute >= 120) {
                 rating = ratingPredictionModel.getPlayerMatchAverageRating(currentPlayer, m_iPositionID,
@@ -648,20 +648,20 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             String playerName = player.getShortName();
 
             if (m_iPositionID == IMatchRoleID.setPieces) {
-                var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+                var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
                 var setPiecesRating = ratingPredictionModel.getPlayerSetPiecesStrength(player);
                 item.setValues(playerName, (float) setPiecesRating, player, true);
                 return item;
             } else if (m_iPositionID == IMatchRoleID.captain) {
                 item.setValues(playerName,
                         Helper.round(
-                                HOVerwaltung.instance().getModel().getCurrentLineup()
+                                HOModelManager.instance().getModel().getCurrentLineup()
                                         .getAverageExperience(player.getPlayerId()),
                                 core.model.UserParameter.instance().nbDecimals),
                         player, true);
                 return item;
             } else {
-                var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+                var lineup = HOModelManager.instance().getModel().getCurrentLineup();
                 final var position = lineup.getPositionById(m_iPositionID);
 
                 if (position != null) {
@@ -679,7 +679,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                     double value = 0.;
                     boolean bestPosition = false;
                     if (roleId != substXT2 && roleId != substXT1) {
-                        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+                        var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
                         if (this.matchMinute == null || this.matchMinute < 0 || this.matchMinute > 120) {
                             value = ratingPredictionModel.getPlayerMatchAverageRating(player, roleId,
                                     position.getBehaviour(),

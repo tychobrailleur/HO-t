@@ -1,6 +1,6 @@
 package core.db;
 
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.HOLogger;
@@ -128,7 +128,7 @@ public class TransferTable extends AbstractTable {
      */
     public List<PlayerTransfer> getTransfers(int playerid, boolean allTransfers) {
         if (!allTransfers) {
-            final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+            final int teamid = HOModelManager.instance().getModel().getBasics().getTeamId();
             try {
                 return load(PlayerTransfer.class,
                         this.connectionManager.executePreparedQuery(getTransfersSql, playerid, teamid, teamid));
@@ -156,7 +156,7 @@ public class TransferTable extends AbstractTable {
      * @return List of transfers.
      */
     public List<PlayerTransfer> getTransfers(int season, boolean bought, boolean sold) {
-        final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+        final int teamid = HOModelManager.instance().getModel().getBasics().getTeamId();
         return getTransfers(teamid, season, bought, sold);
     }
 

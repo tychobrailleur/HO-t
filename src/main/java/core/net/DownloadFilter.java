@@ -1,7 +1,7 @@
 package core.net;
 
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -9,7 +9,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 public class DownloadFilter extends DefaultMutableTreeNode {
 
-    private static final HOVerwaltung hov = HOVerwaltung.instance();
+    private static final HOModelManager hov = HOModelManager.instance();
     private final DefaultMutableTreeNode currentMatches = new DefaultMutableTreeNode(TranslationFacility.tr("download.currentmatches"));
     private final DefaultMutableTreeNode currentSeriesData = new DefaultMutableTreeNode(TranslationFacility.tr("download.currentseriesdata"));
     private final DefaultMutableTreeNode previousSeriesData = new DefaultMutableTreeNode(TranslationFacility.tr("download.oldseriesdata"));

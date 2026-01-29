@@ -1,7 +1,7 @@
 package module.teamAnalyzer.ui;
 
 import core.gui.comp.panel.RasenPanel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
@@ -193,7 +193,7 @@ public class TeamPanel extends JPanel {
         Lineup lineup = getOwnLineup();
         if ( lineup == null ) return;
 
-        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+        var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
 
         for (int spot : IMatchRoleID.aFieldMatchRoleID) {
             Player player = lineup.getPlayerByPositionID(spot);
@@ -221,8 +221,8 @@ public class TeamPanel extends JPanel {
             list.put(spot, pp);
         }
 
-        lineupPanel.getMyTeam().setTeamName(HOVerwaltung.instance().getModel().getBasics().getTeamName() + " ("
-                                            + HOVerwaltung.instance().getModel().getBasics().getTeamId() + ")");
+        lineupPanel.getMyTeam().setTeamName(HOModelManager.instance().getModel().getBasics().getTeamName() + " ("
+                                            + HOModelManager.instance().getModel().getBasics().getTeamId() + ")");
         fillPanel(lineupPanel.getMyTeam().getKeeperPanel(), list.get(IMatchRoleID.keeper));
         fillPanel(lineupPanel.getMyTeam().getLeftWingbackPanel(), list.get(IMatchRoleID.leftBack));
         fillPanel(lineupPanel.getMyTeam().getLeftCentralDefenderPanel(), list.get(IMatchRoleID.leftCentralDefender));
@@ -293,7 +293,7 @@ public class TeamPanel extends JPanel {
     }
 
     public Lineup getOwnLineup() {
-        return HOVerwaltung.instance().getModel().getCurrentLineup();
+        return HOModelManager.instance().getModel().getCurrentLineup();
     }
 
     private static class ManMarkingOrderDisplay extends JPanel {

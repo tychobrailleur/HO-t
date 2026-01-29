@@ -9,7 +9,7 @@ import core.gui.model.MatchOrdersCBItem;
 import core.gui.model.MatchOrdersRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.match.*;
 import core.model.player.TrainerType;
@@ -35,7 +35,7 @@ import static module.lineup.LineupPanel.TITLE_FG;
 
 public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable {
 
-    private final int OWN_TEAM_ID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+    private final int OWN_TEAM_ID = HOModelManager.instance().getModel().getBasics().getTeamId();
     LineupPanel lineupPanel;
     private JComboBox<MatchOrdersCBItem> m_jcbUpcomingGames;
     private List<MatchOrdersCBItem> upcomingMatchesInDB;
@@ -172,7 +172,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
             MatchOrdersCBItem matchOrder = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
 
-            Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+            Lineup lineup = HOModelManager.instance().getModel().getCurrentLineup();
             if (matchOrder != null) {
                 lineup.setLocation(matchOrder.getLocation());
                 lineup.setWeather(matchOrder.getWeather());
@@ -182,7 +182,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         m_jbDownloadLineup.setEnabled(m_clSelectedMatch != null);
         m_jbUploadLineup.setEnabled(m_clSelectedMatch != null);
 
-        Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+        Lineup lineup = HOModelManager.instance().getModel().getCurrentLineup();
         // refresh lineup settings
         Helper.setComboBoxFromID(m_jcbTactic, lineup.getTacticType());
         updateStyleOfPlayComboBox();
@@ -205,7 +205,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         m_jcbStyleOfPlay.addActionListener(e -> {
             // StyleOfPlay changed (directly or indirectly)
-            var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+            var lineup = HOModelManager.instance().getModel().getCurrentLineup();
             var styleOfPlay = ((CBItem) Objects.requireNonNull(m_jcbStyleOfPlay.getSelectedItem(), "ERROR: Style Of Play is null")).getId();
             lineup.setStyleOfPlay(styleOfPlay);
             lineupPanel.refreshLineupRatingPanel();
@@ -213,7 +213,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         m_jcbTeamAttitude.addActionListener(e -> {
             // Attitude changed
-            var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+            var lineup = HOModelManager.instance().getModel().getCurrentLineup();
             var attitude = ((CBItem) Objects.requireNonNull(m_jcbTeamAttitude.getSelectedItem(), "ERROR: Attitude is null")).getId();
             lineup.setAttitude(attitude);
             lineupPanel.refreshLineupRatingPanel();
@@ -221,7 +221,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         m_jcbTactic.addActionListener(e -> {
             // Tactic changed
-            var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+            var lineup = HOModelManager.instance().getModel().getCurrentLineup();
             var tactic = ((CBItem) Objects.requireNonNull(m_jcbTactic.getSelectedItem(), "ERROR: Tactic type is null")).getId();
             lineup.setTacticType(tactic);
             lineupPanel.refreshLineupRatingPanel();
@@ -330,7 +330,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
                     lineup.setLocation(matchOrder.getLocation());
                     lineup.setWeather(matchOrder.getWeather());
                     lineup.setWeatherForecast(matchOrder.getWeatherForecast());
-                    HOVerwaltung.instance().getModel().storeLineup(matchLineupTeam);
+                    HOModelManager.instance().getModel().storeLineup(matchLineupTeam);
                 }
             }
         }
@@ -346,9 +346,9 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         if (matchOrder != null) {
             var details = matchOrder.getMatchdetails();
             if ( details != null){
-                HOVerwaltung.instance().getModel().setLineup(details.getOwnTeamLineup());
+                HOModelManager.instance().getModel().setLineup(details.getOwnTeamLineup());
             }
-            Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineupTeam().getLineup();
+            Lineup lineup = HOModelManager.instance().getModel().getCurrentLineupTeam().getLineup();
             lineup.setLocation(matchOrder.getLocation());
             lineup.setWeather(matchOrder.getWeather());
             lineup.setWeatherForecast(matchOrder.getWeatherForecast());
@@ -358,7 +358,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
     private void uploadLineupToHT() {
 
-        Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+        Lineup lineup = HOModelManager.instance().getModel().getCurrentLineup();
         if (!LineupCheck.doUpload(m_clSelectedMatch, lineup)) {
             return;
         }
@@ -415,7 +415,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
                 // store lineup in database
                 var lineupTeam = new MatchLineupTeam(m_clSelectedMatch.getMatchType(), m_clSelectedMatch.getMatchID(),
-                        HOVerwaltung.instance().getModel().getBasics().getTeamName(), OWN_TEAM_ID, 0);
+                        HOModelManager.instance().getModel().getBasics().getTeamName(), OWN_TEAM_ID, 0);
                 lineupTeam.setLineup(lineup);
                 DBManager.instance().storeMatchLineupTeam(lineupTeam);
             } finally {
@@ -443,7 +443,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     // each time updateStyleOfPlayBox gets called we need to add all elements back so that we can load stored lineups
     // so we need addAllStyleOfPlayItems() after every updateStyleOfPlayBox()
     private void updateStyleOfPlayComboBox() {
-        var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+        var lineup = HOModelManager.instance().getModel().getCurrentLineup();
         var oldValue = StyleOfPlay.fromInt(lineup.getCoachModifier());
 
         // remove all combo box items and add new ones.
@@ -477,8 +477,8 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         TrainerType trainer;
         int tacticalAssistants;
         try {
-            trainer = HOVerwaltung.instance().getModel().getTrainer().getTrainerType();
-            tacticalAssistants = HOVerwaltung.instance().getModel().getClub().getTacticalAssistantLevels();
+            trainer = HOModelManager.instance().getModel().getTrainer().getTrainerType();
+            tacticalAssistants = HOModelManager.instance().getModel().getClub().getTacticalAssistantLevels();
 
         } catch (Exception e) {
             trainer = TrainerType.Balanced;
@@ -510,7 +510,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     private StyleOfPlay getDefaultTrainerStyleOfPlay() {
         TrainerType trainer;
         try {
-            trainer = HOVerwaltung.instance().getModel().getTrainer().getTrainerType();
+            trainer = HOModelManager.instance().getModel().getTrainer().getTrainerType();
         } catch (Exception e) {
             return StyleOfPlay.Neutral();  // Happens for instance with empty db
         }
@@ -528,7 +528,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
             attitude = MatchTeamAttitude.toInt(MatchTeamAttitude.Normal); // core.model.match.IMatchDetails.EINSTELLUNG_NORMAL;
         }
         else {
-            var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+            var lineup = HOModelManager.instance().getModel().getCurrentLineup();
             attitude = lineup.getAttitude();
         }
         Helper.setComboBoxFromID(m_jcbTeamAttitude, attitude);

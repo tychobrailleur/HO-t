@@ -10,7 +10,7 @@ import core.gui.model.PlayerCBItem;
 import core.gui.model.PlayerCBItemRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.Player;
@@ -427,7 +427,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 	}
 
 	private void initSpielerCB() {
-		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
+		List<Player> players = HOModelManager.instance().getModel().getCurrentPlayers();
 		List<PlayerCBItem> playerCBItems = new ArrayList<>(players.size());
 		for (Player player : players) {
 			playerCBItems.add(new PlayerCBItem(player.getFullName(), 0f, player));
@@ -436,11 +436,11 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 
 		// date from
 		var nWeeks = UserParameter.instance().statistikAnzahlHRF;
-		var latestHRFDate = HOVerwaltung.instance().getModel().getBasics().getDatum();
+		var latestHRFDate = HOModelManager.instance().getModel().getBasics().getDatum();
 		var fromDate = latestHRFDate.minus(7*nWeeks, ChronoUnit.DAYS);
 
 		// former players
-		List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers().stream().filter(i->!i.getHrfDate().isBefore(fromDate)).toList();
+		List<Player> oldPlayers = HOModelManager.instance().getModel().getFormerPlayers().stream().filter(i->!i.getHrfDate().isBefore(fromDate)).toList();
 		List<PlayerCBItem> spielerOldCBItems = new ArrayList<>(players.size());
 		for (Player player : oldPlayers) {
 			spielerOldCBItems.add(new PlayerCBItem(player.getFullName(), 0f, player));

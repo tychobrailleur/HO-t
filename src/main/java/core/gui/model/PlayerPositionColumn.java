@@ -4,7 +4,7 @@ package core.gui.model;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoubleLabelEntries;
 import core.gui.comp.entry.IHOTableEntry;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
@@ -60,7 +60,7 @@ public class PlayerPositionColumn extends PlayerColumn {
      * @return ColorLabelEntry
      */
     public ColorLabelEntry getEntryValue(Player player) {
-        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+        var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
         var r = ratingPredictionModel.getPlayerMatchAverageRating(player, position);
         ColorLabelEntry temp = new ColorLabelEntry(r, getBackgroundColor(), core.model.UserParameter.instance().nbDecimals);
         var alternativePosition = player.getAlternativeBestPositions();
@@ -88,7 +88,7 @@ public class PlayerPositionColumn extends PlayerColumn {
                     getBackgroundColor(),
                     SwingConstants.RIGHT);
         }
-        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+        var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
         var playerRating = ratingPredictionModel.getPlayerMatchAverageRating(player, position);
         var comparePlayerRating = ratingPredictionModel.getPlayerMatchAverageRating(comparePlayer, position);
         return new ColorLabelEntry((float) (playerRating - comparePlayerRating),

@@ -3,7 +3,7 @@ package module.series;
 
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.UserParameter;
 import core.model.series.TabellenVerlaufEintrag;
 
@@ -56,7 +56,7 @@ final class SeriesHistoryPanel extends JPanel {
 
 		if ((m_clVerlaufeintraege != null) && (m_clVerlaufeintraege.length > 0)
 				&& (m_clVerlaufeintraege[0] != null)) {
-			final int aktuelleTeamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+			final int aktuelleTeamId = HOModelManager.instance().getModel().getBasics().getTeamId();
 
 			// Wegen Überschrift!
 			final int anzahlPlaetze = m_clVerlaufeintraege.length + 1;

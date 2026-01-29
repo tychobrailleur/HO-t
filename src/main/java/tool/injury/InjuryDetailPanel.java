@@ -1,7 +1,7 @@
 package tool.injury;
 
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.player.Player;
 import tool.keepertool.PlayerItem;
@@ -107,7 +107,7 @@ public class InjuryDetailPanel extends JPanel {
         players.removeAllItems();
         players.addItem(new PlayerItem());
 
-        for (final Player element : HOVerwaltung.instance().getModel().getCurrentPlayers()) {
+        for (final Player element : HOModelManager.instance().getModel().getCurrentPlayers()) {
             if (element.getInjuryWeeks() > 0) {
                 players.addItem(new PlayerItem(element));
             }
@@ -124,7 +124,7 @@ public class InjuryDetailPanel extends JPanel {
                 return;
             }
 
-            final Player player = HOVerwaltung.instance().getModel().getCurrentPlayer(selected.getId());
+            final Player player = HOModelManager.instance().getModel().getCurrentPlayer(selected.getId());
 
             if (player == null) {
                 return;

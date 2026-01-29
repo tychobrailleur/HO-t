@@ -154,7 +154,7 @@ public class HRFStringParser {
 				// basics
 				if (entity.toString().equalsIgnoreCase(BASICS)) {
 					hoModel.setBasics(new Basics(properties));
-					var ownTeamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+					var ownTeamId = HOModelManager.instance().getModel().getBasics().getTeamId();
 					if (hoModel.getBasics().getTeamId() != ownTeamId && ownTeamId != 0) {
 						HOLogger.instance().error(HOModel.class, "properties of other team can not be imported: " + hoModel.getBasics().getTeamName());
 						return hoModel; // properties of foreign team

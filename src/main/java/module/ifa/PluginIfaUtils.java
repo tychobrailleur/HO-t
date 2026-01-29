@@ -5,7 +5,7 @@ import core.file.xml.TeamInfo;
 import core.file.xml.XMLManager;
 import core.file.xml.XMLTeamDetailsParser;
 import core.gui.HOMainFrame;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.WorldDetailLeague;
 import core.model.WorldDetailsManager;
 import core.model.enums.MatchType;
@@ -53,7 +53,7 @@ public class PluginIfaUtils {
 
 		HODateTime time;
 		do {
-			time = HOVerwaltung.instance().getModel().getBasics().getActivationDate();
+			time = HOModelManager.instance().getModel().getBasics().getActivationDate();
 
 			if (time != null && !time.isBefore(HODateTime.HT_START)) {
 				break;
@@ -135,15 +135,15 @@ public class PluginIfaUtils {
 	private static void insertMatches(HODateTime from, HODateTime to) {
 		StringBuilder errors = new StringBuilder();
 		HODateTime matchDate = null;
-		String matchesArchive = MyConnector.instance().getMatchesArchive(HOVerwaltung.instance().getModel().getBasics().getTeamId(), from, to);
+		String matchesArchive = MyConnector.instance().getMatchesArchive(HOModelManager.instance().getModel().getBasics().getTeamId(), from, to);
 		Document doc = XMLManager.parseString(matchesArchive);
 
 		assert doc != null;
 		int matchesCount = ((Element) doc.getDocumentElement().getElementsByTagName("MatchList")
 				.item(0)).getElementsByTagName("Match").getLength();
 		
-		int ownLeague = HOVerwaltung.instance().getModel().getBasics().getLiga();
-		int ownId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		int ownLeague = HOModelManager.instance().getModel().getBasics().getLiga();
+		int ownId = HOModelManager.instance().getModel().getBasics().getTeamId();
 		int opponentId;
 		int opponentLeague = 0;
 		

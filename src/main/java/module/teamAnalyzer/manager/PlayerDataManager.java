@@ -1,7 +1,7 @@
 package module.teamAnalyzer.manager;
 
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import module.teamAnalyzer.vo.PlayerInfo;
 import module.teamAnalyzer.vo.SquadInfo;
 
@@ -36,11 +36,11 @@ public class PlayerDataManager {
 	}
 
 	public static int getCurrentHTSeason() {
-		return HOVerwaltung.instance().getModel().getBasics().getSeason();
+		return HOModelManager.instance().getModel().getBasics().getSeason();
 	}
 
 	public static int getCurrentHTWeek() {
-		return HOVerwaltung.instance().getModel().getBasics().getSpieltag();
+		return HOModelManager.instance().getModel().getBasics().getSpieltag();
 	}
 
 	public static int calcCurrentWeekNumber(){

@@ -5,7 +5,7 @@ import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.ImageUtilities;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.util.CurrencyUtils;
@@ -56,7 +56,7 @@ public class HistoryPane extends JSplitPane {
         final JPanel sidePanel = new ImagePanel();
         sidePanel.setLayout(new TableLayout(sizes));
         sidePanel.setOpaque(false);
-        HOVerwaltung hoV = HOVerwaltung.instance();
+        HOModelManager hoV = HOModelManager.instance();
         final JPanel filterPanel = new ImagePanel();
         filterPanel.setLayout(new TableLayout(new double[][]{
                                                   {
@@ -107,7 +107,7 @@ public class HistoryPane extends JSplitPane {
         JButton button = new JButton(TranslationFacility.tr("Menu.refreshData"));
         button.addActionListener(e -> {
 
-            HOVerwaltung hoV1 = HOVerwaltung.instance();
+            HOModelManager hoV1 = HOModelManager.instance();
             int teamId = hoV1.getModel().getBasics().getTeamId();
             if (teamId != 0 && !hoV1.getModel().getBasics().isNationalTeam()) {
 

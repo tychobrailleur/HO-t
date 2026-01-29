@@ -10,7 +10,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.match.MatchLineup;
@@ -227,14 +227,14 @@ final class SpielerDetailDialog extends JDialog {
 	}
 
 	private void setLabels(Player m_clPlayer) {
-		Player m_clVergleichsPlayer = HOVerwaltung.instance().getModel()
+		Player m_clVergleichsPlayer = HOModelManager.instance().getModel()
 				.getCurrentPlayer(m_clPlayer.getPlayerId());
 
 		m_jpName.setText(m_clPlayer.getFullName());
 		m_jpAlter.setText(m_clPlayer.getAge() + "");
 		m_jpNationalitaet.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getNationalityId()));
 
-		var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+		var lineup = HOModelManager.instance().getModel().getCurrentLineup();
 		if (lineup.isPlayerInLineup(m_clPlayer.getPlayerId())
 				&& (lineup.getPositionByPlayerId(m_clPlayer.getPlayerId()) != null)) {
 			m_jpAufgestellt.setIcon(ImageUtilities.getImage4Position(
@@ -1275,14 +1275,14 @@ final class SpielerDetailDialog extends JDialog {
 	}
 
 	private void showNormal(DoubleLabelEntries labelEntry, byte playerPosition, Player m_clPlayer) {
-		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+		var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
 		labelEntry.getLeft().setText(
 				Helper.round(ratingPredictionModel.getPlayerMatchAverageRating(m_clPlayer, playerPosition), core.model.UserParameter.instance().nbDecimals) + "");
 		labelEntry.getRight().clear();
 	}
 
 	private void showWithCompare(DoubleLabelEntries labelEntry, byte playerPosition, Player m_clPlayer, Player m_clVergleichsPlayer) {
-		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+		var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
 		var r = ratingPredictionModel.getPlayerMatchAverageRating(m_clPlayer, playerPosition);
 		labelEntry.getLeft().setText(Helper.round(r, core.model.UserParameter.instance().nbDecimals) + "");
 		labelEntry.getRight().setSpecialNumber((float) (r - ratingPredictionModel.getPlayerMatchAverageRating(m_clVergleichsPlayer, playerPosition)), false);

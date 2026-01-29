@@ -1,7 +1,7 @@
 package module.training.ui.model;
 
 import core.constants.player.PlayerSkill;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
@@ -155,7 +155,7 @@ public class OutputTableModel extends AbstractTableModel {
      */
     public void fillWithData() {
         this.data = new ArrayList<>();
-        for (var player : HOVerwaltung.instance().getModel().getCurrentPlayers()) {
+        for (var player : HOModelManager.instance().getModel().getCurrentPlayers()) {
             this.data.add(new FutureTrainingManager(player, this.model.getFutureTrainings()));
         }
         fireTableDataChanged();
@@ -171,7 +171,7 @@ public class OutputTableModel extends AbstractTableModel {
     private double getTrainingLength(Player player, PlayerSkill skillIndex) {
         WeeklyTrainingType wt = WeeklyTrainingType.instance(Skills.getTrainingTypeForSkill(skillIndex));
         if (wt != null) {
-            var model = HOVerwaltung.instance().getModel();
+            var model = HOModelManager.instance().getModel();
             return 1 / wt.calculateSkillIncreaseOfTrainingWeek(
                     player.getValue4Skill(skillIndex),
                     model.getTrainer().getCoachSkill(),

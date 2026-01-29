@@ -1,7 +1,7 @@
 package tool;
 
 import core.gui.HOMainFrame;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import tool.arenasizer.ArenaSizerDialog;
 import tool.export.CsvPlayerExport;

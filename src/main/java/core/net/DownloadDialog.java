@@ -36,7 +36,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 	// ~ Instance fields--/
 	private static DownloadDialog m_clDownloadDialog;
-	private static final HOVerwaltung hov = HOVerwaltung.instance();
+	private static final HOModelManager hov = HOModelManager.instance();
 	private final JButton m_jbAbort = new JButton(TranslationFacility.tr("ls.button.cancel"));
 	final private JButton m_jbDownload = new JButton(TranslationFacility.tr("ls.button.download"));
 	private final JButton m_jbProxy = new JButton(TranslationFacility.tr("ConfigureProxy"));
@@ -418,7 +418,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	private void downloadOldFixtures(int teamId, List<Object> selection) {
 		LigaAuswahlDialog leagueSelectionDialog = null;
 		boolean useOwnLeague = true;
-		var leagueId = HOVerwaltung.instance().getModel().getXtraDaten().getLeagueLevelUnitID();
+		var leagueId = HOModelManager.instance().getModel().getXtraDaten().getLeagueLevelUnitID();
 		for (Object s : selection) {
 			if (s instanceof Map.Entry<?, ?> mapEntry) {
 				@SuppressWarnings("unchecked")
@@ -484,7 +484,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 					// save the model in the database
 					homodel.storeModel();
 					// Only update when the model is newer than existing
-					if (HOVerwaltung.isNewModel(homodel)) {
+					if (HOModelManager.isNewModel(homodel)) {
 						hov.setModel(homodel);
 					}
 

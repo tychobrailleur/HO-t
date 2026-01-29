@@ -3,7 +3,7 @@ package module.tsforecast;
 import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.enums.MatchType;
 import core.model.match.IMatchDetails;
@@ -109,7 +109,7 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 	 * @return true if team is still in cup
 	 */
 	private boolean isInCup() {
-		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		int teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
 		var matches = dbManager.getMatchesKurzInfo(
 				" WHERE ( GastID = ? OR HeimID = ? ) AND MatchTyp = ? AND Status <> ? LIMIT 1", teamId, teamId,
 				MatchType.CUP.getId(), MatchKurzInfo.FINISHED);
@@ -120,7 +120,7 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 	 * @return true if team has qualification match scheduled
 	 */
 	private boolean hasQualificationMatch() {
-		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		int teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
 		var matches = dbManager.getMatchesKurzInfo(
 				" WHERE ( GastID = ? OR HeimID = ?) AND MatchTyp = ? AND Status <> ? LIMIT 1", teamId, teamId,
 				MatchType.QUALIFICATION.getId(), MatchKurzInfo.FINISHED);

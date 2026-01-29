@@ -2,7 +2,7 @@ package module.teamAnalyzer;
 
 import java.awt.event.KeyEvent;
 
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.module.DefaultModule;
 import module.teamAnalyzer.ui.TeamAnalyzerPanel;

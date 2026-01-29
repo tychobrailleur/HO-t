@@ -7,7 +7,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.misc.Basics;
@@ -29,7 +29,7 @@ import static core.gui.theme.ThemeManager.getColor;
 public class PromotionInfoPanel extends ImagePanel {
 
     private final LeaguePromotionHandler promotionHandler;
-    private final HOVerwaltung verwaltung = HOVerwaltung.instance();
+    private final HOModelManager verwaltung = HOModelManager.instance();
 
     // Force font when loading panel, otherwise chooses a different from default.
     private final Font defaultFont = new Font("SansSerif", Font.BOLD, UserParameter.instance().fontSize +1);
@@ -42,7 +42,7 @@ public class PromotionInfoPanel extends ImagePanel {
 
         SwingUtilities.invokeLater(() -> {
 
-            final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
+            final Basics basics = DBManager.instance().getBasics(HOModelManager.instance().getId());
             int teamId = basics.getTeamId();
             int seriesId = basics.getLiga();
 
@@ -72,7 +72,7 @@ public class PromotionInfoPanel extends ImagePanel {
     }
 
     private void initComponents() {
-        final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
+        final Basics basics = DBManager.instance().getBasics(HOModelManager.instance().getId());
         final JButton downloadLeagueButton = new JButton(ImageUtilities.getDownloadIcon(getColor(HOColorName.DOWNLOAD_MATCH), 14, 14));
         this.add(downloadLeagueButton);
         final JLabel downloadLabel = new JLabel(TranslationFacility.tr("pd_status.download.unavailable.data"));
@@ -116,7 +116,7 @@ public class PromotionInfoPanel extends ImagePanel {
     private void createBeingProcessedLabel() {
         this.removeAll();
 
-        final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
+        final Basics basics = DBManager.instance().getBasics(HOModelManager.instance().getId());
         JLabel processingLabel = new JLabel(TranslationFacility.tr(
                 "pd_status.download.pending",
                 basics.getLiga()));

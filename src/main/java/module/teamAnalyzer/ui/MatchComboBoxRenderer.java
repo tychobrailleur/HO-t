@@ -4,7 +4,7 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.enums.MatchType;
 import core.util.HODateTime;
 import module.teamAnalyzer.vo.Team;
@@ -17,7 +17,7 @@ import javax.swing.*;
  */
 public class MatchComboBoxRenderer extends JLabel implements ListCellRenderer<Team> {
 
-    private final String OWN_TEAM_NAME = HOVerwaltung.instance().getModel().getBasics().getTeamName();
+    private final String OWN_TEAM_NAME = HOModelManager.instance().getModel().getBasics().getTeamName();
 
     public enum RenderType {TYPE_1, TYPE_2}
 

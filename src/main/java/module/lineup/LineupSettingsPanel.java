@@ -10,7 +10,7 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOModel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.UserParameter;
 import core.model.match.IMatchDetails;
 import core.model.match.Weather;
@@ -110,7 +110,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 
 	public void backupRealGameSettings(){
 
-		homodel = HOVerwaltung.instance().getModel();
+		homodel = HOModelManager.instance().getModel();
 
 		//the following values are stored to allow reverting to real value after playing with the various lineup settings
 		if (homodel.getTeam() != null) {

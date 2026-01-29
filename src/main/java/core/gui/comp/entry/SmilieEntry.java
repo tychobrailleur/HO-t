@@ -3,7 +3,7 @@ package core.gui.comp.entry;
 
 import core.gui.theme.GroupTeamFactory;
 import core.gui.theme.ImageUtilities;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.StringUtils;
@@ -66,7 +66,7 @@ public class SmilieEntry extends DoubleLabelEntries {
 
                 // if equal check lineup
                 if (result == 0) {
-                    var team = HOVerwaltung.instance().getModel().getCurrentLineupTeam();
+                    var team = HOModelManager.instance().getModel().getCurrentLineupTeam();
                     final MatchRoleID entrySort = team.getLineup().getPositionByPlayerId(entry.getPlayer().getPlayerId());
                     final MatchRoleID sort = team.getLineup().getPositionByPlayerId(getPlayer().getPlayerId());
                     if (sort != null) {

@@ -6,7 +6,7 @@ package module.playeranalysis.skillCompare;
 import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
 import core.gui.comp.panel.LazyImagePanel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 
@@ -446,8 +446,8 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 			int cbType = m_CB_type.getSelectedIndex();
 			for (int i = 0; i < m_i_ptmTopCount; i++) {
 				int spielerID = (Integer) m_playerTableModelTop.getValueAt(i,m_playerTableModelTop.getColumnCount() - 1);
-				int pos = HOVerwaltung.instance().getModel().getCurrentPlayer(spielerID).getIdealPosition();
-				String group = HOVerwaltung.instance().getModel().getCurrentPlayer(spielerID).getTeamGroup();
+				int pos = HOModelManager.instance().getModel().getCurrentPlayer(spielerID).getIdealPosition();
+				String group = HOModelManager.instance().getModel().getCurrentPlayer(spielerID).getTeamGroup();
 				// System.out.println(cbType +":"+group);
 				if (cbType == 1 && pos == 0 || cbType == 2 && (pos > 0 && pos < 8) || cbType == 3
 						&& (pos > 7 && pos < 12) || cbType == 4 && (pos > 11 && pos < 16)
@@ -561,7 +561,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		for (int i = 0; i < m_playerTableModelTop.getRowCount(); i++) {
 			spielerID = (Integer) m_playerTableModelTop.getValueAt(i,
                     m_playerTableModelTop.getColumnCount() - 1);
-			core.model.player.Player player = HOVerwaltung.instance().getModel().getCurrentPlayer(spielerID);
+			core.model.player.Player player = HOModelManager.instance().getModel().getCurrentPlayer(spielerID);
 			m_playerTableModelTop.setValueAt(player.getTeamGroup(), i, 5);
 			if (player.getTeamGroup().equals("A-Team")
 					&& m_CB_type.getSelectedIndex() == 6
@@ -636,7 +636,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 	 * 
 	 */
 	private void getAllPlayers() {
-        List<core.model.player.Player> m_V_allPlayers = HOVerwaltung.instance().getModel().getCurrentPlayers();
+        List<core.model.player.Player> m_V_allPlayers = HOModelManager.instance().getModel().getCurrentPlayers();
         int m_numberOfPlayers = m_V_allPlayers.size();
 		m_ar_allPlayers = new module.playeranalysis.skillCompare.Player[m_numberOfPlayers];
 		int i=0;

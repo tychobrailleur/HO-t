@@ -1,6 +1,6 @@
 package core.util;
 
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -365,7 +365,7 @@ public class HODateTime implements Comparable<HODateTime> {
      */
     public HTWeek toTrainingWeek() {
         if (durationBetweenWeekStartAndTrainingDate == null) {
-            var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
+            var xtra = HOModelManager.instance().getModel().getXtraDaten();
             if (xtra != null) {
                 var nextTrainingDate = xtra.getNextTrainingDate();
                 var previousTrainingDate = nextTrainingDate.minus(7, ChronoUnit.DAYS);
@@ -401,7 +401,7 @@ public class HODateTime implements Comparable<HODateTime> {
      */
     public HTWeek toLocaleHTWeek() {
         var ret = toHTWeek();
-        ret.season += HOVerwaltung.instance().getModel().getBasics().getSeasonOffset();
+        ret.season += HOModelManager.instance().getModel().getBasics().getSeasonOffset();
         return ret;
     }
 

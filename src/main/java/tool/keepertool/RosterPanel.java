@@ -1,7 +1,7 @@
 package tool.keepertool;
 
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.player.Player;
 
 import java.awt.BorderLayout;
@@ -53,7 +53,7 @@ class RosterPanel extends JPanel {
         players.removeAllItems();
         players.addItem(new PlayerItem());
 
-        for (final Player element : HOVerwaltung.instance().getModel().getCurrentPlayers()) {
+        for (final Player element : HOModelManager.instance().getModel().getCurrentPlayers()) {
             if (element.getGoalkeeperSkill() > 4) {
                 players.addItem(new PlayerItem(element));
             }

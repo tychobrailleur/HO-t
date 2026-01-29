@@ -6,7 +6,7 @@
  */
 package core.file.xml;
 
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.WorldDetailLeague;
 import core.util.HODateTime;
 import core.util.HOLogger;
@@ -82,7 +82,7 @@ public class XMLWorldDetailsParser {
 
 	private static Map<String, String> initWorldDetailsMap(){
 		var map = new SafeInsertMap();
-		var model = HOVerwaltung.instance().getModel();
+		var model = HOModelManager.instance().getModel();
 		if ( model != null ){
 			var basics = model.getBasics();
 			var xtra = model.getXtraDaten();

@@ -3,7 +3,7 @@ package module.misc;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.misc.Economy;
 import core.util.AmountOfMoney;
 
@@ -59,7 +59,7 @@ final class FinancePanel extends JPanel {
     }
 
     void setLabels() {
-        final Economy finances = HOVerwaltung.instance().getModel().getEconomy();
+        final Economy finances = HOModelManager.instance().getModel().getEconomy();
         if (finances == null) return;
         var nullAmountOfMoney = new AmountOfMoney(0);
         if (currentFinance) {

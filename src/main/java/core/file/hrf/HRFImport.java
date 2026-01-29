@@ -6,7 +6,7 @@ import core.gui.HOMainFrame;
 import core.gui.InfoPanel;
 import core.gui.RefreshManager;
 import core.model.HOModel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.util.HODateTime;
@@ -46,7 +46,7 @@ public class HRFImport {
 
 				// remember path
 				UserParameter.instance().hrfImport_HRFPath = files[i].getParentFile().getAbsolutePath();
-				var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+				var teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
 				frame.setInformation(getLangStr("StartParse"));
 				homodel = HRFFileParser.parse(files[i]);
 				var errorMessage = "Importfehler";
@@ -91,8 +91,8 @@ public class HRFImport {
 				}
 			}
 
-			HOVerwaltung.instance().loadLatestHoModel();
-			HOModel hom = HOVerwaltung.instance().getModel();
+			HOModelManager.instance().loadLatestHoModel();
+			HOModel hom = HOModelManager.instance().getModel();
 
 			RefreshManager.instance().doReInit();
 		}

@@ -1,7 +1,7 @@
 package module.youth;
 
 import core.gui.comp.entry.IHOTableEntry;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 
 import javax.swing.*;
 import javax.swing.event.ListDataListener;

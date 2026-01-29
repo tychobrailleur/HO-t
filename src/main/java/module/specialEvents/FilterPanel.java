@@ -5,7 +5,7 @@ import core.datatype.ComboItem;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.match.IMatchDetails;
 import core.model.player.Player;
@@ -411,7 +411,7 @@ public class FilterPanel extends JPanel {
 		Comparator<Player> comparator = Comparator.comparing(Player::getFullName);
 
 		List<ComboItem> playerItems = new ArrayList<>();
-		List<Player> players = new ArrayList<>(HOVerwaltung.instance().getModel()
+		List<Player> players = new ArrayList<>(HOModelManager.instance().getModel()
 				.getCurrentPlayers());
 		Collections.sort(players, comparator);
 		for (Player player : players) {
@@ -420,7 +420,7 @@ public class FilterPanel extends JPanel {
 		}
 
 		if (!currentPlayersOnly) {
-			players = new ArrayList<>(HOVerwaltung.instance().getModel().getFormerPlayers());
+			players = new ArrayList<>(HOModelManager.instance().getModel().getFormerPlayers());
 			Collections.sort(players, comparator);
 			if (!players.isEmpty()) {
 				playerItems.add(null);

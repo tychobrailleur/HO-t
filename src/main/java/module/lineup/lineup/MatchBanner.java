@@ -5,7 +5,7 @@ import core.gui.model.MatchOrdersCBItem;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.enums.MatchType;
 import core.model.match.Weather;
 import core.net.HattrickLink;
@@ -215,7 +215,7 @@ public class MatchBanner extends JPanel implements Refreshable {
             }
             String sLabel = "<html><div style='text-align: center;'>" + sDate + "\n";
             if (matchType == MatchType.LEAGUE) {
-                sLabel += String.format(Helper.getTranslation("ls.module.lineup.matchSchedule"), htWeek, HOVerwaltung.instance().getModel().getLeague().getLiga());
+                sLabel += String.format(Helper.getTranslation("ls.module.lineup.matchSchedule"), htWeek, HOModelManager.instance().getModel().getLeague().getLiga());
             }
             else if (matchType.isFriendly()) {
                 sLabel += "<br>" + matchType.getName();

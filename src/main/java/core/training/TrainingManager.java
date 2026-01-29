@@ -2,7 +2,7 @@ package core.training;
 
 import core.db.DBManager;
 import core.gui.HOMainFrame;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.util.HODateTime;
 import core.util.HOLogger;
@@ -31,7 +31,7 @@ public class TrainingManager implements PropertyChangeListener {
 
 
 	public void propertyChange(PropertyChangeEvent evt) {
-		HOLogger.instance().debug(this.getClass(), "HOVerwaltung model changed => TrainingManager and TrainingWeekManager are reinitialized");
+		HOLogger.instance().debug(this.getClass(), "HOModelManager model changed => TrainingManager and TrainingWeekManager are reinitialized");
 		m_clInstance = null;
 		if (recentTrainings != null) {
 			recentTrainings.reset();
@@ -43,9 +43,9 @@ public class TrainingManager implements PropertyChangeListener {
      */
     private TrainingManager() {
 
-		if ( HOVerwaltung.instance().getModel() == null ) return; // nothing loaded yet
+		if ( HOModelManager.instance().getModel() == null ) return; // nothing loaded yet
 
-		if (HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
+		if (HOModelManager.instance().getModel().getBasics().isNationalTeam()) {
 			historicalTrainings = null;
 			nextWeekTraining = null;
 			recentTrainings = null;
@@ -63,7 +63,7 @@ public class TrainingManager implements PropertyChangeListener {
 			recentTrainings = new TrainingWeekManager(previousTrainingDate.plus(1, ChronoUnit.DAYS), false, true);
 		}
 		else {
-			var startDate = HOVerwaltung.instance().getModel().getBasics().getActivationDate();
+			var startDate = HOModelManager.instance().getModel().getBasics().getActivationDate();
 			if ( startDate != null ) {
 				recentTrainings = new TrainingWeekManager(startDate, false, true);
 			}
@@ -71,7 +71,7 @@ public class TrainingManager implements PropertyChangeListener {
 		// Load next week training
 		nextWeekTraining = recentTrainings.getNextWeekTraining();
 		lastTrainingDate = recentTrainings.getLastUpdateDate();
-		HOVerwaltung.instance().addPropertyChangeListener(this);
+		HOModelManager.instance().addPropertyChangeListener(this);
     }
 
 	/**
@@ -119,7 +119,7 @@ public class TrainingManager implements PropertyChangeListener {
         if (JOptionPane.showConfirmDialog(HOMainFrame.instance(),
         		TranslationFacility.tr("Subskill.Recalc.Full")+"\n"+TranslationFacility.tr("subskill.Recalc.Start"),
 				TranslationFacility.tr("ls.menu.file.subskillrecalculation"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
-            HOVerwaltung.instance().recalcSubskills(showBar, null);
+            HOModelManager.instance().recalcSubskills(showBar, null);
         }
     }
 

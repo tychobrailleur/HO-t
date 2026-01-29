@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import core.file.xml.TeamStats;
 import core.file.xml.XMLLeagueDetailsParser;
 import core.file.xml.XMLTeamDetailsParser;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.net.MyConnector;
 import core.util.HOLogger;
 
@@ -120,8 +120,8 @@ public class DownloadCountryDetails {
     }
 
     public void processSeries(BlockInfo blockInfo) {
-        int season = HOVerwaltung.instance().getModel().getBasics().getSeason();
-        String username = HOVerwaltung.instance().getModel().getBasics().getManager();
+        int season = HOModelManager.instance().getModel().getBasics().getSeason();
+        String username = HOModelManager.instance().getModel().getBasics().getManager();
 
         CountryTeamInfo countryTeamInfo = new CountryTeamInfo();
         countryTeamInfo.leagueId = blockInfo.leagueId;

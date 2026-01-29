@@ -9,7 +9,7 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoubleLabelEntries;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.ImageUtilities;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
@@ -202,7 +202,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         if (e.getSource().equals(m_jbAddTempSpieler)) {
             var player = new Player();
             player.setHrfDate();
-            player.setNationalityId(HOVerwaltung.instance().getModel().getBasics().getLand());
+            player.setNationalityId(HOModelManager.instance().getModel().getBasics().getLand());
             player.setPlayerId(module.transfer.scout.TransferEingabePanel.getNextTempSpielerID());
             player.setLastName("Temp " + Math.abs(1000 + player.getPlayerId()));
             player.setAge(getAge());
@@ -220,11 +220,11 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
             player.setPlaymakingSkill(((CBItem) m_jcbSpielaufbau.getSelectedItem()).getId());
             player.setLoyalty(((CBItem) m_jcbLoyalty.getSelectedItem()).getId());
             player.setHomeGrown(m_jchHomegrown.isSelected());
-            HOVerwaltung.instance().getModel().addPlayer(player);
+            HOModelManager.instance().getModel().addPlayer(player);
             RefreshManager.instance().doReInit();
             HOMainFrame.instance().showTab(IModule.PLAYEROVERVIEW);
         } else if (e.getSource().equals(m_jbRemoveTempSpieler)) {
-            HOVerwaltung.instance().getModel().removePlayer(m_clPlayer);
+            HOModelManager.instance().getModel().removePlayer(m_clPlayer);
             RefreshManager.instance().doReInit();
             HOMainFrame.instance().showTab(IModule.PLAYEROVERVIEW);
         }
@@ -339,7 +339,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
     }
 
     private void showWithCompare(DoubleLabelEntries labelEntry, byte playerPosition) {
-        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+        var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
 
         var playerAbsoluteValue = ratingPredictionModel.getPlayerMatchAverageRating(m_clPlayer, playerPosition);
         var tmpAbsoluteValue = ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, playerPosition);

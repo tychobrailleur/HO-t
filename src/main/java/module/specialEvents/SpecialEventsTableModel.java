@@ -7,7 +7,7 @@ import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnController;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.match.IMatchDetails;
 import core.util.HODateTime;
 
@@ -110,8 +110,8 @@ public class SpecialEventsTableModel extends HOTableModel {
 						if (!playerName.isEmpty()){
 							sb.append(playerName);
 							var assistingPlayerId = highlight.getAssistingPlayerId();
-							if (HOVerwaltung.instance().getModel().getCurrentPlayer(assistingPlayerId) != null ||
-                                    HOVerwaltung.instance().getModel().getFormerPlayers().stream().anyMatch(i->i.getPlayerId()==assistingPlayerId)){
+							if (HOModelManager.instance().getModel().getCurrentPlayer(assistingPlayerId) != null ||
+                                    HOModelManager.instance().getModel().getFormerPlayers().stream().anyMatch(i->i.getPlayerId()==assistingPlayerId)){
 								sb.append(" - ").append(highlight.getAssistingPlayerName());
 							}
 						}

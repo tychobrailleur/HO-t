@@ -2,7 +2,7 @@
 package module.teamAnalyzer.report;
 
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.prediction.engine.TeamData;
 import core.specialevents.SpecialEventsPredictionManager;
@@ -71,7 +71,7 @@ public class TeamReport {
         this.averageRatingslineup = new TeamLineupBuilder(this)
                 .setName(TranslationFacility.tr("Durchschnitt")).build();
 
-        if ( HOVerwaltung.instance().getModel().getBasics().isNationalTeam()){
+        if ( HOModelManager.instance().getModel().getBasics().isNationalTeam()){
             this.averageRatingslineup.setNtTeamDetails(DBManager.instance().loadNtTeamDetails(this.teamId, null));
         }
     }
@@ -89,7 +89,7 @@ public class TeamReport {
         this.teamId = teamId;
         addMatch(matchDetail, squadInfo , SystemManager.isShowUnavailable.isSet());
         this.averageRatingslineup = new TeamLineupBuilder(this).setMatchDetail(matchDetail).setSquadInfo(squadInfo).build();
-        if (HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
+        if (HOModelManager.instance().getModel().getBasics().isNationalTeam()) {
             this.averageRatingslineup.setNtTeamDetails(DBManager.instance().loadNtTeamDetails(this.teamId, matchDetail.getMatch().getMatchDate().toDbTimestamp()));
         }
     }
@@ -201,7 +201,7 @@ public class TeamReport {
 
     private void addSpecialEvents(MatchDetail matchDetail)
     {
-        Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+        Lineup lineup = HOModelManager.instance().getModel().getCurrentLineup();
 
         if ( this.specialEventsPredictionManager == null){
             this.specialEventsPredictionManager = new SpecialEventsPredictionManager();

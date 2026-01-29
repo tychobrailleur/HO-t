@@ -4,7 +4,7 @@ package module.transfer;
 
 import core.db.DBManager;
 import core.file.xml.XMLManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.player.Player;
 import core.net.MyConnector;
 import core.util.AmountOfMoney;
@@ -299,7 +299,7 @@ public final class XMLParser {
         var transfers = getAllPlayerTransfers(playerID);
         if (!transfers.isEmpty()) {
             var firstTransfer = transfers.get(transfers.size()-1);
-            var isHomegrown = firstTransfer.getSellerid() == HOVerwaltung.instance().getModel().getBasics().getTeamId();
+            var isHomegrown = firstTransfer.getSellerid() == HOModelManager.instance().getModel().getBasics().getTeamId();
             for ( var transfer : transfers){
                 transfer.getPlayerInfo().setHomeGrown(isHomegrown);
                 DBManager.instance().storePlayerTransfer(transfer);

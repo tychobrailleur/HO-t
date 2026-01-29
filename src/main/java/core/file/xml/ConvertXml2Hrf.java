@@ -11,7 +11,7 @@ import core.file.hrf.HRFStringBuilder;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.arena.Arena;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineupTeam;
@@ -53,8 +53,8 @@ public class ConvertXml2Hrf {
         int progressIncrement = 3;
         HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.connection"), progressIncrement);
         final MyConnector mc = MyConnector.instance();
-        int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-        Integer youthTeamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
+        int teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
+        Integer youthTeamId = HOModelManager.instance().getModel().getBasics().getYouthTeamId();
 
         String teamDetails = mc.getTeamDetails(-1);
 
@@ -269,12 +269,12 @@ public class ConvertXml2Hrf {
      * @return true if stored transfers are not fitting to economy data
      */
     private static boolean areTransfersMissing(Map<String, String> economyDataMap) {
-        if (!HOVerwaltung.instance().getModel().getCurrentPlayers().isEmpty()) { // do not download transfers on fresh database
+        if (!HOModelManager.instance().getModel().getCurrentPlayers().isEmpty()) { // do not download transfers on fresh database
             var income = Integer.parseInt(economyDataMap.get("IncomeSoldPlayers")) + Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayers"));
             var costs = Integer.parseInt(economyDataMap.get("CostsBoughtPlayers")) + Integer.parseInt(economyDataMap.get("LastCostsBoughtPlayers"));
             var commission = Integer.parseInt(economyDataMap.get("IncomeSoldPlayersCommission")) + Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayersCommission"));
             if (income > 0 || costs > 0 || commission > 0) {
-                var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+                var teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
                 var previousWeek = HODateTime.now().minus(7, ChronoUnit.DAYS).toHTWeek();
                 var transfers = DBManager.instance().getTransfersSince(HODateTime.fromHTWeek(previousWeek).toDbTimestamp());
                 if (income > 0) {

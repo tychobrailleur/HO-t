@@ -1,6 +1,6 @@
 package module.teamAnalyzer.vo;
 
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.Translator;
 import core.model.match.IMatchDetails;
@@ -47,7 +47,7 @@ public class MatchRating {
         attitude = attitude.toLowerCase();
 
         ResourceBundle englishBundle = Translator.loadDefault().getResourceBundle();
-        HOVerwaltung hoi = HOVerwaltung.instance();
+        HOModelManager hoi = HOModelManager.instance();
 
         String english_attitudeType = englishBundle.getString("ls.team.teamattitude.normal").toLowerCase();
         String local_attitudeType = TranslationFacility.tr("ls.team.teamattitude.normal").toLowerCase();
@@ -83,7 +83,7 @@ public class MatchRating {
         tacticType = tacticType.toLowerCase();
 
         ResourceBundle englishBundle = Translator.loadDefault().getResourceBundle();
-        HOVerwaltung hoi = HOVerwaltung.instance();
+        HOModelManager hoi = HOModelManager.instance();
 
         String english_tactictype = englishBundle.getString("ls.team.tactic.normal").toLowerCase();
         String local_tactictype = TranslationFacility.tr("ls.team.tactic.normal").toLowerCase();

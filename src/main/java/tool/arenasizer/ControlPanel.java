@@ -2,7 +2,7 @@ package tool.arenasizer;
 
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.util.HOLogger;
 
@@ -135,8 +135,8 @@ class ControlPanel extends JPanel implements ActionListener {
 	//Init aus dem HRF
 	private void initStadium() {
 		//Nur, wenn es eine HRFArena ist
-		Stadium m_clStadium = HOVerwaltung.instance().getModel().getStadium();
-		int fans = HOVerwaltung.instance().getModel().getClub().getFans();
+		Stadium m_clStadium = HOModelManager.instance().getModel().getStadium();
+		int fans = HOModelManager.instance().getModel().getClub().getFans();
 
 		m_jtfFans.setText(fans + "");
 		terracesField.setText(m_clStadium.getTerraces() + "");

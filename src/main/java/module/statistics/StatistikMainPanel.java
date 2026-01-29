@@ -2,7 +2,7 @@
 package module.statistics;
 
 import core.gui.comp.panel.LazyImagePanel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 
 import java.awt.BorderLayout;

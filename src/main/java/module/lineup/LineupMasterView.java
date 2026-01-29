@@ -2,7 +2,7 @@ package module.lineup;
 
 import core.gui.RefreshManager;
 import core.gui.Refreshable;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
@@ -41,7 +41,7 @@ public class LineupMasterView extends JPanel {
 
 	private void initComponents() {
 		this.tabbedPane = new JTabbedPane();
-		HOVerwaltung hov = HOVerwaltung.instance();
+		HOModelManager hov = HOModelManager.instance();
 
 		this.lineupPanel = new LineupPanel();
 		this.tabbedPane.addTab(TranslationFacility.tr("Aufstellung"), this.lineupPanel);
@@ -91,12 +91,12 @@ public class LineupMasterView extends JPanel {
 		for (int i = 0; i < takers.size(); i++) {
 			list.add(new MatchLineupPosition(IMatchRoleID.penaltyTaker1 + i, takers.get(i).getPlayer().getPlayerId(), IMatchRoleID.NORMAL));
 		}
-		HOVerwaltung.instance().getModel().getCurrentLineup().setPenaltyTakers(list);
+		HOModelManager.instance().getModel().getCurrentLineup().setPenaltyTakers(list);
 	}
 	
 	private void refreshView() {
-		this.substitutionOverview.setLineup(HOVerwaltung.instance().getModel().getCurrentLineup());
-		this.penaltyTakersView.setPlayers(HOVerwaltung.instance().getModel().getCurrentPlayers());
-		this.penaltyTakersView.setLineup(HOVerwaltung.instance().getModel().getCurrentLineup());
+		this.substitutionOverview.setLineup(HOModelManager.instance().getModel().getCurrentLineup());
+		this.penaltyTakersView.setPlayers(HOModelManager.instance().getModel().getCurrentPlayers());
+		this.penaltyTakersView.setLineup(HOModelManager.instance().getModel().getCurrentLineup());
 	}
 }

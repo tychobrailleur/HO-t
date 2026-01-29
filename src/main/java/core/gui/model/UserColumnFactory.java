@@ -9,7 +9,7 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOModel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.enums.MatchType;
 import core.model.match.MatchKurzInfo;
 import core.model.match.Matchdetails;
@@ -83,7 +83,7 @@ final public class UserColumnFactory {
                         ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                 var position = spielerCBItem.getPosition();
                 if (aPositionBehaviours.contains(position)) {
-                    var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+                    var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
                     var r = ratingPredictionModel.getPlayerMatchAverageRating(spielerCBItem.getSpieler(), (byte) position);
                     colorLabelEntry.setText(MatchRoleID.getNameForPosition((byte) position)
                             + String.format("(%.2f)", r));
@@ -141,7 +141,7 @@ final public class UserColumnFactory {
         matchDetailsColumnsArray[1] = new MatchDetailsColumn(560, "ls.team.teamattitude") {
             @Override
             public IHOTableEntry getTableEntry(Matchdetails matchdetails) {
-                final int teamid = HOVerwaltung.instance().getModel()
+                final int teamid = HOModelManager.instance().getModel()
                         .getBasics().getTeamId();
                 int einstellung = (matchdetails.getHomeTeamId() == teamid) ? matchdetails.getHomeEinstellung() : matchdetails.getGuestEinstellung();
                 return new ColorLabelEntry(Matchdetails.getNameForEinstellung(einstellung), ColorLabelEntry.FG_STANDARD,
@@ -151,7 +151,7 @@ final public class UserColumnFactory {
         matchDetailsColumnsArray[2] = new MatchDetailsColumn(570, "ls.team.tactic") {
             @Override
             public IHOTableEntry getTableEntry(Matchdetails matchdetails) {
-                final int teamid = HOVerwaltung.instance().getModel()
+                final int teamid = HOModelManager.instance().getModel()
                         .getBasics().getTeamId();
                 int tactic = (matchdetails.getHomeTeamId() == teamid) ? matchdetails.getHomeTacticType() : matchdetails.getGuestTacticType();
                 return new ColorLabelEntry(Matchdetails.getNameForTaktik(tactic), ColorLabelEntry.FG_STANDARD,
@@ -161,7 +161,7 @@ final public class UserColumnFactory {
         matchDetailsColumnsArray[3] = new MatchDetailsColumn(580, "ls.team.tacticalskill") {
             @Override
             public IHOTableEntry getTableEntry(Matchdetails matchdetails) {
-                final int teamid = HOVerwaltung.instance().getModel()
+                final int teamid = HOModelManager.instance().getModel()
                         .getBasics().getTeamId();
                 int tacticSkill = (matchdetails.getHomeTeamId() == teamid) ? matchdetails.getHomeTacticSkill() : matchdetails.getGuestTacticSkill();
                 return new ColorLabelEntry(PlayerAbility.getNameForSkill(tacticSkill), ColorLabelEntry.FG_STANDARD,
@@ -243,7 +243,7 @@ final public class UserColumnFactory {
         playerBasicArray[0] = new PlayerColumn(NAME, "ls.player.name", 160) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                var team = HOVerwaltung.instance().getModel().getCurrentLineup();
+                var team = HOModelManager.instance().getModel().getCurrentLineup();
                 var pos = team.getPositionById(player.getPlayerId());
                 return new PlayerLabelEntry(player, pos, 0f, false, false);
             }
@@ -352,7 +352,7 @@ final public class UserColumnFactory {
             public IHOTableEntry getTableEntry(MatchKurzInfo match) {
                 ColorLabelEntry entry = new ColorLabelEntry(match.getHomeTeamName(), ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-                entry.setFGColor((match.getHomeTeamID() == HOVerwaltung.instance().getModel().getBasics()
+                entry.setFGColor((match.getHomeTeamID() == HOModelManager.instance().getModel().getBasics()
                         .getTeamId()) ? ThemeManager.getColor(HOColorName.HOME_TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
 
                 if ((match.getMatchStatus() == MatchKurzInfo.FINISHED) && (match.getHomeTeamGoals() > match.getGuestTeamGoals())) {
@@ -368,7 +368,7 @@ final public class UserColumnFactory {
                 ColorLabelEntry entry = new ColorLabelEntry(spielerCBItem.getHomeTeamName(),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.LEFT);
-                entry.setFGColor((spielerCBItem.getHeimID() == HOVerwaltung.instance().getModel().getBasics()
+                entry.setFGColor((spielerCBItem.getHeimID() == HOModelManager.instance().getModel().getBasics()
                         .getTeamId()) ? ThemeManager.getColor(HOColorName.HOME_TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
                 return entry;
             }
@@ -385,7 +385,7 @@ final public class UserColumnFactory {
             public IHOTableEntry getTableEntry(MatchKurzInfo match) {
                 ColorLabelEntry entry = new ColorLabelEntry(match.getGuestTeamName(), ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-                entry.setFGColor((match.getGuestTeamID() == HOVerwaltung.instance().getModel().getBasics()
+                entry.setFGColor((match.getGuestTeamID() == HOModelManager.instance().getModel().getBasics()
                         .getTeamId()) ? ThemeManager.getColor(HOColorName.HOME_TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
 
                 if ((match.getMatchStatus() == MatchKurzInfo.FINISHED) && (match.getHomeTeamGoals() < match.getGuestTeamGoals())) {
@@ -402,7 +402,7 @@ final public class UserColumnFactory {
                 ColorLabelEntry entry = new ColorLabelEntry(spielerCBItem.getGuestTeamName(),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.LEFT);
-                entry.setFGColor((spielerCBItem.getGastID() == HOVerwaltung.instance().getModel().getBasics()
+                entry.setFGColor((spielerCBItem.getGastID() == HOModelManager.instance().getModel().getBasics()
                         .getTeamId()) ? ThemeManager.getColor(HOColorName.HOME_TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
                 return entry;
             }
@@ -591,7 +591,7 @@ final public class UserColumnFactory {
         playerAdditionalArray[4] = new PlayerColumn(LINEUP, " ", "Aufgestellt", 40) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                final HOModel model = HOVerwaltung.instance().getModel();
+                final HOModel model = HOModelManager.instance().getModel();
                 var team = model.getCurrentLineup();
                 final MatchRoleID positionBySpielerId =  team.getPositionByPlayerId(player.getPlayerId());
                 if (team.isPlayerInLineup(player.getPlayerId()) && positionBySpielerId != null) {

@@ -1,7 +1,7 @@
 package module.lineup.assistant;
 
 import core.gui.HOMainFrame;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.match.MatchLineupPosition;
 import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
@@ -333,7 +333,7 @@ public class LineupAssistant {
 	 * team, <code>false</code> otherwise.
 	 */
 	public static boolean isPlayerEnabledForLineup(int playerID) {
-		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
+		List<Player> players = HOModelManager.instance().getModel().getCurrentPlayers();
 		for (Player player : players) {
 			if (player.getPlayerId() == playerID) {
 				return player.getCanBeSelectedByAssistant();
@@ -351,7 +351,7 @@ public class LineupAssistant {
 		Player bestPlayer = null;
 		double maxRating = -1.0f;
 
-		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+		var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
 
 		if (players != null) {
 			for (var player : players) {

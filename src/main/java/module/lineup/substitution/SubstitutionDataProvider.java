@@ -1,7 +1,7 @@
 package module.lineup.substitution;
 
 import core.datatype.CBItem;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.GoalDiffCriteria;
@@ -20,7 +20,7 @@ public class SubstitutionDataProvider {
 
 	public static Map<Integer, PlayerPositionItem> getFieldAndSubPlayerPosition() {
 		LinkedHashMap<Integer, PlayerPositionItem> positionMap = new LinkedHashMap<>();
-		Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+		Lineup lineup = HOModelManager.instance().getModel().getCurrentLineup();
 
 		for (Integer i : aFieldAndSubsMatchRoleID) {
 			var player = lineup.getPlayerByPositionID(i);
@@ -35,7 +35,7 @@ public class SubstitutionDataProvider {
 	public static List<PlayerPositionItem> getFieldPositions(List<Integer> aMatchRoleID , boolean includeEmptyPositions) {
 		List<PlayerPositionItem> playerItems = new ArrayList<>();
 
-		Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+		Lineup lineup = HOModelManager.instance().getModel().getCurrentLineup();
 		for (Integer i : aMatchRoleID) {
 			var player = lineup.getPlayerByPositionID(i);
 			if (player != null || includeEmptyPositions) {
@@ -48,7 +48,7 @@ public class SubstitutionDataProvider {
 	public static List<PlayerPositionItem> getFieldPositions(int start, int end, boolean includeEmptyPositions) {
 		List<PlayerPositionItem> playerItems = new ArrayList<>();
 
-		Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+		Lineup lineup = HOModelManager.instance().getModel().getCurrentLineup();
 		for (int i = start; i <= end; i++) {
 			var player = lineup.getPlayerByPositionID(i);
 			if (player != null || includeEmptyPositions) {

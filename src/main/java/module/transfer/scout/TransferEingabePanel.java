@@ -9,7 +9,7 @@ import core.gui.comp.HyperLinkLabel;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoubleLabelEntries;
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
@@ -160,7 +160,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             copyPaste();
         } else if (actionEvent.getSource().equals(jbAddTempSpieler)) {
             final core.model.player.Player tempPlayer = new core.model.player.Player();
-            tempPlayer.setNationalityId(HOVerwaltung.instance().getModel().getBasics().getLand());
+            tempPlayer.setNationalityId(HOModelManager.instance().getModel().getBasics().getLand());
             tempPlayer.setPlayerId(getNextTempSpielerID());
             if (jtfName.getText().trim().isEmpty()) {
                 tempPlayer.setLastName("Temp " + Math.abs(1000 + tempPlayer.getPlayerId()));
@@ -186,7 +186,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             tempPlayer.setHomeGrown(jchHomegrown.isSelected());
             tempPlayer.setHrfDate(HODateTime.now());
             tempPlayer.setWage(AmountOfMoney.parse(jtfWage.getText()));
-            HOVerwaltung.instance().getModel().addPlayer(tempPlayer);
+            HOModelManager.instance().getModel().addPlayer(tempPlayer);
             RefreshManager.instance().doReInit();
             HOMainFrame.instance().showTab(IModule.PLAYEROVERVIEW);
         }
@@ -350,7 +350,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         tempPlayer.setHomeGrown(jchHomegrown.isSelected());
         tempPlayer.setAge(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
         tempPlayer.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
-        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+        var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
         byte bIdealPosition = tempPlayer.getIdealPosition();
         jpBestPosition.setText(String.format("%s (%.2f)", MatchRoleID.getNameForPosition(bIdealPosition), tempPlayer.getIdealPositionRating()));
         jpRatingKeeper.getLeft().setText(Helper.getNumberFormat( UserParameter.instance().nbDecimals)

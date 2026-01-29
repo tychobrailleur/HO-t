@@ -5,7 +5,7 @@ import core.constants.player.PlayerSkill;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
 import core.gui.theme.ImageUtilities;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.player.Player;
 import core.model.player.SkillChange;
@@ -90,8 +90,8 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 
 	@Override
 	protected void update() {
-		this.skillups = getSkillups(HOVerwaltung.instance().getModel().getCurrentPlayers());
-		this.skillupsOld = getSkillups(HOVerwaltung.instance().getModel().getFormerPlayers());
+		this.skillups = getSkillups(HOModelManager.instance().getModel().getCurrentPlayers());
+		this.skillupsOld = getSkillups(HOModelManager.instance().getModel().getFormerPlayers());
 		updateFilterPanel();
 		updateTableModel();		
 	}

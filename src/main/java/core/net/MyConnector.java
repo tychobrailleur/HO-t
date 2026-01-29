@@ -11,7 +11,7 @@ import core.HO;
 import core.file.xml.XMLCHPPPreParser;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.enums.MatchType;
@@ -288,7 +288,7 @@ public class MyConnector {
 	 */
 	public String downloadMatchOrder(int matchId, MatchType matchType, int teamId) {
 		String url = getMatchOrdersURl() + "&matchID=" + matchId + "&sourceSystem=" + matchType.getSourceString();
-		if (!HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
+		if (!HOModelManager.instance().getModel().getBasics().isNationalTeam()) {
 			url += "&teamId=" + teamId;
 		}
 		return getCHPPWebFile(url);
@@ -309,7 +309,7 @@ public class MyConnector {
 	public String uploadMatchOrder(int matchId, int teamId, MatchType matchType, String orderString)
 			throws IOException {
 		StringBuilder urlpara = new StringBuilder(getMatchOrdersURl());
-		if (teamId > 0 && !HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
+		if (teamId > 0 && !HOModelManager.instance().getModel().getBasics().isNationalTeam()) {
 			urlpara.append("&teamId=").append(teamId);
 		}
 

@@ -1,7 +1,7 @@
 package module.transfer.scout;
 
 import core.constants.player.PlayerSpeciality;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
@@ -41,7 +41,7 @@ public class PlayerConverter {
 	private int status;
     final private List<String> errorFields;
     final private List<String> notSupportedFields;
-    final HOVerwaltung homodel = HOVerwaltung.instance();
+    final HOModelManager homodel = HOModelManager.instance();
 
 	static {
 		for (int m = 97; m <= 122; m++) { // a-z

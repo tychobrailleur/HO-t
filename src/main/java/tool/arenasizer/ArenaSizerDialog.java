@@ -1,6 +1,6 @@
 package tool.arenasizer;
 
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 
 import javax.swing.*;
@@ -86,7 +86,7 @@ public class ArenaSizerDialog extends JDialog implements ActionListener {
 	private JTabbedPane getTabbedPane() {
 		if (tabbedPane == null) {
 			tabbedPane = new JTabbedPane();
-			HOVerwaltung hoV = HOVerwaltung.instance();
+			HOModelManager hoV = HOModelManager.instance();
 			tabbedPane.addTab(TranslationFacility.tr("Stadion"), getArenaPanel());
 			tabbedPane.addTab(hoV.getModel().getStadium().getStadiumName(), getArenaInfoPanel());
 			tabbedPane.addTab(TranslationFacility.tr("Statistik"), getHistoryPanel());

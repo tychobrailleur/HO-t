@@ -2,7 +2,7 @@ package module.specialEvents;
 
 import core.db.DBManager;
 //import core.db.MatchesOverviewQuery;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.match.MatchEvent;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
@@ -53,7 +53,7 @@ public class SpecialEventsDM {
 	}
 
 	private List<MatchKurzInfo> getMatches(Filter filter) {
-		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		int teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
 		Timestamp from=null;
 		if (filter.getSeasonFilterValue() != SeasonFilterValue.ALL_SEASONS) {
 			from = getMatchDateFrom(filter.getSeasonFilterValue());
@@ -186,9 +186,9 @@ public class SpecialEventsDM {
 		}
 
 		if (filter.isShowOwnPlayersOnly()) {
-			List<Player> players = new ArrayList<>(HOVerwaltung.instance().getModel().getCurrentPlayers());
+			List<Player> players = new ArrayList<>(HOModelManager.instance().getModel().getCurrentPlayers());
 			if (!filter.isShowCurrentOwnPlayersOnly()) {
-				players.addAll(HOVerwaltung.instance().getModel().getFormerPlayers());
+				players.addAll(HOModelManager.instance().getModel().getFormerPlayers());
 			}
 
 			boolean playerFound = false;
@@ -232,7 +232,7 @@ public class SpecialEventsDM {
 	public static String getSpielerName(MatchEvent highlight) {
 		String name;
 		// if(highlight.getTeamId() == teamId && !isNegativeSE(highlight))
-		if (highlight.getTeamID() == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
+		if (highlight.getTeamID() == HOModelManager.instance().getModel().getBasics().getTeamId()) {
 			name = findName(highlight) + "|*";} // -> black
 		else {
 			name = findName(highlight) + "|-"; // -> red
@@ -246,7 +246,7 @@ public class SpecialEventsDM {
 			return null;
 		}
 		Calendar cal = Calendar.getInstance();
-		int week = HOVerwaltung.instance().getModel().getBasics().getSpieltag();
+		int week = HOModelManager.instance().getModel().getBasics().getSpieltag();
 		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 		int dayCorrection = 0;
 		if (dayOfWeek != 7) {

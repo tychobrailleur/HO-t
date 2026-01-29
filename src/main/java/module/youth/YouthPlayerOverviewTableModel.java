@@ -8,7 +8,7 @@ import core.gui.model.UserColumnController;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.player.Player;
 import core.util.HODateTime;
 
@@ -236,7 +236,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
     @Override
     protected void initData() {
         UserColumn[] displayedColumns = getDisplayedColumns();
-        var youthplayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
+        var youthplayers = HOModelManager.instance().getModel().getCurrentYouthPlayers();
         m_clData = new Object[youthplayers.size()][columns.length];
         int playernum = 0;
         for (var player : youthplayers) {

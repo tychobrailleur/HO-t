@@ -511,7 +511,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     }
 
     private String getFormationExperienceTooltip() {
-        Team team = HOVerwaltung.instance().getModel().getTeam();
+        Team team = HOModelManager.instance().getModel().getTeam();
         StringBuilder builder = new StringBuilder();
         int exp = team.getFormationExperience550();
         builder.append("<html>");
@@ -568,15 +568,15 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     }
 
     public void calculateRatings() {
-        if (HOVerwaltung.instance().getModel().getTeam() != null) {
-            final HOModel homodel = HOVerwaltung.instance().getModel();
+        if (HOModelManager.instance().getModel().getTeam() != null) {
+            final HOModel homodel = HOModelManager.instance().getModel();
 
             var team = homodel.getCurrentLineupTeam();
             final Lineup currentLineup = team.getLineup();
             m_jpMinuteToggler.load();
             clear();
 
-            var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+            var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
 
             MinuteRating minuteRating;
             final int minute = m_jpMinuteToggler.getCurrentKey();

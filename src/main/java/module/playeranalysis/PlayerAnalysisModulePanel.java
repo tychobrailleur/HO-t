@@ -1,7 +1,7 @@
 package module.playeranalysis;
 
 import core.gui.comp.panel.LazyImagePanel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.module.config.ModuleConfig;
 import module.playeranalysis.skillCompare.PlayerComparePanel;

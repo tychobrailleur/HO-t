@@ -13,7 +13,7 @@ import core.gui.theme.gnome.GnomeTheme;
 import core.gui.theme.ho.HOClassicSchema;
 import core.gui.theme.light.SolarizedLightTheme;
 import core.gui.theme.nimbus.NimbusTheme;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.UserParameter;
 import core.model.player.PlayerAvatar;
 import core.net.MyConnector;
@@ -420,7 +420,7 @@ public final class ThemeManager {
 	 * @param playerId int
 	 */
 	public void downloadPlayerAvatar(int playerId) {
-		var xml = MyConnector.instance().getAvatars(HOVerwaltung.instance().getModel().getBasics().getTeamId());
+		var xml = MyConnector.instance().getAvatars(HOModelManager.instance().getModel().getBasics().getTeamId());
 		List<PlayerAvatar> playersAvatar = XMLAvatarsParser.parseAvatarsFromString(xml);
 		var playerAvatar = playersAvatar.stream().filter(a -> a.getPlayerID() == playerId).toList();
 		for (var p : playerAvatar) {

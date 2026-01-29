@@ -3,7 +3,7 @@ package module.youth;
 import core.constants.player.PlayerSkill;
 import core.db.AbstractTable;
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.enums.MatchType;
@@ -59,7 +59,7 @@ public class YouthTraining extends AbstractTable.Storable {
     }
 
     public void recalcSkills() {
-        var team = this.getMatchLineup().getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
+        var team = this.getMatchLineup().getTeam(HOModelManager.instance().getModel().getBasics().getYouthTeamId());
         var lineup = team.getLineup();
         var allActivePlayers = new Vector<MatchLineupPosition>();
         allActivePlayers.addAll(lineup.getFieldPositions());
@@ -72,7 +72,7 @@ public class YouthTraining extends AbstractTable.Storable {
 
     private void recalcSkills(int playerId) {
         var since = this.matchLineup.getMatchDate();
-        var p = HOVerwaltung.instance().getModel().getCurrentYouthPlayer(playerId);
+        var p = HOModelManager.instance().getModel().getCurrentYouthPlayer(playerId);
         if (p != null) {
             p.recalcSkills(since);
         }
@@ -171,7 +171,7 @@ public class YouthTraining extends AbstractTable.Storable {
                     for (var prioPositions : train.getTrainedSectors()) {
                         int minutesInPrioPositions = lineupTeam.getTrainingMinutesPlayedInSectors(player.getId(),
                                 prioPositions,
-                                this.getMatchDetails().isWalkoverMatchWin(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId()));
+                                this.getMatchDetails().isWalkoverMatchWin(HOModelManager.instance().getModel().getBasics().getYouthTeamId()));
                         if (minutesInPrioPositions + totalTrainedMinutes > 90) {
                             minutesInPrioPositions = 90 - totalTrainedMinutes;
                         }
@@ -224,7 +224,7 @@ public class YouthTraining extends AbstractTable.Storable {
 
     public String getPlayerTrainedSectors(int playerId) {
         var ret = new StringBuilder();
-        var hov = HOVerwaltung.instance();
+        var hov = HOModelManager.instance();
         var lineupTeam = this.getTeam(hov.getModel().getBasics().getYouthTeamId());
         var sectors = lineupTeam.getTrainMinutesPlayedInSectors(playerId);
         for ( var s : sectors.entrySet()){
@@ -284,7 +284,7 @@ public class YouthTraining extends AbstractTable.Storable {
     );
 
     public double getRating(int playerId) {
-        var player = this.getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId()).getPlayerByID(playerId);
+        var player = this.getTeam(HOModelManager.instance().getModel().getBasics().getYouthTeamId()).getPlayerByID(playerId);
         if ( player != null ) return player.getRating();
         return 0;
     }

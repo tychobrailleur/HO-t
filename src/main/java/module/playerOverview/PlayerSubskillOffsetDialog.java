@@ -5,7 +5,7 @@ import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.player.Player;
 import core.option.SliderPanel;
@@ -83,10 +83,10 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.FORM, formOffsetSlider.getValue() / 100);
 			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.STAMINA, staminaOffsetSlider.getValue() / 100);
 
-			DBManager.instance().saveSpieler(HOVerwaltung.instance().getModel().getCurrentPlayers());
+			DBManager.instance().saveSpieler(HOModelManager.instance().getModel().getCurrentPlayers());
 
 			// Remove player from prediction model to force recalculation of his rating values
-			var predictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+			var predictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
 			predictionModel.removePlayer(m_clPlayer);
 
 			core.gui.RefreshManager.instance().doReInit();

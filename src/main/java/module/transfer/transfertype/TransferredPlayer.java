@@ -3,7 +3,7 @@ package module.transfer.transfertype;
 
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.player.Player;
 import core.util.AmountOfMoney;
 import module.transfer.PlayerTransfer;
@@ -56,8 +56,8 @@ class TransferredPlayer {
         skillups += player.getAllLevelUp(PlayerSkill.SETPIECES).size();
         experienceSkillups = player.getAllLevelUp(PlayerSkill.EXPERIENCE).size();
         officialMatch = DBManager.instance().getCountOfPlayedMatches(player.getPlayerId(), true);
-        endWeek = HOVerwaltung.instance().getModel().getBasics().getSpieltag()
-                  + (HOVerwaltung.instance().getModel().getBasics().getSeason() * 16);
+        endWeek = HOModelManager.instance().getModel().getBasics().getSpieltag()
+                  + (HOModelManager.instance().getModel().getBasics().getSeason() * 16);
     }
 
     /**
@@ -138,7 +138,7 @@ class TransferredPlayer {
             return;
         }
 
-        final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+        final int teamid = HOModelManager.instance().getModel().getBasics().getTeamId();
 
         // Fix for RE-Bought players
         if ((transfer.getBuyerid() == teamid) && (transfer.getSellerid() == teamid)) {

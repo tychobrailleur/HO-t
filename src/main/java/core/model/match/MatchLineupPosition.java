@@ -1,6 +1,6 @@
 package core.model.match;
 
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.enums.MatchType;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -307,7 +307,7 @@ public class MatchLineupPosition  extends MatchRoleID {
 
         if ( player == null || this.getPlayerId() != player.getPlayerId()){
             if (this.getPlayerId() != 0 ) {
-                player = HOVerwaltung.instance().getModel().getCurrentPlayer(this.getPlayerId());
+                player = HOModelManager.instance().getModel().getCurrentPlayer(this.getPlayerId());
             }
             else {
                 player = null;

@@ -53,7 +53,7 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 	 * False if world details were already downloaded during the current season
 	 */
 	public static boolean checkWorldDetailsDownload() {
-		var model = HOVerwaltung.instance().getModel();
+		var model = HOModelManager.instance().getModel();
 		if (model == null) return false; // Without model do NOT download world details
 		if (allLeagues == null || allLeagues.isEmpty()) return true;
 		if (latestDownload.getValue() != null) {
@@ -155,7 +155,7 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 	 * Get the league of user's premier team
 	 */
 	public static WorldDetailLeague getWorldDetailsLeagueOfPremierTeam() {
-		var xtraData = HOVerwaltung.instance().getModel().getXtraDaten();
+		var xtraData = HOModelManager.instance().getModel().getXtraDaten();
 		if (xtraData != null) {
 			var countryId = xtraData.getCountryId();
 			return WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(countryId);

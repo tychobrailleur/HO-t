@@ -9,7 +9,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.match.MatchLineupPosition;
@@ -404,11 +404,11 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 
 			var from = HODateTime.now().minus(anzahlHRF*7, ChronoUnit.DAYS);
 			var matchkurzinfos = DBManager.instance().getMatchesKurzInfo(
-					HOVerwaltung.instance().getModel().getBasics().getTeamId(),
+					HOModelManager.instance().getModel().getBasics().getTeamId(),
 					selectedItem.getId(), MatchLocation.ALL, from.toDbTimestamp(), false);
 
 			int anzahl = matchkurzinfos.size();
-			int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+			int teamid = HOModelManager.instance().getModel().getBasics().getTeamId();
 
 			double[][] statistikWerte = new double[14][anzahl];
 

@@ -3,7 +3,7 @@ package module.lineup.substitution.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import core.db.AbstractTable;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.enums.MatchType;
 import core.model.player.Player;
 
@@ -206,7 +206,7 @@ public class Substitution extends AbstractTable.Storable {
 	}
 
 	private String getCurrentPlayerName(int id) {
-		Player p = HOVerwaltung.instance().getModel().getCurrentPlayer(id);
+		Player p = HOModelManager.instance().getModel().getCurrentPlayer(id);
 		if (p != null) return p.getFullName();
 		return "";
 	}
@@ -219,7 +219,7 @@ public class Substitution extends AbstractTable.Storable {
 				objectPlayerName = getCurrentPlayerName(this.getObjectPlayerID());
 			}
 			else {
-				objectPlayerName = HOVerwaltung.instance().getModel().getOpponentPlayerName(this.getObjectPlayerID());
+				objectPlayerName = HOModelManager.instance().getModel().getOpponentPlayerName(this.getObjectPlayerID());
 			}
 		}
 		return objectPlayerName;

@@ -6,7 +6,7 @@ import core.gui.Updatable;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.match.Weather;
@@ -93,7 +93,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	@Override
 	public final void actionPerformed(java.awt.event.ActionEvent actionEvent) {
 		if (actionEvent.getSource().equals(m_jbFlipSide)) {
-			HOVerwaltung.instance().getModel().getCurrentLineup().flipSide();
+			HOModelManager.instance().getModel().getCurrentLineup().flipSide();
 			var panel = HOMainFrame.instance().getLineupPanel();
 			if (panel != null) {
 				panel.update();
@@ -122,9 +122,9 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		// All Player Positions Inform First 11
 		List<Player> selectedPlayers = new ArrayList<>();
 		List<Player> substitutes = new ArrayList<>();
-		List<Player> allPlayers = HOVerwaltung.instance().getModel().getCurrentPlayers();
+		List<Player> allPlayers = HOModelManager.instance().getModel().getCurrentPlayers();
 		List<Player> filteredPlayers = new ArrayList<>();
-		Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+		Lineup lineup = HOModelManager.instance().getModel().getCurrentLineup();
 
 		for (Player player : allPlayers) {
 			// the first 11
@@ -143,7 +143,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 					|| (!sGroup.equals(player.getTeamGroup()) && bSelectedGroupExcluded)) {
 				boolean include = true;
 				if (bExcludeLast) {
-					var matchlineupTeam = HOVerwaltung.instance().getModel().getPreviousLineup();
+					var matchlineupTeam = HOModelManager.instance().getModel().getPreviousLineup();
 					if (matchlineupTeam != null) {
 						var previousLineup = matchlineupTeam.getLineup();
 						if (previousLineup.isPlayerInStartingEleven(player.getPlayerId())) {

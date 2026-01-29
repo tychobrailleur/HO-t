@@ -1,6 +1,6 @@
 package core.util;
 
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 
 /**

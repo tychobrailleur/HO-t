@@ -1,7 +1,7 @@
 package module.lineup.lineup;
 
 import core.gui.Updatable;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import module.lineup.Lineup;
@@ -47,7 +47,7 @@ public class SwapPositionsManager {
 
 	private void swapPositionsInLineup(SwapPositionFeature swapPositionA,
 			SwapPositionFeature swapPositionB) {
-		Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+		Lineup lineup = HOModelManager.instance().getModel().getCurrentLineup();
 
 		// Changed to allow swapping players to empty positions - Blaghaid
 

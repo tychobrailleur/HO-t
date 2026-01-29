@@ -3,7 +3,7 @@ package core.training;
 import core.constants.TrainingType;
 import core.db.AbstractTable;
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.enums.DBDataSource;
 import core.model.match.MatchKurzInfo;
 import core.util.HODateTime;
@@ -62,7 +62,7 @@ public class TrainingPerWeek extends AbstractTable.Storable {
     public void loadMatches(){
         var _firstMatchDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
         var _lastMatchDate = o_TrainingDate.plus(23, ChronoUnit.HOURS);
-        var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+        var teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
         o_Matches = DBManager.instance().loadOfficialMatchesBetween(teamId, _firstMatchDate, _lastMatchDate);
         o_NTmatches = DBManager.instance().loadNTMatchesBetween(teamId,_firstMatchDate, _lastMatchDate);
     }
@@ -71,7 +71,7 @@ public class TrainingPerWeek extends AbstractTable.Storable {
         if ( o_Matches == null){
             var _firstMatchDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
             var _lastMatchDate = o_TrainingDate.plus(23, ChronoUnit.HOURS);
-            var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+            var teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
             o_Matches = DBManager.instance().loadOfficialMatchesBetween(teamId, _firstMatchDate, _lastMatchDate);
         }
         return o_Matches;
@@ -81,7 +81,7 @@ public class TrainingPerWeek extends AbstractTable.Storable {
         if ( o_NTmatches==null){
             var _firstMatchDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
             var _lastMatchDate = o_TrainingDate.plus(23, ChronoUnit.HOURS);
-            var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+            var teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
             o_NTmatches = DBManager.instance().loadNTMatchesBetween(teamId,_firstMatchDate, _lastMatchDate);
         }
         return o_NTmatches;

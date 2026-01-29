@@ -1,7 +1,7 @@
 package core.training;
 
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.enums.DBDataSource;
 import core.util.HODateTime;
 import core.util.HOLogger;
@@ -32,7 +32,7 @@ public class TrainingWeekManager {
 	 * @param includeMatches           whether or not the TrainingPerWeek objects will contain match information
 	 */
 	public TrainingWeekManager(HODateTime startDate, boolean includeUpcomingTrainings, boolean includeMatches) {
-		if (HOVerwaltung.instance().getModel() == null) {
+		if (HOModelManager.instance().getModel() == null) {
 			HOLogger.instance().error(this.getClass(), "model not yet initialized");
 		} else {
 			getNextTrainingDate();
@@ -79,7 +79,7 @@ public class TrainingWeekManager {
 
 	private HODateTime getNextTrainingDate() {
 		if (nextTrainingDate == null) {
-			var hoModel = HOVerwaltung.instance().getModel();
+			var hoModel = HOModelManager.instance().getModel();
 			if (hoModel != null) {
 				var xtra = hoModel.getXtraDaten();
 				if (xtra != null) {

@@ -1,7 +1,7 @@
 package module.playeranalysis.skillCompare;
 
 import core.constants.player.PlayerSkill;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.player.IMatchRoleID;
 import core.util.AmountOfMoney;
 
@@ -348,7 +348,7 @@ public class Player
 	
 	public void setOldPositionValues()
 	{
-		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+		var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
 		setOldPosVal_GK((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, KEEPER));
 		setOldPosVal_CD((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.CENTRAL_DEFENDER));
 		setOldPosVal_CD_TW((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.CENTRAL_DEFENDER_TOWING));
@@ -399,7 +399,7 @@ public class Player
 			setPlayerSkill(m_PlayerChangedSkills, PlayerSkill.STAMINA, m_Stamina);
 			setPlayerSkill(m_PlayerChangedSkills, PlayerSkill.EXPERIENCE, m_Experience);
 		}
-		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+		var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
 		setPosVal_GK((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, KEEPER));
 		setPosVal_CD((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.CENTRAL_DEFENDER));
 		setPosVal_CD_TW((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.CENTRAL_DEFENDER_TOWING));

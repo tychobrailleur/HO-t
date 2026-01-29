@@ -446,7 +446,7 @@ public class Player extends AbstractTable.Storable {
 
         // Subskills calculation
         // Called when saving the HRF because the necessary data is not available here
-        final HOModel oldmodel = HOVerwaltung.instance().getModel();
+        final HOModel oldmodel = HOModelManager.instance().getModel();
         final Player oldPlayer = oldmodel.getCurrentPlayer(spielerId);
         if (oldPlayer != null) {
             // Training blocked (could be done in the past)
@@ -467,7 +467,7 @@ public class Player extends AbstractTable.Storable {
     }
 
     private void downloadMotherClubInfoIfMissing() {
-        var isCurrentPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(this.getPlayerId()) != null;
+        var isCurrentPlayer = HOModelManager.instance().getModel().getCurrentPlayer(this.getPlayerId()) != null;
         if (isCurrentPlayer && motherClubId == null) {
             var connection = MyConnector.instance();
             var isSilentDownload = connection.isSilentDownload();
@@ -544,7 +544,7 @@ public class Player extends AbstractTable.Storable {
      *         i.e. age + (agedays+offset)/112
      */
     public double getDoubleAgeFromDate(HODateTime t) {
-        var hrfTime = HOVerwaltung.instance().getModel().getBasics().getDatum();
+        var hrfTime = HOModelManager.instance().getModel().getBasics().getDatum();
         var diff = Duration.between(hrfTime.instant, t.instant);
         int years = getAge();
         int days = getAgeDays();
@@ -577,7 +577,7 @@ public class Player extends AbstractTable.Storable {
      */
     public static String getAgeWithDaysAsString(int ageYears, int ageDays, HODateTime time) {
         return getAgeWithDaysAsString(ageYears, ageDays, time,
-                HOVerwaltung.instance().getModel().getBasics().getDatum());
+                HOModelManager.instance().getModel().getBasics().getDatum());
     }
 
     /**
@@ -608,7 +608,7 @@ public class Player extends AbstractTable.Storable {
      * @return the full i18n'd string representing the player's age
      */
     public String getAgeStringFull() {
-        var hrfTime = HOVerwaltung.instance().getModel().getBasics().getDatum();
+        var hrfTime = HOModelManager.instance().getModel().getBasics().getDatum();
         var oldAge = new HODateTime.HODuration(this.getAge(), this.getAgeDays());
         var age = oldAge.plus(HODateTime.HODuration.between(hrfTime, HODateTime.now()));
         var birthday = oldAge.seasons != age.seasons;
@@ -652,7 +652,7 @@ public class Player extends AbstractTable.Storable {
     public int getBonus() {
         int bonus = 0;
 
-        if (nationalityId != HOVerwaltung.instance().getModel().getBasics().getLand()) {
+        if (nationalityId != HOModelManager.instance().getModel().getBasics().getLand()) {
             bonus = 20;
         }
 
@@ -765,7 +765,7 @@ public class Player extends AbstractTable.Storable {
 
     public HODateTime getHrfDate() {
         if (hrfDate == null) {
-            hrfDate = HOVerwaltung.instance().getModel().getBasics().getDatum();
+            hrfDate = HOModelManager.instance().getModel().getBasics().getDatum();
         }
         return hrfDate;
     }
@@ -862,7 +862,7 @@ public class Player extends AbstractTable.Storable {
 
     public double getPositionRating(byte position) {
         if (aPositionBehaviours.contains((int) position)) {
-            var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+            var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
             return ratingPredictionModel.getPlayerMatchAverageRating(this, position);
         }
         return 0;
@@ -878,7 +878,7 @@ public class Player extends AbstractTable.Storable {
     }
 
     public AmountOfMoney getSumOfWage(HODateTime from, HODateTime to) {
-        var economyDate = HOVerwaltung.instance().getModel().getXtraDaten().getEconomyDate();
+        var economyDate = HOModelManager.instance().getModel().getXtraDaten().getEconomyDate();
         while (!economyDate.isBefore(to))
             economyDate = economyDate.plusDaysAtSameLocalTime(-7);
         var sum = new AmountOfMoney(0);
@@ -952,12 +952,12 @@ public class Player extends AbstractTable.Storable {
     }
 
     public double getMatchAverageRating(int position, byte behaviour) {
-        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+        var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
         return ratingPredictionModel.getPlayerMatchAverageRating(this, position, behaviour);
     }
 
     public double getMatchBeginningRating(int position, byte behaviour) {
-        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+        var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
         return ratingPredictionModel.getPlayerRatingMatchBeginning(this, position, behaviour);
     }
 
@@ -1766,7 +1766,7 @@ public class Player extends AbstractTable.Storable {
         if (weeklyTrainingType != null) {
             try {
                 var matches = train.getMatches();
-                int myID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+                int myID = HOModelManager.instance().getModel().getBasics().getTeamId();
                 TrainingWeekPlayer trainingWeekPlayer = new TrainingWeekPlayer(this);
                 for (var match : matches) {
                     var details = match.getMatchdetails();
@@ -1888,7 +1888,7 @@ public class Player extends AbstractTable.Storable {
         if (futurePlayerTrainings == null) {
             futurePlayerTrainings = DBManager.instance().getFuturePlayerTrainings(this.getPlayerId());
             if (!futurePlayerTrainings.isEmpty()) {
-                var start = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek();
+                var start = HOModelManager.instance().getModel().getBasics().getHattrickWeek();
                 var remove = new ArrayList<FuturePlayerTraining>();
                 for (var t : futurePlayerTrainings) {
                     if (t.endsBefore(start)) {
@@ -1968,7 +1968,7 @@ public class Player extends AbstractTable.Storable {
             for (var ft : tmpList) {
                 // cut the past
                 newFuturePlayerTrainings.addAll(
-                        ft.cut(HODateTime.HT_START, HOVerwaltung.instance().getModel().getBasics().getHattrickWeek()));
+                        ft.cut(HODateTime.HT_START, HOModelManager.instance().getModel().getBasics().getHattrickWeek()));
             }
         }
         if (prio != null) {

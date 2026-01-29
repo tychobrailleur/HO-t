@@ -2,7 +2,7 @@ package module.lineup;
 
 import core.db.DBManager;
 import core.gui.Refreshable;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.enums.MatchType;
@@ -200,7 +200,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
 
         for (MatchKurzInfo match : previousPlayedMatches) {
             oTeam = new Team();
-            if (match.getHomeTeamID() == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
+            if (match.getHomeTeamID() == HOModelManager.instance().getModel().getBasics().getTeamId()) {
                 oTeam.setName(match.getGuestTeamName());
                 oTeam.setTeamId(match.getGuestTeamID());
                 oTeam.setHomeMatch(true);
@@ -226,7 +226,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
             var team = (Team) m_jcbLoadLineup.getSelectedItem();
             int teamId;
             if (isMatchTeam(team)) {
-                teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+                teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
                 templateName.setText(getTemplateDefaultName());
                 deleteButton.setEnabled(false);
             } else {
@@ -237,7 +237,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
 
             var matchLineupTeam = DBManager.instance().loadMatchLineupTeam(team.getMatchType().getMatchTypeId(), team.getMatchID(), teamId);
             if (matchLineupTeam != null) {
-                HOVerwaltung.instance().getModel().setLineup(matchLineupTeam);
+                HOModelManager.instance().getModel().setLineup(matchLineupTeam);
             }
 
             lineupPanel.update();
@@ -261,7 +261,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
         }
         var name = templateName.getText();
         var lineupTeam = new MatchLineupTeam(MatchType.NONE, -1, name, templateId, 0);
-        lineupTeam.setLineup(HOVerwaltung.instance().getModel().getCurrentLineup());
+        lineupTeam.setLineup(HOModelManager.instance().getModel().getCurrentLineup());
         DBManager.instance().storeMatchLineupTeam(lineupTeam);
 
         if ( isNewTemplate) {

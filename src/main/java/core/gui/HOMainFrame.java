@@ -9,7 +9,7 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.FormulaFactors;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.match.Weather;
@@ -54,8 +54,28 @@ public final class HOMainFrame extends JFrame implements Refreshable {
     private static HOMainFrame m_clHOMainFrame;
     private static boolean m_HOMainFrame_initialized = false;
     private InfoPanel m_jpInfoPanel;
+    private core.context.ApplicationContext context;
 
     public static final AtomicBoolean launching = new AtomicBoolean(false);
+
+    public void setApplicationContext(core.context.ApplicationContext context) {
+        this.context = context;
+        // Re-apply title referencing the context now that it's available,
+        // in case constructor ran with fallbacks.
+        setFrameTitle();
+    }
+
+    public core.context.ApplicationContext getApplicationContext() {
+        return context;
+    }
+
+    private core.db.DBManager getDBManager() {
+        return context != null ? context.getDBManager() : DBManager.instance();
+    }
+
+    private HOModelManager getModelManager() {
+        return context != null ? context.getModelManager() : HOModelManager.instance();
+    }
 
     // Components
     private HOTabbedPane hoTabbedPane;
@@ -98,14 +118,14 @@ public final class HOMainFrame extends JFrame implements Refreshable {
         HOLogger.instance().info(
                 getClass(),
                 "Operating system found: " + System.getProperty("os.name") + " on "
-                + System.getProperty("os.arch") + " (" + System.getProperty("os.version")
-                + ")");
+                        + System.getProperty("os.arch") + " (" + System.getProperty("os.version")
+                        + ")");
 
         // Log Java version
         HOLogger.instance().info(
                 getClass(),
                 "Using java: " + System.getProperty("java.version") + " ("
-                + System.getProperty("java.vendor") + ")");
+                        + System.getProperty("java.vendor") + ")");
 
         RefreshManager.instance().registerRefreshable(this);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -126,7 +146,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
     }
 
     private void setFrameTitle() {
-        var teamName = HOVerwaltung.instance().getModel().getBasics().getTeamName();
+        var teamName = getModelManager().getModel().getBasics().getTeamName();
         String frameTitle = StringUtils.isEmpty(teamName) ? "" : teamName;
 
         if (!HO.isRelease()) {
@@ -321,7 +341,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
             ModuleConfig.instance().save();
             HOLogger.instance().debug(getClass(), "Module configurations saved");
             // Disconnect
-            DBManager.instance().disconnect();
+            getDBManager().disconnect();
             HOLogger.instance().debug(getClass(), "Disconnected");
 
             isAppTerminated.set(true); // enable System.exit in windowClosed()
@@ -513,10 +533,10 @@ public final class HOMainFrame extends JFrame implements Refreshable {
             var from = HODateTime.now().minus(128 * 7, ChronoUnit.DAYS);
             if (JOptionPane.showConfirmDialog(this,
                     TranslationFacility.tr("Subskill.Recalc.Full") + "\n"
-                    + TranslationFacility.tr("subskill.Recalc.Start"),
+                            + TranslationFacility.tr("subskill.Recalc.Start"),
                     Helper.getTranslation("ls.menu.file.subskillrecalculation"),
                     JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
-                HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
+                getModelManager().recalcSubskills(true, from.toDbTimestamp());
             }
         });
         fileMenu.add(subSkillFullRecalcMenuItem);
@@ -524,16 +544,16 @@ public final class HOMainFrame extends JFrame implements Refreshable {
         final JMenuItem subSkillRecalc7WeeksMenuItem = new JMenuItem(
                 TranslationFacility.tr("ls.menu.file.subskillrecalculation7weeks"));
         subSkillRecalc7WeeksMenuItem.addActionListener(e -> {
-            var nextTraining = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
+            var nextTraining = getModelManager().getModel().getXtraDaten().getNextTrainingDate();
             var from = nextTraining.minus(7 * 7, ChronoUnit.DAYS);
             if (JOptionPane.showConfirmDialog(this,
                     TranslationFacility.tr("subskill.Recalc.7w") + "\n"
-                    + TranslationFacility.tr("subskill.Recalc.1stTrainingweek") + ": "
-                    + from.toLocaleHTWeek().toString() + "\n"
-                    + TranslationFacility.tr("subskill.Recalc.Start"),
+                            + TranslationFacility.tr("subskill.Recalc.1stTrainingweek") + ": "
+                            + from.toLocaleHTWeek().toString() + "\n"
+                            + TranslationFacility.tr("subskill.Recalc.Start"),
                     Helper.getTranslation("ls.menu.file.subskillrecalculation7weeks"),
                     JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
-                HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
+                getModelManager().recalcSubskills(true, from.toDbTimestamp());
             }
         });
         fileMenu.add(subSkillRecalc7WeeksMenuItem);
@@ -625,7 +645,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
     public void reInit() {
         // Set the currency from the HRF file.
         try {
-            var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
+            var xtra = getModelManager().getModel().getXtraDaten();
             if (xtra == null) {
                 return;
             }
@@ -680,10 +700,10 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 
         parameter.hoMainFrame_width = Math.min(getSize().width,
                 getToolkit().getScreenSize().width - parameter.hoMainFrame_PositionX
-                + currentDevice.getDefaultConfiguration().getBounds().x);
+                        + currentDevice.getDefaultConfiguration().getBounds().x);
         parameter.hoMainFrame_height = Math.min(getSize().height,
                 getToolkit().getScreenSize().height - parameter.hoMainFrame_PositionY
-                + currentDevice.getDefaultConfiguration().getBounds().y);
+                        + currentDevice.getDefaultConfiguration().getBounds().y);
 
         final var lineupPanel = getLineupPanel();
 
@@ -726,7 +746,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
             module.storeUserSettings();
         }
 
-        DBManager.instance().saveUserParameter();
+        getDBManager().saveUserParameter();
     }
 
     private void addListeners() {

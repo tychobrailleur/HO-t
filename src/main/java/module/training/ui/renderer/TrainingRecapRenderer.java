@@ -4,7 +4,7 @@ import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSkill;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.player.Player;
 import core.training.WeeklyTrainingType;
@@ -70,7 +70,7 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
 
             // fetch playerId (last column) from table
         	playerId = Integer.parseInt((String)table.getValueAt(row, table.getColumnCount()-1));
-        	Player player = HOVerwaltung.instance().getModel().getCurrentPlayer(playerId);
+        	Player player = HOModelManager.instance().getModel().getCurrentPlayer(playerId);
 
         	/* If there is some kind of skillup information
         	 * in the table cell (s) -> extract it

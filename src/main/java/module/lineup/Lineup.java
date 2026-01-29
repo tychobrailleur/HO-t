@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.match.IMatchDetails;
 import core.model.match.MatchKurzInfo;
@@ -380,14 +380,14 @@ public class Lineup {
         float maxValue = -1;
 
         if (players == null) {
-            players = HOVerwaltung.instance().getModel().getCurrentPlayers();
+            players = HOModelManager.instance().getModel().getCurrentPlayers();
         }
 
         if (players != null) {
             for (Player player : players) {
                 if (m_clAssi.isPlayerInStartingEleven(player.getPlayerId(), m_vFieldPositions)) {
                     int curPlayerId = player.getPlayerId();
-                    float curCaptainsValue = HOVerwaltung.instance().getModel().getCurrentLineupTeam().getLineup()
+                    float curCaptainsValue = HOModelManager.instance().getModel().getCurrentLineupTeam().getLineup()
                             .getAverageExperience(curPlayerId);
                     if (maxValue < curCaptainsValue) {
                         maxValue = curCaptainsValue;
@@ -406,7 +406,7 @@ public class Lineup {
         int form = -1;
 
         if (players == null) {
-            players = HOVerwaltung.instance().getModel().getCurrentPlayers();
+            players = HOModelManager.instance().getModel().getCurrentPlayers();
         }
 
         Vector<MatchLineupPosition> noKeeper = new Vector<>(m_vFieldPositions);
@@ -418,7 +418,7 @@ public class Lineup {
         }
 
         if (players != null) {
-            var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+            var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
             for (Player player : players) {
                 if (m_clAssi.isPlayerInStartingEleven(player.getPlayerId(), noKeeper)) {
                     var sp = ratingPredictionModel.getPlayerSetPiecesStrength(player);
@@ -448,7 +448,7 @@ public class Lineup {
         float value = 0;
 
         Player captain = null;
-        List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
+        List<Player> players = HOModelManager.instance().getModel().getCurrentPlayers();
 
         if (players != null) {
             for (Player player : players) {
@@ -480,11 +480,11 @@ public class Lineup {
 //		Ratings oRatings = new Ratings();
 //		boolean bForm = true;
 //
-//		if ((HOVerwaltung.instance().getModel() != null) && HOVerwaltung.instance().getModel().getID() != -1) {
-//			var hoModel = HOVerwaltung.instance().getModel();
+//		if ((HOModelManager.instance().getModel() != null) && HOModelManager.instance().getModel().getID() != -1) {
+//			var hoModel = HOModelManager.instance().getModel();
 //			var ratingPredictionModel = hoModel.getRatingPredictionModel();
 //			var lineup = hoModel.getLineupWithoutRatingRecalc();
-//			rpManager = new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam());
+//			rpManager = new RatingPredictionManager(this, HOModelManager.instance().getModel().getTeam());
 //			oRatings.setLeftDefense(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Defence_Left, 90));
 //			oRatings.setCentralDefense(rpManager.getCentralDefenseRatings(bForm, true));
 //			oRatings.setRightDefense(rpManager.getRightDefenseRatings(bForm, true));
@@ -507,7 +507,7 @@ public class Lineup {
 //		 Ratings oRatings = new Ratings();
 //		 boolean bForm = true;
 //
-//		if ((HOVerwaltung.instance().getModel() != null) && HOVerwaltung.instance().getModel().getID() != -1) {
+//		if ((HOModelManager.instance().getModel() != null) && HOModelManager.instance().getModel().getID() != -1) {
 //			Team _team = DBManager.instance().getTeam(hrfID);
 //			rpManager = new RatingPredictionManager(this, _team);
 //			oRatings.setLeftDefense(rpManager.getLeftDefenseRatings(bForm, true));
@@ -715,7 +715,7 @@ public class Lineup {
 
     private void getUpcomingMatch() {
         try {
-            final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+            final int teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
             MatchKurzInfo match = DBManager.instance().getFirstUpcomingMatchWithTeamId(teamId);
             setUpcomingMatch(match);
         } catch (Exception e) {
@@ -741,7 +741,7 @@ public class Lineup {
         try {
             var posid = getPositionById(positionId);
             if (posid != null) {
-                return HOVerwaltung.instance().getModel()
+                return HOModelManager.instance().getModel()
                         .getCurrentPlayer(posid.getPlayerId());
             }
         } catch (Exception e) {
@@ -1104,25 +1104,25 @@ public class Lineup {
             case SYS_MURKS ->
                 -1;
             case SYS_451 ->
-                HOVerwaltung.instance().getModel().getTeam().getFormationExperience451();
+                HOModelManager.instance().getModel().getTeam().getFormationExperience451();
             case SYS_352 ->
-                HOVerwaltung.instance().getModel().getTeam().getFormationExperience352();
+                HOModelManager.instance().getModel().getTeam().getFormationExperience352();
             case SYS_442 ->
-                HOVerwaltung.instance().getModel().getTeam().getFormationExperience442();
+                HOModelManager.instance().getModel().getTeam().getFormationExperience442();
             case SYS_343 ->
-                HOVerwaltung.instance().getModel().getTeam().getFormationExperience343();
+                HOModelManager.instance().getModel().getTeam().getFormationExperience343();
             case SYS_433 ->
-                HOVerwaltung.instance().getModel().getTeam().getFormationExperience433();
+                HOModelManager.instance().getModel().getTeam().getFormationExperience433();
             case SYS_532 ->
-                HOVerwaltung.instance().getModel().getTeam().getFormationExperience532();
+                HOModelManager.instance().getModel().getTeam().getFormationExperience532();
             case SYS_541 ->
-                HOVerwaltung.instance().getModel().getTeam().getFormationExperience541();
+                HOModelManager.instance().getModel().getTeam().getFormationExperience541();
             case SYS_523 ->
-                HOVerwaltung.instance().getModel().getTeam().getFormationExperience523();
+                HOModelManager.instance().getModel().getTeam().getFormationExperience523();
             case SYS_550 ->
-                HOVerwaltung.instance().getModel().getTeam().getFormationExperience550();
+                HOModelManager.instance().getModel().getTeam().getFormationExperience550();
             case SYS_253 ->
-                HOVerwaltung.instance().getModel().getTeam().getFormationExperience253();
+                HOModelManager.instance().getModel().getTeam().getFormationExperience253();
             default ->
                 -1;
         };
@@ -1134,8 +1134,8 @@ public class Lineup {
     public final void checkAufgestellteSpieler() {
         for (var pos : getAllPositions()) {
             // existiert Player noch ?
-            if ((HOVerwaltung.instance().getModel() != null)
-                    && (HOVerwaltung.instance().getModel().getCurrentPlayer(pos.getPlayerId()) == null)) {
+            if ((HOModelManager.instance().getModel() != null)
+                    && (HOModelManager.instance().getModel().getCurrentPlayer(pos.getPlayerId()) == null)) {
                 // nein dann zuweisung aufheben
                 pos.setPlayerIdIfValidForLineup(0, this);
             }

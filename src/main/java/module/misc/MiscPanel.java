@@ -4,7 +4,7 @@ import core.constants.player.PlayerAbility;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.misc.Economy;
 import core.model.misc.Verein;
@@ -53,8 +53,8 @@ final class MiscPanel extends JPanel {
 
 
     void setLabels() {
-        final Verein verein = HOVerwaltung.instance().getModel().getClub();
-        final Economy economy = HOVerwaltung.instance().getModel().getEconomy();
+        final Verein verein = HOModelManager.instance().getModel().getClub();
+        final Economy economy = HOModelManager.instance().getModel().getEconomy();
         if( economy == null) return;
 
         DecimalFormat df = new DecimalFormat("###,###,###,##0");
@@ -65,7 +65,7 @@ final class MiscPanel extends JPanel {
         m_jpSponsoren.setText(Economy.getNameForLevelSponsors(economy.getSponsorsPopularity()));
         m_jpUngeschlagen.setText(verein.getUngeschlagen() + "");
         m_jpSiegeInFolge.setText(verein.getSiege() + "");
-        m_jpAnzahlSpieler.setText(HOVerwaltung.instance().getModel().getCurrentPlayers().size() + "");
+        m_jpAnzahlSpieler.setText(HOModelManager.instance().getModel().getCurrentPlayers().size() + "");
         m_jpAvgTSI.setText(df.format(getAvgTSI()));
         m_jpSumTSI.setText(df.format(getSumTSI()));
 //        m_jpAvgEPV.setSpecialNumber(Math.round(getAvgEPV()), true);
@@ -156,7 +156,7 @@ final class MiscPanel extends JPanel {
      * @return average TSI
      */
     float getAvgTSI() {
-        int numPlayers = HOVerwaltung.instance().getModel().getCurrentPlayers().size();
+        int numPlayers = HOModelManager.instance().getModel().getCurrentPlayers().size();
         //Trainer abziehen // without trainer
         if (numPlayers <= 1)
         	return 0;
@@ -168,7 +168,7 @@ final class MiscPanel extends JPanel {
      */
     float getDurchschnittsAlter() {
         float summe = 0;
-        final List<Player> vPlayer = HOVerwaltung.instance().getModel().getCurrentPlayers();
+        final List<Player> vPlayer = HOModelManager.instance().getModel().getCurrentPlayers();
 
         for ( Player p : vPlayer){
             if (!p.isCoach()) {
@@ -188,7 +188,7 @@ final class MiscPanel extends JPanel {
      */
     float getDurchschnittsErfahrung() {
         float summe = 0;
-        final List<Player> vPlayer = HOVerwaltung.instance().getModel().getCurrentPlayers();
+        final List<Player> vPlayer = HOModelManager.instance().getModel().getCurrentPlayers();
 
         for ( Player p  : vPlayer){
 
@@ -207,7 +207,7 @@ final class MiscPanel extends JPanel {
      */
     float getDurchschnittsForm() {
         float summe = 0;
-        final List<Player> vPlayer = HOVerwaltung.instance().getModel().getCurrentPlayers();
+        final List<Player> vPlayer = HOModelManager.instance().getModel().getCurrentPlayers();
 
         for ( Player p: vPlayer){
             //Trainer nicht berücksichtigen
@@ -225,7 +225,7 @@ final class MiscPanel extends JPanel {
      */
     float getSumTSI() {
         float summe = 0;
-        final List<Player> vPlayer = HOVerwaltung.instance().getModel().getCurrentPlayers();
+        final List<Player> vPlayer = HOModelManager.instance().getModel().getCurrentPlayers();
 
         for (Player p: vPlayer) {
             //Trainer nicht berücksichtigen

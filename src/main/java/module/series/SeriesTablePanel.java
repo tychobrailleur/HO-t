@@ -8,7 +8,7 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.model.VAPTableModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.UserParameter;
 import core.model.enums.RatingsStatistics;
 import core.model.series.SerieTableEntry;
@@ -180,8 +180,8 @@ class SeriesTablePanel extends ImagePanel {
 	//  Init from the HRF-XML
 	private void initSeriesTable() {
 
-		if ((HOVerwaltung.instance().getModel().getFixtures() != null)
-				&& (HOVerwaltung.instance().getModel().getFixtures().getSaison() > 0)) {
+		if ((HOModelManager.instance().getModel().getFixtures() != null)
+				&& (HOModelManager.instance().getModel().getFixtures().getSaison() > 0)) {
 
 			// Fill values if a model is available
 			populateSerieTable();
@@ -235,7 +235,7 @@ class SeriesTablePanel extends ImagePanel {
 		try {
 			if (this.model.getCurrentSeries() != null) {
 				final Vector<SerieTableEntry> tableEntries = this.model.getCurrentSeries().getTable().getEntries();
-				final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+				final int teamid = HOModelManager.instance().getModel().getBasics().getTeamId();
 				int j;
 
 				for (int i = 0; i < tableEntries.size(); i++) {

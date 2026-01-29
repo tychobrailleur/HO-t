@@ -1,7 +1,7 @@
 package module.teamAnalyzer.manager;
 
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.enums.MatchType;
 import core.model.series.Paarung;
 import core.util.HODateTime;
@@ -22,7 +22,7 @@ public class TeamManager {
 	public static List<Team> getLeagueMatches(Boolean includeOwn) {
 		MatchFixtures league = getDivisionMatches();
 		List<Team> teams = new ArrayList<>();
-		int ownTeamID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		int ownTeamID = HOModelManager.instance().getModel().getBasics().getTeamId();
 
 		if (league != null) {
 			List<?> matches = league.getMatches();
@@ -30,7 +30,7 @@ public class TeamManager {
 			for (Object match : matches) {
 				Paarung element = (Paarung) match;
 
-				if (element.getSpieltag() < HOVerwaltung.instance().getModel().getBasics().getSpieltag())
+				if (element.getSpieltag() < HOModelManager.instance().getModel().getBasics().getSpieltag())
 					continue;
 
 				if (element.getHeimId() == ownTeamID) {
@@ -63,7 +63,7 @@ public class TeamManager {
 			// add own team before returning list
 			Team t = new Team();
 
-			t.setName(HOVerwaltung.instance().getModel().getBasics().getTeamName());
+			t.setName(HOModelManager.instance().getModel().getBasics().getTeamName());
 			t.setTeamId(ownTeamID);
 			t.setTime(HODateTime.fromHT("2200-01-01 00:00:00")); // to ensure own team appear last
 			t.setMatchType(MatchType.NONE);
@@ -127,7 +127,7 @@ public class TeamManager {
 			List<Team> vLMatch = getUpComingMatches(getLeagueMatches(includeOwn));
 			Collections.sort(vLMatch);
 
-			var refTS = HOVerwaltung.instance().getModel().getBasics().getDatum();
+			var refTS = HOModelManager.instance().getModel().getBasics().getDatum();
 			for (var team : vLMatch) {
 				if (team.getTime().compareTo(refTS) >= 0) {
 					teams.putIfAbsent(team.getTeamId(), team);
@@ -138,9 +138,9 @@ public class TeamManager {
 	}
 
 	private static MatchFixtures getDivisionMatches() {
-		var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
+		var xtra = HOModelManager.instance().getModel().getXtraDaten();
 		if ( xtra != null) {
-			return DBManager.instance().getSpielplan(xtra.getLeagueLevelUnitID(), HOVerwaltung.instance().getModel().getBasics().getSeason());
+			return DBManager.instance().getSpielplan(xtra.getLeagueLevelUnitID(), HOModelManager.instance().getModel().getBasics().getSeason());
 		}
 		return null;	// nothing downloaded yet
 	}
@@ -149,7 +149,7 @@ public class TeamManager {
 	 * Returns upcoming matches.
 	 */
 	private static List<Team> getUpComingMatches(List<Team> vTeams) {
-		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		int teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
 		var dbMatches = DBManager.instance().getMatchesKurzInfoUpComing(teamId);
 
 		for (var match : dbMatches) {

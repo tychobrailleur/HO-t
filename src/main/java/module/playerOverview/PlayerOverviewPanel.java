@@ -2,7 +2,7 @@ package module.playerOverview;
 
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.Player;
@@ -152,7 +152,7 @@ public class PlayerOverviewPanel extends ImagePanel {
 		playerOverviewTable = new PlayerOverviewTable();
 		overviewPanel.add(playerOverviewTable.getContainerComponent(), BorderLayout.CENTER);
 		TeamSummaryModel teamSummaryModel = new TeamSummaryModel();
-		teamSummaryModel.setPlayers(HOVerwaltung.instance().getModel().getCurrentPlayers());
+		teamSummaryModel.setPlayers(HOModelManager.instance().getModel().getCurrentPlayers());
 		teamSummaryPanel = new TeamSummaryPanel(teamSummaryModel);
 		var scrollPane = new JScrollPane(teamSummaryPanel,
 				JScrollPane.VERTICAL_SCROLLBAR_NEVER,

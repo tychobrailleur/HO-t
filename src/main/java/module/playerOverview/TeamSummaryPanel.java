@@ -6,7 +6,7 @@ import core.gui.comp.panel.DoubleLabelPanel;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.util.Helper;
@@ -95,7 +95,7 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener, Refr
     @Override
     public void reInit() {
         model.setComparisonPlayers(model.getPlayers());
-        model.setPlayers(HOVerwaltung.instance().getModel().getCurrentPlayers());
+        model.setPlayers(HOModelManager.instance().getModel().getCurrentPlayers());
         display();
     }
 

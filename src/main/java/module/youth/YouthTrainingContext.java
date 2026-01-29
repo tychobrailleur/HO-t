@@ -1,7 +1,7 @@
 package module.youth;
 
 import core.constants.player.PlayerSkill;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.util.HODateTime;
 
 import java.time.temporal.ChronoUnit;
@@ -22,7 +22,7 @@ public class YouthTrainingContext {
     public YouthTrainingContext(YouthPlayer youthPlayer) {
         this.age = youthPlayer.getAgeYears();
         this.days = youthPlayer.getAgeDays();
-        var hrfTime = HOVerwaltung.instance().getModel().getBasics().getDatum();
+        var hrfTime = HOModelManager.instance().getModel().getBasics().getDatum();
         birthday = hrfTime.minus(age*112+days, ChronoUnit.DAYS);
 
         for (var s : youthPlayer.getCurrentSkills().values()) {

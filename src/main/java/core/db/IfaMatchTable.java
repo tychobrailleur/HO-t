@@ -1,6 +1,6 @@
 package core.db;
 
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import module.ifa.IfaMatch;
@@ -95,7 +95,7 @@ public class IfaMatchTable extends AbstractTable {
 		try {
 			list = load(IfaMatch.class,
 					connectionManager.executePreparedQuery(home ? getHomeMatchesSql : getAwayMatchesSql,
-							HOVerwaltung.instance().getModel().getBasics().getTeamId()));
+							HOModelManager.instance().getModel().getBasics().getTeamId()));
 		} catch (java.sql.SQLException e) {
 			HOLogger.instance().error(this.getClass(), e);
 		}

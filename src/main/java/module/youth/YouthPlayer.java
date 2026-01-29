@@ -3,7 +3,7 @@ package module.youth;
 import core.constants.player.PlayerSkill;
 import core.db.AbstractTable;
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.player.CommentType;
 import core.model.player.PlayerCategory;
@@ -192,7 +192,7 @@ public class YouthPlayer extends AbstractTable.Storable {
      * @return string not negative number of days. 0 when the player can be promoted.
      */
     public String getCanBePromotedInAtDate(HODateTime date) {
-        var diff = Duration.between( HOVerwaltung.instance().getModel().getBasics().getDatum().instant, date.instant);
+        var diff = Duration.between( HOModelManager.instance().getModel().getBasics().getDatum().instant, date.instant);
         var days = canBePromotedIn - (int) diff.toDays();
         if ( days > 0) return "" + days;
         else if ( days < 0 ) return "0";
@@ -456,7 +456,7 @@ public class YouthPlayer extends AbstractTable.Storable {
         this.potential=null;    // trigger potential recalc
         // init from models match list
         trainingDevelopment = new TreeMap<>();
-        var model = HOVerwaltung.instance().getModel();
+        var model = HOModelManager.instance().getModel();
         var teamId = model.getBasics().getYouthTeamId();
 
         // set start skill values (they may be edited by the user)
@@ -631,7 +631,7 @@ public class YouthPlayer extends AbstractTable.Storable {
         if (trainingDevelopment != null) {
             var startSkills = getSkillsBefore(since);
             for (var entry : this.trainingDevelopment.tailMap(since, true).values()) {
-                var team = entry.getTraining().getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
+                var team = entry.getTraining().getTeam(HOModelManager.instance().getModel().getBasics().getYouthTeamId());
                 var newSkills = entry.calcSkills(startSkills, getSkillsAt(entry.getMatchDate()), team);
                 progressLastMatch = newSkills.getSkillSum() - startSkills.getSkillSum();
                 startSkills = newSkills;
@@ -657,7 +657,7 @@ public class YouthPlayer extends AbstractTable.Storable {
                 currentSkill.setCurrentValue(currentSkill.getStartValue());
             }
             if (trainingDevelopment != null && !trainingDevelopment.isEmpty()) {
-                var youthteamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
+                var youthteamId = HOModelManager.instance().getModel().getBasics().getYouthTeamId();
                 var skills = getStartSkills();
                 for (var trainingEntry : trainingDevelopment.values()) {
                     if (!trainingEntry.getMatchDate().isBefore(before)) break; // stop if before date is reached
@@ -701,7 +701,7 @@ public class YouthPlayer extends AbstractTable.Storable {
      * @return int, player's age in years.
      */
     public int getAgeYearsAtDate(HODateTime t) {
-        var hrfTime = HOVerwaltung.instance().getModel().getBasics().getDatum();
+        var hrfTime = HOModelManager.instance().getModel().getBasics().getDatum();
         var diff = HODateTime.HODuration.between(hrfTime, t);
         return new HODateTime.HODuration(this.getAgeYears(), this.getAgeDays()).plus(diff).seasons;
     }
@@ -941,9 +941,9 @@ public class YouthPlayer extends AbstractTable.Storable {
         youthMatchDate = HODateTime.fromHT(properties.getProperty("youthmatchdate"));
 
         YouthPlayer playerStatusPreviousDownload =null;
-        var model = HOVerwaltung.instance().getModel();
+        var model = HOModelManager.instance().getModel();
         if ( model != null ) {
-            playerStatusPreviousDownload = HOVerwaltung.instance().getModel().getCurrentYouthPlayer(id);
+            playerStatusPreviousDownload = HOModelManager.instance().getModel().getCurrentYouthPlayer(id);
         }
         for (var skillId : YouthPlayer.skillIds) {
             var skillinfo = parseSkillInfo(properties, skillId);

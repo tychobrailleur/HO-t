@@ -1,6 +1,6 @@
 package core.rating;
 
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.Team;
 import core.util.HOLogger;
 import groovy.lang.GroovyClassLoader;
@@ -80,7 +80,7 @@ public class RatingPredictionManager {
                 try {
                     var groovyClass = loader.parseClass(groovyModelFile.get());
                     var constr =  groovyClass.getConstructor(Team.class);
-                    var model = constr.newInstance(HOVerwaltung.instance().getModel().getTeam());
+                    var model = constr.newInstance(HOModelManager.instance().getModel().getTeam());
                     ratingPredictionModelName = groovyModelDir.getName();
                     ratingPredictionModel = (RatingPredictionModel) model;
                     return ratingPredictionModel;

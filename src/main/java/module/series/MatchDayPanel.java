@@ -6,7 +6,7 @@ import core.gui.RefreshManager;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.enums.MatchType;
 import core.model.series.Paarung;
@@ -136,8 +136,8 @@ final class MatchDayPanel extends JPanel implements ActionListener {
 
     private void fillLabels() {
         int spieltag = iMatchRound;
-        final int myTeamID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-        final String myTeamName = HOVerwaltung.instance().getModel().getBasics().getTeamName();
+        final int myTeamID = HOModelManager.instance().getModel().getBasics().getTeamId();
+        final String myTeamName = HOModelManager.instance().getModel().getBasics().getTeamName();
 
 
         if (this.model.getCurrentSeries() == null) {
@@ -147,7 +147,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
 
         // Letzte Spieltag
         if (spieltag == LETZTER_SPIELTAG) {
-            spieltag = HOVerwaltung.instance().getModel().getBasics().getSpieltag() - 1;
+            spieltag = HOModelManager.instance().getModel().getBasics().getSpieltag() - 1;
 
             if (spieltag <= 0) {
                 spieltag = 1;
@@ -155,7 +155,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
         }
         // Nächste Spieltag
         else if (spieltag == NAECHSTER_SPIELTAG) {
-            spieltag = HOVerwaltung.instance().getModel().getBasics().getSpieltag();
+            spieltag = HOModelManager.instance().getModel().getBasics().getSpieltag();
 
             if (spieltag > 14) {
                 spieltag = 14;

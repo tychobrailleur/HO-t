@@ -1,6 +1,6 @@
 package core.util;
 
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 
 import java.util.Locale;
 import java.text.NumberFormat;
@@ -22,7 +22,7 @@ public class CurrencyUtils {
 	 */
 	public static Integer convertCurrency(Integer v) {
 		if (v != null) {
-			var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
+			var xtra = HOModelManager.instance().getModel().getXtraDaten();
 			if (xtra != null) {
 				return (int) (v / xtra.getCurrencyRate());
 			}

@@ -3,7 +3,7 @@ package core.model.match;
 import core.db.AbstractTable;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
@@ -1325,7 +1325,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
      */
     public MatchLineupTeam getOwnTeamLineup() {
         if (teamLineup == null) {
-            var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+            var teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
             teamLineup = DBManager.instance().loadMatchLineupTeam(this.getMatchType().getId(), this.getMatchID(), teamId);
         }
         return teamLineup;

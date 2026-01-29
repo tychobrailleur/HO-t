@@ -6,7 +6,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.model.HOModel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.player.Player;
 import core.util.Helper;
 
@@ -62,7 +62,7 @@ public final class AllTeamsPanel extends JPanel implements ActionListener {
     }
 
     private void setGroup(String sGroup) {
-        final HOModel model = HOVerwaltung.instance().getModel();
+        final HOModel model = HOModelManager.instance().getModel();
         final List<Player> lPlayers = model.getCurrentPlayers();
         final Lineup lineup = model.getCurrentLineup();
 

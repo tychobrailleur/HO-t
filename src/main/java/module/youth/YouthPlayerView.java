@@ -7,7 +7,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.FixedColumnsTable;
 import core.gui.model.UserColumnController;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.module.config.ModuleConfig;
 import core.util.Helper;
@@ -283,7 +283,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         }
         if ( row > -1) {
             var index = playerOverviewTable.getSelectedModelIndex();
-            var currentPlayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
+            var currentPlayers = HOModelManager.instance().getModel().getCurrentYouthPlayers();
             if (currentPlayers != null && currentPlayers.size() > index) {
                 return currentPlayers.get(index);
             }
@@ -292,7 +292,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     }
 
     private void setSelectedPlayer(YouthPlayer selectedPlayer) {
-        var currentPlayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
+        var currentPlayers = HOModelManager.instance().getModel().getCurrentYouthPlayers();
         for (int row=0; row<currentPlayers.size(); row++){
             var index = playerOverviewTable.getSelectedModelIndex();
             var player = currentPlayers.get(index);

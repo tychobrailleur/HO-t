@@ -7,7 +7,7 @@
  */
 package module.training.ui.renderer;
 
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import module.training.Skills;
 import module.training.ui.TrainingLegendPanel;
 import module.training.ui.model.SkillupTableModel;
@@ -44,7 +44,7 @@ public class SkillupTableRenderer extends DefaultTableCellRenderer {
 		else {
 			setIcon(null);
 		}
-		if (skillup != null && skillup.getDate().isAfter(HOVerwaltung.instance().getModel().getBasics().getDatum()) ) {
+		if (skillup != null && skillup.getDate().isAfter(HOModelManager.instance().getModel().getBasics().getDatum()) ) {
 			cell.setForeground(Skills.getSkillColor(skillup.getType()));
 		} else {
 			cell.setForeground(Color.BLACK);

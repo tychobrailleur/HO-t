@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import core.constants.player.PlayerSkill;
 import core.db.user.UserManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.model.player.PlayerCategory;
@@ -385,7 +385,7 @@ public class XMLPlayersParser {
         var owningTeam = (Element)root.getElementsByTagName("OwningTeam").item(0);
         var teamID = xmlIntValue(owningTeam, "TeamID");
         if (!UserManager.instance().getCurrentUser().isNtTeam() &&
-             teamID != HOVerwaltung.instance().getModel().getBasics().getTeamId()) return null; // foreign player
+             teamID != HOModelManager.instance().getModel().getBasics().getTeamId()) return null; // foreign player
 
         var player = new Player();
         player.setPlayerId(xmlIntValue(root, "PlayerID"));

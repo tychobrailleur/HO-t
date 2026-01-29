@@ -1,6 +1,6 @@
 package core.db;
 
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
 import core.model.match.MatchKurzInfo;
@@ -197,7 +197,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	 * Return the list of n latest played matches (own team)
 	 */
 	List<MatchKurzInfo> getPlayedMatchInfo( Integer iNbGames, boolean bOfficialOnly, boolean ownTeam) {
-		final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		final int teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
 
 		var params = new ArrayList<>();
 		var where = new StringBuilder(" WHERE Status=? ");

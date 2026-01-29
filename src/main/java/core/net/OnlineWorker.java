@@ -52,7 +52,7 @@ public class OnlineWorker {
 		// Show wait dialog
 		boolean ok = true;
 		try {
-			HOVerwaltung hov = HOVerwaltung.instance();
+			HOModelManager hov = HOModelManager.instance();
 			String hrf = null;
 			try {
 				hrf = ConvertXml2Hrf.createHrf();
@@ -95,7 +95,7 @@ public class OnlineWorker {
 						// Add old players to the model
 						homodel.setFormerPlayers(DBManager.instance().loadAllPlayers());
 						// Only update when the model is newer than existing
-						if (HOVerwaltung.isNewModel(homodel)) {
+						if (HOModelManager.isNewModel(homodel)) {
 							// Show
 							hov.setModel(homodel);
 							// reset value of TS, confidence in Lineup Settings Panel after data download
@@ -331,7 +331,7 @@ public class OnlineWorker {
 						if (info.getHomeTeamID() > 0) {
 							int guestRegionId;
 							if (info.isAwayMatch()) {
-								guestRegionId = HOVerwaltung.instance().getModel().getBasics().getRegionId();
+								guestRegionId = HOModelManager.instance().getModel().getBasics().getRegionId();
 							} else {
 								var guestTeamInfo = getTeam(info.getGuestTeamID());
 								guestRegionId = getRegionId(guestTeamInfo);
@@ -341,7 +341,7 @@ public class OnlineWorker {
 
 							int homeArenaId;
 							if (info.isHomeMatch()) {
-								homeArenaId = HOVerwaltung.instance().getModel().getStadium().getArenaId();
+								homeArenaId = HOModelManager.instance().getModel().getStadium().getArenaId();
 							} else {
 								var homeTeamInfo = getTeam(info.getHomeTeamID());
 								homeArenaId = getArenaId(homeTeamInfo);
@@ -734,7 +734,7 @@ public class OnlineWorker {
 		String orders = lineup.toJson();
 		try {
 			result = MyConnector.instance().uploadMatchOrder(matchId,
-					HOVerwaltung.instance().getModel().getBasics().getTeamId(), matchType, orders);
+					HOModelManager.instance().getModel().getBasics().getTeamId(), matchType, orders);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -917,14 +917,14 @@ public class OnlineWorker {
 	public static MatchLineupTeam getLineupbyMatchId(int matchId, MatchType matchType) {
 
 		try {
-			var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+			var teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
 			String xml = MyConnector.instance().downloadMatchOrder(matchId, matchType, teamId);
 
 			if (!StringUtils.isEmpty(xml)) {
 				Map<String, String> map = XMLMatchOrderParser.parseMatchOrderFromString(xml);
 				String trainerID = "-1";
 				try {
-					trainerID = String.valueOf(HOVerwaltung.instance().getModel().getTrainer()
+					trainerID = String.valueOf(HOModelManager.instance().getModel().getTrainer()
 							.getPlayerId());
 
 				} catch (Exception e) {
@@ -1042,7 +1042,7 @@ public class OnlineWorker {
 		GregorianCalendar calendar = (GregorianCalendar) Calendar.getInstance();
 		StringBuilder builder = new StringBuilder();
 
-		builder.append(HOVerwaltung.instance().getModel().getBasics().getTeamId());
+		builder.append(HOModelManager.instance().getModel().getBasics().getTeamId());
 		builder.append('-');
 
 		builder.append(calendar.get(Calendar.YEAR));
@@ -1213,7 +1213,7 @@ public class OnlineWorker {
 		}
 		for (var match : matches) {
 			for (var teamid : match.getTeamIds()) {
-				if (teamid != HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
+				if (teamid != HOModelManager.instance().getModel().getBasics().getTeamId()) {
 					// not the own team
 					var found = ret.stream().anyMatch(t -> t.getTeamId() == teamid);
 					if (!found) {
@@ -1249,7 +1249,7 @@ public class OnlineWorker {
 		DBManager.instance().storeTeamLogoInfo(teamId, url, null);
 		var logoFilename = ThemeManager.instance().getTeamLogoFilename(teamId);
 		if (logoFilename != null &&
-				teamId == HOVerwaltung.instance().getModel().getBasics().getTeamId() &&
+				teamId == HOModelManager.instance().getModel().getBasics().getTeamId() &&
 				!logoFilename.equals(UserManager.instance().getCurrentUser().getClubLogo())) {
 			UserManager.instance().getCurrentUser().setClubLogo(logoFilename);
 			UserManager.instance().save();

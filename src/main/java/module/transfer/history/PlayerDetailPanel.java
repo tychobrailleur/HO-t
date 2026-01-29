@@ -6,7 +6,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.table.FixedColumnsTable;
 import core.gui.model.UserColumnController;
 import core.gui.theme.ImageUtilities;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.Player;
@@ -311,7 +311,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
             final List<PlayerTransfer> transfers = DBManager.instance().getTransfers(this.playerId, true);
             var valIncome = new AmountOfMoney( 0);
             HODateTime soldDate = null;
-            final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+            final int teamid = HOModelManager.instance().getModel().getBasics().getTeamId();
             for (final PlayerTransfer transfer : transfers) {
                 if (transfer.getBuyerid() == teamid) {
                     valIncome.subtract(transfer.getPrice());

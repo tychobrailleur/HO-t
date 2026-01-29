@@ -15,7 +15,7 @@ package module.tsforecast;
  * @author  michael.roux
  */
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.util.HODateTime;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,13 +29,13 @@ class ConfidenceCurve extends Curve {
 	}
 
 	private void readConfidenceHistory() throws SQLException {
-		var start = HOVerwaltung.instance().getModel().getBasics().getDatum().minus(WEEKS_BACK*7, ChronoUnit.DAYS);
+		var start = HOModelManager.instance().getModel().getBasics().getDatum().minus(WEEKS_BACK*7, ChronoUnit.DAYS);
 		try (ResultSet resultset = dbManager.getConnectionManager().executePreparedQuery("select DATUM, ISELBSTVERTRAUEN from HRF, TEAM where HRF.HRF_ID = TEAM.HRF_ID order by DATUM")) {
 			if (resultset != null) {
 				while (resultset.next()) {
 					var date = HODateTime.fromDbTimestamp(resultset.getTimestamp("DATUM"));
 					if (start.isBefore(date)
-							&& !HOVerwaltung.instance().getModel().getBasics().getDatum().isBefore(date)) {
+							&& !HOModelManager.instance().getModel().getBasics().getDatum().isBefore(date)) {
 						m_clPoints.add(new Point(date, 1 + resultset.getInt("ISELBSTVERTRAUEN"), -1));
 					}
 				}

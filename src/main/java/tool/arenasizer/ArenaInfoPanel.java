@@ -1,6 +1,6 @@
 package tool.arenasizer;
 
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.util.HODateTime;
 import core.util.Helper;
@@ -48,7 +48,7 @@ public class ArenaInfoPanel extends JPanel {
 	}
 
 	private void updateValues() {
-		final Stadium stadium = HOVerwaltung.instance().getModel().getStadium();
+		final Stadium stadium = HOModelManager.instance().getModel().getStadium();
 
 		final String notAvailableString = TranslationFacility.tr("ls.general_label.not_available_abbreviation");
 		final var numberformat = Helper.getNumberFormat( 0);
@@ -136,7 +136,7 @@ public class ArenaInfoPanel extends JPanel {
 
 	private void updateExpansionFinishedLabel() {
 		final JLabel labelExpansionFinished = expandedCapacityPanel.label3;
-		final Stadium stadium = HOVerwaltung.instance().getModel().getStadium();
+		final Stadium stadium = HOModelManager.instance().getModel().getStadium();
 		Optional.ofNullable(stadium).map(Stadium::getExpansionDate).ifPresentOrElse(expansionDate -> {
 				final boolean building = expansionDate.isAfter(HODateTime.now());
 				if (building) {

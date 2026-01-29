@@ -3,7 +3,7 @@ package core.prediction;
 
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.prediction.engine.MatchPredictionManager;
@@ -33,7 +33,7 @@ public class MatchEnginePanel extends ImagePanel implements	 ActionListener {
 	public MatchEnginePanel(TeamData homeTeamValues,
 			TeamData guestTeamValues) {
 		if (guestTeamValues.getTeamName().startsWith(
-				HOVerwaltung.instance().getModel().getBasics().getTeamName())) {
+				HOModelManager.instance().getModel().getBasics().getTeamName())) {
 			isHomeMatch = false;
 		}
 		homeTeamPanel = new TeamRatingPanel(homeTeamValues);

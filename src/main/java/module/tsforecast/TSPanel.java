@@ -31,7 +31,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.enums.MatchType;
@@ -301,13 +301,13 @@ class TSPanel extends JPanel {
   }
 
   private void drawSeason(Graphics2D graphics2d) {
-    var today = HOVerwaltung.instance().getModel().getBasics().getDatum();
+    var today = HOModelManager.instance().getModel().getBasics().getDatum();
     // Week starts at Saturday = 7, Sunday = 1
     var iDay = today.DayOfWeek().getValue();
-    int iSeason = HOVerwaltung.instance().getModel().getBasics().getSeason();
+    int iSeason = HOModelManager.instance().getModel().getBasics().getSeason();
 
     // Spieltag increases with game, therefore -1
-    int iSeasonWeek = HOVerwaltung.instance().getModel().getBasics().getSpieltag() - 1;
+    int iSeasonWeek = HOModelManager.instance().getModel().getBasics().getSpieltag() - 1;
     // iSeasonWeek starts with 1 and the current week has already been subtracted by
     // iDay
     int iCurrentSeasonStart = m_iTodayPosition - iDay - (iSeasonWeek - 2) * 7;
@@ -370,7 +370,7 @@ class TSPanel extends JPanel {
   private void drawWeeks(Graphics2D graphics2d) {
     // calculate first week on screen
     int iSeasonWeek = Math
-        .round(HOVerwaltung.instance().getModel().getBasics().getSpieltag() - (float) m_iTodayPosition / 7.0f);
+        .round(HOModelManager.instance().getModel().getBasics().getSpieltag() - (float) m_iTodayPosition / 7.0f);
     while (iSeasonWeek < 1)
       iSeasonWeek += 16;
 
@@ -396,7 +396,7 @@ class TSPanel extends JPanel {
   // range of the diagram in days,
   // depending on which curves are switched on
   private void setStartEndDate() {
-    m_startDate = HOVerwaltung.instance().getModel().getBasics().getDatum();
+    m_startDate = HOModelManager.instance().getModel().getBasics().getDatum();
     HODateTime m_endDate = new HODateTime(m_startDate);
 
     Curve curve;
@@ -419,7 +419,7 @@ class TSPanel extends JPanel {
 
     // calculate days from start to today
     m_iTodayPosition = 0;
-    var today = HOVerwaltung.instance().getModel().getBasics().getDatum();
+    var today = HOModelManager.instance().getModel().getBasics().getDatum();
     m_iTodayPosition = (int) Duration.between(m_startDate.instant, today.instant).toDays();
   }
 

@@ -3,7 +3,7 @@ package module.transfer;
 import core.db.AbstractTable;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.player.Player;
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
@@ -157,7 +157,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
      */
     public AmountOfMoney getMotherClubFee(){
         if ( this.motherClubFee == null) {
-            var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+            var teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
             this.motherClubFee = calcMotherClubFee(teamId);
         }
         return this.motherClubFee;
@@ -189,7 +189,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
      */
     public AmountOfMoney getPreviousClubFee(){
         if ( this.previousClubFee == null) {
-            var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+            var teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
             this.previousClubFee = calcPreviousClubFee(teamId);
         }
         return this.previousClubFee;
@@ -301,8 +301,8 @@ public class PlayerTransfer extends AbstractTable.Storable {
     public final void setBuyerid(int id) {
         this.buyerid = id;
 
-        if (buyerid == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
-            if (sellerid !=  HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
+        if (buyerid == HOModelManager.instance().getModel().getBasics().getTeamId()) {
+            if (sellerid !=  HOModelManager.instance().getModel().getBasics().getTeamId()) {
                 this.type = BUY;
             } else {
                 this.type = REBOUGHT;
@@ -383,7 +383,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
                 oldPLayerId = playerId;
             }
         }
-        var isPurchase = this.buyerid == HOVerwaltung.instance().getModel().getBasics().getTeamId();
+        var isPurchase = this.buyerid == HOModelManager.instance().getModel().getBasics().getTeamId();
         if (playerId > 0) {
             loadPLayerInfoAtTransferDate(isPurchase);
         } else if (playerId != -1) {
@@ -559,8 +559,8 @@ public class PlayerTransfer extends AbstractTable.Storable {
     public final void setSellerid(int id) {
         this.sellerid = id;
 
-        if (sellerid ==  HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
-            if (buyerid !=  HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
+        if (sellerid ==  HOModelManager.instance().getModel().getBasics().getTeamId()) {
+            if (buyerid !=  HOModelManager.instance().getModel().getBasics().getTeamId()) {
                 this.type = SELL;
             } else {
                 this.type = REBOUGHT;

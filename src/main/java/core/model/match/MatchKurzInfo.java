@@ -2,7 +2,7 @@ package core.model.match;
 
 import core.db.AbstractTable;
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
 import core.model.enums.MatchType;
@@ -437,12 +437,12 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 
 	public final boolean isHomeMatch()
 	{
-		return m_iHomeTeamID == HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		return m_iHomeTeamID == HOModelManager.instance().getModel().getBasics().getTeamId();
 	}
 
 	public final boolean isAwayMatch()
 	{
-		return m_iGuestTeamID == HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		return m_iGuestTeamID == HOModelManager.instance().getModel().getBasics().getTeamId();
 	}
 
 	// Return duration of the match in minutes

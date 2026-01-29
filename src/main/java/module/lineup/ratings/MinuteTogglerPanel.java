@@ -45,7 +45,7 @@ public final class MinuteTogglerPanel extends JPanel {
 //		toggleLabels.add(45d+EPSILON);
 //		toggleLabels.add(90d+EPSILON);
 		// LABELs with substitution minutes
-		//toggleLabels = new ArrayList<>(HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense().keySet());
+		//toggleLabels = new ArrayList<>(HOModelManager.instance().getModel().getLineup().getRatings().getLeftDefense().keySet());
 		initComponents();
 	}
 

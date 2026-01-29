@@ -1,6 +1,6 @@
 package module.lineup.substitution.plausibility;
 
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.player.Player;
 import module.lineup.Lineup;
@@ -87,10 +87,10 @@ public class PlausibilityCheck {
 	}
 
 	private static Player getPlayerIn(Substitution substitution) {
-		return HOVerwaltung.instance().getModel().getCurrentPlayer(substitution.getObjectPlayerID());
+		return HOModelManager.instance().getModel().getCurrentPlayer(substitution.getObjectPlayerID());
 	}
 
 	private static Player getPlayerOut(Substitution substitution) {
-		return HOVerwaltung.instance().getModel().getCurrentPlayer(substitution.getSubjectPlayerID());
+		return HOModelManager.instance().getModel().getCurrentPlayer(substitution.getSubjectPlayerID());
 	}
 }

@@ -5,7 +5,7 @@ import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
 import core.gui.comp.panel.RasenPanel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
@@ -233,14 +233,14 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 
 	private void setWeekLimits() {
 		MatchFixtures plan = (MatchFixtures) seasonCombo.getSelectedItem();
-		int max_week = HOVerwaltung.instance().getModel().getBasics().getSpieltag() - 1;
+		int max_week = HOModelManager.instance().getModel().getBasics().getSpieltag() - 1;
 		int week = 1;
 
 		if (max_week < 1)
 			max_week = 1;
 
 		try {
-			if (HOVerwaltung.instance().getModel().getBasics().getSeason() != plan.getSaison())
+			if (HOModelManager.instance().getModel().getBasics().getSeason() != plan.getSaison())
 				max_week = 14;
 			else
 				week = max_week;

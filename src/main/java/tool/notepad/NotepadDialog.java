@@ -4,7 +4,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.util.HOLogger;
 
 import java.awt.BorderLayout;
@@ -44,7 +44,7 @@ public class NotepadDialog extends JDialog implements ActionListener{
 	}
 	
 	private void initialize(){
-		file = new File(HOVerwaltung.instance().getModel().getBasics().getTeamId()+"_note.txt");
+		file = new File(HOModelManager.instance().getModel().getBasics().getTeamId()+"_note.txt");
 		readFile();
         int with = (int) GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds()
                                             .getWidth();

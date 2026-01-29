@@ -2,7 +2,7 @@ package module.matches.statistics;
 
 import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.match.MatchKurzInfo;
 import core.util.StringUtils;
@@ -102,7 +102,7 @@ public class MatchesOverviewCommonPanel extends ImagePanel {
 			 clear();
 			 return;
 		 }
-		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		int teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
 		MatchKurzInfo home = DBManager.instance().getMatchesKurzInfo(teamId, matchtypes, HighestVictory, true);
 		MatchKurzInfo away = DBManager.instance().getMatchesKurzInfo(teamId, matchtypes, HighestVictory, false);
 		MatchKurzInfo info = getHighestMatch(home, away);

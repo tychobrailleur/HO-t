@@ -4,7 +4,7 @@ package module.misc;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.StaffMember;
 import core.model.StaffType;
 import core.model.TranslationFacility;
@@ -36,7 +36,7 @@ final class StaffPanel extends JPanel {
 	}
 
 	void setLabels() {
-		final Verein verein = HOVerwaltung.instance().getModel().getClub();
+		final Verein verein = HOModelManager.instance().getModel().getClub();
 		if(verein != null){
 			assistantCoachesLabel.setText(verein.getCoTrainer() + "");
 			doctorsLabel.setText(verein.getAerzte() + "");
@@ -67,7 +67,7 @@ final class StaffPanel extends JPanel {
 
 		setLayout(layout);
 		
-		List<StaffMember> staff = HOVerwaltung.instance().getModel().getStaff();
+		List<StaffMember> staff = HOModelManager.instance().getModel().getStaff();
 		
 		int nextYvalue = 0;
 		

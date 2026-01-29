@@ -3,7 +3,7 @@ package tool.export;
 import core.constants.player.*;
 import core.file.ExampleFileFilter;
 import core.gui.HOMainFrame;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
@@ -74,7 +74,7 @@ public class CsvPlayerExport {
 	private void doExport (File file) {
 		HOLogger.instance().debug(getClass(),
 				"Exporting all players as CSV to " + file.getName() + "...");
-		List<Player> list = HOVerwaltung.instance().getModel().getCurrentPlayers();
+		List<Player> list = HOModelManager.instance().getModel().getCurrentPlayers();
 		try {
 			OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
 
@@ -130,7 +130,7 @@ public class CsvPlayerExport {
 							+ "\"" + TranslationFacility.tr("ls.player.position_short.forwardtowardswing") + "\","
 							+ "\n");
 
-			var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+			var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
 
 			for (Player curPlayer : list) {
 				String[] outCols = {

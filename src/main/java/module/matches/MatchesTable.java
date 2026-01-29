@@ -3,7 +3,7 @@ package module.matches;
 import core.db.DBManager;
 import core.gui.model.MatchesColumnModel;
 import core.gui.model.UserColumnController;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.UserParameter;
 import core.model.match.MatchKurzInfo;
 
@@ -18,7 +18,7 @@ final class MatchesTable extends JTable {
 		super();
 		setOpaque(false);
 		m_clTableModel = UserColumnController.instance().getMatchesModel();
-		var matches = DBManager.instance().getMatchesKurzInfo(HOVerwaltung.instance().getModel().getBasics().getTeamId(), matchtyp, UserParameter.instance().matchLocation).toArray(new MatchKurzInfo[0]);
+		var matches = DBManager.instance().getMatchesKurzInfo(HOModelManager.instance().getModel().getBasics().getTeamId(), matchtyp, UserParameter.instance().matchLocation).toArray(new MatchKurzInfo[0]);
 		m_clTableModel.setValues(matches);
 		m_clTableModel.initTable(this);
 		setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -30,7 +30,7 @@ final class MatchesTable extends JTable {
 
 	public void refresh(int iMatchType, MatchLocation matchLocation) {
 		m_clTableModel.setValues(DBManager.instance().getMatchesKurzInfo(
-				HOVerwaltung.instance().getModel().getBasics().getTeamId(), iMatchType, matchLocation).toArray(new MatchKurzInfo[0]));
+				HOModelManager.instance().getModel().getBasics().getTeamId(), iMatchType, matchLocation).toArray(new MatchKurzInfo[0]));
 		m_clTableModel.fireTableDataChanged();
 	}
 

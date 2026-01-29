@@ -2,7 +2,7 @@
 package module.transfer;
 
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.player.Player;
 
 import java.util.ArrayList;
@@ -35,10 +35,10 @@ public final class PlayerRetriever {
      *         could be found.
      */
     public static Player getPlayer(int id) {
-        final Player player = HOVerwaltung.instance().getModel().getCurrentPlayer(id);
+        final Player player = HOModelManager.instance().getModel().getCurrentPlayer(id);
 
         if (player == null) {
-            final List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers();
+            final List<Player> oldPlayers = HOModelManager.instance().getModel().getFormerPlayers();
 
             for (final Player oldPlayer : oldPlayers) {
                 if (oldPlayer.getPlayerId() == id) {
@@ -65,8 +65,8 @@ public final class PlayerRetriever {
         if (player != null) return player;
 
         List<Player> players = new ArrayList<>();
-        players.addAll(HOVerwaltung.instance().getModel().getCurrentPlayers());
-        players.addAll(HOVerwaltung.instance().getModel().getFormerPlayers());
+        players.addAll(HOModelManager.instance().getModel().getCurrentPlayers());
+        players.addAll(HOModelManager.instance().getModel().getFormerPlayers());
 
         List<Player> matches = new ArrayList<>();
 

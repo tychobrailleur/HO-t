@@ -4,7 +4,7 @@ import core.constants.UIConstants;
 import core.gui.HOMainFrame;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.util.GUIUtils;
 import module.lineup.Lineup;
@@ -88,7 +88,7 @@ public class SubstitutionOverview extends JPanel {
 		model.setData(this.lineup.getSubstitutionList());
 
 		// Max order is 5 + the level of the tactical assistant.
-		int maxOrders = 5 + HOVerwaltung.instance().getModel().getClub().getTacticalAssistantLevels();
+		int maxOrders = 5 + HOModelManager.instance().getModel().getClub().getTacticalAssistantLevels();
 		int nSubstitutions = 0; // no limit
 		int nManMarkings = 0; // limit 1
 		int nOther = 0; // limit maxOrders - nSubstitutions

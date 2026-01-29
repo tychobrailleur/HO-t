@@ -3,7 +3,7 @@ package core.training;
 import core.db.DBManager;
 import core.gui.RefreshManager;
 import core.gui.Refreshable;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchStatistics;
 import core.model.player.IMatchRoleID;
@@ -99,8 +99,8 @@ public class TrainingPreviewPlayers implements Refreshable {
      */
     public int getNextWeekTraining() {
         if (nextWeekTraining == -1) {
-            int nextWeekSaison = HOVerwaltung.instance().getModel().getBasics().getSeason();
-            int nextWeekWeek = HOVerwaltung.instance().getModel().getBasics().getSpieltag();
+            int nextWeekSaison = HOModelManager.instance().getModel().getBasics().getSeason();
+            int nextWeekWeek = HOModelManager.instance().getModel().getBasics().getSpieltag();
             if (nextWeekWeek == 16) {
                 nextWeekWeek = 1;
                 nextWeekSaison++;
@@ -209,7 +209,7 @@ public class TrainingPreviewPlayers implements Refreshable {
                             lMatchStats.add(new MatchStatistics(matchInfo, mlt));
                         }
                     } else if (matchInfo.getMatchStatus() == MatchKurzInfo.UPCOMING) {
-                        var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+                        var teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
                         var team = DBManager.instance().loadMatchLineupTeam(matchInfo.getMatchType().getId(), matchInfo.getMatchID(), teamId);
                         if (team != null)
                             lineups.add(team.getLineup());

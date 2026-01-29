@@ -2,7 +2,7 @@
 package module.training;
 
 import core.constants.player.PlayerSkill;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.player.Player;
 import core.model.player.SkillChange;
 import java.time.temporal.ChronoUnit;
@@ -42,7 +42,7 @@ public class PastTrainingManager {
 			var skillChanges = player.getAllSkillChanges(skill);
 			for (var element : skillChanges) {
 				var skillUpDate =  element.getDate();
-				var trainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
+				var trainingDate = HOModelManager.instance().getModel().getXtraDaten().getNextTrainingDate();
 				while (skillUpDate.isAfter(trainingDate)) trainingDate = trainingDate.plus(7, ChronoUnit.DAYS);
 				while (skillUpDate.isBefore(trainingDate)) trainingDate = trainingDate.minus(7, ChronoUnit.DAYS);
 				element.setDate(trainingDate);

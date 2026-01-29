@@ -2,7 +2,7 @@
 package core.prediction;
 
 import core.constants.player.PlayerAbility;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.match.IMatchDetails;
 import core.model.match.Matchdetails;
@@ -206,7 +206,7 @@ class TeamRatingPanel extends JPanel implements ItemListener {
     private void initSubLevel() {
         subLevels = new ArrayList<>();
 
-        final HOVerwaltung verwaltung = HOVerwaltung.instance();
+        final HOModelManager verwaltung = HOModelManager.instance();
         subLevels.add(new RatingItem(TranslationFacility.tr("verylow"), 0));
         subLevels.add(new RatingItem(TranslationFacility.tr("low"), 1));
         subLevels.add(new RatingItem(TranslationFacility.tr("high"), 2));

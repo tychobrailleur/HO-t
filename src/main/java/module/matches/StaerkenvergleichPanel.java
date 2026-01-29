@@ -11,7 +11,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.match.*;
 import core.model.player.IMatchRoleID;
@@ -95,7 +95,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		heimTeamNameLabel.setText(info.getHomeTeamName());
 		gastTeamNameLabel.setText(info.getGuestTeamName());
 
-		int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		int teamid = HOModelManager.instance().getModel().getBasics().getTeamId();
 		if (info.getHomeTeamID() == teamid) {
 			heimTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.HOME_TEAM_FG));
 		} else {

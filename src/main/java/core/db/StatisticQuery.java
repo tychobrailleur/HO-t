@@ -2,7 +2,7 @@ package core.db;
 
 import core.gui.model.ArenaStatistikModel;
 import core.gui.model.ArenaStatistikTableModel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.enums.MatchType;
 import core.model.match.MatchKurzInfo;
 import core.util.AmountOfMoney;
@@ -111,7 +111,7 @@ public class StatisticQuery {
 		String sql;
 		ResultSet rs;
 		final ArrayList<ArenaStatistikModel> liste = new ArrayList<>();
-		final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		final int teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
 		int maxFans = 0;
 		int maxArenaGroesse = 0;
 

@@ -1,7 +1,7 @@
 package module.teamAnalyzer.ui.controller;
 
 import core.constants.player.PlayerAbility;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.match.IMatchDetails;
 import core.model.match.Matchdetails;
@@ -77,7 +77,7 @@ public class SimButtonListener implements ActionListener {
                                                                    myTeam.getMiddleAttack(),
                                                                    myTeam.getRightAttack());
 
-        var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+        var lineup = HOModelManager.instance().getModel().getCurrentLineup();
         TeamData myTeamValues = manager.generateTeamData(myTeam.getTeamPanel().getText(),
         		myTeamRatings, lineup.getTacticType(), getTacticLevel());
 
@@ -113,8 +113,8 @@ public class SimButtonListener implements ActionListener {
      * @return the actual tactic level as shown in HO Lineup tab
      */
     private int getTacticLevel() {
-        var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
-        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+        var lineup = HOModelManager.instance().getModel().getCurrentLineup();
+        var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
         var r = ratingPredictionModel.getTacticRating(lineup, 0);
         if (r > 0) r += 1;
         return (int) r;

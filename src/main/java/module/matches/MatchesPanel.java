@@ -10,7 +10,7 @@ import core.gui.comp.panel.LazyImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.match.IMatchDetails;
@@ -135,10 +135,10 @@ public final class MatchesPanel extends LazyImagePanel {
 
 	private void adoptLineup() {
 		if (matchesModel.getMatch() != null && (matchesModel.getMatch().getMatchStatus() == MatchKurzInfo.FINISHED)) {
-			int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+			int teamid = HOModelManager.instance().getModel().getBasics().getTeamId();
 			List<MatchLineupPosition> positions = DBManager.instance().getMatchLineupPlayers(
 					matchesModel.getMatch().getMatchID(), matchesModel.getMatch().getMatchType(), teamid);
-			Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+			Lineup lineup = HOModelManager.instance().getModel().getCurrentLineup();
 			lineup.clearLineup(); // To make sure the old one is gone.
 			if (positions != null) {
 				for (MatchLineupPosition player : positions) {
@@ -212,7 +212,7 @@ public final class MatchesPanel extends LazyImagePanel {
 		if (matchesModel.getMatch() != null) {
 			Matchdetails details = matchesModel.getDetails();
 			MatchPredictionManager manager = MatchPredictionManager.instance();
-			int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+			int teamId = HOModelManager.instance().getModel().getBasics().getTeamId();
 			boolean homeMatch = teamId == matchesModel.getMatch().getHomeTeamID();
 
 			TeamRatings homeTeamRatings = manager.generateTeamRatings(
@@ -284,7 +284,7 @@ public final class MatchesPanel extends LazyImagePanel {
 	 * Get the team data for the own team (current lineup).
 	 */
 	private TeamData getOwnLineupRatings(MatchPredictionManager manager) {
-		var hoModel = HOVerwaltung.instance().getModel();
+		var hoModel = HOModelManager.instance().getModel();
 		var lineup = hoModel.getCurrentLineup();
 		var ratingPredictionModel = hoModel.getRatingPredictionModel();
 
@@ -298,14 +298,14 @@ public final class MatchesPanel extends LazyImagePanel {
 				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.ATTACK_RIGHT, 90))));
 
 		int tactic = lineup.getTacticType();
-		return manager.generateTeamData(HOVerwaltung.instance().getModel().getBasics().getTeamName(), teamRatings, tactic, getTacticStrength(lineup));
+		return manager.generateTeamData(HOModelManager.instance().getModel().getBasics().getTeamName(), teamRatings, tactic, getTacticStrength(lineup));
 	}
 
 	/**
 	 * Get the tactic strength of the given lineup.
 	 */
 	private int getTacticStrength(Lineup lineup) {
-		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+		var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
 		return (int)ratingPredictionModel.getTacticRating(lineup, 0);
 	}
 
@@ -563,7 +563,7 @@ public final class MatchesPanel extends LazyImagePanel {
 				gameFinishTime.isBefore(HODateTime.now()) ;
 		reloadMatchButton.setEnabled(gameFinished);
 		if (matchesModel.getMatch().getMatchStatus() == MatchKurzInfo.FINISHED) {
-			final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+			final int teamid = HOModelManager.instance().getModel().getBasics().getTeamId();
 			adoptLineupButton.setEnabled((matchesModel.getMatch().getHomeTeamID() == teamid)
 					|| (matchesModel.getMatch().getGuestTeamID() == teamid));
 		} else {

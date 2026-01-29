@@ -1,5 +1,5 @@
 package tool.injury;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 
 /**
@@ -53,6 +53,6 @@ class UpdatePanel extends AbstractInjuryPanel {
         setInputMsg(TranslationFacility.tr("ls.club.staff.medic"));
         setOutputMsg(msg);
         setHeader(TranslationFacility.tr("Injury2"));
-        setInputValue(HOVerwaltung.instance().getModel().getClub().getAerzte() + "");
+        setInputValue(HOModelManager.instance().getModel().getClub().getAerzte() + "");
     }
 }

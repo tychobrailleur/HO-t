@@ -1,7 +1,7 @@
 package core.util;
 
 import core.file.xml.XMLMatchdetailsParser;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
@@ -76,7 +76,7 @@ public class HelperWrapper {
     	try {
           String input = MyConnector.instance().downloadMatchdetails(Integer.parseInt(matchID), matchType);
           Matchdetails mdetails = XMLMatchdetailsParser.parseMatchdetailsFromString(input, null);
-          int teamID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+          int teamID = HOModelManager.instance().getModel().getBasics().getTeamId();
           return ((mdetails.getHomeTeamId() == teamID) || (mdetails.getGuestTeamId() == teamID));
       } catch (Exception e) {
       	HOLogger.instance().warning(Helper.class, "Err: " + e);

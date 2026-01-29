@@ -21,7 +21,7 @@ package module.tsforecast;
  */
 
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.cup.CupLevel;
 import core.model.enums.MatchType;
@@ -52,10 +52,10 @@ abstract class ForecastCurve extends Curve {
 	 */
 	public ForecastCurve(DBManager dbManager, boolean future) {
 		super(dbManager);
-		var basics = HOVerwaltung.instance().getModel().getBasics();
+		var basics = HOModelManager.instance().getModel().getBasics();
 		if (basics != null) {
 			isNtTeam = basics.isNationalTeam();
-            HOVerwaltung.instance().getModel().getStaff().stream()
+            HOModelManager.instance().getModel().getStaff().stream()
 					.filter(i -> i.getStaffType() == SPORTPSYCHOLOGIST)
 					.findAny()
 					.ifPresent(teamPsychologist -> psychologyEffect = teamPsychologist.getLevel() / 10.0);
@@ -185,7 +185,7 @@ abstract class ForecastCurve extends Curve {
 	 * Add future events
 	 */
 	private void readFutureMatches() {
-		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
+		Basics ibasics = HOModelManager.instance().getModel().getBasics();
 		if (ibasics == null) return;
 
 		var teamId = ibasics.getTeamId();
@@ -212,15 +212,15 @@ abstract class ForecastCurve extends Curve {
 		}
 
 		var toDate = ibasics.getDatum().plus(7 * m_iNoWeeksForecast, ChronoUnit.DAYS);
-		var trainingIntensityChangeDate = HOVerwaltung.instance().getModel().getXtraDaten().getLatestDailyUpdateDateBeforeTraining();
+		var trainingIntensityChangeDate = HOModelManager.instance().getModel().getXtraDaten().getLatestDailyUpdateDateBeforeTraining();
 		if (trainingIntensityChangeDate == null){
 			// Should only happen as long as no daily updates were downloaded from hattrick
-			trainingIntensityChangeDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
+			trainingIntensityChangeDate = HOModelManager.instance().getModel().getXtraDaten().getNextTrainingDate();
 		}
-		var training = HOVerwaltung.instance().getModel().getTraining();
+		var training = HOModelManager.instance().getModel().getTraining();
 		var intensity = (double)training.getTrainingIntensity();
-		var spirit = HOVerwaltung.instance().getModel().getTeam().getTeamSpirit();
-		var updates = HOVerwaltung.instance().getModel().getXtraDaten().getDailyUpdates();
+		var spirit = HOModelManager.instance().getModel().getTeam().getTeamSpirit();
+		var updates = HOModelManager.instance().getModel().getXtraDaten().getDailyUpdates();
 		var nextDailyUpdates = updates.stream().filter(Objects::nonNull).sorted().collect(Collectors.toList());
 
 		if (cupMatch.isPresent()) {
@@ -311,8 +311,8 @@ abstract class ForecastCurve extends Curve {
 	}
 
 	private void readPastMatches() {
-		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
-		Liga iliga = HOVerwaltung.instance().getModel().getLeague();
+		Basics ibasics = HOModelManager.instance().getModel().getBasics();
+		Liga iliga = HOModelManager.instance().getModel().getLeague();
 		if (iliga != null) {
 			var start = ibasics.getDatum().minus(WEEKS_BACK*7, ChronoUnit.DAYS).toDbTimestamp();
 			var types = new ArrayList<Integer>();

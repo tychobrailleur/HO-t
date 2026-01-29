@@ -1,7 +1,7 @@
 package module.training;
 
 import core.gui.comp.panel.LazyPanel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.UserParameter;
 import core.model.player.Player;
 import core.util.Helper;
@@ -39,7 +39,7 @@ public class TrainingModulePanel extends LazyPanel {
 		//setStaffInTrainingModel(this.model);
 
 		if (oldPlayer != null) {
-			Player player = HOVerwaltung.instance().getModel()
+			Player player = HOModelManager.instance().getModel()
 					.getCurrentPlayer(oldPlayer.getPlayerId());
 			this.model.setActivePlayer(player);
 		}

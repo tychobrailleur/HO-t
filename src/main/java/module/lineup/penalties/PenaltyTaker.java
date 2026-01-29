@@ -1,7 +1,7 @@
 package module.lineup.penalties;
 
 import core.constants.player.PlayerSkill;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.player.Player;
 
 public class PenaltyTaker {
@@ -17,7 +17,7 @@ public class PenaltyTaker {
 	}
 
 	public double getAbility() {
-		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+		var ratingPredictionModel = HOModelManager.instance().getModel().getRatingPredictionModel();
 		return ratingPredictionModel.getPlayerPenaltyStrength(player);
 	}
 

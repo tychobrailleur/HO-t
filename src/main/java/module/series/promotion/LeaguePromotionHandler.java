@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import core.db.DBManager;
 import core.gui.event.ChangeEventHandler;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.misc.Basics;
 import core.util.HOLogger;
 import javax.swing.*;
@@ -47,7 +47,7 @@ public class LeaguePromotionHandler extends ChangeEventHandler {
         return false;
 //        List<Integer> supportedLeagues = HttpDataSubmitter.instance().fetchSupportedLeagues();
 //        int[] activeWeeks = ModuleConfig.instance().getIntArray("PromotionStatus_ActiveWeeks", new int[] { 14, 15 });
-//        int week = HOVerwaltung.instance().getModel().getBasics().getSpieltag();
+//        int week = HOModelManager.instance().getModel().getBasics().getSpieltag();
 //        return UserParameter.instance().promotionManagerTest ||
 //                (Arrays.stream(activeWeeks).boxed().collect(Collectors.toList()).contains(week) &&
 //                        supportedLeagues.contains(seriesId));
@@ -62,7 +62,7 @@ public class LeaguePromotionHandler extends ChangeEventHandler {
     }
 
     private LeagueStatus fetchLeagueStatus() {
-        final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
+        final Basics basics = DBManager.instance().getBasics(HOModelManager.instance().getId());
         int leagueId = basics.getLiga();
 
         HttpDataSubmitter submitter = HttpDataSubmitter.instance();

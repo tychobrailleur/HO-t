@@ -1,6 +1,6 @@
 package module.lineup.ratings;
 
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.UserParameter;
 import core.rating.RatingPredictionModel;
 import java.util.Arrays;
@@ -19,7 +19,7 @@ public final class RatingChartData {
 		protected RatingChartValues(){}
 		public RatingChartValues(RatingPredictionModel.RatingSector ratingSector){
 			var ret = new ArrayList<Double>();
-			var hoMOdel = HOVerwaltung.instance().getModel();
+			var hoMOdel = HOModelManager.instance().getModel();
 			var lineup = hoMOdel.getCurrentLineup();
 			var ratingPredictionModel = hoMOdel.getRatingPredictionModel();
 			for (var minute : getMinutes()){
@@ -47,7 +47,7 @@ public final class RatingChartData {
 	class HatStatsRatingChartValues extends RatingChartValues{
 		public HatStatsRatingChartValues(){
 			var values = new ArrayList<Double>();
-			var hoMOdel = HOVerwaltung.instance().getModel();
+			var hoMOdel = HOModelManager.instance().getModel();
 			var lineup = hoMOdel.getCurrentLineup();
 			var ratingPredictionModel = hoMOdel.getRatingPredictionModel();
 			for (var minute : getMinutes()){
@@ -61,7 +61,7 @@ public final class RatingChartData {
 	class LoddarStatsRatingChartValues extends RatingChartValues{
 		public LoddarStatsRatingChartValues(){
 			var values = new ArrayList<Double>();
-			var hoMOdel = HOVerwaltung.instance().getModel();
+			var hoMOdel = HOModelManager.instance().getModel();
 			var lineup = hoMOdel.getCurrentLineup();
 			var ratingPredictionModel = hoMOdel.getRatingPredictionModel();
 			for (var minute : getMinutes()){
@@ -94,7 +94,7 @@ public final class RatingChartData {
 
 	private ArrayList<Integer> getMinutes() {
 		if(mapKeys == null) {
-			var hoMOdel = HOVerwaltung.instance().getModel();
+			var hoMOdel = HOModelManager.instance().getModel();
 			var lineup = hoMOdel.getCurrentLineup();
 			var ratingChangeMinutes = RatingPredictionModel.getRatingChangeMinutes(lineup, isExtraTime?120:90);
 			mapKeys = new ArrayList<>(ratingChangeMinutes);

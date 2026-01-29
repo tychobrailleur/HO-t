@@ -9,7 +9,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOModel;
-import core.model.HOVerwaltung;
+import core.model.HOModelManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
@@ -133,7 +133,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 	}
 
 	public final void actionPerformed(java.awt.event.ActionEvent actionEvent) {
-		final HOModel hoModel = HOVerwaltung.instance().getModel();
+		final HOModel hoModel = HOModelManager.instance().getModel();
 		final HOMainFrame mainFrame = core.gui.HOMainFrame.instance();
 
 		if (actionEvent.getSource().equals(m_jbClearLineup)) {
@@ -214,7 +214,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 		for (Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry : positions.entrySet()) {
 			if (!entry.getValue().isSelected()) {
-				var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+				var lineup = HOModelManager.instance().getModel().getCurrentLineup();
                 lineup.setSpielerAtPosition(entry.getKey().getPositionsID(), 0);
             }
 		}
